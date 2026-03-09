@@ -1,0 +1,14 @@
+.next/
+node_modules/
+dist/
+build/
+.vercel/
+*.log
+*.txt
+*.tsbuildinfo
+next-env.d.ts
+public/
+.DS_Store
+.env*
+package-lock.json
+brain/

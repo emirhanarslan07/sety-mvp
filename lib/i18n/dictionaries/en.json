@@ -1,0 +1,610 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "back": "Back",
+        "next": "Next",
+        "search": "Search..."
+    },
+    "dashboard": {
+        "welcome": "Welcome",
+        "greeting": "Hello",
+        "subtitle": "Let's get you ready for sales.",
+        "today_overview": "Here's what's happening in your store today.",
+        "stats": {
+            "total_sales": "Total Sales",
+            "total_revenue": "Total Revenue",
+            "customers": "Customer Count",
+            "conversion_rate": "Conversion Rate"
+        },
+        "recent_orders": "Recent Orders",
+        "quick_actions": "Quick Actions",
+        "new_product": "New Product",
+        "preview_store": "Preview Store",
+        "menu": {
+            "home": "Home",
+            "my_store": "My Store",
+            "income": "Income",
+            "analytics": "Analytics",
+            "customers": "Customers",
+            "settings": "Settings",
+            "logout": "Logout"
+        },
+        "notifications": {
+            "title": "Notifications",
+            "sale_title": "New Sale! 🎉",
+            "customer_title": "New Customer",
+            "minute_ago": "m ago",
+            "hour_ago": "h ago",
+            "day_ago": "d ago",
+            "product_fallback": "Product",
+            "registered": "registered."
+        },
+        "sidebar": {
+            "plan_status": "Plan Status",
+            "free_trial": "Free Trial",
+            "days_remaining": "days",
+            "upgrade": "Upgrade ✨",
+            "admin_panel": "Admin Panel",
+            "add_account": "Add Account",
+            "get_help": "Get Help"
+        },
+        "toast": {
+            "store_link_copied": "Store link copied!"
+        },
+        "cards": {
+            "theme": {
+                "title": "Select store theme",
+                "desc": "Customize your store design and bring your brand to life."
+            },
+            "products": {
+                "title": "Manage your products",
+                "desc": "Add new products or edit your existing ones."
+            },
+            "share": {
+                "title": "Share my store",
+                "desc": "Copy and share the {{url}} link."
+            }
+        },
+        "analytics": {
+            "periods": {
+                "last_7_days": "Last 7 Days",
+                "last_14_days": "Last 14 Days",
+                "custom_range": "Custom Range",
+                "date_range": "Mar 1 - Mar 3, 2026"
+            },
+            "stats": {
+                "store_views": "Store Views",
+                "total_revenue": "Total Revenue",
+                "leads": "Leads"
+            },
+            "customers_origin": {
+                "title": "Where are my customers coming from?",
+                "empty_title": "No location data yet",
+                "empty_desc": "A map will appear here when sales start."
+            },
+            "referral_channels": {
+                "title": "Referral channels",
+                "empty_title": "Waiting for traffic data",
+                "empty_desc": "You can see channels when you share social media links.",
+                "direct": "Direct",
+                "other": "Other"
+            },
+            "top_products": {
+                "title": "Best Selling Products",
+                "full_report": "Full Report",
+                "table": {
+                    "product_info": "Product Info",
+                    "views": "Views",
+                    "orders": "Orders",
+                    "conversion": "Conversion",
+                    "net_revenue": "Net Revenue"
+                },
+                "empty_title": "Let's start selling! 🚀",
+                "empty_desc": "When your products are viewed and sold, all data will appear here in seconds."
+            }
+        },
+        "store": {
+            "tabs": {
+                "products": "My Products",
+                "design": "Design & Brand",
+                "pages": "Landing Pages"
+            },
+            "header": {
+                "visit_store": "Visit Store",
+                "copy_link": "Copy Link",
+                "save_changes": "Save Changes"
+            },
+            "sections": {
+                "theme_selection": "Theme Selection",
+                "style_tuning": "Appearance Tuning",
+                "my_products": "My Products",
+                "landing_pages": "Store Pages",
+                "color_palette": "Brand Color",
+                "font_selection": "Typography",
+                "button_styles": "Button Style",
+                "logo_profile": "Logo / Profile",
+                "cover_image": "Cover Image",
+                "display_name": "Display Name",
+                "bio": "Bio",
+                "verified_badge": "Verified",
+                "announcement_banner": "Announcement Banner",
+                "announcement_desc": "A prominent announcement banner is displayed at the top of your store.",
+                "sety_badge": "Sety Badge",
+                "show_sety_badge": "Show Sety Badge",
+                "sety_badge_desc": "Built with Sety badge and affiliate link.",
+                "social_media": "Social Media",
+                "social_media_desc": "Add your social media links."
+            },
+            "product_types": {
+                "collect_emails": {
+                    "title": "Collect Emails / Applications",
+                    "desc": "Collect potential customer information with a lead tool."
+                },
+                "digital_product": {
+                    "title": "Digital Product",
+                    "desc": "Sell PDFs, guides, templates, e-books, etc."
+                },
+                "coaching_call": {
+                    "title": "Coaching Call",
+                    "desc": "Offer discovery calls and paid coaching services."
+                },
+                "video_response": {
+                    "title": "Personalized Video Response",
+                    "desc": "Send custom video or product responses to requests."
+                },
+                "ask_me_anything": {
+                    "title": "Q&A (AMA)",
+                    "desc": "Let your followers ask you paid questions."
+                },
+                "private_group": {
+                    "title": "Private Access / Closed Group",
+                    "desc": "Sell access to Telegram or Instagram Close Friends."
+                },
+                "custom_product": {
+                    "title": "Custom Product",
+                    "desc": "Audits, analyses, or personalized video reviews."
+                },
+                "sety_affiliate": {
+                    "title": "Sety Affiliate Link",
+                    "desc": "Recommend Sety and earn 20% from sales."
+                }
+            },
+            "design": {
+                "themes": {
+                    "arctic_glass": "Modern, transparent premium glass design.",
+                    "midnight_neon": "Dark mode with glowing neon details.",
+                    "luxury_gold": "Elegant serif fonts and gold touches.",
+                    "soft_clay": "3D soft edges and modern depth.",
+                    "cyber_future": "Grid and techno-vibes from the future.",
+                    "sunset_pastel": "Fun, soft, and aesthetic colors.",
+                    "dreamy_mesh": "Soft and artistic color transitions.",
+                    "neo_brutalist": "Sharp lines and bold contrasts."
+                },
+                "button_styles": {
+                    "rounded": "Full Oval",
+                    "semi": "Soft Corner",
+                    "sharp": "Sharp Corner"
+                }
+            },
+            "actions": {
+                "save": "Save Changes",
+                "cancel": "Cancel",
+                "add_new": "Add New",
+                "add_page": "New Page",
+                "edit": "Edit",
+                "publish": "Publish",
+                "archive": "Archive",
+                "delete": "Delete",
+                "back": "Go Back",
+                "create": "Create"
+            },
+            "editors": {
+                "tabs": {
+                    "thumbnail": "Thumbnail",
+                    "checkout": "Checkout Page",
+                    "options": "Options"
+                },
+                "general": {
+                    "style_selection": "1. Select a Style",
+                    "style_button": "Button",
+                    "style_button_desc": "Simple and effective",
+                    "style_callout": "Callout",
+                    "style_callout_desc": "Larger prominent card",
+                    "image_selection": "2. Select Image",
+                    "image_upload": "Upload Image",
+                    "image_change": "Change",
+                    "text_selection": "3. Add Text",
+                    "title": "Title",
+                    "subtitle": "Subtitle / Description",
+                    "button_text": "Button Text",
+                    "edit_appearance": "1. Edit Appearance",
+                    "header_image": "Header Image",
+                    "description_text": "Description Text",
+                    "ai_generate": "Generate with AI",
+                    "cta_button": "Call to Action Button",
+                    "set_price_title": "2. Set Price",
+                    "price": "Price",
+                    "discount_price": "Discount Price",
+                    "price_hint": "Must be between 0.50 and 25,000 dollars.",
+                    "add_payment_plan": "Add Payment Plan",
+                    "limit_amount": "Limit Amount",
+                    "discount_code": "Discount Code",
+                    "collect_info_title": "3. Collect Info",
+                    "add_field": "Add Field",
+                    "secure_process": "Processed securely by Sety 🔒",
+                    "save_draft": "Save as draft",
+                    "publish": "Publish ✨",
+                    "saved": "Saved",
+                    "next": "Next",
+                    "improve_page": "Improve this page",
+                    "currency_name": "dollars"
+                },
+                "video_response": {
+                    "title_default": "Personalized Video Response",
+                    "subtitle_default": "I will send you a custom video/product based on your request!",
+                    "button_text_default": "Submit Your Request",
+                    "checkout_desc_default": "I will personally review your request and help you create a plan to reach success.\n\nBy purchasing this product, I will create a special video/product for you, addressing your specific requests and offering my best suggestions!"
+                },
+                "reviews": {
+                    "title": "Add Customer Review",
+                    "subtitle": "Show customer testimonials and reviews for this product. Building trust increases sales.",
+                    "add_button": "Add Review",
+                    "name_label": "Customer Name",
+                    "name_placeholder": "e.g. John Doe",
+                    "text_label": "Review",
+                    "text_placeholder": "Write the customer's experience here..."
+                },
+                "emails": {
+                    "title": "Add Email Flow",
+                    "flow_title": "Automated Email Flow",
+                    "flow_subtitle": "A sequence of automated messages to be sent to the customer after purchase.",
+                    "select_flow": "Select Flow",
+                    "flows": [
+                        "Thank You & Welcome",
+                        "Educational Series",
+                        "Feedback Request"
+                    ]
+                },
+                "reminders": {
+                    "title": "Email Reminders",
+                    "flow_title": "Timed Reminders",
+                    "flow_subtitle": "Send automated reminders before an event or delivery.",
+                    "hours": "hours",
+                    "days": "days",
+                    "before": "before",
+                    "automatic": "Automatic reminder",
+                    "time_placeholder": "Time",
+                    "hours_before": "hours before"
+                },
+                "bump": {
+                    "title": "Enable Order Bump",
+                    "flow_title": "Order Bump",
+                    "flow_subtitle": "Add a one-time offer to your checkout flow.",
+                    "product_name": "Product Name",
+                    "product_placeholder": "e.g. E-book, Bonus Video",
+                    "price": "Price",
+                    "select_image": "Select Image",
+                    "desc_placeholder": "Tell the customer why they should take this offer."
+                },
+                "affiliate": {
+                    "title": "Enable Affiliate Sharing",
+                    "flow_title": "Affiliate System",
+                    "flow_subtitle": "Allow your customers to resell this product.",
+                    "commission_rate": "Commission Rate",
+                    "commission_desc": "Your affiliates will receive a share of each sale at this rate."
+                }
+            },
+            "pages": {
+                "title": "Store Pages",
+                "desc": "Create specialized sales pages and store tabs.",
+                "empty_title": "Create a Landing Page",
+                "empty_desc": "Use a specialized landing page to direct customers to only a specific product link! This page is hidden from your store storefront, so you can offer it only to a specific group of customers.",
+                "default_badge": "Default"
+            },
+            "modals": {
+                "delete_product": {
+                    "title": "Delete Product",
+                    "desc": "Are you sure you want to delete this product? This action cannot be undone and the product will be permanently removed from your store.",
+                    "confirm": "Yes, Permanently Delete"
+                },
+                "edit_page": {
+                    "title": "Edit Page",
+                    "desc": "Customize the page title and link extension.",
+                    "label_title": "Page Title",
+                    "placeholder_title": "e.g. Masterclass Intro",
+                    "label_slug": "Link Extension (Slug)",
+                    "placeholder_slug": "custom-link",
+                    "default_page_desc": "Home page link cannot be changed.",
+                    "main_page_title": "Main Store Page"
+                }
+            },
+            "states": {
+                "loading_editor": "Loading Editor...",
+                "logo_error": "Error uploading logo",
+                "cover_error": "Error uploading cover image",
+                "draft": "Draft",
+                "sales_count": "{{count}} Sales",
+                "no_products": "You haven't added content yet",
+                "no_products_desc": "Start earning by adding digital products, subscriptions, or appointments.",
+                "add_first_product": "Add Your First Product",
+                "coming_soon": "Coming Soon",
+                "step_select_type": "Step 1/2: Select Type",
+                "add_product_title": "What would you like to add?",
+                "add_product_desc": "Select the product or service type you want to add to your store."
+            },
+            "preview": {
+                "brand_name_placeholder": "My Sety Store",
+                "bio_placeholder": "Your store description will appear here. Tell your followers about yourself!",
+                "buy_button": "Buy",
+                "free_button": "Free",
+                "affiliate_badge_text": "Build your own brand with Sety!"
+            },
+            "placeholders": {
+                "display_name": "Your Name or Brand",
+                "bio": "Briefly tell about yourself...",
+                "announcement": "e.g. My Masterclass Guide is Live! 🚀"
+            }
+        }
+    },
+    "store": {
+        "my_store": "My Store",
+        "products": "Products",
+        "add_product": "Add Product",
+        "no_products": "No products added yet.",
+        "product_types": {
+            "digital": "Digital Product",
+            "course": "E-Course",
+            "coaching": "Coaching",
+            "community": "Community"
+        }
+    },
+    "public": {
+        "buy_now": "Buy Now",
+        "checkout": "Checkout",
+        "free": "FREE",
+        "built_with": "Built with Sety"
+    },
+    "landing": {
+        "nav": {
+            "login": "Login",
+            "signup": "Sign Up"
+        },
+        "hero": {
+            "title": "Launch Your Digital Store in 2 Minutes, ",
+            "title_accent": "Start Selling Now.",
+            "subtitle": "Sell your digital products, coaching services, and subscriptions from a single hub with Sety. Focus on creating, we'll handle the rest. Turning your social media influence into a professional store has never been easier.",
+            "cta": "Open Your Store Now"
+        },
+        "features": {
+            "title": "Designed for Those Who ",
+            "title_accent": "Want to Grow Their Business",
+            "subtitle": "Forget complex tools. Focus only on your business with Sety.",
+            "cards": [
+                {
+                    "title": "Setup Your Store",
+                    "desc": "Add your digital products and your professional store goes live instantly.",
+                    "footer": "Live Instantly"
+                },
+                {
+                    "title": "Share Your Link",
+                    "desc": "Add your Sety link to your social media bio and start selling immediately.",
+                    "footer": "Link Ready"
+                },
+                {
+                    "title": "Withdraw Your Earnings",
+                    "desc": "Track your sales in real-time and transfer your money to your bank in seconds.",
+                    "footer": "Fast Transfer"
+                }
+            ]
+        },
+        "footer": {
+            "help": "Help",
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Use",
+            "rights": "All rights reserved."
+        },
+        "how_it_works": {
+            "title": "Your Dream Store, ",
+            "title_accent": "Live in Minutes",
+            "step1": {
+                "title": "Manage All from <br />One Panel",
+                "desc": "Everything from product uploads to sales tracking, customer analysis to payments, all in one smart panel.",
+                "badge": "Seller Panel",
+                "metrics": {
+                    "earnings": "EARNINGS THIS MONTH",
+                    "customers": "ACTIVE CUSTOMERS",
+                    "activity": "RECENT ACTIVITIES"
+                }
+            },
+            "step2": {
+                "title": "Your Own Brand",
+                "desc": "Personalize your store with your logo, colors, and domain. Don't be crushed under a platform."
+            },
+            "step3": {
+                "title": "Instant Earnings",
+                "desc": "Receive payments from all over the world with global payment methods. No commission, you are the sole owner of your earnings."
+            }
+        },
+        "faq": {
+            "title": "Questions?",
+            "subtitle": "Here are the most frequently asked questions about Sety.",
+            "items": [
+                {
+                    "q": "How do I receive my payments?",
+                    "a": "Sety does not act as an intermediary in the payment process. You connect your own Iyzico, Stripe or other payment infrastructure to the system. When your customer buys a product, the payment is deposited directly into your own account at your payment provider."
+                },
+                {
+                    "q": "Does Sety take commission from my sales?",
+                    "a": "No, Sety does not take commission from any sales. You only pay a fixed monthly subscription fee. No matter how much your sales volume increases, 100% of your earnings remain yours."
+                },
+                {
+                    "q": "Is it difficult to connect my own payment infrastructure?",
+                    "a": "Not at all! You can connect popular payment methods like Iyzico or Stripe in seconds by entering your API keys with just a few clicks through our panel."
+                },
+                {
+                    "q": "How do refund and cancellation processes work?",
+                    "a": "Since the money flow takes place directly between you and your customer (via your own payment infrastructure), refund and cancellation processes are also entirely under your control. Sety does not interfere in this process."
+                },
+                {
+                    "q": "How are tax processes managed?",
+                    "a": "Since sales take place over your own payment infrastructure, billing and tax processes are managed by you according to your existing business model. As a professional store owner, you are in control of all processes."
+                },
+                {
+                    "q": "Can I open a store without technical knowledge?",
+                    "a": "Yes! Sety is designed for you to become a professional store owner without requiring any coding or technical setup. Just upload your product, choose your payment method, and start selling."
+                }
+            ]
+        },
+        "product_showcase": {
+            "title": "Focus on creating, ",
+            "title_accent": "we'll handle the rest.",
+            "subtitle": "Say goodbye to complex setups. Sety offers you a professional store and a powerful back office via a single simple link.",
+            "trial": "Start your 1-month free trial today.",
+            "cards": {
+                "revenue": {
+                    "title": "TOTAL REVENUE",
+                    "goal": "Monthly goal"
+                },
+                "live_sale": {
+                    "title": "LIVE SALE",
+                    "time": "Just now",
+                    "country": "Turkey"
+                },
+                "customers": {
+                    "title": "ACTIVE CUSTOMER",
+                    "count": "2,400 customers",
+                    "trend": "↑ 142 this week"
+                },
+                "chart": {
+                    "title": "THIS WEEK",
+                    "days": [
+                        "Mon",
+                        "Wed",
+                        "Fri",
+                        "Today"
+                    ]
+                },
+                "link_in_bio": {
+                    "title": "LINK IN BIO"
+                },
+                "payment": {
+                    "title": "Payment Received",
+                    "stripe": "Stripe · Just now"
+                }
+            },
+            "mockup": {
+                "category": "Lifestyle & Business",
+                "badge": "POWERED BY SETY",
+                "products": {
+                    "digital": "DIGITAL PRODUCT",
+                    "booking": "BOOKING",
+                    "course": "E-COURSE",
+                    "membership": "MEMBERSHIP"
+                },
+                "items": [
+                    {
+                        "title": "7-Day Reset Guide",
+                        "price": "$24"
+                    },
+                    {
+                        "title": "1-on-1 Strategy Call",
+                        "price": "$150"
+                    },
+                    {
+                        "title": "Passive Income Course",
+                        "price": "$99"
+                    },
+                    {
+                        "title": "Creator Mastermind",
+                        "price": "$299"
+                    },
+                    {
+                        "title": "Link-in-Bio Templates",
+                        "price": "$15"
+                    }
+                ]
+            }
+        },
+        "commission_band": {
+            "title": "No commission,",
+            "subtitle": "you are the ",
+            "subtitle_accent": "sole owner ",
+            "subtitle_end": "of your earnings.",
+            "button": "Open Your Store Now"
+        },
+        "comparison": {
+            "title": "Don't Lose as You ",
+            "title_accent": "Earn",
+            "subtitle": "High commission rates hinder your growth. With Sety, no matter how much you sell, all your earnings stay with you.",
+            "sety": {
+                "title": "Sety",
+                "items": [
+                    "0% Commission per sale",
+                    "Unlimited digital product uploads",
+                    "Earnings instantly in your account",
+                    "Your own brand and domain",
+                    "Smart Upsell and Sales Boosters",
+                    "Advanced Customer Analytics",
+                    "24/7 Priority Support"
+                ],
+                "cost_label": "Cost",
+                "price": "$19",
+                "period": "/MONTH"
+            },
+            "others": {
+                "title": "Others",
+                "items": [
+                    "15%+ commission per sale",
+                    "Listing fee per product",
+                    "14-30 days payment holding",
+                    "Getting crushed under platform brand",
+                    "Lack of sales boosting tools",
+                    "Complex and limited analytics",
+                    "Limited customer communication"
+                ],
+                "cost_label": "Cost",
+                "price": "$49",
+                "period": "/MONTH"
+            },
+            "banner": {
+                "title": "Invest ",
+                "title_accent": "$4,200+ More ",
+                "title_end": "in Your Future Each Year",
+                "description": "Don't be punished as you grow. Even if you only make $2,000 turnover per month, commissioned platforms take more than ",
+                "description_accent": "$4,000 annually ",
+                "description_end": "from your pocket. With Sety, 100% of your earnings belong to you.",
+                "button": "Start Protecting Your Earnings Now",
+                "button_mobile": "Start Now"
+            }
+        },
+        "social_proof": {
+            "title": "The Favorite Platform of ",
+            "title_accent": "Content Creators",
+            "followers": "Followers",
+            "testimonials": [
+                {
+                    "role": "Fitness Coach",
+                    "quote": "The 0% commission model was a game-changer. Thanks to Sety, every penny of my effort now goes directly into my account. Cutting out the middleman grew my business by 40%!"
+                },
+                {
+                    "role": "Digital Creator",
+                    "quote": "It took exactly 2 minutes to set up my store. Bringing my e-books and coaching packages together in one professional showcase instantly won the trust of my followers."
+                },
+                {
+                    "role": "Designer & Artist",
+                    "quote": "The most stylish platform I've used to expand into the global market. I present my design templates all over the world with a single link and a flawless user experience."
+                }
+            ]
+        },
+        "sticky_cta": {
+            "label": "START NOW",
+            "subtitle": "1 Month Free",
+            "button": "Open Store"
+        }
+    }
+}

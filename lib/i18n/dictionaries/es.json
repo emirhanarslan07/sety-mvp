@@ -1,0 +1,492 @@
+{
+    "common": {
+        "loading": "Cargando...",
+        "error": "Ha ocurrido un error",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "back": "Atrás",
+        "next": "Siguiente",
+        "search": "Buscar..."
+    },
+    "dashboard": {
+        "welcome": "Bienvenido",
+        "greeting": "Hola",
+        "subtitle": "Preparémonos para las ventas.",
+        "today_overview": "Esto es lo que está pasando en tu tienda hoy.",
+        "stats": {
+            "total_sales": "Ventas Totales",
+            "total_revenue": "Ingresos Totales",
+            "customers": "Número de Clientes",
+            "conversion_rate": "Tasa de Conversión"
+        },
+        "recent_orders": "Pedidos Recientes",
+        "quick_actions": "Acciones Rápidas",
+        "new_product": "Nuevo Producto",
+        "preview_store": "Vista Previa de la Tienda",
+        "menu": {
+            "home": "Inicio",
+            "my_store": "Mi Tienda",
+            "income": "Ingresos",
+            "analytics": "Análisis",
+            "customers": "Clientes",
+            "settings": "Ajustes",
+            "logout": "Cerrar Sesión"
+        },
+        "notifications": {
+            "title": "Notificaciones",
+            "sale_title": "¡Nueva venta! 🎉",
+            "customer_title": "Nuevo cliente",
+            "minute_ago": "hace m",
+            "hour_ago": "hace h",
+            "day_ago": "hace d",
+            "product_fallback": "Producto",
+            "registered": "registrado."
+        },
+        "sidebar": {
+            "plan_status": "Estado del plan",
+            "free_trial": "Prueba gratuita",
+            "days_remaining": "días",
+            "upgrade": "Actualizar ✨",
+            "admin_panel": "Panel de administración",
+            "add_account": "Añadir cuenta",
+            "get_help": "Obtener ayuda"
+        },
+        "toast": {
+            "store_link_copied": "¡Enlace a la tienda copiado!"
+        },
+        "analytics": {
+            "periods": {
+                "last_7_days": "Últimos 7 días",
+                "last_14_days": "Últimos 14 días",
+                "custom_range": "Rango personalizado",
+                "date_range": "1 mar - 3 mar 2026"
+            },
+            "stats": {
+                "store_views": "Visitas a la tienda",
+                "total_revenue": "Ingresos totales",
+                "leads": "Leads"
+            },
+            "customers_origin": {
+                "title": "¿De dónde vienen mis clientes?",
+                "empty_title": "Aún no hay datos de ubicación",
+                "empty_desc": "Un mapa aparecerá aquí cuando comiencen las ventas."
+            },
+            "referral_channels": {
+                "title": "Canales de referencia",
+                "empty_title": "Esperando datos de tráfico",
+                "empty_desc": "Podrás ver los canales cuando compartas los enlaces de redes sociales.",
+                "direct": "Directo",
+                "other": "Otros"
+            },
+            "top_products": {
+                "title": "Productos más vendidos",
+                "full_report": "Informe completo",
+                "table": {
+                    "product_info": "Información del producto",
+                    "views": "Vistas",
+                    "orders": "Pedidos",
+                    "conversion": "Conversión",
+                    "net_revenue": "Ingresos netos"
+                },
+                "empty_title": "¡Empecemos a vender! 🚀",
+                "empty_desc": "Cuando tus productos sean vistos y vendidos, todos los datos aparecerán aquí en segundos."
+            }
+        },
+        "store": {
+            "tabs": {
+                "products": "Mis Productos",
+                "design": "Diseño y Marca",
+                "pages": "Páginas de Destino"
+            },
+            "header": {
+                "visit_store": "Visitar Tienda",
+                "copy_link": "Copiar Enlace",
+                "save_changes": "Guardar Cambios"
+            },
+            "sections": {
+                "theme_selection": "Selección de Tema",
+                "style_tuning": "Ajuste de Apariencia",
+                "my_products": "Mis Productos",
+                "landing_pages": "Páginas de la Tienda",
+                "color_palette": "Color de Marca",
+                "font_selection": "Tipografía",
+                "button_styles": "Estilo de Botón",
+                "logo_profile": "Logo / Perfil",
+                "cover_image": "Imagen de Portada",
+                "display_name": "Nombre a Mostrar",
+                "bio": "Biografía",
+                "verified_badge": "Verificado",
+                "announcement_banner": "Banner de Anuncio",
+                "announcement_desc": "Se muestra un banner de anuncio prominente en la parte superior de tu tienda.",
+                "sety_badge": "Insignia de Sety",
+                "show_sety_badge": "Mostrar Insignia de Sety",
+                "sety_badge_desc": "Insignia \"Creado con Sety\" y enlace de afiliado.",
+                "social_media": "Redes Sociales",
+                "social_media_desc": "Añade tus enlaces de redes sociales."
+            },
+            "product_types": {
+                "collect_emails": {
+                    "title": "Recopilar Correos / Solicitudes",
+                    "desc": "Recopila información de clientes potenciales con una herramienta de leads."
+                },
+                "digital_product": {
+                    "title": "Producto Digital",
+                    "desc": "Vende PDFs, guías, plantillas, libros electrónicos, etc."
+                },
+                "coaching_call": {
+                    "title": "Llamada de Coaching",
+                    "desc": "Ofrece llamadas de descubrimiento y servicios de coaching pagados."
+                },
+                "video_response": {
+                    "title": "Respuesta en Video Personalizada",
+                    "desc": "Envía respuestas personalizadas en video o productos a las solicitudes."
+                },
+                "ask_me_anything": {
+                    "title": "Preguntas y Respuestas (AMA)",
+                    "desc": "Deja que tus seguidores te hagan preguntas pagadas."
+                },
+                "private_group": {
+                    "title": "Acceso Privado / Grupo Cerrado",
+                    "desc": "Vende acceso a Telegram o Mejores Amigos de Instagram."
+                },
+                "custom_product": {
+                    "title": "Producto Personalizado",
+                    "desc": "Auditorías, análisis o revisiones de video personalizadas."
+                },
+                "sety_affiliate": {
+                    "title": "Enlace de Afiliado de Sety",
+                    "desc": "Recomienda Sety y gana un 20% de las ventas."
+                }
+            },
+            "design": {
+                "themes": {
+                    "arctic_glass": "Diseño de vidrio premium moderno y transparente.",
+                    "midnight_neon": "Modo oscuro con detalles de neón brillantes.",
+                    "luxury_gold": "Fuentes serif elegantes y toques dorados.",
+                    "soft_clay": "Bordes suaves 3D y profundidad moderna.",
+                    "cyber_future": "Vibras de cuadrícula y techno del futuro.",
+                    "sunset_pastel": "Colores divertidos, suaves y estéticos.",
+                    "dreamy_mesh": "Transiciones de color suaves и artísticas.",
+                    "neo_brutalist": "Líneas afiladas y contrastes audaces."
+                },
+                "button_styles": {
+                    "rounded": "Ovalado Completo",
+                    "semi": "Esquina Suave",
+                    "sharp": "Esquina Afilada"
+                }
+            },
+            "actions": {
+                "save": "Guardar Cambios",
+                "cancel": "Cancelar",
+                "add_new": "Añadir Nuevo",
+                "add_page": "Nueva Página",
+                "edit": "Editar",
+                "publish": "Publicar",
+                "archive": "Archivar",
+                "delete": "Eliminar",
+                "back": "Volver",
+                "create": "Crear"
+            },
+            "pages": {
+                "title": "Páginas de la Tienda",
+                "desc": "Crea páginas de ventas especializadas y pestañas de la tienda.",
+                "empty_title": "Crear una Página de Destino",
+                "empty_desc": "¡Usa una página de destino especializada para dirigir a los clientes solo a un enlace de producto específico! Esta página está oculta de la vitrina de tu tienda, por lo que puedes ofrecerla solo a un grupo específico de clientes.",
+                "default_badge": "Predeterminado"
+            },
+            "modals": {
+                "delete_product": {
+                    "title": "Eliminar Producto",
+                    "desc": "¿Estás seguro de que quieres eliminar este producto? Esta acción no se puede deshacer y el producto se eliminará permanentemente de tu tienda.",
+                    "confirm": "Sí, Eliminar Permanentemente"
+                },
+                "edit_page": {
+                    "title": "Editar Página",
+                    "desc": "Personaliza el título de la página y la extensión del enlace.",
+                    "label_title": "Título de la Página",
+                    "placeholder_title": "ej. Introducción al Masterclass",
+                    "label_slug": "Extensión del Enlace (Slug)",
+                    "placeholder_slug": "enlace-personalizado",
+                    "default_page_desc": "El enlace de la página principal no se puede cambiar.",
+                    "main_page_title": "Página Principal de la Tienda"
+                }
+            },
+            "states": {
+                "loading_editor": "Cargando Editor...",
+                "logo_error": "Error al subir el logo",
+                "cover_error": "Error al subir la imagen de portada",
+                "draft": "Borrador",
+                "sales_count": "{{count}} Ventas",
+                "no_products": "Aún no has añadido contenido",
+                "no_products_desc": "Empieza a ganar añadiendo productos digitales, suscripciones o citas.",
+                "add_first_product": "Añade tu Primer Producto",
+                "coming_soon": "Próximamente",
+                "step_select_type": "Paso 1/2: Seleccionar Tipo",
+                "add_product_title": "¿Qué te gustaría añadir?",
+                "add_product_desc": "Selecciona el tipo de producto o servicio que quieres añadir a tu tienda."
+            },
+            "preview": {
+                "brand_name_placeholder": "Mi Tienda Sety",
+                "bio_placeholder": "La descripción de tu tienda aparecerá aquí. ¡Cuéntales a tus seguidores sobre ti!",
+                "buy_button": "Comprar",
+                "free_button": "Gratis",
+                "affiliate_badge_text": "¡Crea tu propia marca con Sety!"
+            },
+            "placeholders": {
+                "display_name": "Tu Nombre o Marca",
+                "bio": "Cuéntanos brevemente sobre ti...",
+                "announcement": "ej. ¡Mi Guía de Masterclass ya está disponible! 🚀"
+            }
+        },
+        "cards": {
+            "theme": {
+                "title": "Seleccionar tema de la tienda",
+                "desc": "Personaliza el diseño de tu tienda y dale vida a tu marca."
+            },
+            "products": {
+                "title": "Gestionar productos",
+                "desc": "Añade nuevos productos o edita los existentes."
+            },
+            "share": {
+                "title": "Compartir mi tienda",
+                "desc": "Copia y comparte el enlace {{url}}."
+            }
+        }
+    },
+    "landing": {
+        "nav": {
+            "login": "Iniciar Sesión",
+            "signup": "Registrarse"
+        },
+        "hero": {
+            "title": "Crea tu tienda digital en 2 minutos, ",
+            "title_accent": "Empieza a vender ahora.",
+            "subtitle": "Vende tus productos digitales, servicios de coaching y suscripciones desde un único centro con Sety. Concéntrate en crear, nosotros nos encargamos del resto. Convertir tu influencia en las redes sociales en una tienda profesional nunca ha sido tan fácil.",
+            "cta": "Abre tu tienda ahora"
+        },
+        "features": {
+            "title": "Diseñado para quienes ",
+            "title_accent": "quieren hacer crecer su negocio",
+            "subtitle": "Olvídate de herramientas complejas. Concéntrate solo en tu negocio con Sety.",
+            "cards": [
+                {
+                    "title": "Configura tu tienda",
+                    "desc": "Añade tus productos digitales y tu tienda profesional estará en línea al instante.",
+                    "footer": "En vivo al instante"
+                },
+                {
+                    "title": "Comparte tu enlace",
+                    "desc": "Añade tu enlace de Sety a tu bio de redes sociales y empieza a vender de inmediato.",
+                    "footer": "Enlace listo"
+                },
+                {
+                    "title": "Retira tus ganancias",
+                    "desc": "Sigue tus ventas en tiempo real y transfiere tu dinero a tu banco en segundos.",
+                    "footer": "Transferencia rápida"
+                }
+            ]
+        },
+        "footer": {
+            "help": "Ayuda",
+            "privacy": "Política de Privacidad",
+            "terms": "Términos de Uso",
+            "rights": "Todos los derechos reservados."
+        },
+        "how_it_works": {
+            "title": "La tienda de tus sueños, ",
+            "title_accent": "en vivo en minutos",
+            "step1": {
+                "title": "Gestiona todo desde <br />un solo panel",
+                "desc": "Desde la carga de productos hasta el seguimiento de ventas, desde el análisis de clientes hasta los pagos, todo en un solo panel inteligente.",
+                "badge": "Panel de vendedor",
+                "metrics": {
+                    "earnings": "GANANCIAS ESTE MES",
+                    "customers": "CLIENTES ACTIVOS",
+                    "activity": "ACTIVIDADES RECIENTES"
+                }
+            },
+            "step2": {
+                "title": "Tu propia marca",
+                "desc": "Personaliza tu tienda con tu logo, colores y dominio. No te dejes aplastar por una plataforma."
+            },
+            "step3": {
+                "title": "Ganancias instantáneas",
+                "desc": "Recibe pagos de todo el mundo con métodos de pago globales. Sin comisiones, tú eres el único dueño de tus ganancias."
+            }
+        },
+        "faq": {
+            "title": "¿Preguntas?",
+            "subtitle": "Aquí están las preguntas más frecuentes sobre Sety.",
+            "items": [
+                {
+                    "q": "¿Cómo recibo mis pagos?",
+                    "a": "Sety no actúa como intermediario en el proceso de pago. Conecta sus propias infraestructuras de pago como Iyzico, Stripe u otras al sistema. Cuando su cliente compra un producto, el pago se deposita directamente en su propia cuenta con su proveedor de pagos."
+                },
+                {
+                    "q": "¿Sety cobra comisión por mis ventas?",
+                    "a": "No, Sety no cobra ninguna comisión por las ventas. Solo paga una cuota de suscripción mensual fija. No importa cuánto aumente su volumen de ventas, el 100% de sus ganancias sigue siendo suyo."
+                },
+                {
+                    "q": "¿Es difícil conectar mi propia infraestructura de pago?",
+                    "a": "¡Para nada! Puede conectar métodos de pago populares como Iyzico o Stripe en segundos ingresando sus claves API con solo unos pocos clics a través de nuestro panel."
+                },
+                {
+                    "q": "¿Cómo funcionan los procesos de reembolso y cancelación?",
+                    "a": "Dado que el flujo de dinero ocurre directamente entre usted y su cliente (a través de su propia infraestructura de pago), los procesos de reembolso y cancelación también están completamente bajo su control. Sety no interviene en este proceso."
+                },
+                {
+                    "q": "¿Cómo se gestionan los procesos fiscales?",
+                    "a": "Dado que las ventas se realizan a través de su propia infraestructura de pago, los procesos de facturación e impuestos son gestionados por usted de acuerdo con su modelo de negocio existente. Como propietario de una tienda profesional, usted tiene el control de todos los procesos."
+                },
+                {
+                    "q": "¿Puedo abrir una tienda sin conocimientos técnicos?",
+                    "a": "¡Sí! Sety está diseñado para que te conviertas en dueño de una tienda profesional sin necesidad de programación ni configuración técnica. Simplemente sube tu producto, elige tu método de pago y comienza a vender."
+                }
+            ]
+        },
+        "product_showcase": {
+            "title": "Concéntrate en crear, ",
+            "title_accent": "nosotros nos encargamos del resto.",
+            "subtitle": "Dile adiós a las configuraciones complejas. Sety te ofrece una tienda profesional y una potente oficina administrativa a través de un único enlace sencillo.",
+            "trial": "Comienza hoy tu prueba gratuita de 1 mes.",
+            "cards": {
+                "revenue": {
+                    "title": "INGRESOS TOTALES",
+                    "goal": "Meta mensual"
+                },
+                "live_sale": {
+                    "title": "VENTA EN VIVO",
+                    "time": "Justo ahora",
+                    "country": "Turquía"
+                },
+                "customers": {
+                    "title": "CLIENTE ACTIVO",
+                    "count": "2,400 clientes",
+                    "trend": "↑ 142 esta semana"
+                },
+                "chart": {
+                    "title": "ESTA SEMANA",
+                    "days": [
+                        "Lun",
+                        "Mié",
+                        "Vie",
+                        "Hoy"
+                    ]
+                },
+                "link_in_bio": {
+                    "title": "ENLACE EN BIO"
+                },
+                "payment": {
+                    "title": "Pago recibido",
+                    "stripe": "Stripe · Justo ahora"
+                }
+            },
+            "mockup": {
+                "category": "Estilo de vida y Negocios",
+                "badge": "POWERED BY SETY",
+                "products": {
+                    "digital": "PRODUCTO DIGITAL",
+                    "booking": "RESERVA",
+                    "course": "CURSO EN LÍNEA",
+                    "membership": "MEMBRESÍA"
+                },
+                "items": [
+                    {
+                        "title": "Guía de reinicio de 7 días",
+                        "price": "$24"
+                    },
+                    {
+                        "title": "Llamada de estrategia 1 a 1",
+                        "price": "$150"
+                    },
+                    {
+                        "title": "Mente maestra del creador",
+                        "price": "$299"
+                    },
+                    {
+                        "title": "Plantillas de enlace en bio",
+                        "price": "$15"
+                    }
+                ]
+            }
+        },
+        "commission_band": {
+            "title": "Sin comisión,",
+            "subtitle": "tú eres el ",
+            "subtitle_accent": "único dueño ",
+            "subtitle_end": "de tus ganancias.",
+            "button": "Abre tu tienda ahora"
+        },
+        "comparison": {
+            "title": "No pierdas mientras ",
+            "title_accent": "ganas",
+            "subtitle": "Las altas tasas de comisión dificultan tu crecimiento. Con Sety, no importa cuánto vendas, todas tus ganancias se quedan contigo.",
+            "sety": {
+                "title": "Sety",
+                "items": [
+                    "0% de comisión por venta",
+                    "Carga ilimitada de productos digitales",
+                    "Ganancias instantáneas en tu cuenta",
+                    "Tu propia marca y dominio",
+                    "Ventas adicionales inteligentes y potenciadores",
+                    "Análisis de clientes avanzados",
+                    "Soporte prioritario 24/7"
+                ],
+                "cost_label": "Costo",
+                "price": "$19",
+                "period": "/MES"
+            },
+            "others": {
+                "title": "Otros",
+                "items": [
+                    "15%+ de comisión por venta",
+                    "Tarifa de listado por producto",
+                    "Retención de pago de 14-30 días",
+                    "Aplastado bajo la marca de la plataforma",
+                    "Falta de herramientas de impulso de ventas",
+                    "Análisis complejos y limitados",
+                    "Comunicación limitada con el cliente"
+                ],
+                "cost_label": "Costo",
+                "price": "$49",
+                "period": "/MES"
+            },
+            "banner": {
+                "title": "Invierte ",
+                "title_accent": "$4,200+ más ",
+                "title_end": "en tu futuro cada año",
+                "description": "No seas castigado mientras creces. Incluso si solo generas $2,000 al mes, las plataformas con comisión te quitan anualmente más de ",
+                "description_accent": "$4,000 anuales ",
+                "description_end": "de tu bolsillo. Con Sety, el 100% de tus ganancias te pertenecen.",
+                "button": "Comienza a proteger tus ganancias ahora",
+                "button_mobile": "Comienza ahora"
+            }
+        },
+        "social_proof": {
+            "title": "La plataforma favorita de los ",
+            "title_accent": "creadores de contenido",
+            "followers": "Seguidores",
+            "testimonials": [
+                {
+                    "role": "Coach de fitness",
+                    "quote": "El modelo de comisión del 0% cambió las reglas del juego. Gracias a Sety, cada centavo de mi esfuerzo ahora va directamente a mi cuenta. ¡Eliminar a los intermediarios hizo que mi negocio creciera un 40%!"
+                },
+                {
+                    "role": "Creador digital",
+                    "quote": "Me tomó exactamente 2 minutos configurar mi tienda. Reunir mis libros electrónicos y paquetes de coaching en un solo escaparate profesional ganó instantáneamente la confianza de mis seguidores."
+                },
+                {
+                    "role": "Diseñadora y artista",
+                    "quote": "La plataforma más elegante que he usado para expandirme al mercado global. Presento mis plantillas de diseño en todo el mundo con un solo enlace y una experiencia de usuario impecable."
+                }
+            ]
+        },
+        "sticky_cta": {
+            "label": "COMIENZA AHORA",
+            "subtitle": "1 Mes Gratis",
+            "button": "Abre tu tienda"
+        }
+    }
+}

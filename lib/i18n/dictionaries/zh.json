@@ -1,0 +1,496 @@
+{
+    "common": {
+        "loading": "加载中...",
+        "error": "发生错误",
+        "save": "保存",
+        "cancel": "取消",
+        "delete": "删除",
+        "edit": "编辑",
+        "back": "返回",
+        "next": "下一步",
+        "search": "搜索..."
+    },
+    "dashboard": {
+        "welcome": "欢迎",
+        "greeting": "你好",
+        "subtitle": "让我们为您准备好销售。",
+        "today_overview": "以下是您店铺今天的动态。",
+        "stats": {
+            "total_sales": "总销量",
+            "total_revenue": "总收入",
+            "customers": "客户数量",
+            "conversion_rate": "转化率"
+        },
+        "recent_orders": "近期订单",
+        "quick_actions": "快速操作",
+        "new_product": "新产品",
+        "preview_store": "预览商店",
+        "menu": {
+            "home": "首页",
+            "my_store": "我的商店",
+            "income": "收入",
+            "analytics": "数据分析",
+            "customers": "客户",
+            "settings": "设置",
+            "logout": "注销"
+        },
+        "notifications": {
+            "title": "通知",
+            "sale_title": "新销售！🎉",
+            "customer_title": "新客户",
+            "minute_ago": "分钟前",
+            "hour_ago": "小时前",
+            "day_ago": "天前",
+            "product_fallback": "产品",
+            "registered": "已注册。"
+        },
+        "sidebar": {
+            "plan_status": "计划状态",
+            "free_trial": "免费试用",
+            "days_remaining": "天",
+            "upgrade": "升级 ✨",
+            "admin_panel": "管理面板",
+            "add_account": "添加账户",
+            "get_help": "获取帮助"
+        },
+        "toast": {
+            "store_link_copied": "店铺链接已复制！"
+        },
+        "analytics": {
+            "periods": {
+                "last_7_days": "最近 7 天",
+                "last_14_days": "最近 14 天",
+                "custom_range": "自定义范围",
+                "date_range": "2026年3月1日 - 3月3日"
+            },
+            "stats": {
+                "store_views": "店铺访问量",
+                "total_revenue": "总收入",
+                "leads": "潜在客户 (Leads)"
+            },
+            "customers_origin": {
+                "title": "我的客户来自哪里？",
+                "empty_title": "尚无位置数据",
+                "empty_desc": "销售开始后，此处将显示地图。"
+            },
+            "referral_channels": {
+                "title": "推荐渠道",
+                "empty_title": "等待流量数据",
+                "empty_desc": "分享社交媒体链接后，您可以在此处查看渠道。",
+                "direct": "直接访问",
+                "other": "其他"
+            },
+            "top_products": {
+                "title": "畅销产品",
+                "full_report": "完整报告",
+                "table": {
+                    "product_info": "产品信息",
+                    "views": "浏览量",
+                    "orders": "订单",
+                    "conversion": "转化率",
+                    "net_revenue": "净收入"
+                },
+                "empty_title": "让我们开始销售吧！🚀",
+                "empty_desc": "当您的产品被浏览和售出时，所有数据将在几秒钟内显示在此处。"
+            }
+        },
+        "store": {
+            "tabs": {
+                "products": "我的产品",
+                "design": "设计与品牌",
+                "pages": "着陆页"
+            },
+            "header": {
+                "visit_store": "访问商店",
+                "copy_link": "复制链接",
+                "save_changes": "保存更改"
+            },
+            "sections": {
+                "theme_selection": "主题选择",
+                "style_tuning": "外观调整",
+                "my_products": "我的产品",
+                "landing_pages": "商店页面",
+                "color_palette": "品牌颜色",
+                "font_selection": "字体",
+                "button_styles": "按钮样式",
+                "logo_profile": "徽标 / 个人头像",
+                "cover_image": "封面图片",
+                "display_name": "显示名称",
+                "bio": "简介",
+                "verified_badge": "已认证",
+                "announcement_banner": "公告栏",
+                "announcement_desc": "在商店顶部显示醒目的公告栏。",
+                "sety_badge": "Sety 徽章",
+                "show_sety_badge": "显示 Sety 徽章",
+                "sety_badge_desc": "\"由 Sety 提供支持\" 徽章和联盟链接。",
+                "social_media": "社交媒体",
+                "social_media_desc": "添加您的社交媒体链接。"
+            },
+            "product_types": {
+                "collect_emails": {
+                    "title": "收集电子邮件/申请",
+                    "desc": "使用线索工具收集潜在客户信息。"
+                },
+                "digital_product": {
+                    "title": "数字产品",
+                    "desc": "销售 PDF、指南、模板、电子书等。"
+                },
+                "coaching_call": {
+                    "title": "辅导电话",
+                    "desc": "提供咨询电话和付费辅导服务。"
+                },
+                "video_response": {
+                    "title": "个性化视频回复",
+                    "desc": "根据请求发送自定义视频或产品回复。"
+                },
+                "ask_me_anything": {
+                    "title": "问答 (AMA)",
+                    "desc": "让你的追随者向你提出付费问题。"
+                },
+                "private_group": {
+                    "title": "私人访问/封闭群组",
+                    "desc": "销售 Telegram 或 Instagram 亲密朋友访问权限。"
+                },
+                "custom_product": {
+                    "title": "定制产品",
+                    "desc": "审核、分析或个性化视频回顾。"
+                },
+                "sety_affiliate": {
+                    "title": "Sety 联盟链接",
+                    "desc": "推荐 Sety 并从销售中赚取 20% 的佣金。"
+                }
+            },
+            "design": {
+                "themes": {
+                    "arctic_glass": "现代、透明的高级玻璃设计。",
+                    "midnight_neon": "带有发光霓虹细节的深色模式。",
+                    "luxury_gold": "优雅的衬线字体和金点缀。",
+                    "soft_clay": "3D 软边缘和现代深度。",
+                    "cyber_future": "来自未来的网格和科技氛围。",
+                    "sunset_pastel": "有趣、柔和且美观的色彩。",
+                    "dreamy_mesh": "柔和且富有艺术感的色彩转换。",
+                    "neo_brutalist": "锋利的线条和大胆的对比。"
+                },
+                "button_styles": {
+                    "rounded": "全椭圆",
+                    "semi": "圆角",
+                    "sharp": "直角"
+                }
+            },
+            "actions": {
+                "save": "保存更改",
+                "cancel": "取消",
+                "add_new": "新增",
+                "add_page": "新页面",
+                "edit": "编辑",
+                "publish": "发布",
+                "archive": "归档",
+                "delete": "删除",
+                "back": "返回",
+                "create": "创建"
+            },
+            "pages": {
+                "title": "商店页面",
+                "desc": "创建专门的销售页面和商店标签。",
+                "empty_title": "创建一个着陆页",
+                "empty_desc": "使用专门的着陆页将客户引导至特定的产品链接！此页面在您的商店主页中是隐藏的，因此您可以仅将其提供给特定的客户群体。",
+                "default_badge": "默认"
+            },
+            "modals": {
+                "delete_product": {
+                    "title": "删除产品",
+                    "desc": "您确定要删除此产品吗？此操作无法撤销，产品将从您的商店中永久删除。",
+                    "confirm": "是的，永久删除"
+                },
+                "edit_page": {
+                    "title": "编辑页面",
+                    "desc": "自定义页面标题和链接后缀。",
+                    "label_title": "页面标题",
+                    "placeholder_title": "例如：大师班介绍",
+                    "label_slug": "链接后缀 (Slug)",
+                    "placeholder_slug": "自定义链接",
+                    "default_page_desc": "首页链接无法更改。",
+                    "main_page_title": "主商店页面"
+                }
+            },
+            "states": {
+                "loading_editor": "编辑器加载中...",
+                "logo_error": "上传徽标出错",
+                "cover_error": "上传封面图片出错",
+                "draft": "草稿",
+                "sales_count": "{{count}} 销量",
+                "no_products": "你还没有添加内容",
+                "no_products_desc": "通过添加数字产品、订阅或预约开始赚钱。",
+                "add_first_product": "添加你的第一个产品",
+                "coming_soon": "即将推出",
+                "step_select_type": "步骤 1/2：选择类型",
+                "add_product_title": "你想添加什么？",
+                "add_product_desc": "选择要添加到商店的产品或服务类型。"
+            },
+            "preview": {
+                "brand_name_placeholder": "我的 Sety 商店",
+                "bio_placeholder": "你的商店描述将出现在这里。向你的追随者介绍你自己！",
+                "buy_button": "购买",
+                "free_button": "免费",
+                "affiliate_badge_text": "使用 Sety 建立你自己的品牌！"
+            },
+            "placeholders": {
+                "display_name": "您的名字或品牌",
+                "bio": "简短地介绍一下你自己...",
+                "announcement": "例如：我的大师班指南现已上线！🚀"
+            }
+        },
+        "cards": {
+            "theme": {
+                "title": "选择店铺主题",
+                "desc": "自定义您的店铺设计，让您的品牌焕发活力。"
+            },
+            "products": {
+                "title": "管理您的产品",
+                "desc": "添加新产品或编辑现有产品。"
+            },
+            "share": {
+                "title": "分享我的店铺",
+                "desc": "复制并分享 {{url}} 链接。"
+            }
+        }
+    },
+    "landing": {
+        "nav": {
+            "login": "登录",
+            "signup": "注册"
+        },
+        "hero": {
+            "title": "2分钟开启你的数字商店， ",
+            "title_accent": "立即开始销售。",
+            "subtitle": "使用 Sety 从单一中心销售您的数字产品、教练服务和订阅。您专注于创作，剩下的交给我们。将您的社交媒体影响力转化为专业商店从未如此简单。",
+            "cta": "立即开店"
+        },
+        "features": {
+            "title": "为那些 ",
+            "title_accent": "想要发展业务的人而设计",
+            "subtitle": "忘掉复杂的工具。使用 Sety 只专注于您的业务。",
+            "cards": [
+                {
+                    "title": "设置您的商店",
+                    "desc": "添加您的数字产品，您的专业商店立即上线。",
+                    "footer": "立即上线"
+                },
+                {
+                    "title": "分享您的链接",
+                    "desc": "将您的 Sety 链接添加到您的社交媒体个人资料中，立即开始销售。",
+                    "footer": "链接已就绪"
+                },
+                {
+                    "title": "提取您的收益",
+                    "desc": "实时跟踪您的销售情况，并在几秒钟内将钱转入您的银行帐户。",
+                    "footer": "快速转账"
+                }
+            ]
+        },
+        "footer": {
+            "help": "帮助",
+            "privacy": "隐私政策",
+            "terms": "使用条款",
+            "rights": "版权所有。"
+        },
+        "how_it_works": {
+            "title": "您梦想中的商店， ",
+            "title_accent": "分钟内上线",
+            "step1": {
+                "title": "从一个面板 <br />管理所有内容",
+                "desc": "从产品上传到销售跟踪，从客户分析到付款，一切都在一个智能面板中。",
+                "badge": "卖家面板",
+                "metrics": {
+                    "earnings": "本月收入",
+                    "customers": "活跃客户",
+                    "activity": "近期活动"
+                }
+            },
+            "step2": {
+                "title": "您自己的品牌",
+                "desc": "使用您的徽标、颜色和域名个性化您的商店。不要被平台压垮。"
+            },
+            "step3": {
+                "title": "即时收益",
+                "desc": "通过全球支付方式接收来自世界各地的付款。无佣金，您是收益的唯一所有者。"
+            }
+        },
+        "faq": {
+            "title": "有疑问吗？",
+            "subtitle": "以下是关于 Sety 的常见问题。",
+            "items": [
+                {
+                    "q": "我如何收到我的付款？",
+                    "a": "Sety 不在支付过程中充当中间人。您将自己的 Iyzico、Stripe 或其他支付基础设施连接到系统。当您的客户购买产品时，款项将直接存入您在支付提供商处的账户。"
+                },
+                {
+                    "q": "Sety 会从我的销售中提取佣金吗？",
+                    "a": "不，Sety 不会从任何销售中提取佣金。您只需支付固定的每月订阅费。无论您的销量增加多少，100% 的收益都归您所有。"
+                },
+                {
+                    "q": "连接我自己的支付基础设施困难吗？",
+                    "a": "一点也不！您可以只需在我们的面板中点击几下并输入您的 API 密钥，即可在几秒钟内连接 Iyzico 或 Stripe 等常用支付方式。"
+                },
+                {
+                    "q": "退款和取消流程如何运作？",
+                    "a": "由于资金流在您和您的客户之间直接进行（通过您自己的支付基础设施），退款和取消流程也完全由您控制。Sety 不干预此过程。"
+                },
+                {
+                    "q": "税务流程如何管理？",
+                    "a": "由于销售是通过您自己的支付基础设施进行的，因此计费和税务流程由您根据现有的商业模式进行管理。作为专业商店所有者，您可以控制所有流程。"
+                },
+                {
+                    "q": "我可以在没有技术知识的情况下开店吗？",
+                    "a": "是的！Sety 的设计让您无需任何编码或技术设置即可成为专业商店所有者。只需上传您的产品，选择您的支付方式，然后开始销售。"
+                }
+            ]
+        },
+        "product_showcase": {
+            "title": "专注于创作，",
+            "title_accent": "剩下的交给我们。",
+            "subtitle": "告别复杂的设置。Sety 通过一个简单的链接为您提供专业商店和强大的后台。",
+            "trial": "今天就开始您的 1 个月免费试用。",
+            "cards": {
+                "revenue": {
+                    "title": "总收入",
+                    "goal": "每月目标"
+                },
+                "live_sale": {
+                    "title": "实时销售",
+                    "time": "刚刚",
+                    "country": "土耳其"
+                },
+                "customers": {
+                    "title": "活跃客户",
+                    "count": "2,400 名客户",
+                    "trend": "本周 ↑ 142"
+                },
+                "chart": {
+                    "title": "本周",
+                    "days": [
+                        "周一",
+                        "周三",
+                        "周五",
+                        "今天"
+                    ]
+                },
+                "link_in_bio": {
+                    "title": "个人资料链接"
+                },
+                "payment": {
+                    "title": "收到付款",
+                    "stripe": "Stripe · 刚刚"
+                }
+            },
+            "mockup": {
+                "category": "生活方式与商业",
+                "badge": "POWERED BY SETY",
+                "products": {
+                    "digital": "数字产品",
+                    "booking": "预约",
+                    "course": "在线课程",
+                    "membership": "会员"
+                },
+                "items": [
+                    {
+                        "title": "7天重置指南",
+                        "price": "$24"
+                    },
+                    {
+                        "title": "1对1策略通话",
+                        "price": "$150"
+                    },
+                    {
+                        "title": "被动收入课程",
+                        "price": "$99"
+                    },
+                    {
+                        "title": "創作者大師班",
+                        "price": "$299"
+                    },
+                    {
+                        "title": "个人资料链接模板",
+                        "price": "$15"
+                    }
+                ]
+            }
+        },
+        "commission_band": {
+            "title": "无佣金，",
+            "subtitle": "您是收益的 ",
+            "subtitle_accent": "唯一所有者",
+            "subtitle_end": "。",
+            "button": "立即开设您的商店"
+        },
+        "comparison": {
+            "title": "不要边赚边",
+            "title_accent": "亏",
+            "subtitle": "高额佣金率阻碍了您的成长。使用 Sety，无论您的销售额有多少，所有收入都归您所有。",
+            "sety": {
+                "title": "Sety",
+                "items": [
+                    "每笔销售 0% 佣金",
+                    "无限次数字产品上传",
+                    "收入即时入账",
+                    "您自己的品牌和域名",
+                    "智能向上销售和销售助推器",
+                    "高级客户分析",
+                    "24/7 优先支持"
+                ],
+                "cost_label": "成本",
+                "price": "$19",
+                "period": "/月"
+            },
+            "others": {
+                "title": "其他平台",
+                "items": [
+                    "每笔销售 15%+ 佣金",
+                    "每个产品的上架费",
+                    "14-30 天付款冻结期",
+                    "被淹没在平台品牌下",
+                    "缺乏销售助推工具",
+                    "复杂且有限的分析",
+                    "有限的客户沟通"
+                ],
+                "cost_label": "成本",
+                "price": "$49",
+                "period": "/月"
+            },
+            "banner": {
+                "title": "每年为您的未来多投资 ",
+                "title_accent": "$4,200+ ",
+                "title_end": "",
+                "description": "不要因为成长而受到惩罚。即使您每月的营业额仅为 $2,000，收取佣金的平台每年也会从您的口袋里拿走超过 ",
+                "description_accent": "$4,000 ",
+                "description_end": "。使用 Sety，100% 的收入都属于您。",
+                "button": "立即开始保护您的收入",
+                "button_mobile": "立即开始"
+            }
+        },
+        "social_proof": {
+            "title": "内容创作者 ",
+            "title_accent": "最喜爱的平台",
+            "followers": "粉丝",
+            "testimonials": [
+                {
+                    "role": "健身教练",
+                    "quote": "0% 佣金模式改变了游戏规则。多亏了 Sety，我付出的每一分钱现在都直接进入我的账户。省去中间环节让我的业务增长了 40%！"
+                },
+                {
+                    "role": "数字创作者",
+                    "quote": "设置我的商店正好用了 2 分钟。将我的电子书和辅导套餐整合到一个专业的展示窗中，立即赢得了粉丝的信任。"
+                },
+                {
+                    "role": "设计师和艺术家",
+                    "quote": "这是我用来拓展全球市场最时尚的平台。我只需一个链接，就能以完美的用户体验向全世界展示我的设计模板。"
+                }
+            ]
+        },
+        "sticky_cta": {
+            "label": "立即开始",
+            "subtitle": "1 个月免费",
+            "button": "开设商店"
+        }
+    }
+}
