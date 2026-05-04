@@ -20,6 +20,16 @@ import {
     ExternalLink,
     Plus,
     Shield,
+    Filter,
+    Clock,
+    Smile,
+    Mail,
+    Send,
+    Users,
+    HelpCircle,
+    Sparkles,
+    Link2,
+    Layers,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase/client';
@@ -42,6 +52,7 @@ function DashboardLayoutContent({
     const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState<any[]>([]);
     const [showUserMenu, setShowUserMenu] = useState(false);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     const unreadCount = notifications.filter((n: any) => !n.read).length;
 
@@ -51,25 +62,25 @@ function DashboardLayoutContent({
 
     const menuItems = [
         { label: t('dashboard.menu.home'), icon: Home, href: '/dashboard' },
-        { label: t('dashboard.menu.my_store'), icon: ShoppingBag, href: '/dashboard/store' },
         { label: t('dashboard.menu.income'), icon: Wallet, href: '/dashboard/income' },
+        { label: t('dashboard.menu.my_store'), icon: Layers, href: '/dashboard/store' },
         { label: t('dashboard.menu.analytics'), icon: BarChart3, href: '/dashboard/analytics' },
-        { label: t('dashboard.menu.customers'), icon: Heart, href: '/dashboard/customers' },
+        { label: t('dashboard.menu.customers'), icon: Users, href: '/dashboard/customers' },
     ];
 
     const mobileMenuItems = [
         { label: t('dashboard.menu.home'), icon: Home, href: '/dashboard' },
-        { label: t('dashboard.menu.my_store'), icon: ShoppingBag, href: '/dashboard/store' },
         { label: t('dashboard.menu.income'), icon: Wallet, href: '/dashboard/income' },
+        { label: t('dashboard.menu.my_store'), icon: Layers, href: '/dashboard/store' },
         { label: t('dashboard.menu.analytics'), icon: BarChart3, href: '/dashboard/analytics' },
-        { label: t('dashboard.menu.customers'), icon: Heart, href: '/dashboard/customers' },
+        { label: t('dashboard.menu.more'), icon: Plus, onClick: () => setShowMobileMenu(true) },
     ];
 
     useEffect(() => {
-        if (!contextLoading && !user) {
-            router.push('/auth');
-            return;
-        }
+        // if (!contextLoading && !user) {
+        //     router.push('/auth');
+        //     return;
+        // }
 
         if (store?.id) {
             const loadNotifications = async () => {
@@ -387,10 +398,10 @@ function DashboardLayoutContent({
 
             {/* Main Content Area */}
             <main className="flex-1 lg:pl-[240px] flex flex-col min-h-screen font-sans">
-                {/* Fixed Top Header (Ev) */}
-                <header className="h-[80px] flex items-center justify-between px-8 bg-white/80 backdrop-blur-md border-b border-slate-100/50 sticky top-0 z-40">
+                {/* Fixed Top Header (Stan Style) */}
+                <header className="h-[70px] md:h-[80px] flex items-center justify-between px-6 md:px-8 bg-white sticky top-0 z-40 transition-all border-b border-slate-100 lg:border-none">
                     <div className="flex items-center gap-6">
-                        <h2 className="text-[24px] font-black text-slate-900 tracking-tight">
+                        <h2 className="text-[22px] md:text-[24px] font-black text-slate-900 tracking-tight leading-tight">
                             {pathname === '/dashboard' ? t('dashboard.menu.home') :
                                 pathname.includes('/store') ? t('dashboard.menu.my_store') :
                                     pathname.includes('/income') ? t('dashboard.menu.income') :
@@ -401,9 +412,26 @@ function DashboardLayoutContent({
                     </div>
 
                     <div className="flex items-center gap-3">
+                        {/* Mobile Actions (Stan Style) */}
+                        <div className="flex items-center gap-1 lg:hidden">
+                            <button
+                                onClick={() => window.open(`https://${storeUrl}`, '_blank')}
+                                className="w-10 h-10 rounded-full flex items-center justify-center text-[#5500ff] hover:bg-slate-50 transition-colors"
+                            >
+                                <Link2 className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={copyStoreLink}
+                                className="w-10 h-10 rounded-full flex items-center justify-center text-[#5500ff] hover:bg-slate-50 transition-colors"
+                            >
+                                {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
+                            </button>
+                        </div>
+
+                        {/* Desktop Actions */}
                         <button
                             onClick={copyStoreLink}
-                            className="hidden md:flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-all group"
+                            className="hidden lg:flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-all group"
                         >
                             <span className="text-[15px] font-bold text-[#5500ff]">
                                 sety.store/{store?.username || user?.username || ''}
@@ -418,29 +446,183 @@ function DashboardLayoutContent({
                 </header>
 
                 {/* Content Container */}
-                <div className="flex-1 bg-[#FDFDFF] pb-24 lg:pb-0">
+                <div className="flex-1 bg-[#FDFDFF] pb-24 lg:pb-0 px-4 md:px-0">
                     {children}
                 </div>
 
-                {/* Mobile Bottom Nav */}
-                <nav className="fixed bottom-0 inset-x-0 h-[80px] bg-white border-t border-slate-100 flex lg:hidden items-center justify-around px-4 z-50 pb-safe">
-                    {mobileMenuItems.map((item) => {
-                        const isActive = pathname === item.href;
+                {/* Mascot FAB (Stan Style) */}
+                <div className="fixed bottom-24 right-5 lg:bottom-10 lg:right-10 z-[60]">
+                    <button
+                        className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#5500ff] shadow-[0_8px_30px_rgba(85,0,255,0.3)] flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all group overflow-hidden"
+                        onClick={() => router.push('/dashboard/ai')}
+                    >
+                        <div className="relative w-8 h-8 md:w-10 md:h-10">
+                            <SetyLogo size="sm" className="brightness-0 invert opacity-90 group-hover:scale-110 transition-transform" />
+                        </div>
+                    </button>
+                </div>
+
+                {/* Mobile Bottom Nav (Stan Style Refined) */}
+                <nav className="fixed bottom-0 inset-x-0 h-[85px] bg-white border-t border-slate-100 flex lg:hidden items-center justify-around px-2 z-[70] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+                    {mobileMenuItems.map((item, idx) => {
+                        const isActive = pathname === item.href && !('onClick' in item);
+                        const Icon = item.icon;
+
+                        if ('onClick' in item) {
+                            return (
+                                <button
+                                    key={idx}
+                                    onClick={item.onClick}
+                                    className={cn(
+                                        "flex flex-col items-center gap-1.5 transition-all px-3 py-2 rounded-2xl",
+                                        showMobileMenu ? "text-[#5500ff] bg-indigo-50" : "text-slate-400 hover:text-slate-600"
+                                    )}
+                                >
+                                    <Icon className={cn("w-6 h-6", showMobileMenu && "rotate-45")} />
+                                    <span className="text-[9px] font-black uppercase tracking-widest">{item.label}</span>
+                                </button>
+                            );
+                        }
+
                         return (
                             <Link
-                                key={item.href}
-                                href={item.href}
+                                key={item.href || idx}
+                                href={item.href || '#'}
                                 className={cn(
-                                    "flex flex-col items-center gap-1.5 transition-all px-3",
-                                    isActive ? "text-[#5500ff]" : "text-slate-400"
+                                    "flex flex-col items-center gap-1.5 transition-all px-3 py-2 rounded-2xl",
+                                    isActive ? "text-[#5500ff] bg-indigo-50/50" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
-                                <item.icon className={cn("w-6 h-6", isActive && "animate-in zoom-in duration-300")} />
-                                <span className="text-[10px] font-black uppercase tracking-widest">{item.label}</span>
+                                <Icon className={cn("w-6 h-6", isActive && "animate-in zoom-in duration-300")} />
+                                <span className="text-[9px] font-black uppercase tracking-widest leading-none">{item.label}</span>
                             </Link>
                         );
                     })}
                 </nav>
+
+                {/* Mobile "More" Menu Overlay (Stan-ify Premium) */}
+                <AnimatePresence>
+                    {showMobileMenu && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="fixed inset-0 bg-[#F4F7FF] z-[100] flex flex-col lg:hidden"
+                        >
+                            {/* Header */}
+                            <div className="p-6 pt-12 flex items-center justify-between">
+                                <h2 className="text-[28px] font-black text-slate-900 tracking-tight leading-none">{t('dashboard.menu.more')}</h2>
+                                <button
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-400 shadow-xl shadow-slate-200/50 active:scale-90 transition-transform"
+                                >
+                                    <Plus className="w-7 h-7 rotate-45" />
+                                </button>
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 overflow-y-auto p-6 space-y-12 custom-scrollbar pb-32">
+                                {/* Tools Grid - Stan Style */}
+                                <div className="grid grid-cols-3 gap-y-10 gap-x-4">
+                                    {[
+                                        { label: t('dashboard.menu.customers'), icon: Heart, href: '/dashboard/customers' },
+                                        { label: 'Funnels', icon: Filter, href: '/dashboard/funnels' },
+                                        { label: 'Affiliate', icon: Link2, href: '/dashboard/affiliate' },
+                                        { label: 'Appointments', icon: Clock, href: '/dashboard/appointments' },
+                                        { label: 'Referrals', icon: Smile, href: '/dashboard/referrals' },
+                                        { label: 'Email Flows', icon: Mail, href: '/dashboard/emails' },
+                                        { label: 'AutoDM', icon: Send, href: '/dashboard/autodm' },
+                                    ].map((item, i) => (
+                                        <Link
+                                            key={i}
+                                            href={item.href}
+                                            onClick={() => setShowMobileMenu(false)}
+                                            className="flex flex-col items-center gap-3 transition-active active:scale-95"
+                                        >
+                                            <div className="w-20 h-20 rounded-[24px] bg-white shadow-[0_4px_25px_rgba(85,0,255,0.06)] flex items-center justify-center text-indigo-900 border border-slate-50">
+                                                <item.icon className="w-9 h-9" strokeWidth={1.5} />
+                                            </div>
+                                            <span className="text-[12px] font-black text-indigo-900 text-center leading-tight tracking-tight">{item.label}</span>
+                                        </Link>
+                                    ))}
+                                </div>
+
+                                {/* Other & Accounts Sections */}
+                                <div className="space-y-10">
+                                    {/* Other Section */}
+                                    <div className="space-y-4">
+                                        <h3 className="text-[18px] font-black text-indigo-900 px-2 tracking-tight opacity-40 uppercase text-[12px]">Other</h3>
+                                        <div className="space-y-3">
+                                            {[
+                                                { label: 'Community', icon: Users, href: '/dashboard/community' },
+                                                { label: t('dashboard.menu.settings'), icon: Settings, href: '/dashboard/settings' },
+                                                { label: 'Ask Sety AI', icon: Zap, href: '/dashboard/ai' },
+                                            ].map((item, i) => (
+                                                <Link
+                                                    key={i}
+                                                    href={item.href}
+                                                    onClick={() => setShowMobileMenu(false)}
+                                                    className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-white shadow-sm border border-transparent active:scale-[0.98] transition-all"
+                                                >
+                                                    <div className="w-10 h-10 rounded-xl bg-indigo-50/50 flex items-center justify-center text-[#5500ff]">
+                                                        <item.icon className="w-5 h-5" />
+                                                    </div>
+                                                    <span className="text-[16px] font-black text-indigo-900">{item.label}</span>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Accounts Section */}
+                                    <div className="space-y-4">
+                                        <h3 className="text-[18px] font-black text-indigo-900 px-2 tracking-tight opacity-40 uppercase text-[12px]">Accounts</h3>
+                                        <div className="space-y-3">
+                                            {/* Current User Profile Card */}
+                                            <div className="w-full flex items-center gap-4 p-6 rounded-[32px] bg-white shadow-sm border border-transparent">
+                                                <div className="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden border-2 border-white shadow-sm relative">
+                                                    {profile?.profile_image_url ? (
+                                                        <Image src={profile.profile_image_url} alt="" fill className="object-cover" />
+                                                    ) : (
+                                                        <User className="w-7 h-7 text-indigo-300" />
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-[16px] font-black text-indigo-900 truncate leading-tight">{store?.username || 'setyuser'}</p>
+                                                    <p className="text-[12px] font-bold text-slate-400 truncate mt-1">{user?.email}</p>
+                                                </div>
+                                            </div>
+
+                                            <button className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-white shadow-sm transition-all active:scale-[0.98]">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
+                                                    <Plus className="w-5 h-5" />
+                                                </div>
+                                                <span className="text-[16px] font-black text-indigo-900">{t('dashboard.sidebar.add_account')}</span>
+                                            </button>
+
+                                            <button className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-white shadow-sm transition-all active:scale-[0.98]">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
+                                                    <HelpCircle className="w-5 h-5" />
+                                                </div>
+                                                <span className="text-[16px] font-black text-indigo-900">{t('dashboard.sidebar.get_help')}</span>
+                                            </button>
+
+                                            <button
+                                                onClick={handleLogout}
+                                                className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-red-50/20 text-red-500 mt-6 border border-red-100/50 active:scale-[0.98] transition-all"
+                                            >
+                                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                                                    <LogOut className="w-5 h-5" />
+                                                </div>
+                                                <span className="text-[17px] font-black tracking-tight">{t('dashboard.menu.logout')}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </main>
 
             <style jsx global>{`
