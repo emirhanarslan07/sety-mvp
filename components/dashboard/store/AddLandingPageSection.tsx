@@ -74,16 +74,16 @@ export default function AddLandingPageSection({
                     <div className="w-10 h-10 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-slate-50">
                         <ArrowLeft className="w-5 h-5" />
                     </div>
-                    {t('store.actions.back')}
+                    {t('dashboard.store.actions.back')}
                 </button>
             </div>
 
             <div className="space-y-2 text-center max-w-2xl mx-auto">
                 <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight">
-                    {t('store.pages.empty_title')}
+                    {t('dashboard.store.pages.empty_title')}
                 </h2>
                 <p className="text-slate-400 font-bold text-lg leading-relaxed">
-                    {t('store.pages.empty_desc')}
+                    {t('dashboard.store.pages.empty_desc')}
                 </p>
             </div>
 
@@ -124,10 +124,10 @@ export default function AddLandingPageSection({
                         </div>
                         <div className="flex-1 relative z-10">
                             <h4 className="text-[17px] font-extrabold text-slate-800 tracking-tight group-hover:text-slate-900 transition-colors mb-1.5">
-                                {t(`store.product_types.${type.id}.title`) || type.title}
+                                {t(`dashboard.store.product_types.${type.id}.title`) || type.title}
                             </h4>
                             <p className="text-[14px] font-bold text-slate-400 leading-snug group-hover:text-slate-500 transition-colors">
-                                {t(`store.product_types.${type.id}.desc`) || type.description}
+                                {t(`dashboard.store.product_types.${type.id}.desc`) || type.description}
                             </p>
                         </div>
                         <div className="relative z-10 w-11 h-11 rounded-full bg-slate-50 text-slate-300 flex items-center justify-center group-hover:bg-[#5500ff] group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 shadow-sm group-hover:shadow-md">

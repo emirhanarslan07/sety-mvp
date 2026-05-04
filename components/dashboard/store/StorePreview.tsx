@@ -30,62 +30,62 @@ import { useTranslation } from '@/lib/i18n/context';
 
 export const getProductTypes = (t: (key: string) => string) => [
     {
-        id: 'collect_emails',
-        title: t('store.product_types.collect_emails.title'),
-        description: t('store.product_types.collect_emails.desc'),
-        icon: Mail,
-        color: 'bg-indigo-50 text-indigo-600',
-        comingSoon: false,
-    },
-    {
         id: 'digital_product',
-        title: t('store.product_types.digital_product.title'),
-        description: t('store.product_types.digital_product.desc'),
+        title: t('dashboard.store.product_types.digital_product.title'),
+        description: t('dashboard.store.product_types.digital_product.desc'),
         icon: Download,
         color: 'bg-blue-50 text-blue-600',
         comingSoon: false,
     },
     {
+        id: 'private_group',
+        title: t('dashboard.store.product_types.private_group.title'),
+        description: t('dashboard.store.product_types.private_group.desc'),
+        icon: ShieldCheck,
+        color: 'bg-[#0088cc] text-white', // Telegram Blue
+        comingSoon: false,
+    },
+    {
+        id: 'collect_emails',
+        title: t('dashboard.store.product_types.collect_emails.title'),
+        description: t('dashboard.store.product_types.collect_emails.desc'),
+        icon: Mail,
+        color: 'bg-indigo-50 text-indigo-600',
+        comingSoon: true,
+    },
+    {
         id: 'coaching_call',
-        title: t('store.product_types.coaching_call.title'),
-        description: t('store.product_types.coaching_call.desc'),
+        title: t('dashboard.store.product_types.coaching_call.title'),
+        description: t('dashboard.store.product_types.coaching_call.desc'),
         icon: Clock,
         iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg',
         color: 'bg-emerald-50 text-emerald-600',
-        comingSoon: false,
+        comingSoon: true,
     },
     {
         id: 'video_response',
-        title: t('store.product_types.video_response.title'),
-        description: t('store.product_types.video_response.desc'),
+        title: t('dashboard.store.product_types.video_response.title'),
+        description: t('dashboard.store.product_types.video_response.desc'),
         icon: Video,
         color: 'bg-teal-50 text-teal-600',
-        comingSoon: false,
-    },
-    {
-        id: 'private_group',
-        title: t('store.product_types.private_group.title'),
-        description: t('store.product_types.private_group.desc'),
-        icon: ShieldCheck,
-        color: 'bg-rose-50 text-rose-600',
-        comingSoon: false,
+        comingSoon: true,
     },
     {
         id: 'custom_product',
-        title: t('store.product_types.custom_product.title'),
-        description: t('store.product_types.custom_product.desc'),
+        title: t('dashboard.store.product_types.custom_product.title'),
+        description: t('dashboard.store.product_types.custom_product.desc'),
         icon: Sparkles,
         color: 'bg-amber-50 text-amber-600',
-        comingSoon: false,
+        comingSoon: true,
     },
     {
         id: 'sety_affiliate',
-        title: t('store.product_types.sety_affiliate.title'),
-        description: t('store.product_types.sety_affiliate.desc'),
+        title: t('dashboard.store.product_types.sety_affiliate.title'),
+        description: t('dashboard.store.product_types.sety_affiliate.desc'),
         icon: Trophy,
         isSetyLogo: true,
         color: 'bg-violet-50 text-[#5500ff]',
-        comingSoon: false,
+        comingSoon: true,
     }
 ];
 
@@ -104,7 +104,7 @@ export default function StorePreview({
         logo?: string | null;
         socialLinks?: {
             instagram?: string;
-            x?: string;
+            twitter?: string;
             youtube?: string;
             tiktok?: string;
         };
@@ -268,7 +268,7 @@ export default function StorePreview({
                                             "text-2xl font-black tracking-tight transition-all",
                                             theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white" : "text-slate-900"
                                         )}>
-                                            {displayName || t('store.preview.brand_name_placeholder')}
+                                            {displayName || t('dashboard.store.preview.brand_name_placeholder')}
                                         </h2>
                                         {isVerified && (
                                             <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/20">
@@ -282,7 +282,7 @@ export default function StorePreview({
                                         "text-[15px] font-semibold leading-relaxed px-4 transition-all",
                                         theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white/60" : "text-slate-500"
                                     )}>
-                                        {bio || t('store.preview.bio_placeholder')}
+                                        {bio || t('dashboard.store.preview.bio_placeholder')}
                                     </p>
                                 </div>
 
@@ -291,7 +291,7 @@ export default function StorePreview({
                                     <div className="flex items-center justify-center gap-3 mt-8">
                                         {[
                                             { id: 'instagram', icon: Instagram, url: socialLinks.instagram },
-                                            { id: 'x', icon: Zap, url: socialLinks.x },
+                                            { id: 'twitter', icon: Zap, url: socialLinks.twitter }, // Keeping Zap for X as common pattern in this project if no X icon
                                             { id: 'youtube', icon: Youtube, url: socialLinks.youtube },
                                             { id: 'tiktok', icon: VideoIcon, url: socialLinks.tiktok }
                                         ].filter(s => s.url).map((social) => (
@@ -399,7 +399,7 @@ export default function StorePreview({
                                                 <p className={cn(
                                                     "text-[11px] font-bold mt-0.5 transition-all opacity-80",
                                                     theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white/40" : "text-slate-400"
-                                                )}>{item.subtitle || (t(`store.product_types.${typeInfo.id}.desc`) || typeInfo.description).slice(0, 30) + '...'}</p>
+                                                )}>{item.subtitle || (t(`dashboard.store.product_types.${typeInfo.id}.desc`) || typeInfo.description).slice(0, 30) + '...'}</p>
                                             </div>
 
                                             <div
@@ -413,7 +413,7 @@ export default function StorePreview({
                                                     color: (theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'neo-brutalist' || theme === 'luxury-gold' || theme === 'cyber-future') && (color === '#C4FF00' || color === '#ffffff' || color === '#FACC15' || color === '#FBBF24' || color === '#06B6D4') ? '#000' : '#fff'
                                                 }}
                                             >
-                                                {item.price === 0 || !item.price ? t('store.preview.buy_button') : formatCurrency(item.price, item.currency || 'TRY')}
+                                                {item.price === 0 || !item.price ? t('dashboard.store.preview.free_button') : formatCurrency(item.price, item.currency || 'TRY')}
                                             </div>
                                         </div>
                                     );
@@ -444,7 +444,7 @@ export default function StorePreview({
                                             <h4 className={cn(
                                                 "text-[13px] font-black tracking-tight leading-tight transition-all",
                                                 theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white" : "text-slate-900"
-                                            )}>{t('store.preview.affiliate_badge_text')}</h4>
+                                            )}>{t('dashboard.store.preview.affiliate_badge_text')}</h4>
                                         </div>
                                         <ChevronRight className={cn(
                                             "w-4 h-4 transition-all",

@@ -27,11 +27,11 @@ export default function SettingsSection({
             {/* Announcement Banner */}
             <div className="space-y-4">
                 <label className="text-[14px] font-black text-slate-900 uppercase tracking-widest px-1">
-                    {t('store.sections.announcement_banner')}
+                    {t('dashboard.store.sections.announcement_banner')}
                 </label>
                 <div className="relative">
                     <Input
-                        placeholder={t('store.placeholders.announcement')}
+                        placeholder={t('dashboard.store.placeholders.announcement')}
                         value={announcement}
                         onChange={(e) => setAnnouncement(e.target.value)}
                         className="h-16 px-6 rounded-[24px] bg-slate-50/50 border-slate-100 font-bold focus:ring-[#5500ff]/10 focus:border-[#5500ff] transition-all pr-16"
@@ -41,14 +41,14 @@ export default function SettingsSection({
                     </div>
                 </div>
                 <p className="text-[12px] font-medium text-slate-400 px-1">
-                    {t('store.sections.announcement_desc')}
+                    {t('dashboard.store.sections.announcement_desc')}
                 </p>
             </div>
 
             {/* Affiliate Badge Toggle */}
             <div className="space-y-4">
                 <label className="text-[14px] font-black text-slate-900 uppercase tracking-widest px-1">
-                    {t('store.sections.sety_badge')}
+                    {t('dashboard.store.sections.sety_badge')}
                 </label>
                 <div
                     onClick={() => setShowAffiliateBadge(!showAffiliateBadge)}
@@ -68,10 +68,10 @@ export default function SettingsSection({
                         </div>
                         <div>
                             <h4 className={cn("text-[16px] font-black tracking-tight", showAffiliateBadge ? "text-slate-900" : "text-slate-400")}>
-                                {t('store.sections.show_sety_badge')}
+                                {t('dashboard.store.sections.show_sety_badge')}
                             </h4>
                             <p className="text-[13px] font-bold opacity-60">
-                                {t('store.sections.sety_badge_desc')}
+                                {t('dashboard.store.sections.sety_badge_desc')}
                             </p>
                         </div>
                     </div>

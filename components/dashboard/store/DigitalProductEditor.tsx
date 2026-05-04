@@ -5,6 +5,7 @@ import { Upload, Image as ImageLucide, Copy, Sparkles, BarChart3, User, Check, P
 import Image from 'next/image';
 import { useToast } from '@/context/ToastContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from '@/lib/i18n';
 
 // Shared components
 import ImageSelectorModal from './ImageSelectorModal';
@@ -43,6 +44,7 @@ export default function DigitalProductEditor({
     isSuccess = false
 }: DigitalProductEditorProps) {
     const { showToast } = useToast();
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'checkout' | 'options'>('checkout');
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [isAddFieldMenuOpen, setIsAddFieldMenuOpen] = useState(false);
@@ -183,13 +185,13 @@ export default function DigitalProductEditor({
                         active={activeTab === 'checkout'}
                         onClick={() => handleTabChange('checkout')}
                         icon={<ShoppingBag className="w-4 h-4" />}
-                        label="Ödeme Sayfası"
+                        label={t('dashboard.store.editors.tabs.checkout')}
                     />
                     <TabButton
                         active={activeTab === 'options'}
                         onClick={() => handleTabChange('options')}
                         icon={<Sparkles className="w-4 h-4" />}
-                        label="Seçenekler"
+                        label={t('dashboard.store.editors.tabs.options')}
                     />
                 </div>
 
@@ -199,7 +201,7 @@ export default function DigitalProductEditor({
                         {activeTab === 'checkout' && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-16">
                                 {/* Section 1: Image */}
-                                <EditorSection number={1} title="Görsel Seçin">
+                                <EditorSection number={1} title={t('dashboard.store.editors.sections.select_image')}>
                                     <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 flex items-center gap-10 group transition-all hover:shadow-2xl hover:shadow-slate-200/30">
                                         <div className="relative w-40 h-40 rounded-[32px] overflow-hidden bg-slate-50 border-2 border-slate-50 shadow-inner group-hover:scale-[1.02] transition-transform">
                                             {formData.image_url ? (
@@ -220,27 +222,27 @@ export default function DigitalProductEditor({
                                         </div>
                                         <div className="flex-1 space-y-6">
                                             <div className="space-y-2">
-                                                <h4 className="text-[17px] font-black text-slate-900 tracking-tight leading-none">Görselinizi Buraya Sürükleyin</h4>
-                                                <p className="text-[13px] text-slate-400 font-bold uppercase tracking-wider">Önerilen: 1920 x 1080</p>
+                                                <h4 className="text-[17px] font-black text-slate-900 tracking-tight leading-none">{t('dashboard.store.editors.image_selection')}</h4>
+                                                <p className="text-[13px] text-slate-400 font-bold uppercase tracking-wider">{t('dashboard.store.editors.image_hint')}</p>
                                             </div>
                                             <button
                                                 onClick={() => setIsImageModalOpen(true)}
                                                 className="h-14 px-8 rounded-2xl border-2 border-[#5500ff]/10 text-[#5500ff] font-black text-[14px] hover:bg-[#5500ff] hover:text-white transition-all shadow-sm active:scale-95"
                                             >
-                                                Görsel Seç
+                                                {t('dashboard.store.editors.select_button')}
                                             </button>
                                         </div>
                                     </div>
                                 </EditorSection>
 
                                 {/* Section 2: Write Description */}
-                                <EditorSection number={2} title="Açıklama Yazın">
+                                <EditorSection number={2} title={t('dashboard.store.editors.sections.write_description')}>
                                     <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 space-y-10 transition-all hover:shadow-2xl hover:shadow-slate-200/30">
                                         <PremiumInput
-                                            label="Başlık *"
+                                            label={t('dashboard.store.editors.fields.title_label')}
                                             value={formData.title}
                                             onChange={(e) => updateData('title', e.target.value)}
-                                            placeholder="Get My [Template/eBook/Course] Now!"
+                                            placeholder={t('dashboard.store.editors.placeholders.title')}
                                         />
 
                                         <div className="space-y-4">
@@ -251,22 +253,22 @@ export default function DigitalProductEditor({
                                         </div>
 
                                         <PremiumInput
-                                            label="Alt Başlık"
+                                            label={t('dashboard.store.editors.fields.bottom_title_label')}
                                             value={formData.bottom_title}
                                             onChange={(e) => updateData('bottom_title', e.target.value)}
-                                            placeholder="Get My Guide"
+                                            placeholder={t('dashboard.store.editors.placeholders.bottom_title')}
                                         />
                                         <PremiumInput
-                                            label="Buton Metni *"
+                                            label={t('dashboard.store.editors.fields.button_text_label')}
                                             value={formData.button_text}
                                             onChange={(e) => updateData('button_text', e.target.value)}
-                                            placeholder="PURCHASE"
+                                            placeholder={t('dashboard.store.editors.placeholders.button_text')}
                                         />
                                     </div>
                                 </EditorSection>
 
                                 {/* Section 3: Pricing */}
-                                <EditorSection number={3} title="Fiyat Belirleyin">
+                                <EditorSection number={3} title={t('dashboard.store.editors.sections.pricing')}>
                                     <PricingSection
                                         data={pricingData}
                                         onChange={(field: string, value: string | boolean) => updatePricing(field, value)}
@@ -274,7 +276,7 @@ export default function DigitalProductEditor({
                                 </EditorSection>
 
                                 {/* Section 4: Collect Info */}
-                                <EditorSection number={4} title="Bilgi Toplayın">
+                                <EditorSection number={4} title={t('dashboard.store.editors.sections.collect_info')}>
                                     <FieldManager
                                         fields={formData.fields}
                                         updateField={updateField}
@@ -289,7 +291,7 @@ export default function DigitalProductEditor({
                                 </EditorSection>
 
                                 {/* Section 5: Upload */}
-                                <EditorSection number={5} title="Dijital Ürün Yükle">
+                                <EditorSection number={5} title={t('dashboard.store.editors.sections.upload_product')}>
                                     <FileUploadSection
                                         uploadedFileUrl={uploadedFileUrl}
                                         redirectUrl={redirectUrl}
@@ -301,13 +303,13 @@ export default function DigitalProductEditor({
                                 {/* Unified Action Bar */}
                                 <div className="pt-20 border-t border-slate-100 mt-10">
                                     <div className="flex items-center justify-between">
-                                        <p className="text-[12px] text-slate-300 font-black italic">Bu sayfayı iyileştirin</p>
+                                        <p className="text-[12px] text-slate-300 font-black italic">{t('dashboard.store.editors.improve_page')}</p>
                                         <div className="flex items-center gap-4">
                                             <button
-                                                onClick={() => showToast('Taslak olarak kaydedildi', 'success')}
+                                                onClick={() => showToast(t('dashboard.store.editors.draft_saved'), 'success')}
                                                 className="h-14 px-8 rounded-2xl font-black text-[14px] text-slate-400 hover:text-slate-900 transition-colors"
                                             >
-                                                Taslak Olarak Kaydet
+                                                {t('dashboard.store.editors.save_draft')}
                                             </button>
                                             <button
                                                 onClick={handleSave}
@@ -318,11 +320,11 @@ export default function DigitalProductEditor({
                                                 )}
                                             >
                                                 {isSuccess ? (
-                                                    <><Check className="w-5 h-5 text-[#C4FF00]" /> Yayınlandı ✨</>
+                                                    <><Check className="w-5 h-5 text-[#C4FF00]" /> {t('dashboard.store.editors.published')}</>
                                                 ) : isSaving ? (
-                                                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Yükleniyor...</>
+                                                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('dashboard.store.editors.publishing')}</>
                                                 ) : (
-                                                    'Yayınla ✨'
+                                                    t('dashboard.store.editors.publish')
                                                 )}
                                             </button>
                                         </div>

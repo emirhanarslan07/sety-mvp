@@ -36,13 +36,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         if (savedLang && supported.includes(savedLang)) {
             setLangState(savedLang);
         } else {
-            // Auto detect browser language
-            const browserLang = navigator.language.split('-')[0];
-            if (supported.includes(browserLang)) {
-                setLangState(browserLang as Language);
-            } else {
-                setLangState('en'); // Global fallback to English
-            }
+            setLangState('tr'); // Global strict fallback to Turkish
         }
     }, []);
 
@@ -64,27 +58,54 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     const isRTL = lang === 'ar';
 
     const t = (path: string, options?: { returnObjects?: boolean } & Record<string, any>): any => {
-        const keys = path.split('.');
-        let result: any = dictionaries[lang] || dictionaries['en']; // Fallback to EN if lang not loaded
+        const translate = (p: string): any => {
+            const keys = p.split('.');
+            let result: any = dictionaries[lang] || dictionaries['en'];
 
-        for (const key of keys) {
-            if (result && typeof result === 'object' && key in result) {
-                result = result[key];
-            } else {
-                // If not found in current lang, try English
-                let enResult = dictionaries['en'];
-                for (const enKey of keys) {
-                    if (enResult && typeof enResult === 'object' && enKey in enResult) {
-                        enResult = enResult[enKey];
+            for (const key of keys) {
+                if (result && typeof result === 'object' && key in result) {
+                    result = result[key];
+                } else {
+                    return null;
+                }
+            }
+            return result;
+        };
+
+        // 1. Try original path in current language
+        let result = translate(path);
+
+        // 2. If not found, try adding 'dashboard.' prefix
+        if (result === null && !path.startsWith('dashboard.')) {
+            result = translate(`dashboard.${path}`);
+        }
+
+        // 3. Fallback to English if still not found
+        if (result === null) {
+            const enDict = dictionaries['en'];
+            const translateEn = (p: string): any => {
+                const keys = p.split('.');
+                let res = enDict;
+                for (const key of keys) {
+                    if (res && typeof res === 'object' && key in res) {
+                        res = res[key];
                     } else {
-                        return path;
+                        return null;
                     }
                 }
-                result = enResult;
-                break;
+                return res;
+            };
+
+            result = translateEn(path);
+            if (result === null && !path.startsWith('dashboard.')) {
+                result = translateEn(`dashboard.${path}`);
             }
         }
 
+        // 4. Final fallback to path name
+        if (result === null) return path;
+
+        // Handle string interpolation
         if (typeof result === 'string' && options) {
             Object.entries(options).forEach(([key, value]) => {
                 if (key !== 'returnObjects') {

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Plus, Check, PenLine, ExternalLink, Trash2, Rocket, ArrowRight } from 'lucide-react';
+import { Plus, Check, PenLine, ExternalLink, Trash2, Rocket, ArrowRight, Layout } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -33,10 +33,10 @@ export default function PagesSection({
 
                 <div className="space-y-4 max-w-2xl mx-auto">
                     <h2 className="text-[36px] font-black text-slate-900 tracking-tight leading-tight">
-                        {t('store.pages.empty_title')}
+                        {t('dashboard.store.pages.empty_title')}
                     </h2>
                     <p className="text-slate-400 font-bold text-lg leading-relaxed">
-                        {t('store.pages.empty_desc')}
+                        {t('dashboard.store.pages.empty_desc')}
                     </p>
                 </div>
 
@@ -46,7 +46,7 @@ export default function PagesSection({
                     onClick={onAddPage}
                     className="h-20 px-12 rounded-[32px] bg-slate-900 text-white text-[18px] font-black flex items-center gap-4 shadow-2xl shadow-slate-900/20 hover:bg-[#5500ff] transition-all group"
                 >
-                    {t('store.actions.create')}
+                    {t('dashboard.store.actions.create')}
                     <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
             </div>
@@ -54,72 +54,73 @@ export default function PagesSection({
     }
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="flex items-center justify-between">
+        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex items-center justify-between px-2">
                 <div className="space-y-1">
-                    <h3 className="text-[20px] font-black text-slate-900 tracking-tight">
-                        {t('store.pages.title')}
+                    <h3 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">
+                        {t('dashboard.store.pages.title')}
                     </h3>
-                    <p className="text-slate-400 font-bold text-[14px]">
-                        {t('store.pages.desc')}
-                    </p>
                 </div>
                 <Button
                     onClick={onAddPage}
-                    className="h-12 px-6 rounded-full bg-slate-900 text-white text-[13px] font-black flex items-center gap-2"
+                    className="h-12 w-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white transition-all shadow-lg shadow-indigo-100 flex items-center justify-center p-0"
                 >
-                    <Plus className="w-5 h-5" />
-                    {t('store.actions.add_new')}
+                    <Plus className="w-6 h-6 stroke-[3px]" />
                 </Button>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-                {landingPages.map((page) => (
-                    <div
-                        key={page.id}
-                        className="p-6 rounded-[32px] bg-white border border-slate-100/50 flex items-center justify-between group hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500"
-                    >
-                        <div className="flex items-center gap-6">
-                            <div className="w-14 h-14 rounded-2xl bg-indigo-50/50 flex items-center justify-center text-[#5500ff]">
-                                {page.id === 'main' ? (
-                                    <Rocket className="w-7 h-7" />
+                {landingPages.map((page) => {
+                    const isMain = page.id === 'main';
+                    return (
+                        <div
+                            key={page.id}
+                            className="p-6 rounded-[32px] bg-white border border-slate-100/60 flex items-center gap-6 group hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] transition-all duration-500"
+                        >
+                            {/* Page Icon */}
+                            <div className="w-16 h-16 rounded-[20px] bg-slate-50 flex-shrink-0 flex items-center justify-center border border-slate-100 group-hover:scale-105 transition-transform duration-500 text-[#5500ff]">
+                                {isMain ? (
+                                    <Rocket className="w-8 h-8" strokeWidth={1.5} />
                                 ) : (
-                                    <Plus className="w-7 h-7" />
+                                    <Layout className="w-8 h-8" strokeWidth={1.5} />
                                 )}
                             </div>
-                            <div>
-                                <div className="flex items-center gap-3 mb-1">
-                                    <h4 className="text-[17px] font-black text-slate-900">
-                                        {page.id === 'main' ? t('store.modals.edit_page.main_page_title') : page.title}
+
+                            {/* Details */}
+                            <div className="flex-1 min-w-0 space-y-1">
+                                <div className="flex items-center gap-3">
+                                    <h4 className="text-[17px] md:text-[19px] font-black text-slate-900 truncate tracking-tight leading-tight">
+                                        {isMain ? t('dashboard.store.modals.edit_page.main_page_title') : page.title}
                                     </h4>
                                     {page.isDefault && (
-                                        <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-bold flex items-center gap-1.5">
-                                            <Check className="w-3 h-3" /> {t('store.pages.default_badge')}
+                                        <span className="px-3 py-1 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[11px] font-black tracking-tight">
+                                            {t('dashboard.store.pages.default_badge').toUpperCase()}
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-slate-400 font-bold text-[13px]">sety.store/kullanici{page.slug ? '/' + page.slug : ''}</p>
+                                <p className="text-slate-400 font-bold text-[14px]">sety.store/kullanici{page.slug ? '/' + page.slug : ''}</p>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => handleEditPage(page)}
+                                    className="w-12 h-12 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all border border-transparent active:scale-90"
+                                >
+                                    <PenLine className="w-6 h-6" />
+                                </button>
+                                <button className="w-12 h-12 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all border border-transparent active:scale-90">
+                                    <ExternalLink className="w-6 h-6" />
+                                </button>
+                                {!page.isDefault && (
+                                    <button className="w-12 h-12 rounded-full hover:bg-rose-50 flex items-center justify-center text-rose-300 hover:text-rose-500 transition-all border border-transparent active:scale-90">
+                                        <Trash2 className="w-6 h-6" />
+                                    </button>
+                                )}
                             </div>
                         </div>
-
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => handleEditPage(page)}
-                                className="w-11 h-11 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all border border-transparent hover:border-slate-100"
-                            >
-                                <PenLine className="w-5 h-5" />
-                            </button>
-                            <button className="w-11 h-11 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all border border-transparent hover:border-slate-100">
-                                <ExternalLink className="w-5 h-5" />
-                            </button>
-                            {!page.isDefault && (
-                                <button className="w-11 h-11 rounded-full hover:bg-rose-50 flex items-center justify-center text-rose-300 hover:text-rose-500 transition-all border border-transparent hover:border-rose-100">
-                                    <Trash2 className="w-5 h-5" />
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

@@ -1,9 +1,8 @@
-'use client';
-
 import React, { useState, useRef } from 'react';
 import { Upload, FileText, X, Link, ExternalLink, File } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface FileUploadSectionProps {
     uploadedFileUrl: string;
@@ -14,6 +13,7 @@ interface FileUploadSectionProps {
 
 export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded, onRedirectUrlChange }: FileUploadSectionProps) {
     const { showToast } = useToast();
+    const { t } = useTranslation();
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedFileName, setUploadedFileName] = useState('');
@@ -25,7 +25,7 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
         setIsUploading(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('Oturum bulunamadı');
+            if (!user) throw new Error(t('common.session_not_found'));
 
             const fileExt = file.name.split('.').pop();
             const fileName = `${Math.random().toString(36).slice(2)}.${fileExt}`;
@@ -43,9 +43,9 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
 
             onFileUploaded(publicUrl, file.name);
             setUploadedFileName(file.name);
-            showToast('Dosya başarıyla yüklendi! ✅', 'success');
+            showToast(t('dashboard.store.editors.upload.upload_success'), 'success');
         } catch (err: any) {
-            showToast(`Yükleme hatası: ${err.message}`, 'error');
+            showToast(`${t('dashboard.store.editors.upload.upload_error')}: ${err.message}`, 'error');
         } finally {
             setIsUploading(false);
         }
@@ -62,7 +62,7 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
         <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 space-y-8 transition-all hover:shadow-2xl hover:shadow-slate-200/30">
             <div className="space-y-2">
                 <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest">
-                    💡 Satın alan müşterilere otomatik olarak gönderilecek
+                    {t('dashboard.store.editors.upload.delivery_hint')}
                 </p>
             </div>
 
@@ -72,13 +72,13 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                     onClick={() => setUseRedirect(false)}
                     className={`flex-1 h-11 rounded-2xl text-[13px] font-black transition-all border ${!useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
                 >
-                    📁 Dosya Yükle
+                    {t('dashboard.store.editors.upload.file_tab')}
                 </button>
                 <button
                     onClick={() => setUseRedirect(true)}
                     className={`flex-1 h-11 rounded-2xl text-[13px] font-black transition-all border ${useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
                 >
-                    🔗 URL&apos;ye Yönlendir
+                    {t('dashboard.store.editors.upload.url_tab')}
                 </button>
             </div>
 
@@ -90,8 +90,8 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                             <FileText className="w-5 h-5 text-emerald-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[14px] font-black text-emerald-800 truncate">{uploadedFileName || 'Dosya yüklendi'}</p>
-                            <p className="text-[12px] text-emerald-600 font-medium">Müşteriye otomatik gönderilecek ✅</p>
+                            <p className="text-[14px] font-black text-emerald-800 truncate">{uploadedFileName || t('dashboard.store.editors.upload.file_uploaded')}</p>
+                            <p className="text-[12px] text-emerald-600 font-medium">{t('dashboard.store.editors.upload.auto_delivery_msg')}</p>
                         </div>
                         <button
                             onClick={() => { onFileUploaded('', ''); setUploadedFileName(''); }}
@@ -117,14 +117,14 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                         </div>
                         <div className="text-center">
                             <p className="text-[15px] font-black text-slate-700">
-                                {isUploading ? 'Yükleniyor...' : 'Dosyanı buraya sürükle'}
+                                {isUploading ? t('dashboard.store.editors.publishing') : t('dashboard.store.editors.upload.drag_drop_title')}
                             </p>
                             <p className="text-[13px] text-slate-400 font-medium mt-1">
-                                veya <span className="text-[#5500ff] font-black">tıkla ve seç</span>
+                                {t('dashboard.store.editors.upload.or_choose')}
                             </p>
                         </div>
                         <p className="text-[11px] text-slate-300 font-medium">
-                            PDF, ZIP, MP4, MP3, PNG, DOCX — Maks. 500MB
+                            {t('dashboard.store.editors.upload.file_types_hint')}
                         </p>
                         <input
                             ref={fileInputRef}
@@ -146,12 +146,12 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                             type="url"
                             value={redirectUrl}
                             onChange={(e) => onRedirectUrlChange(e.target.value)}
-                            placeholder="https://drive.google.com/..."
+                            placeholder={t('dashboard.store.editors.upload.url_placeholder')}
                             className="w-full h-14 pl-12 pr-5 bg-slate-50 border border-slate-100 rounded-2xl text-[14px] font-medium text-slate-700 focus:ring-4 focus:ring-[#5500ff]/5 focus:border-[#5500ff] outline-none transition-all placeholder:text-slate-300"
                         />
                     </div>
                     <p className="text-[12px] text-slate-400 font-medium ml-1">
-                        Google Drive, Dropbox, Notion, YouTube gibi linkler kullanabilirsiniz.
+                        {t('dashboard.store.editors.upload.url_hint')}
                     </p>
                 </div>
             )}

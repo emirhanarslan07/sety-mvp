@@ -21,7 +21,7 @@ export function Navbar() {
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 group">
                     <SetyLogo size="md" className="group-hover:scale-110 transition-transform" />
-                    <span className="text-[26px] font-bold tracking-tight text-foreground font-logo">
+                    <span translate="no" className="notranslate text-[26px] font-bold tracking-tight text-foreground font-logo">
                         Sety
                     </span>
                 </Link>

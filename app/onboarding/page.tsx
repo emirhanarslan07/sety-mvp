@@ -366,9 +366,7 @@ export default function OnboardingPage() {
                     </CardContent>
                 </Card>
 
-                <p className="text-center mt-10 text-[13px] font-medium text-slate-400">
-                    Sety MVP • Profesyonel dijital mağaza çözümü
-                </p>
+                {/* Removed Sety MVP footer text */}
             </div>
         </div>
     );

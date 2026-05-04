@@ -1,12 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
     ChevronRight,
     Plus,
     Zap,
-    Share2,
-    Link as LinkIcon
+    AlertCircle,
 } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n/context';
 import { useDashboard } from '@/context/DashboardContext';
@@ -21,103 +21,134 @@ export default function DashboardPage() {
 
     if (loading) return <DashboardSkeleton />;
 
-    if (!store && !loading) {
-        router.push('/onboarding');
-        return null;
-    }
-
     return (
-        <div className="max-w-[1200px] mx-auto px-8 py-16 space-y-16">
-            {/* Greeting Section */}
-            <div className="space-y-3">
-                <h1 className="text-[36px] font-black text-slate-900 tracking-tight leading-tight font-plus-jakarta transition-all">
-                    {t('dashboard.greeting')} {profile?.full_name?.split(' ')[0] || '...'} 👋
+        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6 md:py-16 space-y-8 md:space-y-16 pb-32">
+            {/* Warning Banner (Stan Style) */}
+            {(() => {
+                if (!profile) return null;
+                const createdAt = new Date(profile.created_at);
+                const now = new Date();
+                const diffInHours = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
+                const hasPayments = profile.payment_config?.stripe?.connected || profile.payment_config?.manual?.enabled;
+                
+                if (diffInHours < 24 || hasPayments) return null;
+
+                return (
+                    <div className="w-full bg-[#FFFBEB] border border-amber-100 rounded-3xl p-4 md:p-6 flex items-start gap-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-amber-500 shadow-sm shrink-0">
+                            <AlertCircle className="w-5 h-5" />
+                        </div>
+                        <div className="flex-1 space-y-1">
+                            <p className="text-[15px] font-black text-slate-900 leading-tight">{t('dashboard.payout_warning')}</p>
+                            <p className="text-[13px] font-bold text-slate-500 leading-relaxed">
+                                {t('dashboard.payout_warning_desc')}
+                            </p>
+                            <button
+                                onClick={() => router.push('/dashboard/settings')}
+                                className="text-[13px] font-black text-amber-600 underline underline-offset-4 mt-2 block"
+                            >
+                                {t('dashboard.payout_setup')}
+                            </button>
+                        </div>
+                    </div>
+                );
+            })()}
+
+            {/* Premium Greeting Section */}
+            <div className="space-y-3 px-2">
+                <h1 className="text-[32px] md:text-[48px] font-black text-[#5500ff] tracking-tight leading-[1.1] font-plus-jakarta">
+                    {t('dashboard.greeting')}, {profile?.full_name?.split(' ')[0] || '...'} 👋
                 </h1>
-                <p className="text-[26px] font-black text-primary tracking-tighter leading-tight font-plus-jakarta">
+                <p className="text-[20px] md:text-[24px] font-black text-slate-800 tracking-tight leading-tight font-plus-jakarta">
                     {t('dashboard.subtitle')}
                 </p>
             </div>
 
-            {/* Stan-style Action Cards */}
-            <div className="space-y-6 max-w-[520px]">
-                {/* Theme Selector Card */}
+            {/* Dashboard Action Cards */}
+            <div className="space-y-4 max-w-[640px]">
+                {/* Market Your Products Card */}
                 <button
-                    onClick={() => router.push('/dashboard/store?tab=design')}
-                    className="w-full bg-white rounded-[32px] p-8 flex items-center justify-between border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all group text-left relative overflow-hidden"
+                    onClick={() => router.push('/dashboard/analytics')}
+                    className="w-full bg-white rounded-[28px] p-6 md:p-7 flex items-center justify-between gap-6 border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(85,0,255,0.06)] hover:-translate-y-1 transition-all group text-left relative overflow-hidden"
                 >
-                    <div className="flex-1 space-y-2 pr-6 relative z-10">
+                    <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
-                            <span className="text-[19px] font-black text-slate-900 tracking-tight">{t('dashboard.cards.theme.title')}</span>
-                            <div className="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all">
-                                <ChevronRight className="w-4 h-4" />
-                            </div>
+                            <span className="text-[19px] md:text-[21px] font-black text-slate-900 tracking-tight leading-tight">{t('dashboard.actions.market_products')}</span>
+                            <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
                         </div>
-                        <p className="text-[14px] text-slate-400 font-bold leading-relaxed opacity-80">
-                            {t('dashboard.cards.theme.desc')}
+                        <p className="text-[15px] text-slate-400 font-bold leading-relaxed max-w-[280px]">
+                            {t('dashboard.actions.market_products_desc')}
                         </p>
                     </div>
-                    <div className="w-24 h-24 rounded-[28px] bg-slate-50/50 flex items-center justify-center p-3 group-hover:bg-primary/5 transition-colors shrink-0">
-                        <div className="w-full h-full rounded-xl bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col gap-1.5 p-2">
-                            <div className="w-full h-2.5 bg-primary/20 rounded-full" />
-                            <div className="w-3/4 h-1.5 bg-slate-100 rounded-full" />
-                            <div className="w-1/2 h-1.5 bg-slate-100 rounded-full" />
+
+                    <div className="relative w-24 h-24 md:w-28 md:h-28 shrink-0">
+                        <div className="absolute inset-0 bg-[#FFF2E5] rounded-[24px]" />
+                        <div className="relative w-full h-full p-2">
+                            <Image
+                                src="/images/dashboard/market_products.png"
+                                alt=""
+                                fill
+                                className="object-cover rounded-[18px]"
+                            />
                         </div>
                     </div>
                 </button>
 
-                {/* Add Product Card */}
+                {/* Add a Product Card */}
                 <button
                     onClick={() => router.push('/dashboard/store?tab=store&action=add')}
-                    className="w-full bg-white rounded-[32px] p-8 flex items-center justify-between border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all group text-left relative overflow-hidden"
+                    className="w-full bg-white rounded-[28px] p-6 md:p-7 flex items-center justify-between gap-6 border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(85,0,255,0.06)] hover:-translate-y-1 transition-all group text-left relative overflow-hidden"
                 >
-                    <div className="flex-1 space-y-2 pr-6 relative z-10">
+                    <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
-                            <span className="text-[19px] font-black text-slate-900 tracking-tight">{t('dashboard.cards.products.title')}</span>
-                            <div className="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all">
-                                <ChevronRight className="w-4 h-4" />
-                            </div>
+                            <span className="text-[19px] md:text-[21px] font-black text-slate-900 tracking-tight leading-tight">{t('dashboard.actions.add_product')}</span>
+                            <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
                         </div>
-                        <p className="text-[14px] text-slate-400 font-bold leading-relaxed opacity-80">
-                            {t('dashboard.cards.products.desc')}
+                        <p className="text-[15px] text-slate-400 font-bold leading-relaxed max-w-[280px]">
+                            {t('dashboard.actions.add_product_desc')}
                         </p>
                     </div>
-                    <div className="w-24 h-24 rounded-[28px] bg-slate-50/50 flex items-center justify-center p-3 group-hover:bg-primary/5 transition-colors shrink-0">
-                        <div className="flex flex-col gap-2 w-full">
-                            <div className="h-6 bg-white rounded-[10px] border border-slate-100 shadow-sm flex items-center px-2">
-                                <Plus className="w-3 h-3 text-primary stroke-[3px]" />
-                            </div>
-                            <div className="h-6 bg-white rounded-[10px] border border-slate-100 shadow-sm" />
+
+                    <div className="relative w-24 h-24 md:w-28 md:h-28 shrink-0">
+                        <div className="absolute inset-0 bg-[#E6F4FF] rounded-[24px]" />
+                        <div className="relative w-full h-full p-2">
+                            <Image
+                                src="/images/dashboard/add_product.png"
+                                alt=""
+                                fill
+                                className="object-cover rounded-[18px]"
+                            />
                         </div>
                     </div>
                 </button>
 
-                {/* Share Store Card */}
+                {/* Ask Sety Card */}
                 <button
-                    onClick={() => {
-                        const url = `sety.store/${store?.username}`;
-                        navigator.clipboard.writeText(`https://${url}`);
-                        showToast(t('dashboard.toast.store_link_copied'), 'success');
-                    }}
-                    className="w-full bg-white rounded-[32px] p-8 flex items-center justify-between border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-1 transition-all group text-left relative overflow-hidden"
+                    onClick={() => router.push('/dashboard/ai')}
+                    className="w-full bg-white rounded-[28px] p-6 md:p-7 flex items-center justify-between gap-6 border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(85,0,255,0.06)] hover:-translate-y-1 transition-all group text-left relative overflow-hidden"
                 >
-                    <div className="flex-1 space-y-2 pr-6 relative z-10">
+                    <div className="flex-1 space-y-2">
                         <div className="flex items-center gap-2">
-                            <span className="text-[19px] font-black text-slate-900 tracking-tight">{t('dashboard.cards.share.title')}</span>
-                            <div className="w-6 h-6 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all">
-                                <ChevronRight className="w-4 h-4" />
-                            </div>
+                            <span className="text-[19px] md:text-[21px] font-black text-slate-900 tracking-tight leading-tight">{t('dashboard.actions.ask_sety')}</span>
+                            <span className="text-xl group-hover:translate-x-1 transition-transform">→</span>
                         </div>
-                        <p className="text-[14px] text-slate-400 font-bold leading-relaxed opacity-80">
-                            {t('dashboard.cards.share.desc', { url: `sety.store/${store?.username}` })}
+                        <p className="text-[15px] text-slate-400 font-bold leading-relaxed max-w-[280px]">
+                            {t('dashboard.actions.ask_sety_desc')}
                         </p>
                     </div>
-                    <div className="w-24 h-24 rounded-[28px] bg-slate-50/50 flex items-center justify-center p-3 group-hover:bg-primary/5 transition-colors shrink-0">
-                        <div className="w-14 h-14 rounded-2xl bg-white shadow-xl shadow-slate-200/40 border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <Share2 className="w-6 h-6 text-primary" />
+
+                    <div className="relative w-24 h-24 md:w-28 md:h-28 shrink-0">
+                        <div className="absolute inset-0 bg-white rounded-[24px]" />
+                        <div className="relative w-full h-full">
+                            <Image
+                                src="/images/dashboard/ask_sety.png"
+                                alt=""
+                                fill
+                                className="object-contain"
+                            />
                         </div>
                     </div>
                 </button>
-
             </div>
         </div>
     );

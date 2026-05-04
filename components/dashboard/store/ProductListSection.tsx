@@ -17,7 +17,8 @@ import {
     Heart,
     Gift,
     Book,
-    Music
+    Music,
+    ShoppingBag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -46,41 +47,44 @@ export default function ProductListSection({
     const productTypes = getProductTypes((key) => t(key));
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-10">
             <div className="flex items-center justify-between px-2">
-                <h3 className="text-[14px] font-bold text-slate-900 uppercase tracking-[0.2em] opacity-60">
-                    {t('store.sections.my_products')}
+                <h3 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">
+                    {t('dashboard.store.sections.my_products')}
                 </h3>
                 <Button
                     onClick={() => setShowAddProduct(true)}
-                    className="h-10 px-6 rounded-full bg-slate-900 hover:bg-black text-white text-[12px] font-bold flex items-center gap-2 transition-all shadow-lg shadow-slate-200"
+                    className="h-12 w-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white transition-all shadow-lg shadow-indigo-100 flex items-center justify-center p-0"
                 >
-                    <Plus className="w-4 h-4" />
-                    {t('store.actions.add_new')}
+                    <Plus className="w-6 h-6 stroke-[3px]" />
                 </Button>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 <AnimatePresence mode="popLayout">
                     {products.map((item, index) => {
                         const typeInfo = productTypes.find(t => t.id === item.type) || productTypes[1];
+                        const isActive = item.status === 'active';
+
                         return (
                             <motion.div
                                 key={item.id}
                                 layout
-                                initial={{ opacity: 0, scale: 0.95 }}
+                                initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
+                                exit={{ opacity: 0, scale: 0.98 }}
                                 className={cn(
-                                    "p-4 rounded-[24px] bg-white border border-slate-100/60 flex items-center gap-5 group hover:shadow-xl hover:shadow-slate-200/40 transition-all duration-500",
-                                    item.status === 'draft' && "opacity-60 grayscale-[0.5]"
+                                    "p-6 rounded-[32px] bg-white border border-slate-100/60 flex items-center gap-6 group hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] transition-all duration-500",
+                                    !isActive && "opacity-70"
                                 )}
                             >
-                                <div className="p-2 cursor-grab active:cursor-grabbing text-slate-200 hover:text-slate-400 transition-colors">
-                                    <GripVertical className="w-5 h-5" />
+                                {/* Drag Handle */}
+                                <div className="text-slate-200 group-hover:text-slate-400 transition-colors cursor-grab active:cursor-grabbing">
+                                    <GripVertical className="w-6 h-6" />
                                 </div>
 
-                                <div className="w-16 h-16 rounded-[20px] bg-slate-50 flex-shrink-0 overflow-hidden relative group-hover:scale-105 transition-transform duration-500 border border-slate-100 flex items-center justify-center">
+                                {/* Icon / Image */}
+                                <div className="w-16 h-16 rounded-[20px] bg-slate-50 flex-shrink-0 overflow-hidden relative border border-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                                     {item.image_url ? (
                                         <img src={item.image_url} alt="" className="w-full h-full object-cover" />
                                     ) : (
@@ -105,57 +109,73 @@ export default function ProductListSection({
                                     )}
                                 </div>
 
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <h4 className="text-[15px] font-bold text-slate-900 truncate tracking-tight">{item.title}</h4>
-                                        {item.status === 'draft' && (
-                                            <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-400 text-[9px] font-bold uppercase tracking-widest">
-                                                {t('store.states.draft')}
-                                            </span>
-                                        )}
-                                    </div>
+                                {/* Details */}
+                                <div className="flex-1 min-w-0 space-y-1">
+                                    <h4 className="text-[17px] md:text-[19px] font-black text-slate-900 truncate tracking-tight leading-tight">{item.title}</h4>
                                     <div className="flex items-center gap-3">
-                                        <span className="text-[13px] font-bold text-[#5500ff]">
-                                            {item.price === 0 ? t('store.preview.free_button').toUpperCase() : formatCurrency(item.price, item.currency)}
-                                        </span>
-                                        <div className="w-1 h-1 rounded-full bg-slate-200" />
-                                        <span className="text-[12px] font-medium text-slate-400">
-                                            {t('store.states.sales_count', { count: 0 })}
+                                        <span className="text-[14px] font-black text-[#5500ff]">
+                                            {item.price === 0 ? t('dashboard.store.preview.free_button').toUpperCase() : formatCurrency(item.price, item.currency)}
                                         </span>
                                     </div>
                                 </div>
 
+                                {/* Status Toggle (Stan Style Tags) */}
+                                <div className="hidden md:flex items-center gap-3">
+                                    {isActive ? (
+                                        <span className="px-5 py-2.5 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[13px] font-black tracking-tight">
+                                            {t('dashboard.store.states.active')}
+                                        </span>
+                                    ) : (
+                                        <span className="px-5 py-2.5 rounded-full bg-slate-100 text-slate-400 text-[13px] font-black tracking-tight">
+                                            {t('dashboard.store.states.draft')}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {/* Action Button */}
                                 <div className="relative">
                                     <button
                                         onClick={() => setActiveActionMenu(activeActionMenu === item.id ? null : item.id)}
-                                        className="w-10 h-10 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all border border-transparent hover:border-slate-100"
+                                        className="w-12 h-12 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all border border-transparent active:scale-90"
                                     >
-                                        <MoreHorizontal className="w-5 h-5" />
+                                        <MoreHorizontal className="w-6 h-6" />
                                     </button>
 
                                     {activeActionMenu === item.id && (
-                                        <div className="absolute right-0 top-12 w-48 bg-white rounded-2xl shadow-2xl shadow-indigo-200/50 border border-slate-100 py-2 z-50 animate-in fade-in zoom-in-95 duration-200">
-                                            <button className="w-full px-4 py-2.5 text-[13px] font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-3 transition-colors">
-                                                <PenLine className="w-4 h-4" /> {t('store.actions.edit')}
-                                            </button>
-                                            <button
-                                                onClick={() => handleToggleStatus(item)}
-                                                className="w-full px-4 py-2.5 text-[13px] font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-3 transition-colors"
-                                            >
-                                                {item.status === 'active' ? (
-                                                    <><EyeOff className="w-4 h-4" /> {t('store.actions.archive')}</>
-                                                ) : (
-                                                    <><Eye className="w-4 h-4" /> {t('store.actions.publish')}</>
-                                                )}
-                                            </button>
-                                            <div className="h-px bg-slate-50 my-1 mx-2" />
-                                            <button
-                                                onClick={() => handleDeleteProduct(item.id)}
-                                                className="w-full px-4 py-2.5 text-[13px] font-bold text-rose-500 hover:bg-rose-50 flex items-center gap-3 transition-colors"
-                                            >
-                                                <Trash2 className="w-4 h-4" /> {t('store.actions.delete')}
-                                            </button>
-                                        </div>
+                                        <>
+                                            <div
+                                                className="fixed inset-0 z-40"
+                                                onClick={() => setActiveActionMenu(null)}
+                                            />
+                                            <div className="absolute right-0 top-14 w-52 bg-white rounded-[28px] shadow-[0_20px_60px_rgba(85,0,255,0.12)] border border-[#5500ff]/5 py-3 z-50 animate-in fade-in zoom-in-95 duration-200">
+                                                <button className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors">
+                                                    <PenLine className="w-5 h-5 text-slate-400" /> {t('dashboard.store.actions.edit')}
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        handleToggleStatus(item);
+                                                        setActiveActionMenu(null);
+                                                    }}
+                                                    className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors"
+                                                >
+                                                    {isActive ? (
+                                                        <><EyeOff className="w-5 h-5 text-slate-400" /> {t('dashboard.store.actions.archive')}</>
+                                                    ) : (
+                                                        <><Eye className="w-5 h-5 text-slate-400" /> {t('dashboard.store.actions.publish')}</>
+                                                    )}
+                                                </button>
+                                                <div className="h-px bg-slate-50 my-2 mx-4" />
+                                                <button
+                                                    onClick={() => {
+                                                        handleDeleteProduct(item.id);
+                                                        setActiveActionMenu(null);
+                                                    }}
+                                                    className="w-full px-5 py-3.5 text-[15px] font-black text-rose-500 hover:bg-rose-50 flex items-center gap-4 transition-colors"
+                                                >
+                                                    <Trash2 className="w-5 h-5" /> {t('dashboard.store.actions.delete')}
+                                                </button>
+                                            </div>
+                                        </>
                                     )}
                                 </div>
                             </motion.div>
@@ -164,17 +184,27 @@ export default function ProductListSection({
                 </AnimatePresence>
 
                 {products.length === 0 && (
-                    <div className="py-20 flex flex-col items-center justify-center text-center px-4 bg-slate-50/30 rounded-[32px] border-2 border-dashed border-slate-100/50">
-                        <div className="w-20 h-20 rounded-full bg-white shadow-xl shadow-slate-200/30 flex items-center justify-center mb-6 border border-slate-100">
-                            <Plus className="w-8 h-8 text-slate-200" />
+                    <div className="py-24 flex flex-col items-center justify-center text-center px-6 bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden relative group">
+                        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                        <div className="relative w-48 h-48 mb-10">
+                            <div className="absolute inset-0 bg-[#5500ff]/5 rounded-full blur-3xl animate-pulse" />
+                            <div className="relative w-full h-full flex items-center justify-center">
+                                <ShoppingBag className="w-24 h-24 text-slate-100 stroke-[1.5px] group-hover:scale-110 group-hover:text-indigo-100 transition-all duration-700" />
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center border border-slate-50">
+                                    <Plus className="w-8 h-8 text-[#5500ff] stroke-[3px]" />
+                                </div>
+                            </div>
                         </div>
-                        <h4 className="text-[18px] font-bold text-slate-900 mb-2">{t('store.states.no_products')}</h4>
-                        <p className="text-slate-400 text-[14px] font-medium max-w-xs mx-auto mb-8">{t('store.states.no_products_desc')}</p>
+
+                        <h4 className="text-[28px] font-black text-slate-900 mb-4 tracking-tight leading-none">{t('dashboard.store.states.no_products')}</h4>
+                        <p className="text-slate-400 text-[17px] font-bold leading-relaxed max-w-[320px] mb-12">{t('dashboard.store.states.no_products_desc')}</p>
+
                         <Button
                             onClick={() => setShowAddProduct(true)}
-                            className="h-14 px-10 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white text-[15px] font-bold shadow-xl shadow-indigo-100/40 active:scale-[0.98] transition-all"
+                            className="h-16 px-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white text-[17px] font-black shadow-xl shadow-indigo-100 active:scale-95 transition-all"
                         >
-                            {t('store.states.add_first_product')}
+                            {t('dashboard.store.states.add_first_product')}
                         </Button>
                     </div>
                 )}

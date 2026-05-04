@@ -10,7 +10,8 @@ import {
     AlertCircle,
     ExternalLink,
     ChevronDown,
-    Lock
+    Lock,
+    ArrowRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { PremiumInput } from '@/components/ui/PremiumInput';
@@ -91,46 +92,55 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
     };
 
     return (
-        <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-700 pb-20">
             {/* Header */}
-            <div className="space-y-2">
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-                    <CreditCard className="w-8 h-8 text-primary" />
-                    Ödeme Yöntemlerini Bağla
-                </h2>
-                <p className="text-slate-400 font-medium italic opacity-80 max-w-2xl">
-                    Dünyanın her yerinden veya yerel ödeme almak için tercih ettiğiniz ödeme geçidini bağlayın. Biz komisyon almıyoruz, ödemeler doğrudan sizin hesabınıza yatar.
+            <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-[24px] bg-[#5500ff]/5 flex items-center justify-center">
+                        <CreditCard className="w-8 h-8 text-[#5500ff]" />
+                    </div>
+                    <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-none">
+                        Connect Payment Methods
+                    </h2>
+                </div>
+                <p className="text-slate-400 font-bold text-lg leading-relaxed max-w-2xl opacity-80">
+                    Connect your preferred payment gateway to receive payments from anywhere in the world. We don&apos;t take any commission, payments go directly to your account.
                 </p>
             </div>
 
             {/* Provider Selection */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {PROVIDERS.map((p) => (
-                    <button
-                        key={p.id}
-                        onClick={() => setSelectedProvider(p.id)}
-                        className={cn(
-                            "p-6 rounded-[28px] border-2 transition-all text-left flex flex-col gap-4 group relative overflow-hidden",
-                            selectedProvider === p.id
-                                ? "bg-white border-primary shadow-xl shadow-primary/10"
-                                : "bg-slate-50/50 border-transparent hover:border-slate-200"
-                        )}
-                    >
-                        <div className="flex items-center justify-between relative z-10">
-                            <span className="text-3xl">{p.icon}</span>
-                            {selectedProvider === p.id && (
-                                <CheckCircle2 className="w-6 h-6 text-primary" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {PROVIDERS.map((p) => {
+                    const isActive = selectedProvider === p.id;
+                    return (
+                        <button
+                            key={p.id}
+                            onClick={() => setSelectedProvider(p.id)}
+                            className={cn(
+                                "p-8 rounded-[40px] border-2 transition-all text-left flex flex-col gap-6 group relative overflow-hidden active:scale-95",
+                                isActive
+                                    ? "bg-white border-[#5500ff] shadow-[0_20px_40px_rgba(85,0,255,0.1)]"
+                                    : "bg-white border-transparent shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:border-slate-200 hover:shadow-xl"
                             )}
-                        </div>
-                        <div className="relative z-10">
-                            <h4 className="font-black text-slate-900">{p.name}</h4>
-                            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{p.region}</p>
-                        </div>
-                        {selectedProvider === p.id && (
-                            <div className="absolute top-0 right-0 w-24 h-24 -mr-12 -mt-12 bg-primary/5 rounded-full blur-2xl" />
-                        )}
-                    </button>
-                ))}
+                        >
+                            <div className="flex items-center justify-between relative z-10">
+                                <span className="text-4xl group-hover:scale-110 transition-transform duration-500">{p.icon}</span>
+                                {isActive && (
+                                    <div className="w-8 h-8 rounded-full bg-[#5500ff] flex items-center justify-center shadow-lg">
+                                        <CheckCircle2 className="w-5 h-5 text-white" />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="relative z-10 space-y-1">
+                                <h4 className="text-[20px] font-black text-slate-900 tracking-tight uppercase">{p.name}</h4>
+                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{p.region}</p>
+                            </div>
+                            {isActive && (
+                                <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-[#5500ff]/5 rounded-full blur-3xl" />
+                            )}
+                        </button>
+                    );
+                })}
             </div>
 
             {/* Configuration Form */}
@@ -138,28 +148,28 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
                 {selectedProvider && provider && (
                     <motion.div
                         key={selectedProvider}
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="bg-white rounded-[40px] border border-slate-100 shadow-sm p-8 md:p-12 space-y-10"
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="bg-white rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] p-10 md:p-14 space-y-12"
                     >
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                            <div className="flex items-center gap-5">
-                                <div className="w-16 h-16 rounded-[22px] flex items-center justify-center text-3xl shadow-lg border border-slate-50" style={{ backgroundColor: provider.color + '10' }}>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-slate-50 pb-10">
+                            <div className="flex items-center gap-6">
+                                <div className="w-20 h-20 rounded-[32px] flex items-center justify-center text-4xl shadow-2xl border border-white" style={{ backgroundColor: provider.color + '15' }}>
                                     {provider.icon}
                                 </div>
-                                <div>
-                                    <h3 className="text-xl font-black text-slate-900">{provider.name} Yapılandırması</h3>
-                                    <p className="text-sm font-bold text-slate-400">Gerekli API bilgilerini girerek bağlantıyı tamamlayın.</p>
+                                <div className="space-y-1">
+                                    <h3 className="text-[24px] font-black text-slate-900 tracking-tight">{provider.name} Configuration</h3>
+                                    <p className="text-slate-400 font-bold text-base">Enter your API credentials to complete the setup.</p>
                                 </div>
                             </div>
-                            <Button variant="ghost" className="rounded-xl text-slate-400 hover:text-primary gap-2">
+                            <button className="h-14 px-8 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-sm tracking-tight flex items-center gap-3 transition-all border border-slate-100 active:scale-95">
                                 <ExternalLink className="w-4 h-4" />
-                                Rehber
-                            </Button>
+                                Setup Guide
+                            </button>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14">
                             {provider.fields.map((field) => (
                                 <PremiumInput
                                     key={field.id}
@@ -173,18 +183,21 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
                             ))}
                         </div>
 
-                        <div className="pt-8 flex items-center justify-between border-t border-slate-50">
-                            <div className="flex items-center gap-3 text-slate-400">
-                                <Shield className="w-5 h-5" />
-                                <span className="text-xs font-bold italic">Bilgileriniz uçtan uca şifrelenir ve güvenle saklanır.</span>
+                        <div className="pt-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
+                            <div className="flex items-center gap-4 bg-[#F8FAFF] px-8 py-5 rounded-[32px] border border-slate-100">
+                                <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center shrink-0">
+                                    <Shield className="w-6 h-6 text-white" />
+                                </div>
+                                <span className="text-[13px] font-bold text-slate-500 italic max-w-xs leading-tight">Your credentials are encrypted end-to-end and stored securely.</span>
                             </div>
-                            <Button
+                            <button
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="h-14 px-10 rounded-2xl bg-slate-900 hover:bg-black text-white font-black shadow-xl transition-all active:scale-95"
+                                className="h-20 px-14 rounded-[32px] bg-slate-900 hover:bg-[#5500ff] text-white font-black text-[18px] shadow-2xl transition-all active:scale-95 disabled:opacity-50 min-w-[280px] flex items-center justify-center gap-4"
                             >
-                                {saving ? 'Kaydediliyor...' : 'Bağlantıyı Kaydet'}
-                            </Button>
+                                {saving ? 'Connecting...' : 'Save Connection'}
+                                {!saving && <ArrowRight className="w-6 h-6" />}
+                            </button>
                         </div>
                     </motion.div>
                 )}

@@ -146,7 +146,7 @@ const FloatingIconsHero = React.forwardRef<
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(var(--primary),0.05)_0%,transparent_60%)] pointer-events-none" />
 
             {/* Container for the background floating icons */}
-            <div className="absolute inset-0 w-full h-full opacity-70 md:opacity-100">
+            <div className="absolute inset-0 w-full h-full opacity-100">
                 {icons.map((iconData, index) => (
                     <Icon
                         key={iconData.id}

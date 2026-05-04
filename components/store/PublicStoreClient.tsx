@@ -169,13 +169,15 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
             window.location.href = product.redirect_url;
             return;
         }
+
         if (product.digital_file_url || product.file_url) {
             const url = product.digital_file_url || product.file_url;
             window.open(url, '_blank');
             return;
         }
 
-        if (product.external_checkout_url) {
+        // If it's manual, we don't open a link, the details are shown in the bottom sheet success state
+        if (product.external_checkout_url && product.checkout_provider !== 'manual') {
             window.open(product.external_checkout_url, '_blank');
         }
     };
@@ -480,7 +482,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                                     </div>
                                                     <div className="flex items-center gap-3">
                                                         <span className="text-[15px] font-black" style={{ color: brand_color }}>
-                                                            {product.price === 0 ? 'FREE' : formatCurrency(product.price)}
+                                                            {product.price === 0 ? (t('public.free') || 'FREE') : formatCurrency(product.price, product.currency || 'USD')}
                                                         </span>
                                                         <ChevronRight className="w-5 h-5 opacity-20 group-hover:opacity-40" />
                                                     </div>

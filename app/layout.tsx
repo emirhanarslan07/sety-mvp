@@ -58,6 +58,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import DiagnosticLayer from "@/components/debug/DiagnosticLayer";
 import { ToastProvider } from "@/context/ToastContext";
 import { headers, cookies } from "next/headers";
+import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
     subsets: ["latin", "latin-ext"],
@@ -136,6 +138,27 @@ export default function RootLayout({
 
     return (
         <html lang={lang} className={`${inter.variable} ${plusJakartaSans.variable} ${cairo.variable} ${montserrat.variable} ${syne.variable} ${spaceMono.variable} ${playfair.variable} ${outfit.variable} ${bebasNeue.variable} ${poppins.variable} ${lexend.variable}`} suppressHydrationWarning>
+            <head>
+                {/* Google Analytics */}
+                <Script
+                    strategy="afterInteractive"
+                    src={`https://www.googletagmanager.com/gtag/js?id=G-BQ821YY6WL`}
+                />
+                <Script
+                    id="google-analytics"
+                    strategy="afterInteractive"
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('js', new Date());
+                            gtag('config', 'G-BQ821YY6WL', {
+                                page_path: window.location.pathname,
+                            });
+                        `,
+                    }}
+                />
+            </head>
             <body className="antialiased font-sans">
                 <PHProvider>
                     <I18nProvider>
@@ -149,6 +172,7 @@ export default function RootLayout({
                             >
                                 <DiagnosticLayer />
                                 {children}
+                                <Analytics />
                             </ThemeProvider>
                         </ToastProvider>
                     </I18nProvider>

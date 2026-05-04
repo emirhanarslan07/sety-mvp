@@ -43,6 +43,7 @@ import CheckoutEditor from '@/components/dashboard/store/CheckoutEditor';
 import DigitalProductEditor from '@/components/dashboard/store/DigitalProductEditor';
 import CoachingEditor from '@/components/dashboard/store/CoachingEditor';
 import VideoResponseEditor from '@/components/dashboard/store/VideoResponseEditor';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface ProductEditorModalProps {
     isOpen: boolean;
@@ -61,6 +62,7 @@ export default function ProductEditorModal({
     onSuccess,
     isLandingPage = false
 }: ProductEditorModalProps) {
+    const { t } = useTranslation();
     const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState<Tab>('checkout_page');
     const [loading, setLoading] = useState(false);
@@ -236,7 +238,7 @@ export default function ProductEditorModal({
                         <span className="text-slate-400">Mağazam</span>
                         <span className="text-slate-300">/</span>
                         <span className="text-[#5500ff]">
-                            {isLandingPage ? 'Açılış Sayfası Oluştur' : 'Yeni Ürün Ekle'}
+                            {isLandingPage ? t('dashboard.store.actions.create_landing_page') : t('dashboard.store.actions.create_product')}
                         </span>
                     </div>
                 </div>
@@ -290,9 +292,9 @@ export default function ProductEditorModal({
                                 {/* Tab Navigation (Stan Style) */}
                                 <div className="flex items-center gap-3 bg-slate-100/50 p-1 rounded-full w-fit border border-slate-100">
                                     {[
-                                        { id: 'checkout_page', label: 'Ödeme Sayfası', icon: ShoppingBag },
-                                        { id: 'product', label: 'Mağaza Ürünü', icon: ImageIcon },
-                                        { id: 'options', label: 'Seçenekler', icon: Settings }
+                                        { id: 'checkout_page', label: t('dashboard.store.editors.tabs.checkout'), icon: ShoppingBag },
+                                        { id: 'product', label: t('dashboard.store.editors.tabs.product'), icon: ImageIcon },
+                                        { id: 'options', label: t('dashboard.store.editors.tabs.options'), icon: Settings }
                                     ].map((tab) => (
                                         <button
                                             key={tab.id}
@@ -315,13 +317,13 @@ export default function ProductEditorModal({
                                         <section className="space-y-6">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm">1</div>
-                                                <h4 className="text-[17px] font-bold text-slate-900">Kart stilini seçin</h4>
+                                                <h4 className="text-[17px] font-bold text-slate-900">{t('dashboard.store.editors.general.style_selection')}</h4>
                                             </div>
                                             <div className="grid grid-cols-3 gap-4">
                                                 {[
-                                                    { id: 'button', label: 'Buton', icon: MousePointer2 },
-                                                    { id: 'callout', label: 'Callout', icon: MessageSquare },
-                                                    { id: 'preview', label: 'Önizleme', icon: Eye }
+                                                    { id: 'button', label: t('dashboard.store.editors.general.style_button'), icon: MousePointer2 },
+                                                    { id: 'callout', label: t('dashboard.store.editors.general.style_callout'), icon: MessageSquare },
+                                                    { id: 'preview', label: t('dashboard.store.editors.general.style_preview'), icon: Eye }
                                                 ].map((style) => (
                                                     <button
                                                         key={style.id}
@@ -348,7 +350,7 @@ export default function ProductEditorModal({
                                         <section className="space-y-6">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm">2</div>
-                                                <h4 className="text-[17px] font-bold text-slate-900">Görsel ve İkon</h4>
+                                                <h4 className="text-[17px] font-bold text-slate-900">{t('dashboard.store.editors.general.image_and_icon')}</h4>
                                             </div>
                                             <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm flex items-center gap-8">
                                                 <div
@@ -409,8 +411,8 @@ export default function ProductEditorModal({
                                             <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm space-y-6">
                                                 <div className="flex items-center justify-between">
                                                     <div className="space-y-1">
-                                                        <p className="text-[16px] font-black text-slate-900">Ürün Aktif</p>
-                                                        <p className="text-[13px] text-slate-400 font-bold">Mağazanızda yayına alınsın.</p>
+                                                        <p className="text-[16px] font-black text-slate-900">{t('dashboard.store.editors.general.product_active')}</p>
+                                                        <p className="text-[13px] text-slate-400 font-bold">{t('dashboard.store.editors.general.product_active_desc')}</p>
                                                     </div>
                                                     <button
                                                         onClick={() => updateData('status', formData.status === 'active' ? 'draft' : 'active')}
@@ -428,7 +430,7 @@ export default function ProductEditorModal({
                                 )}
 
                                 <div className="flex items-center justify-between pt-10 border-t border-slate-100">
-                                    <button onClick={onClose} className="text-slate-400 font-bold hover:text-slate-900 transition-colors">Vazgeç</button>
+                                    <button onClick={onClose} className="text-slate-400 font-bold hover:text-slate-900 transition-colors">{t('dashboard.store.actions.cancel')}</button>
                                     <Button
                                         onClick={handleSubmit}
                                         disabled={loading || isSuccess}
@@ -440,12 +442,12 @@ export default function ProductEditorModal({
                                         {isSuccess ? (
                                             <div className="flex items-center gap-2">
                                                 <Check className="w-5 h-5 text-[#C4FF00]" />
-                                                Yayınlandı ✨
+                                                {t('dashboard.store.editors.general.saved')}
                                             </div>
                                         ) : loading ? (
                                             <Loader2 className="w-6 h-6 animate-spin" />
                                         ) : (
-                                            'Kaydet ve Yayınla ✨'
+                                            t('dashboard.store.editors.general.publish')
                                         )}
                                     </Button>
                                 </div>
@@ -456,8 +458,8 @@ export default function ProductEditorModal({
                         <div className="hidden lg:flex w-[480px] border-l border-slate-100 flex-col items-center justify-center p-12 bg-[#F8FAFC]">
                             <div className="w-full max-w-[320px] space-y-10 group">
                                 <div className="text-center space-y-3">
-                                    <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Kart Önizlemesi</h3>
-                                    <p className="text-[14px] text-slate-400 font-bold tracking-tight">Mağaza ana sayfasında böyle görünecek.</p>
+                                    <h3 className="text-[20px] font-black text-slate-900 tracking-tight">{t('dashboard.store.editors.general.card_preview')}</h3>
+                                    <p className="text-[14px] text-slate-400 font-bold tracking-tight">{t('dashboard.store.editors.general.card_preview_desc')}</p>
                                 </div>
 
                                 <div className="relative">

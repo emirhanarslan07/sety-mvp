@@ -26,7 +26,7 @@ export function Comparison() {
                     <div className="flex flex-col">
                         <div className="mb-8 flex items-center gap-4 px-4">
                             <SetyLogo size="lg" />
-                            <h3 className="text-3xl font-black text-slate-900 tracking-tight">{t('landing.comparison.sety.title')}</h3>
+                            <h3 translate="no" className="notranslate text-3xl font-black text-slate-900 tracking-tight">{t('landing.comparison.sety.title')}</h3>
                         </div>
 
                         <div className="bg-white rounded-[48px] p-10 md:p-14 border border-slate-100 flex-grow flex flex-col shadow-sm hover:shadow-md transition-all duration-500">

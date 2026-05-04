@@ -8,7 +8,10 @@
         "edit": "Edit",
         "back": "Back",
         "next": "Next",
-        "search": "Search..."
+        "search": "Search...",
+        "close": "Close",
+        "copied": "Copied!",
+        "session_not_found": "Session not found"
     },
     "dashboard": {
         "welcome": "Welcome",
@@ -138,7 +141,17 @@
                 "show_sety_badge": "Show Sety Badge",
                 "sety_badge_desc": "Built with Sety badge and affiliate link.",
                 "social_media": "Social Media",
-                "social_media_desc": "Add your social media links."
+                "social_media_desc": "Add your social media links.",
+                "basic_info": "Basic Info",
+                "product_title": "Product Title",
+                "description": "Description",
+                "price_payment": "Price & Payment",
+                "price": "Price",
+                "checkout_provider": "Payment Provider",
+                "manual_payment_info": "Payment Details (IBAN, USDT etc.)",
+                "checkout_link": "Checkout Link",
+                "manual_payment_desc": "Your customers will see this info to make a payment.",
+                "checkout_link_desc": "Paste your external checkout link (Shopier, Stripe etc.)."
             },
             "product_types": {
                 "collect_emails": {
@@ -162,8 +175,8 @@
                     "desc": "Let your followers ask you paid questions."
                 },
                 "private_group": {
-                    "title": "Private Access / Closed Group",
-                    "desc": "Sell access to Telegram or Instagram Close Friends."
+                    "title": "Telegram Subscription",
+                    "desc": "Sell paid access to your Telegram channel or group."
                 },
                 "custom_product": {
                     "title": "Custom Product",
@@ -204,9 +217,20 @@
                 "create": "Create"
             },
             "editors": {
+                "fields": {
+                    "title_label": "Title",
+                    "bottom_title_label": "Bottom Title",
+                    "button_text_label": "Button Text"
+                },
+                "placeholders": {
+                    "title": "Get My [Template/eBook/Course] Now!",
+                    "bottom_title": "Get My Guide",
+                    "button_text": "PURCHASE"
+                },
                 "tabs": {
                     "thumbnail": "Thumbnail",
                     "checkout": "Checkout Page",
+                    "product": "Store Product",
                     "options": "Options"
                 },
                 "general": {
@@ -214,90 +238,130 @@
                     "style_button": "Button",
                     "style_button_desc": "Simple and effective",
                     "style_callout": "Callout",
-                    "style_callout_desc": "Larger prominent card",
+                    "style_callout_desc": "Larger standout card",
                     "image_selection": "2. Select Image",
                     "image_upload": "Upload Image",
                     "image_change": "Change",
+                    "image_and_icon": "Image and Icon",
+                    "style_preview": "Preview",
+                    "card_preview": "Card Preview",
+                    "card_preview_desc": "This is how it will look on your store homepage.",
                     "text_selection": "3. Add Text",
                     "title": "Title",
                     "subtitle": "Subtitle / Description",
                     "button_text": "Button Text",
+                    "link": "Link",
                     "edit_appearance": "1. Edit Appearance",
                     "header_image": "Header Image",
                     "description_text": "Description Text",
                     "ai_generate": "Generate with AI",
                     "cta_button": "Call to Action Button",
-                    "set_price_title": "2. Set Price",
-                    "price": "Price",
-                    "discount_price": "Discount Price",
-                    "price_hint": "Must be between 0.50 and 25,000 dollars.",
-                    "add_payment_plan": "Add Payment Plan",
-                    "limit_amount": "Limit Amount",
-                    "discount_code": "Discount Code",
-                    "collect_info_title": "3. Collect Info",
-                    "add_field": "Add Field",
-                    "secure_process": "Processed securely by Sety 🔒",
-                    "save_draft": "Save as draft",
-                    "publish": "Publish ✨",
-                    "saved": "Saved",
-                    "next": "Next",
-                    "improve_page": "Improve this page",
-                    "currency_name": "dollars"
+                    "set_price_title": "2. Set Price"
                 },
-                "video_response": {
-                    "title_default": "Personalized Video Response",
-                    "subtitle_default": "I will send you a custom video/product based on your request!",
-                    "button_text_default": "Submit Your Request",
-                    "checkout_desc_default": "I will personally review your request and help you create a plan to reach success.\n\nBy purchasing this product, I will create a special video/product for you, addressing your specific requests and offering my best suggestions!"
+                "sections": {
+                    "select_image": "1. Select Image",
+                    "write_description": "2. Title & Description",
+                    "pricing": "3. Pricing",
+                    "collect_info": "4. Collect Information",
+                    "upload_product": "5. Product Delivery"
                 },
-                "reviews": {
-                    "title": "Add Customer Review",
-                    "subtitle": "Show customer testimonials and reviews for this product. Building trust increases sales.",
-                    "add_button": "Add Review",
-                    "name_label": "Customer Name",
-                    "name_placeholder": "e.g. John Doe",
-                    "text_label": "Review",
-                    "text_placeholder": "Write the customer's experience here..."
+                "image_selection": "Image Selection",
+                "image_hint": "Select the best image that describes your product.",
+                "select_button": "Select Image",
+                "pricing": {
+                    "price_label": "Price *",
+                    "price_hint": "Price must be between $0.50 and $25,000.",
+                    "min_price_error": "Minimum price must be $0.50.",
+                    "discount_price_label": "Discount Price",
+                    "discount_price_hint": "Enter discounted price (optional).",
+                    "discount_price_error": "Discounted price must be lower than the original price.",
+                    "payment_plan_title": "Add Payment Plan",
+                    "payment_plan_desc": "Offer installment payment options",
+                    "installments_label": "installments",
+                    "discount_code_title": "Add Discount Code",
+                    "discount_code_desc": "Create a custom coupon code",
+                    "discount_code_placeholder": "DISCOUNT20",
+                    "quantity_limit_title": "Limit Quantity",
+                    "quantity_limit_desc": "Set how many units can be sold",
+                    "quantity_limit_placeholder": "100",
+                    "quantity_unit": "units"
                 },
-                "emails": {
-                    "title": "Add Email Flow",
-                    "flow_title": "Automated Email Flow",
-                    "flow_subtitle": "A sequence of automated messages to be sent to the customer after purchase.",
-                    "select_flow": "Select Flow",
-                    "flows": [
-                        "Thank You & Welcome",
-                        "Educational Series",
-                        "Feedback Request"
-                    ]
+                "upload": {
+                    "delivery_hint": "💡 Will be automatically sent to the customers who purchase",
+                    "file_tab": "📁 Upload File",
+                    "url_tab": "🔗 Redirect to URL",
+                    "upload_success": "File uploaded successfully! ✅",
+                    "upload_error": "Upload error",
+                    "file_uploaded": "File uploaded",
+                    "auto_delivery_msg": "Will be automatically sent to the customer ✅",
+                    "drag_drop_title": "Drag and drop your file here",
+                    "or_choose": "or click to select",
+                    "file_types_hint": "PDF, ZIP, MP4, MP3, PNG, DOCX — Max. 500MB",
+                    "url_placeholder": "https://drive.google.com/...",
+                    "url_hint": "You can use links like Google Drive, Dropbox, Notion, YouTube."
                 },
-                "reminders": {
-                    "title": "Email Reminders",
-                    "flow_title": "Timed Reminders",
-                    "flow_subtitle": "Send automated reminders before an event or delivery.",
-                    "hours": "hours",
-                    "days": "days",
-                    "before": "before",
-                    "automatic": "Automatic reminder",
-                    "time_placeholder": "Time",
-                    "hours_before": "hours before"
+                "description": {
+                    "label": "Description text *",
+                    "placeholder": "Write your description here...",
+                    "toolbar": {
+                        "h3": "Heading",
+                        "bold": "Bold",
+                        "strike": "Strikethrough",
+                        "italic": "Italic",
+                        "list": "Bulleted List",
+                        "image": "Add Image",
+                        "video": "Add Video",
+                        "link": "Add Link"
+                    },
+                    "modals": {
+                        "video_title": "Add Video",
+                        "video_placeholder": "Enter a YouTube, Loom or Wistia video link here",
+                        "embed_button": "Embed Video",
+                        "upload_own": "Upload your own content.",
+                        "link_title": "Add Link",
+                        "link_name_placeholder": "Name",
+                        "link_url_placeholder": "https://...",
+                        "remove_link": "Remove link",
+                        "save_button": "Save"
+                    }
                 },
-                "bump": {
-                    "title": "Enable Order Bump",
-                    "flow_title": "Order Bump",
-                    "flow_subtitle": "Add a one-time offer to your checkout flow.",
-                    "product_name": "Product Name",
-                    "product_placeholder": "e.g. E-book, Bonus Video",
-                    "price": "Price",
-                    "select_image": "Select Image",
-                    "desc_placeholder": "Tell the customer why they should take this offer."
+                "fields_manager": {
+                    "title": "Collect Information",
+                    "subtitle": "What information do you want to collect from customers?",
+                    "required_section": "Required Fields",
+                    "extra_section": "Extra Fields",
+                    "required_badge": "Required",
+                    "add_field_button": "Add New Field",
+                    "select_type_title": "Select Field Type",
+                    "placeholder_name": "Field Name",
+                    "options_title": "Options",
+                    "menu_items_title": "Menu Items",
+                    "no_options": "No options yet",
+                    "add_option": "Add Option",
+                    "preview_title": "Preview",
+                    "checkbox_hint": "💡 User must check this box before proceeding.",
+                    "checkbox_hint_default": "I agree to the terms and conditions",
+                    "types": {
+                        "phone": "Phone Number",
+                        "phone_desc": "Country code phone input",
+                        "text": "Text Box",
+                        "text_desc": "Free text input",
+                        "multiple": "Multiple Choice",
+                        "multiple_desc": "User selects multiple",
+                        "dropdown": "Dropdown Menu",
+                        "dropdown_desc": "User selects one",
+                        "checkbox": "Checkbox",
+                        "checkbox_desc": "Check box for logic/consent",
+                        "email": "Email",
+                        "metin": "Text"
+                    }
                 },
-                "affiliate": {
-                    "title": "Enable Affiliate Sharing",
-                    "flow_title": "Affiliate System",
-                    "flow_subtitle": "Allow your customers to resell this product.",
-                    "commission_rate": "Commission Rate",
-                    "commission_desc": "Your affiliates will receive a share of each sale at this rate."
-                }
+                "improve_page": "💡 Improve your store page by adding more details",
+                "save_draft": "Save as Draft",
+                "draft_saved": "Draft saved successfully!",
+                "publish": "Publish ✨",
+                "publishing": "Uploading...",
+                "published": "Published ✨"
             },
             "pages": {
                 "title": "Store Pages",
@@ -327,15 +391,16 @@
                 "loading_editor": "Loading Editor...",
                 "logo_error": "Error uploading logo",
                 "cover_error": "Error uploading cover image",
+                "active": "Active",
                 "draft": "Draft",
                 "sales_count": "{{count}} Sales",
-                "no_products": "You haven't added content yet",
+                "no_products": "You haven't added any content yet",
                 "no_products_desc": "Start earning by adding digital products, subscriptions, or appointments.",
                 "add_first_product": "Add Your First Product",
-                "coming_soon": "Coming Soon",
+                "coming_soon": "COMING SOON",
                 "step_select_type": "Step 1/2: Select Type",
-                "add_product_title": "What would you like to add?",
-                "add_product_desc": "Select the product or service type you want to add to your store."
+                "add_product_desc": "Select the product or service type you want to add to your store.",
+                "add_product_subtitle": "Add to your store in seconds"
             },
             "preview": {
                 "brand_name_placeholder": "My Sety Store",
@@ -347,7 +412,10 @@
             "placeholders": {
                 "display_name": "Your Name or Brand",
                 "bio": "Briefly tell about yourself...",
-                "announcement": "e.g. My Masterclass Guide is Live! 🚀"
+                "announcement": "e.g. My Masterclass Guide is Live! 🚀",
+                "product_title_example": "e.g. Masterclass Video Series",
+                "product_desc": "A brief info about your product...",
+                "payment_info": "e.g. IBAN: TR00... or USDT (TRC20): ..."
             }
         }
     },
@@ -367,7 +435,17 @@
         "buy_now": "Buy Now",
         "checkout": "Checkout",
         "free": "FREE",
-        "built_with": "Built with Sety"
+        "built_with": "Built with Sety",
+        "success_title": "Awesome!",
+        "coaching_success": "Your appointment request has been received. We will contact you as soon as possible.",
+        "delivery_ready": "Your product is ready! You can access it by clicking the button below.",
+        "manual_payment_instruction": "Use the information below to complete the payment.",
+        "order_captured": "Your information has been successfully saved!",
+        "order_email_sent": "Order details have also been sent to your email address.",
+        "payment_details": "Payment Details",
+        "manual_payment_footer": "Don't forget to include your email address in the description when making the payment.",
+        "go_to_link": "Go to Link",
+        "download_now": "Download Now"
     },
     "landing": {
         "nav": {

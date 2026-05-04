@@ -16,7 +16,8 @@ export const formatCurrency = (
         'TRY': '₺',
         'USD': '$',
         'EUR': '€',
-        'GBP': '£'
+        'GBP': '£',
+        'USDT': '₮'
     };
 
     const symbol = symbols[currency] || currency;

@@ -8,7 +8,8 @@ import {
     DollarSign,
     Type,
     AlignLeft,
-    Loader2
+    Loader2,
+    Rocket
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n/context';
+import { PremiumInput } from '@/components/ui/PremiumInput';
 
 interface CreateProductModalProps {
     isOpen: boolean;
@@ -42,8 +44,8 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
         setError('');
 
         // Basic Validation
-        if (externalCheckoutUrl && !externalCheckoutUrl.startsWith('https://')) {
-            setError('Ödeme linki https:// ile başlamalıdır.');
+        if (checkoutProvider !== 'manual' && externalCheckoutUrl && !externalCheckoutUrl.startsWith('https://')) {
+            setError(t('dashboard.store.errors.https_required') || 'URL must start with https://');
             setLoading(false);
             return;
         }
@@ -71,7 +73,7 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                         description,
                         price: parseFloat(price) || 0,
                         currency,
-                        type: productType.title.toLowerCase().replace(/\s+/g, '_'),
+                        type: productType.id,
                         external_checkout_url: externalCheckoutUrl,
                         checkout_provider: checkoutProvider,
                         status: 'active'
@@ -103,141 +105,165 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
-                className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
             />
             <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                initial={{ opacity: 0, scale: 0.9, y: 40 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-[550px] bg-white rounded-[32px] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
+                exit={{ opacity: 0, scale: 0.9, y: 40 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="relative w-full max-w-[600px] bg-white rounded-[44px] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] overflow-hidden max-h-[92vh] flex flex-col"
             >
                 {/* Header */}
-                <div className="p-6 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/80 backdrop-blur-md z-10">
-                    <div className="flex items-center gap-3">
-                        <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center", productType.color)}>
-                            <productType.icon className="w-5 h-5" />
+                <div className="p-8 md:p-10 border-b border-slate-50 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur-xl z-10">
+                    <div className="flex items-center gap-5">
+                        <div className={cn("w-14 h-14 rounded-[20px] flex items-center justify-center shadow-lg", productType.color)}>
+                            <productType.icon className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-semibold text-slate-900 tracking-tight leading-none">
-                                {t('store.add_product')} {productType.title}
+                            <h3 className="text-[20px] font-black text-slate-900 tracking-tight leading-none uppercase">
+                                {t(`dashboard.store.product_types.${productType.id}.title`) || productType.title}
                             </h3>
-                            <p className="text-xs text-slate-500 font-medium mt-1">Mağazanda anında yayınlanacak.</p>
+                            <p className="text-[13px] text-slate-400 font-bold mt-2 uppercase tracking-widest opacity-70">
+                                {t('dashboard.store.states.add_product_subtitle') || "Saniyeler içinde mağazana ekle"}
+                            </p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-50 rounded-full transition-colors text-slate-400">
-                        <X className="w-5 h-5" />
+                    <button onClick={onClose} className="w-12 h-12 flex items-center justify-center hover:bg-slate-50 rounded-full transition-all text-slate-300 hover:text-slate-900 active:scale-90">
+                        <X className="w-6 h-6" />
                     </button>
                 </div>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-8">
-                    {/* Section 1: Temel Bilgiler */}
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="w-6 h-6 rounded-full bg-slate-100 text-[11px] font-bold flex items-center justify-center text-slate-500">1</span>
-                            <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">Temel Bilgiler</h4>
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto p-8 md:p-10 space-y-12">
+                    <form onSubmit={handleSubmit} className="space-y-12">
+                        {/* Section 1: Temel Bilgiler */}
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-slate-900 text-white text-[14px] font-black flex items-center justify-center">1</div>
+                                <h4 className="text-[16px] font-black text-slate-900 uppercase tracking-widest">{t('dashboard.store.sections.basic_info') || 'Temel Bilgiler'}</h4>
+                            </div>
+
+                            <div className="space-y-8">
+                                <PremiumInput
+                                    label={t('dashboard.store.sections.product_title') || "Ürün Başlığı"}
+                                    required
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder={t('dashboard.store.placeholders.product_title_example') || "Örn: Masterclass Video Seti"}
+                                    icon={<Type className="w-5 h-5" />}
+                                />
+
+                                <div className="space-y-3">
+                                    <label className="text-[14px] font-black text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.description') || "Açıklama"}</label>
+                                    <div className="relative group">
+                                        <div className="absolute left-6 top-5 text-slate-400 group-focus-within:text-[#5500ff] transition-colors">
+                                            <AlignLeft className="w-5 h-5" />
+                                        </div>
+                                        <Textarea
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            placeholder={t('dashboard.store.placeholders.product_desc') || "Ürününüz hakkında kısa bir bilgi..."}
+                                            className="min-h-[120px] pl-16 pr-6 py-5 rounded-[28px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] transition-all font-bold text-slate-900 placeholder:text-slate-300 placeholder:font-bold resize-none shadow-none outline-none ring-0"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-[13px] font-medium text-slate-600 ml-1">Ürün Başlığı</label>
-                            <Input
-                                required
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Örn: Masterclass Video Seti"
-                                className="h-11 rounded-xl border-slate-200 bg-white focus-visible:ring-[#5500ff]/10 focus-visible:border-[#5500ff] font-medium text-sm"
-                            />
-                        </div>
+                        {/* Section 2: Fiyat & Ödeme */}
+                        <div className="space-y-8">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-slate-900 text-white text-[14px] font-black flex items-center justify-center">2</div>
+                                <h4 className="text-[16px] font-black text-slate-900 uppercase tracking-widest">{t('dashboard.store.sections.price_payment') || 'Fiyat & Ödeme'}</h4>
+                            </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-[13px] font-medium text-slate-600 ml-1">Açıklama</label>
-                            <Textarea
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Ürününüz hakkında kısa bir bilgi..."
-                                className="min-h-[100px] rounded-xl border-slate-200 bg-white focus-visible:ring-[#5500ff]/10 focus-visible:border-[#5500ff] font-medium resize-none text-sm leading-relaxed"
-                            />
-                        </div>
-                    </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="space-y-3">
+                                    <label className="text-[14px] font-black text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.price') || "Fiyat"}</label>
+                                    <div className="flex gap-3">
+                                        <div className="relative flex-1 group">
+                                            <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#5500ff] transition-colors">
+                                                <DollarSign className="w-5 h-5" />
+                                            </div>
+                                            <Input
+                                                type="number"
+                                                required
+                                                value={price}
+                                                onChange={(e) => setPrice(e.target.value)}
+                                                placeholder="0.00"
+                                                className="h-16 pl-16 pr-6 rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] transition-all font-black text-slate-900 placeholder:text-slate-300 shadow-none outline-none ring-0"
+                                            />
+                                        </div>
+                                        <select
+                                            value={currency}
+                                            onChange={(e) => setCurrency(e.target.value)}
+                                            className="h-16 w-28 rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] focus:outline-none px-4 font-black text-slate-900 transition-all cursor-pointer"
+                                        >
+                                            <option value="TRY">TRY</option>
+                                            <option value="USD">USD</option>
+                                            <option value="EUR">EUR</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                    {/* Section 2: Fiyat & Ödeme */}
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="w-6 h-6 rounded-full bg-slate-100 text-[11px] font-bold flex items-center justify-center text-slate-500">2</span>
-                            <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">Fiyat & Ödeme</h4>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-1.5">
-                                <label className="text-[13px] font-medium text-slate-600 ml-1">Fiyat</label>
-                                <div className="flex gap-2">
-                                    <Input
-                                        type="number"
-                                        required
-                                        value={price}
-                                        onChange={(e) => setPrice(e.target.value)}
-                                        placeholder="0.00"
-                                        className="h-11 rounded-xl border-slate-200 bg-white focus-visible:ring-[#5500ff]/10 focus-visible:border-[#5500ff] font-semibold text-sm"
-                                    />
+                                <div className="space-y-3">
+                                    <label className="text-[14px] font-black text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.checkout_provider') || "Ödeme Sağlayıcı"}</label>
                                     <select
-                                        value={currency}
-                                        onChange={(e) => setCurrency(e.target.value)}
-                                        className="h-11 w-24 rounded-xl border border-slate-200 bg-white focus:border-[#5500ff] focus:outline-none px-3 font-semibold text-xs"
+                                        value={checkoutProvider}
+                                        onChange={(e) => setCheckoutProvider(e.target.value)}
+                                        className="h-16 w-full rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] focus:outline-none px-6 font-black text-slate-900 transition-all cursor-pointer"
                                     >
-                                        <option value="TRY">TRY</option>
-                                        <option value="USD">USD</option>
-                                        <option value="EUR">EUR</option>
+                                        <option value="manual">Sety Manual (%0 Fee)</option>
+                                        <option value="shopier">Shopier</option>
+                                        <option value="stripe">Stripe</option>
+                                        <option value="iyzico">iyzico</option>
                                     </select>
                                 </div>
                             </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[13px] font-medium text-slate-600 ml-1">Ödeme Sağlayıcı</label>
-                                <select
-                                    value={checkoutProvider}
-                                    onChange={(e) => setCheckoutProvider(e.target.value)}
-                                    className="h-11 w-full rounded-xl border border-slate-200 bg-white focus:border-[#5500ff] focus:outline-none px-4 font-semibold text-xs"
-                                >
-                                    <option value="manual">Sety Manual</option>
-                                    <option value="shopier">Shopier</option>
-                                    <option value="stripe">Stripe</option>
-                                    <option value="iyzico">iyzico</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-[13px] font-medium text-slate-600 ml-1">Ödeme Sayfası Linki</label>
-                            <Input
-                                required={checkoutProvider !== 'manual'}
+                            <PremiumInput
+                                label={checkoutProvider === 'manual' ? (t('dashboard.store.sections.manual_payment_info') || "Ödeme Detayları (IBAN, USDT vb.)") : (t('dashboard.store.sections.checkout_link') || "Ödeme Sayfası Linki")}
+                                required
                                 value={externalCheckoutUrl}
                                 onChange={(e) => setExternalCheckoutUrl(e.target.value)}
-                                placeholder="https://..."
-                                className="h-11 rounded-xl border-slate-200 bg-white focus-visible:ring-[#5500ff]/10 focus-visible:border-[#5500ff] font-medium text-sm"
+                                placeholder={checkoutProvider === 'manual' ? (t('dashboard.store.placeholders.payment_info') || "Örn: IBAN: TR00... veya USDT (TRC20): ...") : "https://..."}
+                                icon={<LinkIcon className="w-5 h-5" />}
+                                helperText={checkoutProvider === 'manual' 
+                                    ? (t('dashboard.store.sections.manual_payment_desc') || "Müşterileriniz ödeme yapmak için bu bilgileri görecektir.")
+                                    : (t('dashboard.store.sections.checkout_link_desc') || "Kendi ödeme altyapınızın (Shopier vb.) linkini yapıştırın.")}
                             />
-                            <p className="text-[11px] text-slate-400 font-medium ml-1">Kendi ödeme altyapınızın (Shopier vb.) linkini yapıştırın.</p>
                         </div>
-                    </div>
 
-                    {error && <p className="text-rose-500 text-[13px] font-medium text-center">{error}</p>}
+                        {error && (
+                            <div className="p-5 rounded-[24px] bg-rose-50 border-2 border-rose-100 text-rose-500 text-[14px] font-bold text-center animate-shake">
+                                {error}
+                            </div>
+                        )}
 
-                    <div className="flex items-center gap-3 pt-4 border-t border-slate-50">
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={onClose}
-                            className="flex-1 h-12 rounded-xl text-slate-500 font-semibold"
-                        >
-                            İptal
-                        </Button>
-                        <Button
-                            type="submit"
-                            disabled={loading}
-                            className="flex-[2] h-12 rounded-xl bg-[#5500ff] hover:bg-[#4400cc] text-white font-semibold shadow-sm shadow-[#5500ff]/10 border-none transition-all active:scale-95"
-                        >
-                            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : t('store.add_product')}
-                        </Button>
-                    </div>
-                </form>
+                        <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="w-full sm:flex-1 h-18 py-5 rounded-[28px] text-slate-400 font-black text-lg hover:bg-slate-50 transition-all active:scale-95"
+                            >
+                                {t('common.cancel')}
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full sm:flex-[2] h-20 rounded-[32px] bg-slate-900 hover:bg-[#5500ff] text-white font-black text-xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+                            >
+                                {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
+                                    <>
+                                        {t('dashboard.store.actions.create_product') || "Ürünü Oluştur"}
+                                        <Rocket className="w-6 h-6" />
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </motion.div>
         </div>
     );

@@ -4,12 +4,12 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
     ShoppingBag,
-    Box,
     PenLine,
-    Sparkles,
     ArrowLeft,
     Loader2,
-    Check
+    Check,
+    Palette,
+    Layout
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import { useDashboard } from '@/context/DashboardContext';
@@ -423,117 +423,122 @@ function StorePageContent() {
             {/* Main Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 <div className="lg:col-span-8 space-y-12">
-                    {/* Navigation Tabs */}
-                    <div className="flex items-center gap-2 p-1.5 bg-slate-100/60 rounded-[22px] w-fit border border-slate-200/50">
-                        {[
-                            { id: 'store', label: t('dashboard.store.tabs.products'), icon: ShoppingBag },
-                            { id: 'design', label: t('dashboard.store.tabs.design'), icon: PenLine },
-                            { id: 'landing', label: t('dashboard.store.tabs.pages'), icon: Box },
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id as any)}
-                                className={cn(
-                                    "flex items-center gap-2.5 px-6 py-3 rounded-[18px] text-[14px] font-black transition-all",
-                                    activeTab === tab.id
-                                        ? "bg-white text-[#5500ff] shadow-sm border border-[#5500ff]/10"
-                                        : "text-slate-500 hover:text-slate-900 hover:bg-white/50"
-                                )}
-                            >
-                                <tab.icon className="w-4 h-4" />
-                                {tab.label}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Tab Content */}
-                    <div className="space-y-12 min-h-[500px]">
-                        {activeTab === 'store' && (
-                            <ProductListSection
-                                products={products}
-                                setShowAddProduct={setShowAddProduct}
-                                activeActionMenu={activeActionMenu}
-                                setActiveActionMenu={setActiveActionMenu}
-                                handleToggleStatus={handleToggleStatus}
-                                handleDeleteProduct={handleDeleteProduct}
-                            />
-                        )}
-
-                        {activeTab === 'design' && (
-                            <div className="space-y-20 pb-20 relative">
-                                {/* 1. Theme Selection */}
-                                <section className="space-y-8">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1">{t('dashboard.store.sections.theme_selection')}</h3>
-                                    </div>
-                                    <ThemeCarousel
-                                        selectedTheme={selectedTheme}
-                                        onSelectTheme={(theme) => {
-                                            setSelectedTheme(theme.id);
-                                            setSelectedColor(theme.color);
-                                            setSelectedFont(theme.font);
-                                            setButtonStyle(theme.buttonStyle);
+                    {/* Sticky Navigation Tabs (Mobile Optimized) */}
+                    <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl -mx-4 px-4 py-4 md:static md:bg-transparent md:p-0 md:m-0 border-b border-slate-100 md:border-none">
+                        <div className="flex items-center gap-1.5 p-1.5 bg-slate-100/50 md:bg-slate-100/80 rounded-[28px] max-w-fit shadow-sm border border-slate-200/50">
+                            {[
+                                { id: 'store', label: t('dashboard.store.tabs.products'), icon: ShoppingBag },
+                                { id: 'design', label: t('dashboard.store.tabs.design'), icon: Palette },
+                                { id: 'landing', label: t('dashboard.store.tabs.pages'), icon: Layout },
+                            ].map((tab) => {
+                                const isActive = activeTab === tab.id;
+                                const Icon = tab.icon;
+                                return (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => {
+                                            setActiveTab(tab.id as any);
+                                            // Scroll to top when switching tabs on mobile
+                                            if (window.innerWidth < 768) {
+                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            }
                                         }}
-                                    />
-                                </section>
-
-                                {/* 2. Appearance Tuning */}
-                                <section className="space-y-8">
-                                    {/* Section title removed per user request */}
-                                    <div className="bg-white p-8 rounded-[40px] border border-slate-100/50 shadow-sm transition-all hover:shadow-md">
-                                        <StylingSection
-                                            selectedColor={selectedColor}
-                                            setSelectedColor={setSelectedColor}
-                                            selectedFont={selectedFont}
-                                            setSelectedFont={setSelectedFont}
-                                            buttonStyle={buttonStyle}
-                                            setButtonStyle={setButtonStyle}
-                                        />
-                                    </div>
-                                </section>
-
-                                {/* Footer Action Buttons */}
-                                <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                                    <button
-                                        onClick={handleResetDesign}
-                                        className="h-14 px-8 rounded-2xl font-black text-[15px] text-slate-400 hover:bg-slate-50 transition-all active:scale-95"
-                                    >
-                                        {t('dashboard.store.actions.cancel')}
-                                    </button>
-                                    <button
-                                        onClick={() => handleSaveDesign()}
-                                        disabled={isSavingDesign}
                                         className={cn(
-                                            "h-14 px-10 rounded-2xl font-black text-[15px] transition-all active:scale-95 shadow-xl shadow-indigo-100/50",
-                                            "bg-[#5500ff] text-white hover:bg-[#4400cc] disabled:opacity-50"
+                                            "flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3.5 rounded-[22px] text-[13px] md:text-[15px] font-black transition-all active:scale-95 whitespace-nowrap",
+                                            isActive
+                                                ? "bg-white text-[#5500ff] shadow-md shadow-slate-200/50"
+                                                : "text-slate-400 hover:text-slate-600 hover:bg-white/50"
                                         )}
                                     >
-                                        {t('dashboard.store.actions.save')}
+                                        <Icon className={cn("w-4 md:w-4.5 h-4 md:h-4.5", isActive ? "text-[#5500ff]" : "text-slate-400")} />
+                                        <span>{tab.label}</span>
                                     </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {activeTab === 'landing' && (
-                            <PagesSection
-                                landingPages={[
-                                    { id: 'main', title: t('dashboard.store.modals.edit_page.main_page_title'), slug: '', status: 'active', isDefault: true },
-                                    ...products.filter(p => p.visibility === 'hidden').map(p => ({
-                                        id: p.id,
-                                        title: p.title,
-                                        slug: p.slug || p.id.split('-')[0],
-                                        status: p.status,
-                                        isDefault: false
-                                    }))
-                                ]}
-                                onAddPage={() => setShowAddLandingPage(true)}
-                                handleEditPage={(page) => {
-                                    setSelectedPage(page);
-                                    setIsPageEditModalOpen(true);
-                                }}
-                            />
-                        )}
+                                );
+                            })}
+                        </div>
                     </div>
+
+                    {/* Tab Content with Entrance Animations */}
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={activeTab}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className="space-y-12 min-h-[500px]"
+                        >
+                            {activeTab === 'store' && (
+                                <ProductListSection
+                                    products={products}
+                                    setShowAddProduct={setShowAddProduct}
+                                    activeActionMenu={activeActionMenu}
+                                    setActiveActionMenu={setActiveActionMenu}
+                                    handleToggleStatus={handleToggleStatus}
+                                    handleDeleteProduct={handleDeleteProduct}
+                                />
+                            )}
+
+                            {activeTab === 'design' && (
+                                <div className="space-y-16 pb-20 relative">
+                                    {/* 1. Theme Selection */}
+                                    <section className="space-y-6">
+                                        <div className="flex items-center justify-between px-1">
+                                            <h3 className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('dashboard.store.sections.theme_selection')}</h3>
+                                        </div>
+                                        <ThemeCarousel
+                                            selectedTheme={selectedTheme}
+                                            onSelectTheme={(theme) => {
+                                                setSelectedTheme(theme.id);
+                                                setSelectedColor(theme.color);
+                                                setSelectedFont(theme.font);
+                                                setButtonStyle(theme.buttonStyle);
+                                            }}
+                                            activeProps={{
+                                                color: selectedColor,
+                                                font: selectedFont,
+                                                buttonStyle: buttonStyle
+                                            }}
+                                        />
+                                    </section>
+
+                                    {/* 2. Appearance Tuning */}
+                                    <section className="space-y-6">
+                                        <div className="bg-white p-6 md:p-10 rounded-[32px] md:rounded-[48px] border border-slate-100 shadow-sm">
+                                            <StylingSection
+                                                selectedColor={selectedColor}
+                                                setSelectedColor={setSelectedColor}
+                                                selectedFont={selectedFont}
+                                                setSelectedFont={setSelectedFont}
+                                                buttonStyle={buttonStyle}
+                                                setButtonStyle={setButtonStyle}
+                                            />
+                                        </div>
+                                    </section>
+                                </div>
+                            )}
+
+                            {activeTab === 'landing' && (
+                                <PagesSection
+                                    landingPages={[
+                                        { id: 'main', title: t('dashboard.store.modals.edit_page.main_page_title'), slug: '', status: 'active', isDefault: true },
+                                        ...products.filter(p => p.visibility === 'hidden').map(p => ({
+                                            id: p.id,
+                                            title: p.title,
+                                            slug: p.slug || p.id.split('-')[0],
+                                            status: p.status,
+                                            isDefault: false
+                                        }))
+                                    ]}
+                                    onAddPage={() => setShowAddLandingPage(true)}
+                                    handleEditPage={(page) => {
+                                        setSelectedPage(page);
+                                        setIsPageEditModalOpen(true);
+                                    }}
+                                />
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
 
                 {/* Sidebar Preview */}
@@ -556,6 +561,34 @@ function StorePageContent() {
                             showAffiliateBadge: showAffiliateBadge
                         }}
                     />
+                </div>
+            </div>
+
+            {/* Mobile Sticky Action Bar */}
+            <div className="lg:hidden fixed bottom-6 inset-x-4 z-50 animate-in fade-in slide-in-from-bottom-10 h-20">
+                <div className="bg-white/80 backdrop-blur-2xl border border-white/20 p-3 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex items-center gap-3">
+                    <button
+                        onClick={copyToClipboard}
+                        title={t('dashboard.store.header.copy_link')}
+                        className={cn(
+                            "w-14 h-14 rounded-[24px] flex items-center justify-center transition-all active:scale-90",
+                            copied ? "bg-[#E0FFEC] text-[#00A84D]" : "bg-slate-100 text-slate-500"
+                        )}
+                    >
+                        {copied ? <Check className="w-6 h-6" /> : <Copy className="w-6 h-6" />}
+                    </button>
+                    <button
+                        onClick={handleSaveDesign}
+                        disabled={isSavingDesign}
+                        className="flex-1 h-14 rounded-[24px] bg-[#5500ff] text-white font-black flex items-center justify-center gap-3 shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50"
+                    >
+                        {isSavingDesign ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                            <Sparkles className="w-5 h-5" />
+                        )}
+                        {t('dashboard.store.header.save_changes')}
+                    </button>
                 </div>
             </div>
 

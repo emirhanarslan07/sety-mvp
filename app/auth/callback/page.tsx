@@ -12,18 +12,7 @@ export default function AuthCallbackPage() {
             const { data: { session } } = await supabase.auth.getSession();
 
             if (session) {
-                // Check if user has completed onboarding
-                const { data: profile } = await supabase
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('user_id', session.user.id)
-                    .single();
-
-                if (profile) {
-                    router.push('/dashboard');
-                } else {
-                    router.push('/onboarding');
-                }
+                router.push('/dashboard');
             } else {
                 router.push('/auth');
             }

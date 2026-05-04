@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
+import { useTranslation } from '@/lib/i18n/context';
 
 interface ProductBottomSheetProps {
     isOpen: boolean;
@@ -17,6 +18,7 @@ interface ProductBottomSheetProps {
 
 export default function ProductBottomSheet({ isOpen, onClose, product, onPurchase, profile }: ProductBottomSheetProps) {
     const { showToast } = useToast();
+    const { t } = useTranslation();
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
     const [email, setEmail] = useState('');
@@ -176,7 +178,11 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
     };
 
     if (!product) return null;
+    
     if (success) {
+        const isManual = product.checkout_provider === 'manual';
+        const paymentInfo = product.external_checkout_url || '';
+
         return (
             <AnimatePresence>
                 <motion.div
@@ -184,36 +190,70 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                     animate={{ opacity: 1 }}
                     className="fixed inset-0 z-[130] bg-white flex flex-col items-center justify-center p-8 text-center"
                 >
-                    <div className="w-24 h-24 rounded-full bg-emerald-50 flex items-center justify-center mb-8">
-                        <CheckCircle2 className="w-12 h-12 text-emerald-500 animate-bounce" />
+                    <div className="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-8">
+                        <CheckCircle2 className="w-10 h-10 text-emerald-500 animate-bounce" />
                     </div>
-                    <h2 className="text-[32px] font-black text-slate-900 mb-4 tracking-tight">Harika!</h2>
-                    <p className="text-[18px] text-slate-500 font-medium mb-12 max-w-sm">
-                        {isCoaching ? 'Randevu talebiniz alındı. Sizinle en kısa sürede iletişime geçeceğiz.' :
-                            (product.digital_file_url || product.file_url || product.redirect_url) ? 'Ürününüz hazır! Aşağıdaki butona tıklayarak erişebilirsiniz.' :
-                                'Bilgileriniz başarıyla kaydedildi!'}
-                        <br />
-                        <span className="text-[14px] opacity-60 mt-2 block">Sipariş detayları e-posta adresinize de gönderildi.</span>
-                    </p>
+                    <h2 className="text-[28px] md:text-[32px] font-black text-slate-900 mb-4 tracking-tight">
+                        {t('public.success_title') || 'Harika!'}
+                    </h2>
+                    
+                    <div className="flex flex-col items-center max-w-sm w-full">
+                        <p className="text-[16px] md:text-[18px] text-slate-500 font-medium mb-8 leading-relaxed">
+                            {isCoaching ? (t('public.coaching_success') || 'Randevu talebiniz alındı. Sizinle en kısa sürede iletişime geçeceğiz.') :
+                                (product.digital_file_url || product.file_url || product.redirect_url) ? (t('public.delivery_ready') || 'Ürününüz hazır! Aşağıdaki butona tıklayarak erişebilirsiniz.') :
+                                    isManual ? (t('public.manual_payment_instruction') || 'Ödemeyi tamamlamak için aşağıdaki bilgileri kullanın.') :
+                                        (t('public.order_captured') || 'Bilgileriniz başarıyla kaydedildi!')}
+                            <br />
+                            <span className="text-[13px] opacity-60 mt-3 block">
+                                {t('public.order_email_sent') || 'Sipariş detayları e-posta adresinize de gönderildi.'}
+                            </span>
+                        </p>
 
-                    {(product.digital_file_url || product.file_url || product.redirect_url) && (
-                        <Button
-                            onClick={() => {
-                                const url = product.redirect_url || product.digital_file_url || product.file_url;
-                                window.open(url, '_blank');
-                            }}
-                            className="h-16 px-10 rounded-2xl bg-[#6C47FF] hover:bg-[#5835E0] text-white font-black text-[17px] shadow-2xl shadow-[#6C47FF]/20 flex items-center gap-3 group"
-                        >
-                            {product.redirect_url ? 'Bağlantıya Git' : 'Şimdi İndir'}
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                    )}
+                        {/* Manual Payment Info Box */}
+                        {isManual && paymentInfo && (
+                            <div className="w-full bg-slate-50 rounded-3xl p-6 mb-8 border-2 border-slate-100 text-left">
+                                <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 block">
+                                    {t('public.payment_details') || 'Ödeme Bilgileri'}
+                                </label>
+                                <div className="bg-white p-4 rounded-2xl border border-slate-100 flex items-center justify-between gap-4 group">
+                                    <code className="text-[14px] font-bold text-slate-900 break-all">
+                                        {paymentInfo}
+                                    </code>
+                                    <button 
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(paymentInfo);
+                                            showToast(t('common.copied') || 'Kopyalandı!', 'success');
+                                        }}
+                                        className="shrink-0 w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center hover:bg-[#6C47FF] transition-all active:scale-95"
+                                    >
+                                        <CheckCircle2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <p className="text-[12px] text-slate-400 font-medium mt-4 italic">
+                                    {t('public.manual_payment_footer') || 'Ödeme yaparken açıklama kısmına e-posta adresinizi yazmayı unutmayın.'}
+                                </p>
+                            </div>
+                        )}
+
+                        {(product.digital_file_url || product.file_url || product.redirect_url) && (
+                            <Button
+                                onClick={() => {
+                                    const url = product.redirect_url || product.digital_file_url || product.file_url;
+                                    window.open(url, '_blank');
+                                }}
+                                className="h-16 px-10 w-full rounded-2xl bg-slate-900 hover:bg-[#6C47FF] text-white font-black text-[17px] shadow-2xl flex items-center justify-center gap-3 group transition-all"
+                            >
+                                {product.redirect_url ? (t('public.go_to_link') || 'Bağlantıya Git') : (t('public.download_now') || 'Şimdi İndir')}
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Button>
+                        )}
+                    </div>
 
                     <button
                         onClick={onClose}
-                        className="mt-8 text-[14px] font-bold text-slate-400 hover:text-slate-900 transition-colors"
+                        className="mt-12 text-[14px] font-bold text-slate-400 hover:text-slate-900 transition-colors"
                     >
-                        Kapat
+                        {t('common.close') || 'Kapat'}
                     </button>
                 </motion.div>
             </AnimatePresence>
@@ -313,7 +353,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                         {product.title}
                                     </h1>
                                     <p className="text-[24px] font-bold text-[#6C47FF]">
-                                        {product.price === 0 ? 'Ücretsiz' : formatCurrency(product.price)}
+                                        {product.price === 0 ? (t('public.free') || 'Free') : formatCurrency(product.price, product.currency || 'USD')}
                                     </p>
                                 </motion.div>
 

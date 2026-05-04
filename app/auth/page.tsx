@@ -230,6 +230,28 @@ function AuthContent() {
             if (verifyError) throw verifyError;
 
             if (data.user) {
+                // Initialize Profile and Store immediately to bypass onboarding
+                const { error: profileError } = await supabase.from('user_profiles').upsert({
+                    user_id: data.user.id,
+                    email: data.user.email!,
+                    plan_type: selectedPlan || 'founder',
+                    subscription_status: 'trialing',
+                    trial_ends_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    is_active: true,
+                    onboarding_completed: true,
+                });
+
+                if (profileError) console.error('Profile init error:', profileError);
+
+                const { error: storeError } = await supabase.from('stores').insert({
+                    user_id: data.user.id,
+                    username: username.toLowerCase() || `user${Math.floor(Math.random() * 10000)}`,
+                    niche: 'Digital Store',
+                    platform: 'Instagram',
+                });
+
+                if (storeError) console.error('Store init error:', storeError);
+
                 setIsSuccess(true);
                 await analytics.signup('email');
                 showToast('Hoş geldiniz!', 'success');

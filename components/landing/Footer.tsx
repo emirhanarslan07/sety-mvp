@@ -54,7 +54,7 @@ export function Footer() {
                         {/* Brand Logo */}
                         <Link href="/" className="flex items-center gap-3 group pt-10 md:pt-0">
                             <SetyLogo size="md" className="group-hover:scale-110 transition-transform" />
-                            <span className="text-2xl font-black tracking-tighter text-foreground">
+                            <span translate="no" className="notranslate text-2xl font-black tracking-tighter text-foreground">
                                 Sety
                             </span>
                         </Link>
@@ -80,7 +80,7 @@ export function Footer() {
                 {/* Bottom line */}
                 <div className="max-w-6xl mx-auto mt-20 pt-8 border-t border-border/10">
                     <p className="text-sm text-muted-foreground/60 font-medium">
-                        © {new Date().getFullYear()} Sety. {t('landing.footer.rights')}
+                        © {new Date().getFullYear()} <span translate="no" className="notranslate">Sety</span>. {t('landing.footer.rights')}
                     </p>
                 </div>
             </div>
