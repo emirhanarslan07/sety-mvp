@@ -92,7 +92,7 @@ export default function SettingsPage() {
             await supabase.from('user_profiles').delete().eq('user_id', user.id);
 
             // Sign out
-            await supabase.auth.signOut();
+            await fetch('/api/auth/signout', { method: 'POST' });
             window.location.href = '/';
         } catch (err: any) {
             showToast('Hesap silinirken hata oluştu: ' + err.message, 'error');
@@ -100,7 +100,7 @@ export default function SettingsPage() {
     };
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
+        await fetch('/api/auth/signout', { method: 'POST' });
         window.location.href = '/';
     };
 
