@@ -9,6 +9,7 @@ import { FAQ } from '@/components/landing/FAQ';
 import { Footer } from '@/components/landing/Footer';
 import { StickyCTA } from '@/components/landing/StickyCTA';
 import { Comparison } from '@/components/landing/Comparison';
+import { LeadMagnet } from '@/components/landing/LeadMagnet';
 
 
 export default function Home() {
@@ -39,6 +40,8 @@ export default function Home() {
             <div id="faq">
                 <FAQ />
             </div>
+
+            <LeadMagnet />
 
 
 

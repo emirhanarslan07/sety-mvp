@@ -38,7 +38,7 @@ export function Step4Verify({
                     type="text"
                     value={verificationCode}
                     onChange={(e) => setVerificationCode(e.target.value)}
-                    placeholder="Doğrulama Kodu"
+                    placeholder="Verification Code"
                     className="pl-12 h-[52px] rounded-xl border border-slate-200 hover:border-slate-300 focus-visible:border-[#5500ff] bg-white shadow-sm text-[16px] placeholder:text-slate-400 font-medium transition-all duration-200"
                     required
                 />
@@ -52,12 +52,12 @@ export function Step4Verify({
                     disabled={loading || verificationCode.length < 6}
                     className="w-full h-[54px] rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white font-semibold text-[17px] shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2 transform active:scale-[0.98] border-none"
                 >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Doğrula ve Bitir ✨'}
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Verify and Finish ✨'}
                 </Button>
             </div>
 
             <p className="text-center text-[13px] text-slate-400 font-medium">
-                Kodu almadınız mı? <button className="text-[#5500ff] hover:underline font-bold">Tekrar Gönder</button>
+                Didn't receive code? <button className="text-[#5500ff] hover:underline font-bold">Resend</button>
             </p>
         </motion.div>
     );

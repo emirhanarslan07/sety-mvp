@@ -2,30 +2,44 @@ import React, { useState, useRef } from 'react';
 import { Upload, FileText, X, Link, ExternalLink, File } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
-import { useTranslation } from '@/lib/i18n/context';
 
 interface FileUploadSectionProps {
     uploadedFileUrl: string;
     redirectUrl: string;
+    paymentLinkOverride?: string;
     onFileUploaded: (url: string, name: string) => void;
     onRedirectUrlChange: (url: string) => void;
+    onPaymentLinkOverrideChange?: (url: string) => void;
 }
 
-export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded, onRedirectUrlChange }: FileUploadSectionProps) {
+export function FileUploadSection({ uploadedFileUrl, redirectUrl, paymentLinkOverride = '', onFileUploaded, onRedirectUrlChange, onPaymentLinkOverrideChange }: FileUploadSectionProps) {
     const { showToast } = useToast();
-    const { t } = useTranslation();
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedFileName, setUploadedFileName] = useState('');
     const [useRedirect, setUseRedirect] = useState(false);
+    const [defaultProvider, setDefaultProvider] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    React.useEffect(() => {
+        if (onPaymentLinkOverrideChange) {
+            fetch('/api/settings/payment')
+                .then(res => res.json())
+                .then(json => {
+                    if (json.data && json.data.default_provider) {
+                        setDefaultProvider(json.data.default_provider);
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+    }, [onPaymentLinkOverrideChange]);
 
     const handleFile = async (file: File) => {
         if (!file) return;
         setIsUploading(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error(t('common.session_not_found'));
+            if (!user) throw new Error('Oturum bulunamadı');
 
             const fileExt = file.name.split('.').pop();
             const fileName = `${Math.random().toString(36).slice(2)}.${fileExt}`;
@@ -43,9 +57,9 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
 
             onFileUploaded(publicUrl, file.name);
             setUploadedFileName(file.name);
-            showToast(t('dashboard.store.editors.upload.upload_success'), 'success');
+            showToast('Yükleme başarılı', 'success');
         } catch (err: any) {
-            showToast(`${t('dashboard.store.editors.upload.upload_error')}: ${err.message}`, 'error');
+            showToast(`Yükleme hatası: ${err.message}`, 'error');
         } finally {
             setIsUploading(false);
         }
@@ -62,7 +76,7 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
         <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 space-y-8 transition-all hover:shadow-2xl hover:shadow-slate-200/30">
             <div className="space-y-2">
                 <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest">
-                    {t('dashboard.store.editors.upload.delivery_hint')}
+                    {'dashboard.store.editors.upload.delivery_hint'}
                 </p>
             </div>
 
@@ -72,13 +86,13 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                     onClick={() => setUseRedirect(false)}
                     className={`flex-1 h-11 rounded-2xl text-[13px] font-black transition-all border ${!useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
                 >
-                    {t('dashboard.store.editors.upload.file_tab')}
+                    {'dashboard.store.editors.upload.file_tab'}
                 </button>
                 <button
                     onClick={() => setUseRedirect(true)}
                     className={`flex-1 h-11 rounded-2xl text-[13px] font-black transition-all border ${useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
                 >
-                    {t('dashboard.store.editors.upload.url_tab')}
+                    {'dashboard.store.editors.upload.url_tab'}
                 </button>
             </div>
 
@@ -90,8 +104,8 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                             <FileText className="w-5 h-5 text-emerald-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[14px] font-black text-emerald-800 truncate">{uploadedFileName || t('dashboard.store.editors.upload.file_uploaded')}</p>
-                            <p className="text-[12px] text-emerald-600 font-medium">{t('dashboard.store.editors.upload.auto_delivery_msg')}</p>
+                            <p className="text-[14px] font-black text-emerald-800 truncate">{uploadedFileName || 'dashboard.store.editors.upload.file_uploaded'}</p>
+                            <p className="text-[12px] text-emerald-600 font-medium">{'dashboard.store.editors.upload.auto_delivery_msg'}</p>
                         </div>
                         <button
                             onClick={() => { onFileUploaded('', ''); setUploadedFileName(''); }}
@@ -117,14 +131,14 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                         </div>
                         <div className="text-center">
                             <p className="text-[15px] font-black text-slate-700">
-                                {isUploading ? t('dashboard.store.editors.publishing') : t('dashboard.store.editors.upload.drag_drop_title')}
+                                {isUploading ? 'dashboard.store.editors.publishing' : 'dashboard.store.editors.upload.drag_drop_title'}
                             </p>
                             <p className="text-[13px] text-slate-400 font-medium mt-1">
-                                {t('dashboard.store.editors.upload.or_choose')}
+                                {'dashboard.store.editors.upload.or_choose'}
                             </p>
                         </div>
                         <p className="text-[11px] text-slate-300 font-medium">
-                            {t('dashboard.store.editors.upload.file_types_hint')}
+                            {'dashboard.store.editors.upload.file_types_hint'}
                         </p>
                         <input
                             ref={fileInputRef}
@@ -146,13 +160,71 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, onFileUploaded
                             type="url"
                             value={redirectUrl}
                             onChange={(e) => onRedirectUrlChange(e.target.value)}
-                            placeholder={t('dashboard.store.editors.upload.url_placeholder')}
+                            placeholder={'dashboard.store.editors.upload.url_placeholder'}
                             className="w-full h-14 pl-12 pr-5 bg-slate-50 border border-slate-100 rounded-2xl text-[14px] font-medium text-slate-700 focus:ring-4 focus:ring-[#5500ff]/5 focus:border-[#5500ff] outline-none transition-all placeholder:text-slate-300"
                         />
                     </div>
                     <p className="text-[12px] text-slate-400 font-medium ml-1">
-                        {t('dashboard.store.editors.upload.url_hint')}
+                        {'dashboard.store.editors.upload.url_hint'}
                     </p>
+                </div>
+            )}
+
+            {/* Payment Override Section */}
+            {onPaymentLinkOverrideChange && (
+                <div className="pt-8 border-t border-slate-100 space-y-5">
+                    <div className="space-y-1">
+                        <h4 className="text-[15px] font-black text-slate-800">Ödeme Linki (İsteğe Bağlı)</h4>
+                        <p className="text-[13px] font-medium text-slate-500">Bu ürün için farklı bir ödeme linki kullanmak isterseniz belirtebilirsiniz.</p>
+                    </div>
+
+                    <div className="space-y-3">
+                        <div 
+                            onClick={() => onPaymentLinkOverrideChange('')}
+                            className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${!paymentLinkOverride ? 'border-[#5500ff] bg-[#5500ff]/5' : 'border-slate-100 hover:border-slate-200 bg-white'}`}
+                        >
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${!paymentLinkOverride ? 'border-[#5500ff]' : 'border-slate-300'}`}>
+                                {!paymentLinkOverride && <div className="w-2.5 h-2.5 rounded-full bg-[#5500ff]" />}
+                            </div>
+                            <div>
+                                <p className={`font-bold text-sm ${!paymentLinkOverride ? 'text-[#5500ff]' : 'text-slate-700'}`}>
+                                    Genel ayarları kullan (önerilen)
+                                </p>
+                                <p className="text-xs text-slate-500 mt-0.5">
+                                    {defaultProvider ? `Varsayılan yöntem: ${defaultProvider.charAt(0).toUpperCase() + defaultProvider.slice(1)}` : 'Mağaza ayarlarındaki varsayılan ödeme yöntemi kullanılır'}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div 
+                            onClick={() => {
+                                if (!paymentLinkOverride) onPaymentLinkOverrideChange('https://');
+                            }}
+                            className={`p-4 rounded-2xl border-2 transition-all ${paymentLinkOverride ? 'border-[#5500ff] bg-[#5500ff]/5' : 'border-slate-100 bg-white'}`}
+                        >
+                            <div className="flex items-center gap-3 cursor-pointer mb-3">
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${paymentLinkOverride ? 'border-[#5500ff]' : 'border-slate-300'}`}>
+                                    {paymentLinkOverride && <div className="w-2.5 h-2.5 rounded-full bg-[#5500ff]" />}
+                                </div>
+                                <div>
+                                    <p className={`font-bold text-sm ${paymentLinkOverride ? 'text-[#5500ff]' : 'text-slate-700'}`}>Özel ödeme linki kullan</p>
+                                </div>
+                            </div>
+                            
+                            {paymentLinkOverride !== '' && (
+                                <div className="pl-8">
+                                    <input
+                                        type="url"
+                                        value={paymentLinkOverride}
+                                        onChange={(e) => onPaymentLinkOverrideChange(e.target.value)}
+                                        placeholder="https://..."
+                                        className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-[#5500ff] outline-none text-sm bg-white"
+                                    />
+                                    <p className="text-xs text-slate-500 mt-2">Sadece bu ürün için yukarıdaki linke yönlendirilir.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

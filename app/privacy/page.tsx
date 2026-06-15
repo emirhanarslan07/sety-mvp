@@ -141,14 +141,25 @@ export default function PrivacyPage() {
                             </h2>
                             <div className="pl-11 space-y-3 text-slate-600 leading-relaxed">
                                 <p>KVKK ve GDPR kapsamında; verilerinize erişme, düzeltme, silme talep etme ve işlemeye itiraz etme haklarına sahipsiniz.</p>
-                                <p>Tüm talepleriniz için: <a href="mailto:support@sety.co" className="text-[#7C3AED] font-medium hover:underline">support@sety.co</a></p>
+                                <p>Tüm talepleriniz için: <a href="mailto:hello@sety.store" className="text-[#7C3AED] font-medium hover:underline">hello@sety.store</a></p>
+                            </div>
+                        </section>
+
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-3">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-50 text-slate-500 text-sm">8</span>
+                                Alıcı Ödemeleri ve Finansal Veriler
+                            </h2>
+                            <div className="pl-11 space-y-3 text-slate-600 leading-relaxed">
+                                <p>Sety, mağaza sahiplerinin (creator'ların) kendi müşterilerinden (alıcılardan) aldığı ödemelere ait kredi kartı, banka bilgileri veya diğer finansal verileri kesinlikle işlemez, saklamaz veya platform sunucularından geçirmez. Bu ödemeler, mağaza sahibinin kendi hesabına bağladığı üçüncü taraf ödeme aracıları (Stripe, PayPal, iyzico vb.) tarafından doğrudan ve ilgili kuruluşların kendi gizlilik politikaları çerçevesinde güvenli bir şekilde işlenir.</p>
+                                <p>Sety, yalnızca mağaza sahiplerinin platform kullanımına yönelik (Sety Pro aboneliği) gerçekleştirdiği ödemeleri yetkili ödeme ortağımız Paddle aracılığıyla yönetir.</p>
                             </div>
                         </section>
 
                         <section className="space-y-4 p-6 bg-slate-50 rounded-2xl border border-slate-100">
                             <h2 className="text-lg font-bold text-slate-900">İletişim</h2>
                             <p className="text-slate-600">Sorularınız için bizimle her zaman iletişime geçebilirsiniz.</p>
-                            <p className="text-slate-600">E-posta: <a href="mailto:support@sety.co" className="text-[#6a5fff] font-medium hover:underline">support@sety.co</a></p>
+                            <p className="text-slate-600">E-posta: <a href="mailto:hello@sety.store" className="text-[#6a5fff] font-medium hover:underline">hello@sety.store</a></p>
                         </section>
                     </div>
                 </div>

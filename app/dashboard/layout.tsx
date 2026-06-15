@@ -81,81 +81,8 @@ function DashboardLayoutContent({
         //     router.push('/auth');
         //     return;
         // }
-
-        if (store?.id) {
-            const loadNotifications = async () => {
-                const [ordersRes, customersRes] = await Promise.all([
-                    supabase.from('orders')
-                        .select('id, amount, created_at, products(title), customers(name)')
-                        .eq('store_id', store.id)
-                        .order('created_at', { ascending: false })
-                        .limit(5),
-                    supabase.from('customers')
-                        .select('id, name, email, created_at')
-                        .eq('store_id', store.id)
-                        .order('created_at', { ascending: false })
-                        .limit(3)
-                ]);
-
-                const recentOrders = ordersRes.data || [];
-                const recentCustomers = customersRes.data || [];
-                const notifs: any[] = [];
-
-                recentOrders.forEach((order: any) => {
-                    const minutesAgo = Math.floor((Date.now() - new Date(order.created_at).getTime()) / 60000);
-                    const timeStr = minutesAgo < 60
-                        ? `${minutesAgo} ${t('dashboard.notifications.minute_ago')}`
-                        : minutesAgo < 1440
-                            ? `${Math.floor(minutesAgo / 60)} ${t('dashboard.notifications.hour_ago')}`
-                            : `${Math.floor(minutesAgo / 1440)} ${t('dashboard.notifications.day_ago')}`;
-
-                    notifs.push({
-                        id: `order-${order.id}`,
-                        type: 'sale',
-                        title: t('dashboard.notifications.sale_title'),
-                        message: `${order.products?.title || t('dashboard.notifications.product_fallback')} — ₺${order.amount}`,
-                        time: timeStr,
-                        read: minutesAgo > 1440,
-                        icon: Wallet,
-                        iconColor: 'text-emerald-500',
-                        bgColor: 'bg-emerald-50'
-                    });
-                });
-
-                recentCustomers.forEach((cust: any) => {
-                    const minutesAgo = Math.floor((Date.now() - new Date(cust.created_at).getTime()) / 60000);
-                    const timeStr = minutesAgo < 60
-                        ? `${minutesAgo} ${t('dashboard.notifications.minute_ago')}`
-                        : minutesAgo < 1440
-                            ? `${Math.floor(minutesAgo / 60)} ${t('dashboard.notifications.hour_ago')}`
-                            : `${Math.floor(minutesAgo / 1440)} ${t('dashboard.notifications.day_ago')}`;
-
-                    notifs.push({
-                        id: `cust-${cust.id}`,
-                        type: 'user',
-                        title: t('dashboard.notifications.customer_title'),
-                        message: `${cust.name || cust.email} ${t('dashboard.notifications.registered')}`,
-                        time: timeStr,
-                        read: minutesAgo > 1440,
-                        icon: Heart,
-                        iconColor: 'text-blue-500',
-                        bgColor: 'bg-blue-50'
-                    });
-                });
-
-                setNotifications(notifs.sort((a, b) => {
-                    const parseTime = (timeStr: string) => {
-                        const num = parseInt(timeStr);
-                        if (timeStr.includes(t('dashboard.notifications.minute_ago'))) return num;
-                        if (timeStr.includes(t('dashboard.notifications.hour_ago'))) return num * 60;
-                        return num * 1440;
-                    };
-                    return parseTime(a.time) - parseTime(b.time);
-                }));
-            };
-            loadNotifications();
-        }
     }, [contextLoading, user, store, router]);
+
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
@@ -271,7 +198,7 @@ function DashboardLayoutContent({
                                     />
                                 </div>
                                 <button
-                                    onClick={() => router.push('/dashboard/settings?tab=billing')}
+                                    onClick={() => router.push('/dashboard/billing')}
                                     className="w-full py-2.5 rounded-xl bg-slate-900 text-white text-[12px] font-black hover:bg-slate-800 transition-all mt-1"
                                 >
                                     {t('dashboard.sidebar.upgrade')}
@@ -407,7 +334,8 @@ function DashboardLayoutContent({
                                     pathname.includes('/income') ? t('dashboard.menu.income') :
                                         pathname.includes('/analytics') ? t('dashboard.menu.analytics') :
                                             pathname.includes('/customers') ? t('dashboard.menu.customers') :
-                                                pathname.includes('/settings') ? t('dashboard.menu.settings') : 'Panel'}
+                                                pathname.includes('/settings') ? t('dashboard.menu.settings') :
+                                                    pathname.includes('/billing') ? t('dashboard.settings.tabs.billing') : 'Panel'}
                         </h2>
                     </div>
 
@@ -527,12 +455,7 @@ function DashboardLayoutContent({
                                 <div className="grid grid-cols-3 gap-y-10 gap-x-4">
                                     {[
                                         { label: t('dashboard.menu.customers'), icon: Heart, href: '/dashboard/customers' },
-                                        { label: 'Funnels', icon: Filter, href: '/dashboard/funnels' },
-                                        { label: 'Affiliate', icon: Link2, href: '/dashboard/affiliate' },
-                                        { label: 'Appointments', icon: Clock, href: '/dashboard/appointments' },
-                                        { label: 'Referrals', icon: Smile, href: '/dashboard/referrals' },
-                                        { label: 'Email Flows', icon: Mail, href: '/dashboard/emails' },
-                                        { label: 'AutoDM', icon: Send, href: '/dashboard/autodm' },
+                                        { label: t('dashboard.menu.settings'), icon: Settings, href: '/dashboard/settings' },
                                     ].map((item, i) => (
                                         <Link
                                             key={i}
@@ -548,38 +471,15 @@ function DashboardLayoutContent({
                                     ))}
                                 </div>
 
-                                {/* Other & Accounts Sections */}
+                                {/* Accounts Sections */}
                                 <div className="space-y-10">
-                                    {/* Other Section */}
-                                    <div className="space-y-4">
-                                        <h3 className="text-[18px] font-black text-indigo-900 px-2 tracking-tight opacity-40 uppercase text-[12px]">Other</h3>
-                                        <div className="space-y-3">
-                                            {[
-                                                { label: 'Community', icon: Users, href: '/dashboard/community' },
-                                                { label: t('dashboard.menu.settings'), icon: Settings, href: '/dashboard/settings' },
-                                                { label: 'Ask Sety AI', icon: Zap, href: '/dashboard/ai' },
-                                            ].map((item, i) => (
-                                                <Link
-                                                    key={i}
-                                                    href={item.href}
-                                                    onClick={() => setShowMobileMenu(false)}
-                                                    className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-white shadow-sm border border-transparent active:scale-[0.98] transition-all"
-                                                >
-                                                    <div className="w-10 h-10 rounded-xl bg-indigo-50/50 flex items-center justify-center text-[#5500ff]">
-                                                        <item.icon className="w-5 h-5" />
-                                                    </div>
-                                                    <span className="text-[16px] font-black text-indigo-900">{item.label}</span>
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-
                                     {/* Accounts Section */}
                                     <div className="space-y-4">
                                         <h3 className="text-[18px] font-black text-indigo-900 px-2 tracking-tight opacity-40 uppercase text-[12px]">Accounts</h3>
                                         <div className="space-y-3">
                                             {/* Current User Profile Card */}
                                             <div className="w-full flex items-center gap-4 p-6 rounded-[32px] bg-white shadow-sm border border-transparent">
+
                                                 <div className="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden border-2 border-white shadow-sm relative">
                                                     {profile?.profile_image_url ? (
                                                         <Image src={profile.profile_image_url} alt="" fill className="object-cover" />

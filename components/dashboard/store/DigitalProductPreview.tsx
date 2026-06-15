@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useTranslation } from '@/lib/i18n/context';
 
 interface DigitalProductPreviewProps {
     data: {
@@ -25,7 +24,6 @@ interface DigitalProductPreviewProps {
 }
 
 export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: DigitalProductPreviewProps) {
-    const { t } = useTranslation();
     const [showCouponInput, setShowCouponInput] = React.useState(false);
     const hasDiscount = data.discount_price && data.discount_price > 0 && data.discount_price < data.price;
     const displayPrice = hasDiscount ? data.discount_price! : data.price;
@@ -37,7 +35,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                 <div className="absolute top-4 left-4 z-20">
                     <div className="px-3 py-1 bg-white/90 backdrop-blur-md border border-slate-100 rounded-full shadow-sm flex items-center gap-1.5 animate-in fade-in slide-in-from-left-2 duration-500">
                         <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                        <span className="text-[10px] font-black text-slate-900 tracking-tight uppercase">{t('dashboard.store.preview.limited_stock')}: {data.quantity_limit} {t('dashboard.store.preview.units')}</span>
+                        <span className="text-[10px] font-black text-slate-900 tracking-tight uppercase">{'dashboard.store.preview.limited_stock'}: {data.quantity_limit} {'dashboard.store.preview.units'}</span>
                     </div>
                 </div>
             )}
@@ -53,7 +51,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">{t('dashboard.store.preview.no_image_selected')}</p>
+                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">{'dashboard.store.preview.no_image_selected'}</p>
                     </div>
                 )}
                 {/* Stan-style overlay fade */}
@@ -85,8 +83,8 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                         {/* Payment Plan Info */}
                         {data.payment_plan_enabled && data.payment_plan_installments && (
                             <p className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
-                                {t('dashboard.store.preview.or')} <span className="text-slate-900">{data.payment_plan_installments} {t('dashboard.store.preview.installments')}</span> {t('dashboard.store.preview.selection_with')}
-                                <span className="text-[#5500ff]"> ${((displayPrice) / parseInt(data.payment_plan_installments)).toFixed(2)} / {t('dashboard.store.preview.per_month')}</span>
+                                {'dashboard.store.preview.or'} <span className="text-slate-900">{data.payment_plan_installments} {'dashboard.store.preview.installments'}</span> {'dashboard.store.preview.selection_with'}
+                                <span className="text-[#5500ff]"> ${((displayPrice) / parseInt(data.payment_plan_installments)).toFixed(2)} / {'dashboard.store.preview.per_month'}</span>
                             </p>
                         )}
 
@@ -164,17 +162,17 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                     </svg>
-                                    {t('dashboard.store.preview.have_coupon')}
+                                    {'dashboard.store.preview.have_coupon'}
                                 </button>
                             ) : (
                                 <div className="flex gap-2 animate-in zoom-in-95 duration-200">
                                     <input
                                         type="text"
-                                        placeholder={t('dashboard.store.preview.coupon_placeholder')}
+                                        placeholder={'dashboard.store.preview.coupon_placeholder'}
                                         className="flex-1 h-11 px-4 bg-[#F8FAFC] border-2 border-[#5500ff]/20 rounded-xl text-[12px] font-black focus:border-[#5500ff] outline-none tracking-widest uppercase"
                                     />
                                     <button className="h-11 px-5 bg-slate-900 text-white rounded-xl text-[11px] font-black uppercase tracking-widest active:scale-95 transition-all">
-                                        {t('dashboard.store.preview.apply')}
+                                        {'dashboard.store.preview.apply'}
                                     </button>
                                 </div>
                             )}
@@ -214,7 +212,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                                 </svg>
                             </div>
                             <div className="flex flex-col items-start leading-none">
-                                <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">{t('dashboard.store.preview.built_with')}</span>
+                                <span className="text-[8px] text-slate-400 font-bold uppercase tracking-widest mb-0.5">{'dashboard.store.preview.built_with'}</span>
                                 <span className="text-[11px] text-slate-900 font-[900] tracking-tight">Sety Store</span>
                             </div>
                         </div>
@@ -224,7 +222,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                             <svg className="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                             </svg>
-                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">{t('dashboard.store.preview.secure_checkout')}</span>
+                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">{'dashboard.store.preview.secure_checkout'}</span>
                         </div>
                     </div>
                 </div>

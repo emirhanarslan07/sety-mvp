@@ -96,36 +96,47 @@ export default function CustomersPage() {
     }
 
     return (
-        <div className="max-w-[1200px] mx-auto space-y-10 pb-32 px-4 md:px-8 pt-8 text-slate-900">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12 pb-32 space-y-10 text-slate-900">
             {/* Premium Header & ActionsSection */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div className="flex items-center gap-2 p-1 bg-slate-100/80 rounded-[28px] border border-slate-200/50 w-full md:w-auto overflow-hidden">
-                    <div className="relative flex-1 md:w-80">
-                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                        <input
-                            type="text"
-                            placeholder={t('dashboard.customers.search_placeholder')}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-14 pr-6 py-4 bg-transparent text-[15px] font-bold focus:outline-none placeholder:text-slate-400"
-                        />
-                    </div>
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                        Müşteriler 👥
+                    </h1>
+                    <p className="text-slate-500 mt-2 font-bold">
+                        Mağazanızdan alışveriş yapan müşterileri görüntüleyin.
+                    </p>
                 </div>
 
-                <button className="h-16 px-10 bg-slate-900 text-white rounded-[28px] font-black text-[15px] flex items-center gap-3 shadow-[0_20px_40px_rgba(15,23,42,0.15)] hover:bg-[#5500ff] transition-all hover:scale-[1.02] active:scale-95 group">
-                    <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                    {t('dashboard.customers.actions.add_contact')}
-                </button>
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                    <div className="flex items-center gap-2 p-1 bg-slate-100/80 rounded-[28px] border border-slate-200/50 w-full sm:w-auto overflow-hidden">
+                        <div className="relative flex-1 sm:w-80">
+                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                            <input
+                                type="text"
+                                placeholder={'Müşteri ara...'}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-14 pr-6 py-4 bg-transparent text-[15px] font-bold focus:outline-none placeholder:text-slate-400"
+                            />
+                        </div>
+                    </div>
+
+                    <button className="w-full sm:w-auto h-16 px-10 bg-slate-900 text-white rounded-[28px] font-black text-[15px] flex items-center justify-center gap-3 shadow-[0_20px_40px_rgba(15,23,42,0.15)] hover:bg-[#5500ff] transition-all hover:scale-[1.02] active:scale-95 group">
+                        <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                        {'Kişi Ekle'}
+                    </button>
+                </div>
             </div>
 
             {/* Premium Filter Pills */}
             <div className="flex flex-wrap gap-2.5">
                 {[
-                    { key: 'name', label: t('dashboard.customers.filters.name') },
-                    { key: 'email', label: t('dashboard.customers.filters.email') },
-                    { key: 'joined', label: t('dashboard.customers.filters.joined') },
-                    { key: 'orders', label: t('dashboard.customers.filters.orders') },
-                    { key: 'spent', label: t('dashboard.customers.filters.spent') },
+                    { key: 'name', label: 'İsim' },
+                    { key: 'email', label: 'E-posta' },
+                    { key: 'joined', label: 'Katılma Tarihi' },
+                    { key: 'orders', label: 'Siparişler' },
+                    { key: 'spent', label: 'Harcama' },
                 ].map((filter, index) => (
                     <button
                         key={index}
@@ -137,34 +148,27 @@ export default function CustomersPage() {
             </div>
 
             {/* Main Content Area */}
-            <div className="bg-white rounded-[44px] border border-slate-100/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden min-h-[600px] flex flex-col items-center justify-center relative">
+            <div className="bg-white rounded-[32px] md:rounded-[44px] border border-slate-100/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden min-h-[600px] flex flex-col relative">
                 {filteredCustomers.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-24 px-6 text-center max-w-2xl mx-auto w-full">
-                        {/* Premium Clean Empty State Illustration */}
-                        <div className="relative mb-16">
-                            <div className="absolute inset-0 bg-[#5500ff]/5 rounded-full blur-[80px] scale-150" />
-                            <div className="w-32 h-32 bg-white rounded-[40px] shadow-2xl shadow-indigo-100 border border-slate-100 flex items-center justify-center relative z-10">
-                                <Users className="w-12 h-12 text-[#5500ff] stroke-[2.5px]" />
-                                <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-[#E0FFEC] border-4 border-white shadow-lg flex items-center justify-center">
-                                    <Check className="w-5 h-5 text-[#00A84D] stroke-[3px]" />
-                                </div>
+                    <div className="flex-1 flex flex-col items-center justify-center p-6 text-center w-full">
+                        <div className="py-24 flex flex-col items-center justify-center text-center px-4 border-2 border-dashed border-slate-200 rounded-[40px] bg-slate-50/50 w-full max-w-2xl mx-auto">
+                            <div className="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
+                                <Users className="w-10 h-10 text-slate-300" />
                             </div>
-                        </div>
 
-                        <div className="space-y-6 relative z-10">
-                            <h3 className="text-[32px] md:text-[40px] font-black text-slate-900 tracking-tight leading-none">
-                                {t('dashboard.customers.empty_title')}
+                            <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">
+                                Henüz müşteri yok
                             </h3>
+                            <p className="text-slate-500 font-medium max-w-[320px] mb-10">
+                                Müşterileriniz sipariş verdiğinde burada görünecek
+                            </p>
+                            
                             <button
                                 onClick={() => router.push('/dashboard/store?tab=store&action=add')}
-                                className="group inline-flex items-center gap-4 text-[#5500ff] text-[20px] font-black hover:gap-6 transition-all duration-300"
+                                className="bg-[#5500ff] text-white font-black px-10 py-6 rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20 hover:scale-[1.02] active:scale-95 transition-all text-base"
                             >
-                                {t('dashboard.customers.empty_cta')}
-                                <span className="text-2xl group-hover:translate-x-1 transition-transform">→</span>
+                                Ürün Ekle
                             </button>
-                            <p className="text-slate-400 text-[16px] font-bold pt-8 leading-relaxed opacity-80">
-                                {t('dashboard.customers.empty_footer')}
-                            </p>
                         </div>
                     </div>
                 ) : (
@@ -172,11 +176,11 @@ export default function CustomersPage() {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-slate-50">
-                                    <th className="text-left py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">{t('dashboard.customers.filters.name')}</th>
-                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">{t('dashboard.customers.filters.email')}</th>
-                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">{t('dashboard.customers.filters.joined')}</th>
-                                    <th className="text-center py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">{t('dashboard.customers.filters.orders')}</th>
-                                    <th className="text-right py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">{t('dashboard.customers.filters.spent')}</th>
+                                    <th className="text-left py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">İsim</th>
+                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">E-posta</th>
+                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Katılma Tarihi</th>
+                                    <th className="text-center py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Siparişler</th>
+                                    <th className="text-right py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Harcama</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50">

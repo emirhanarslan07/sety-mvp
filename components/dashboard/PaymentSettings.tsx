@@ -100,11 +100,11 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
                         <CreditCard className="w-8 h-8 text-[#5500ff]" />
                     </div>
                     <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-none">
-                        Connect Payment Methods
+                        Ödeme Yöntemlerini Bağla
                     </h2>
                 </div>
                 <p className="text-slate-400 font-bold text-lg leading-relaxed max-w-2xl opacity-80">
-                    Connect your preferred payment gateway to receive payments from anywhere in the world. We don&apos;t take any commission, payments go directly to your account.
+                    Dünyanın her yerinden ödeme almak için tercih ettiğiniz ödeme geçidini bağlayın. Biz komisyon almıyoruz, ödemeler doğrudan hesabınıza geçer.
                 </p>
             </div>
 
@@ -133,7 +133,7 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
                             </div>
                             <div className="relative z-10 space-y-1">
                                 <h4 className="text-[20px] font-black text-slate-900 tracking-tight uppercase">{p.name}</h4>
-                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{p.region}</p>
+                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em]">{p.region === 'Global' ? 'KÜRESEL' : p.region}</p>
                             </div>
                             {isActive && (
                                 <div className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-[#5500ff]/5 rounded-full blur-3xl" />
@@ -151,7 +151,7 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
-                        className="bg-white rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] p-10 md:p-14 space-y-12"
+                        className="rounded-[32px] md:rounded-[44px] bg-white border border-slate-100/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] p-6 md:p-10 space-y-12"
                     >
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-slate-50 pb-10">
                             <div className="flex items-center gap-6">
@@ -159,13 +159,13 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
                                     {provider.icon}
                                 </div>
                                 <div className="space-y-1">
-                                    <h3 className="text-[24px] font-black text-slate-900 tracking-tight">{provider.name} Configuration</h3>
-                                    <p className="text-slate-400 font-bold text-base">Enter your API credentials to complete the setup.</p>
+                                    <h3 className="text-[24px] font-black text-slate-900 tracking-tight">{provider.name} Yapılandırması</h3>
+                                    <p className="text-slate-400 font-bold text-base">Kurulumu tamamlamak için API anahtarlarınızı girin.</p>
                                 </div>
                             </div>
                             <button className="h-14 px-8 rounded-2xl bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold text-sm tracking-tight flex items-center gap-3 transition-all border border-slate-100 active:scale-95">
                                 <ExternalLink className="w-4 h-4" />
-                                Setup Guide
+                                Kurulum Rehberi
                             </button>
                         </div>
 
@@ -188,14 +188,14 @@ export default function PaymentSettings({ initialConfig, onSave }: PaymentSettin
                                 <div className="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center shrink-0">
                                     <Shield className="w-6 h-6 text-white" />
                                 </div>
-                                <span className="text-[13px] font-bold text-slate-500 italic max-w-xs leading-tight">Your credentials are encrypted end-to-end and stored securely.</span>
+                                <span className="text-[13px] font-bold text-slate-500 italic max-w-xs leading-tight">Bilgileriniz uçtan uca şifrelenir ve güvenli bir şekilde saklanır.</span>
                             </div>
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
                                 className="h-20 px-14 rounded-[32px] bg-slate-900 hover:bg-[#5500ff] text-white font-black text-[18px] shadow-2xl transition-all active:scale-95 disabled:opacity-50 min-w-[280px] flex items-center justify-center gap-4"
                             >
-                                {saving ? 'Connecting...' : 'Save Connection'}
+                                {saving ? 'Bağlanıyor...' : 'Bağlantıyı Kaydet'}
                                 {!saving && <ArrowRight className="w-6 h-6" />}
                             </button>
                         </div>

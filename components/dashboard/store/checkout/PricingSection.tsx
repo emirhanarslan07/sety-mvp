@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { DollarSign, ChevronDown, ChevronUp, Tag, Calendar, Package } from 'lucide-react';
-import { useTranslation } from '@/lib/i18n/context';
 
 interface PricingData {
     price: string;
@@ -31,7 +30,6 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
 }
 
 export function PricingSection({ data, onChange }: PricingSectionProps) {
-    const { t } = useTranslation();
 
     return (
         <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 space-y-8 transition-all hover:shadow-2xl hover:shadow-slate-200/30">
@@ -41,7 +39,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                 {/* Price */}
                 <div className="space-y-2">
                     <label className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1 flex items-center gap-1.5">
-                        {t('dashboard.store.editors.pricing.price_label')}
+                        {'dashboard.store.editors.pricing.price_label'}
                     </label>
                     <div className="relative">
                         <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[15px] font-black text-slate-400">$</div>
@@ -63,15 +61,15 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             : 'text-slate-400'
                         }`}>
                         {parseFloat(data.price) > 0 && parseFloat(data.price) < 0.5
-                            ? t('dashboard.store.editors.pricing.min_price_error')
-                            : t('dashboard.store.editors.pricing.price_hint')}
+                            ? 'dashboard.store.editors.pricing.min_price_error'
+                            : 'dashboard.store.editors.pricing.price_hint'}
                     </p>
                 </div>
 
                 {/* Discount Price */}
                 <div className="space-y-2">
                     <label className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1">
-                        {t('dashboard.store.editors.pricing.discount_price_label')}
+                        {'dashboard.store.editors.pricing.discount_price_label'}
                     </label>
                     <div className="relative">
                         <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[15px] font-black text-slate-300">$</div>
@@ -93,8 +91,8 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             : 'text-slate-400'
                         }`}>
                         {parseFloat(data.discount_price) >= parseFloat(data.price) && parseFloat(data.price) > 0
-                            ? t('dashboard.store.editors.pricing.discount_price_error')
-                            : t('dashboard.store.editors.pricing.discount_price_hint')}
+                            ? 'dashboard.store.editors.pricing.discount_price_error'
+                            : 'dashboard.store.editors.pricing.discount_price_hint'}
                     </p>
                 </div>
             </div>
@@ -110,8 +108,8 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             <Calendar className="w-4 h-4 text-violet-500" />
                         </div>
                         <div>
-                            <p className="text-[14px] font-black text-slate-800">{t('dashboard.store.editors.pricing.payment_plan_title')}</p>
-                            <p className="text-[12px] text-slate-400 font-medium">{t('dashboard.store.editors.pricing.payment_plan_desc')}</p>
+                            <p className="text-[14px] font-black text-slate-800">{'dashboard.store.editors.pricing.payment_plan_title'}</p>
+                            <p className="text-[12px] text-slate-400 font-medium">{'dashboard.store.editors.pricing.payment_plan_desc'}</p>
                         </div>
                     </div>
                     <Toggle on={data.payment_plan_enabled} onToggle={() => onChange('payment_plan_enabled', !data.payment_plan_enabled)} />
@@ -128,7 +126,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                                 max="12"
                                 className="w-full h-12 px-5 bg-slate-50 border border-slate-100 rounded-2xl text-[14px] font-bold text-slate-800 focus:ring-4 focus:ring-violet-500/5 focus:border-violet-400 outline-none transition-all placeholder:text-slate-300"
                             />
-                            <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[12px] text-slate-400 font-bold">{t('dashboard.store.editors.pricing.installments_label')}</span>
+                            <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[12px] text-slate-400 font-bold">{'dashboard.store.editors.pricing.installments_label'}</span>
                         </div>
                     </div>
                 )}
@@ -142,8 +140,8 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             <Tag className="w-4 h-4 text-amber-500" />
                         </div>
                         <div>
-                            <p className="text-[14px] font-black text-slate-800">{t('dashboard.store.editors.pricing.discount_code_title')}</p>
-                            <p className="text-[12px] text-slate-400 font-medium">{t('dashboard.store.editors.pricing.discount_code_desc')}</p>
+                            <p className="text-[14px] font-black text-slate-800">{'dashboard.store.editors.pricing.discount_code_title'}</p>
+                            <p className="text-[12px] text-slate-400 font-medium">{'dashboard.store.editors.pricing.discount_code_desc'}</p>
                         </div>
                     </div>
                     <Toggle on={data.discount_code_enabled} onToggle={() => onChange('discount_code_enabled', !data.discount_code_enabled)} />
@@ -154,7 +152,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             type="text"
                             value={data.discount_code}
                             onChange={(e) => onChange('discount_code', e.target.value.toUpperCase())}
-                            placeholder={t('dashboard.store.editors.pricing.discount_code_placeholder')}
+                            placeholder={'dashboard.store.editors.pricing.discount_code_placeholder'}
                             className="h-12 px-5 bg-slate-50 border border-slate-100 rounded-2xl text-[14px] font-bold text-slate-800 focus:ring-4 focus:ring-amber-500/5 focus:border-amber-400 outline-none transition-all placeholder:text-slate-300 tracking-widest uppercase"
                         />
                         <div className="relative">
@@ -181,8 +179,8 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             <Package className="w-4 h-4 text-rose-500" />
                         </div>
                         <div>
-                            <p className="text-[14px] font-black text-slate-800">{t('dashboard.store.editors.pricing.quantity_limit_title')}</p>
-                            <p className="text-[12px] text-slate-400 font-medium">{t('dashboard.store.editors.pricing.quantity_limit_desc')}</p>
+                            <p className="text-[14px] font-black text-slate-800">{'dashboard.store.editors.pricing.quantity_limit_title'}</p>
+                            <p className="text-[12px] text-slate-400 font-medium">{'dashboard.store.editors.pricing.quantity_limit_desc'}</p>
                         </div>
                     </div>
                     <Toggle on={data.quantity_limit_enabled} onToggle={() => onChange('quantity_limit_enabled', !data.quantity_limit_enabled)} />
@@ -194,11 +192,11 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                                 type="number"
                                 value={data.quantity_limit}
                                 onChange={(e) => onChange('quantity_limit', e.target.value)}
-                                placeholder={t('dashboard.store.editors.pricing.quantity_limit_placeholder')}
+                                placeholder={'dashboard.store.editors.pricing.quantity_limit_placeholder'}
                                 min="1"
                                 className="w-full h-12 px-5 bg-slate-50 border border-slate-100 rounded-2xl text-[14px] font-bold text-slate-800 focus:ring-4 focus:ring-rose-500/5 focus:border-rose-400 outline-none transition-all placeholder:text-slate-300"
                             />
-                            <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[12px] text-slate-400 font-bold">{t('dashboard.store.editors.pricing.quantity_unit')}</span>
+                            <span className="absolute right-5 top-1/2 -translate-y-1/2 text-[12px] text-slate-400 font-bold">{'dashboard.store.editors.pricing.quantity_unit'}</span>
                         </div>
                     </div>
                 )}

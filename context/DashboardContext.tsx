@@ -46,10 +46,6 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         loadData();
     }, []);
 
-    const renderCount = React.useRef(0);
-    renderCount.current++;
-    console.debug(`[DashboardProvider] Render #${renderCount.current}`, { loading, hasStore: !!store });
-
     return (
         <DashboardContext.Provider value={{ user, profile, store, loading, refreshData: loadData }}>
             {children}

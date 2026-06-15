@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SetyLogo } from '@/components/ui/SetyLogo';
+import { THEME_TEMPLATES } from '@/components/dashboard/store/ThemeCarousel';
 import Image from 'next/image';
 import { formatCurrency } from '@/lib/utils/format';
 import { useTranslation } from '@/lib/i18n/context';
@@ -79,14 +80,13 @@ export const getProductTypes = (t: (key: string) => string) => [
         comingSoon: true,
     },
     {
-        id: 'sety_affiliate',
-        title: t('dashboard.store.product_types.sety_affiliate.title'),
-        description: t('dashboard.store.product_types.sety_affiliate.desc'),
-        icon: Trophy,
-        isSetyLogo: true,
+        id: 'external_link',
+        title: 'Dış Bağlantı',
+        description: 'Herhangi bir URL\'ye yönlendirin.',
+        icon: Link2,
         color: 'bg-violet-50 text-[#5500ff]',
-        comingSoon: true,
-    }
+        comingSoon: false,
+    },
 ];
 
 export default function StorePreview({
@@ -98,9 +98,6 @@ export default function StorePreview({
     products: any[];
     designProps: {
         theme: string;
-        color: string;
-        font: string;
-        buttonStyle: string;
         logo?: string | null;
         socialLinks?: {
             instagram?: string;
@@ -117,7 +114,12 @@ export default function StorePreview({
     }
 }) {
     const { t } = useTranslation();
-    const { theme, color, font, buttonStyle, logo, socialLinks, displayName, bio, isVerified, coverImage, showAffiliateBadge } = designProps;
+    const { theme, logo, socialLinks, displayName, bio, isVerified, coverImage, showAffiliateBadge } = designProps;
+    const activeThemeData = THEME_TEMPLATES.find(t => t.id === theme) || THEME_TEMPLATES[0];
+    const color = activeThemeData.color;
+    const font = activeThemeData.font;
+    const buttonStyle = activeThemeData.buttonStyle;
+
     const allProductTypes = getProductTypes((key) => t(key));
 
     const fontStyles = {
@@ -144,6 +146,8 @@ export default function StorePreview({
         'sharp': 'rounded-[5px]'
     }[buttonStyle] || 'rounded-[24px]';
 
+    const isDarkTheme = ['premium', 'midnight-neon', 'luxury-gold', 'cyber-future', 'deep-midnight'].includes(theme);
+
     return (
         <div className="relative w-[300px] mx-auto transition-transform duration-700 hover:scale-[1.02]">
             {/* iPhone 17 Pro Mockup Frame */}
@@ -154,7 +158,7 @@ export default function StorePreview({
                 <div
                     className={cn(
                         "absolute inset-[7px] rounded-[2.6rem] overflow-hidden flex flex-col shadow-inner border border-black/5 transition-all",
-                        theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "bg-[#0A0C14]" :
+                        isDarkTheme ? "bg-[#0A0C14]" :
                             theme === 'arctic-glass' ? "bg-gradient-to-br from-blue-50 via-white to-purple-50" :
                                 theme === 'sunset-pastel' ? "bg-gradient-to-br from-orange-50 via-pink-50 to-white" :
                                     theme === 'dreamy-mesh' ? "bg-[#f8f7ff]" :
@@ -221,14 +225,15 @@ export default function StorePreview({
                                 />
                                 <div className={cn(
                                     "absolute inset-0 bg-gradient-to-b",
-                                    theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "from-black/40 via-transparent to-[#0A0C14]" : "from-black/20 via-transparent to-white"
+                                    isDarkTheme ? "from-black/40 via-transparent to-[#0A0C14]" : "from-black/20 via-transparent to-white"
                                 )} />
                             </div>
                         )}
 
                         <div className={cn(
                             "flex flex-col items-center px-4 pt-16 pb-8 space-y-6 w-full relative z-10",
-                            fontStyles
+                            fontStyles,
+                            theme === 'luxury-gold' && 'font-playfair'
                         )}>
                             {/* Profile Section */}
                             <div className="flex flex-col items-center text-center w-full px-4 relative">
@@ -266,7 +271,7 @@ export default function StorePreview({
                                     <div className="flex items-center justify-center gap-2">
                                         <h2 className={cn(
                                             "text-2xl font-black tracking-tight transition-all",
-                                            theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white" : "text-slate-900"
+                                            isDarkTheme ? "text-white" : "text-slate-900"
                                         )}>
                                             {displayName || t('dashboard.store.preview.brand_name_placeholder')}
                                         </h2>
@@ -280,7 +285,7 @@ export default function StorePreview({
                                     </div>
                                     <p className={cn(
                                         "text-[15px] font-semibold leading-relaxed px-4 transition-all",
-                                        theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white/60" : "text-slate-500"
+                                        isDarkTheme ? "text-white/60" : "text-slate-500"
                                     )}>
                                         {bio || t('dashboard.store.preview.bio_placeholder')}
                                     </p>
@@ -309,7 +314,7 @@ export default function StorePreview({
                                             >
                                                 <social.icon className={cn(
                                                     "w-5 h-5",
-                                                    theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white" : "text-slate-900"
+                                                    isDarkTheme ? "text-white" : "text-slate-900"
                                                 )} />
                                             </a>
                                         ))}
@@ -336,7 +341,7 @@ export default function StorePreview({
                                                                     theme === 'neo-brutalist' ? "bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" :
                                                                         theme === 'luxury-gold' ? "bg-white/5 border-white/5" :
                                                                             theme === 'cyber-future' ? "bg-white/5 border-white/5" :
-                                                                                theme === 'deep-midnight' ? "bg-white/5 border-white/10" : "bg-white border-slate-100"
+                                                                            theme === 'deep-midnight' ? "bg-white/5 border-white/10" : "bg-white border-slate-100"
                                             )}
                                         >
                                             <div className={cn(
@@ -352,11 +357,9 @@ export default function StorePreview({
                                                         className="object-cover"
                                                         sizes="48px"
                                                     />
-                                                ) : typeInfo.isSetyLogo ? (
-                                                    <SetyLogo size="sm" showBackground={false} />
-                                                ) : typeInfo.iconUrl ? (
+                                                ) : (typeInfo as any).iconUrl ? (
                                                     <Image
-                                                        src={typeInfo.iconUrl}
+                                                        src={(typeInfo as any).iconUrl as string}
                                                         alt=""
                                                         width={40}
                                                         height={40}
@@ -394,11 +397,11 @@ export default function StorePreview({
                                             <div className="flex-1 min-w-0">
                                                 <h4 className={cn(
                                                     "text-[14px] font-[1000] tracking-tight leading-tight truncate transition-all",
-                                                    theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white" : "text-slate-900"
+                                                    isDarkTheme ? "text-white" : "text-slate-900"
                                                 )}>{item.title}</h4>
                                                 <p className={cn(
                                                     "text-[11px] font-bold mt-0.5 transition-all opacity-80",
-                                                    theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white/40" : "text-slate-400"
+                                                    isDarkTheme ? "text-white/40" : "text-slate-400"
                                                 )}>{item.subtitle || (t(`dashboard.store.product_types.${typeInfo.id}.desc`) || typeInfo.description).slice(0, 30) + '...'}</p>
                                             </div>
 
@@ -410,7 +413,7 @@ export default function StorePreview({
                                                 )}
                                                 style={{
                                                     backgroundColor: color,
-                                                    color: (theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'neo-brutalist' || theme === 'luxury-gold' || theme === 'cyber-future') && (color === '#C4FF00' || color === '#ffffff' || color === '#FACC15' || color === '#FBBF24' || color === '#06B6D4') ? '#000' : '#fff'
+                                                    color: (isDarkTheme || theme === 'neo-brutalist') && (color === '#C4FF00' || color === '#ffffff' || color === '#FACC15' || color === '#FBBF24' || color === '#06B6D4') ? '#000' : '#fff'
                                                 }}
                                             >
                                                 {item.price === 0 || !item.price ? t('dashboard.store.preview.free_button') : formatCurrency(item.price, item.currency || 'TRY')}
@@ -443,12 +446,12 @@ export default function StorePreview({
                                         <div className="flex-1">
                                             <h4 className={cn(
                                                 "text-[13px] font-black tracking-tight leading-tight transition-all",
-                                                theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white" : "text-slate-900"
+                                                isDarkTheme ? "text-white" : "text-slate-900"
                                             )}>{t('dashboard.store.preview.affiliate_badge_text')}</h4>
                                         </div>
                                         <ChevronRight className={cn(
                                             "w-4 h-4 transition-all",
-                                            theme === 'deep-midnight' || theme === 'midnight-neon' || theme === 'luxury-gold' || theme === 'cyber-future' ? "text-white/40" : "text-slate-300"
+                                            isDarkTheme ? "text-white/40" : "text-slate-300"
                                         )} />
                                     </div>
                                 </div>

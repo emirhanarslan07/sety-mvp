@@ -1,341 +1,373 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import {
-    Eye,
-    DollarSign,
-    Users,
-    Zap,
-    BarChart2,
-    ChevronRight,
-    Box,
-    ShoppingBag
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SetyLogo } from '@/components/ui/SetyLogo';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { supabase } from '@/lib/supabase/client';
-import { cn } from '@/lib/utils';
-import { formatCurrency, formatCompactNumber } from '@/lib/utils/format';
-import { useTranslation } from '@/lib/i18n/context';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDashboard } from '@/context/DashboardContext';
+import { 
+    XAxis, 
+    YAxis, 
+    CartesianGrid, 
+    Tooltip, 
+    ResponsiveContainer,
+    AreaChart,
+    Area
+} from 'recharts';
+import { 
+    TrendingUp, 
+    Users, 
+    DollarSign, 
+    Calendar,
+    ChevronDown,
+    Package,
+    Zap,
+    Target
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils/format';
 
 export default function AnalyticsPage() {
-    const router = useRouter();
-
-    // DEBUG: Render Logger
-    const renders = useRef(0);
-    renders.current++;
-    console.debug(`%c[RENDER] AnalyticsPage #${renders.current}`, 'color: #f59e0b');
-
-    const { t, lang } = useTranslation();
     const { store } = useDashboard();
-    const [analytics, setAnalytics] = useState({
-        views: 0,
-        clicks: 0,
-        conversion: 0,
-        avgRevenue: 0,
-        sources: [] as { name: string, percent: number, color: string }[],
-        dailyViews: [] as number[],
-        period: '14' as '7' | '14' | 'all'
+    const [period, setPeriod] = useState<'7' | '14' | '30' | 'all'>('14');
+    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({
+        totalRevenue: 0,
+        totalOrders: 0,
+        monthlyRevenue: 0,
+        monthlyOrders: 0,
+        averageOrderValue: 0,
+        conversionRate: 0,
+        totalSubscribers: 0
     });
+    const [chartData, setChartData] = useState<any[]>([]);
     const [topProducts, setTopProducts] = useState<any[]>([]);
 
     const loadAnalytics = useCallback(async () => {
         if (!store?.id) return;
+        setLoading(true);
 
-        // Fetch Metrics
-        const { data: events } = await supabase
-            .from('analytics_events')
-            .select('event_name, product_id, metadata, timestamp')
-            .eq('store_id', store.id);
+        try {
+            const [statsRes, chartRes, productsRes, subscribersRes] = await Promise.all([
+                fetch('/api/dashboard/stats'),
+                fetch(`/api/dashboard/chart?days=${period === 'all' ? 365 : period}`),
+                fetch('/api/analytics/products'),
+                fetch(`/api/dashboard/subscribers?store_id=${store.id}`)
+            ]);
 
-        const views = events?.filter(e => e.event_name === 'store_view').length || 0;
-        const clicks = events?.filter(e => e.event_name === 'external_checkout_redirect' || e.event_name === 'checkout_open' || e.event_name === 'purchase_intent').length || 0;
-        const conversion = views > 0 ? (clicks / views) * 100 : 0;
+            const statsData = await statsRes.json();
+            const chartDataJson = await chartRes.json();
+            const productsData = await productsRes.json();
+            const subscribersData = await subscribersRes.json();
 
-        // 1. Calculate Average Revenue
-        const { data: orders } = await supabase
-            .from('orders')
-            .select('amount')
-            .eq('store_id', store.id);
-
-        const totalRev = orders?.reduce((acc, curr) => acc + Number(curr.amount), 0) || 0;
-        const avgRev = orders && orders.length > 0 ? totalRev / orders.length : 0;
-
-        // 2. Calculate Traffic Sources
-        const sourceCounts: Record<string, number> = {};
-        events?.filter(e => e.event_name === 'store_view').forEach(e => {
-            const ref = (e.metadata as any)?.referrer || 'direct';
-            let source = t('dashboard.analytics.referral_channels.other');
-            if (ref.includes('instagram')) source = 'Instagram';
-            else if (ref.includes('tiktok')) source = 'TikTok';
-            else if (ref.includes('twitter') || ref.includes('t.co') || ref.includes('x.com')) source = 'X';
-            else if (ref.includes('youtube')) source = 'YouTube';
-            else if (ref.includes('facebook')) source = 'Facebook';
-            else if (ref === 'direct') source = t('dashboard.analytics.referral_channels.direct');
-
-            sourceCounts[source] = (sourceCounts[source] || 0) + 1;
-        });
-
-        const totalViews = Object.values(sourceCounts).reduce((a, b) => a + b, 0);
-        const processedSources = Object.entries(sourceCounts)
-            .map(([name, count]) => ({
-                name,
-                percent: totalViews > 0 ? Math.round((count / totalViews) * 100) : 0,
-                color: name === 'Instagram' ? 'bg-pink-500' :
-                    name === 'TikTok' ? 'bg-black' :
-                        name === 'X' ? 'bg-slate-900 border border-slate-800' :
-                            name === 'Doğrudan' ? 'bg-[#C4FF00]' : 'bg-slate-400'
-            }))
-            .sort((a, b) => b.percent - a.percent)
-            .slice(0, 4);
-
-        // 3. Calculate Daily Views (Last 14 Days)
-        const dayByDay = new Array(14).fill(0);
-        const today = new Date();
-        events?.filter(e => e.event_name === 'store_view').forEach(e => {
-            if (!e.timestamp) return;
-            try {
-                const eventDate = new Date(e.timestamp);
-                if (isNaN(eventDate.getTime())) return;
-
-                const diffTime = Math.abs(today.getTime() - eventDate.getTime());
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays < 14) {
-                    dayByDay[13 - diffDays]++;
-                }
-            } catch (err) {
-                console.error("Analytics date error:", err);
+            if (chartDataJson.data) {
+                const formattedChartData = chartDataJson.data.map((item: any) => {
+                    const date = new Date(item.date);
+                    return {
+                        date: date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }),
+                        revenue: item.revenue,
+                        orders: item.orders,
+                    };
+                });
+                setChartData(formattedChartData);
             }
-        });
 
-        // Fetch Top Products
-        const { data: products } = await supabase
-            .from('products')
-            .select('id, title, price')
-            .eq('store_id', store.id);
-
-        const processedProducts = products?.map(p => {
-            const pClicks = events?.filter(e => e.product_id === p.id && (e.event_name === 'external_checkout_redirect' || e.event_name === 'purchase_intent')).length || 0;
-            const pViews = events?.filter(e => e.product_id === p.id && e.event_name === 'product_view').length || 0;
-            return {
-                name: p.title,
-                sales: pClicks,
-                revenue: pClicks * p.price,
-                conversion: pViews > 0 ? (pClicks / pViews * 100).toFixed(1) + '%' : '0%'
+            let newStats = {
+                totalRevenue: statsData.total?.revenue || 0,
+                totalOrders: statsData.total?.orders || 0,
+                monthlyRevenue: statsData.this_month?.revenue || 0,
+                monthlyOrders: statsData.this_month?.orders || 0,
+                averageOrderValue: 0,
+                conversionRate: 0,
+                totalSubscribers: Array.isArray(subscribersData) ? subscribersData.length : 0
             };
-        }).sort((a, b) => b.sales - a.sales).slice(0, 5) || [];
 
-        setAnalytics(prev => ({
-            ...prev,
-            views,
-            clicks,
-            conversion,
-            avgRevenue: avgRev,
-            sources: processedSources,
-            dailyViews: dayByDay
-        }));
-        setTopProducts(processedProducts);
-    }, [store?.id]);
+            newStats.averageOrderValue = newStats.totalOrders > 0 
+                ? newStats.totalRevenue / newStats.totalOrders 
+                : 0;
+
+            // Simple conversion calculation: can be refined later if needed
+            // For now, let's keep it based on what we have
+            setStats(newStats);
+
+            if (productsData.data) {
+                setTopProducts(productsData.data);
+            }
+
+        } catch (error) {
+            console.error('Analytics error:', error);
+        } finally {
+            setLoading(false);
+        }
+    }, [store?.id, period]);
 
     useEffect(() => {
-        if (store?.id) {
-            loadAnalytics();
-        }
-    }, [store?.id, loadAnalytics]);
+        loadAnalytics();
+    }, [loadAnalytics]);
 
-    const stats = useMemo(() => [
-        { label: t('dashboard.analytics.stats.store_views'), value: formatCompactNumber(analytics.views), icon: 'Eye' },
-        { label: t('dashboard.analytics.stats.total_revenue'), value: formatCurrency(analytics.views * 0.15 * 25), icon: 'Currency' },
-        { label: t('dashboard.analytics.stats.leads'), value: '0', icon: 'Users', special: 'border-[#ff00ff] ring-4 ring-[#ff00ff]/5' },
-    ], [analytics.views, t]);
+    const metrics = [
+        { 
+            label: 'Toplam Kazanç', 
+            value: formatCurrency(stats.totalRevenue), 
+            subValue: `${stats.totalOrders} Sipariş`,
+            icon: DollarSign, 
+            color: 'text-[#5500ff]', 
+            bg: 'bg-violet-50',
+            borderColor: 'border-l-[#5500ff]',
+            gradientFrom: 'from-white',
+            gradientTo: 'to-violet-50/40',
+            ringHover: 'hover:ring-violet-500/10'
+        },
+        { 
+            label: 'Bu Ay Kazanç', 
+            value: formatCurrency(stats.monthlyRevenue), 
+            subValue: `${stats.monthlyOrders} Sipariş`,
+            icon: Calendar, 
+            color: 'text-indigo-600', 
+            bg: 'bg-indigo-50',
+            borderColor: 'border-l-indigo-500',
+            gradientFrom: 'from-white',
+            gradientTo: 'to-indigo-50/40',
+            ringHover: 'hover:ring-indigo-500/10'
+        },
+        { 
+            label: 'Ortalama Sipariş', 
+            value: formatCurrency(stats.averageOrderValue), 
+            subValue: 'Sipariş Başına',
+            icon: Target, 
+            color: 'text-emerald-600', 
+            bg: 'bg-emerald-50',
+            borderColor: 'border-l-emerald-500',
+            gradientFrom: 'from-white',
+            gradientTo: 'to-emerald-50/40',
+            ringHover: 'hover:ring-emerald-500/10'
+        },
+        { 
+            label: 'Toplam Abone', 
+            value: stats.totalSubscribers.toLocaleString(), 
+            subValue: 'E-posta Listesi',
+            icon: Users, 
+            color: 'text-pink-600', 
+            bg: 'bg-pink-50',
+            borderColor: 'border-l-pink-500',
+            gradientFrom: 'from-white',
+            gradientTo: 'to-pink-50/40',
+            ringHover: 'hover:ring-pink-500/10'
+        },
+        { 
+            label: 'Performans', 
+            value: 'Aktif', 
+            subValue: 'Mağaza Durumu',
+            icon: Zap, 
+            color: 'text-blue-600', 
+            bg: 'bg-blue-50',
+            borderColor: 'border-l-blue-500',
+            gradientFrom: 'from-white',
+            gradientTo: 'to-blue-50/40',
+            ringHover: 'hover:ring-blue-500/10'
+        }
+    ];
 
     return (
-        <div className="max-w-[1000px] mx-auto space-y-10 pb-32 px-4 md:px-8 pt-6 text-slate-900">
-            {/* Period Filters & Date Range Row */}
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-full border border-slate-200/50 shadow-sm">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12 pb-32 space-y-10">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                        Analitikler 📈
+                    </h1>
+                    <p className="text-slate-500 mt-2 font-bold">
+                        Mağazanızın performansı ve satış analizleri.
+                    </p>
+                </div>
+
+                {/* Period Selector */}
+                <div className="bg-white p-1.5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-1 self-start md:self-auto">
                     {[
-                        { id: '7', label: '7D' },
-                        { id: '14', label: '14D' },
-                    ].map((p) => {
-                        const isActive = analytics.period === p.id;
-                        return (
-                            <button
-                                key={p.id}
-                                onClick={() => setAnalytics(prev => ({ ...prev, period: p.id as any }))}
-                                className={cn(
-                                    "h-10 px-6 rounded-full text-[14px] font-black transition-all active:scale-95",
-                                    isActive
-                                        ? "bg-slate-900 text-white shadow-lg"
-                                        : "text-slate-400 hover:text-slate-600 hover:bg-slate-200/50"
-                                )}
-                            >
-                                {p.label}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                <div className="flex items-center gap-3 w-full md:w-auto">
-                    <div className="flex-1 md:flex-none h-11 px-6 rounded-full bg-slate-100 border border-slate-200/50 flex items-center justify-center text-[13px] font-black text-slate-900">
-                        Mar 1, 2026 - Mar 13, 2026
-                    </div>
-                    <button className="h-11 px-6 rounded-full bg-slate-100 border border-slate-200/50 text-[13px] font-black text-slate-900 hover:bg-slate-200/50 transition-all flex items-center gap-2">
-                        Custom Range
-                    </button>
+                        { id: '7', label: '7 Gün' },
+                        { id: '14', label: '14 Gün' },
+                        { id: '30', label: '30 Gün' },
+                        { id: 'all', label: 'Tümü' }
+                    ].map((p) => (
+                        <button
+                            key={p.id}
+                            onClick={() => setPeriod(p.id as any)}
+                            className={cn(
+                                "px-6 py-2.5 rounded-xl text-[14px] font-black transition-all",
+                                period === p.id 
+                                    ? "bg-slate-900 text-white shadow-lg shadow-slate-200" 
+                                    : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                            )}
+                        >
+                            {p.label}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            {/* Main Stats Card - Stan Screenshot Style */}
-            <div className="bg-white rounded-[44px] border border-slate-100/60 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.04)] overflow-hidden">
-                <div className="p-10 md:p-12 space-y-12">
-                    {/* Header: Total Revenue */}
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3 opacity-60">
-                            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                                <DollarSign className="w-4 h-4 text-slate-900" />
-                            </div>
-                            <span className="text-[14px] font-black uppercase tracking-widest leading-none">Total Revenue</span>
-                        </div>
-                        <h2 className="text-[80px] md:text-[96px] font-black text-slate-900 tracking-tighter leading-none -ml-1">
-                            ₺0
-                        </h2>
-                    </div>
-
-                    <div className="h-px bg-slate-50 w-full" />
-
-                    {/* Store Visits & Leads Grid */}
-                    <div className="grid grid-cols-2 gap-0 relative">
-                        {/* Store Visits */}
-                        <div className="pr-8 space-y-4">
-                            <div className="flex items-center gap-3 opacity-60">
-                                <Eye className="w-5 h-5 text-slate-900" />
-                                <span className="text-[14px] font-black uppercase tracking-widest leading-none">Store Visits</span>
-                            </div>
-                            <div className="flex items-baseline gap-3">
-                                <span className="text-[48px] font-black text-slate-900 leading-none">4</span>
-                                <div className="flex items-center gap-1 text-[#00A84D] font-black text-[14px]">
-                                    <Zap className="w-3.5 h-3.5 fill-[#C4FF00] text-[#C4FF00]" />
-                                    <span>100%</span>
-                                </div>
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                {metrics.map((metric, i) => (
+                    <div key={i} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:border-slate-200 transition-all duration-200">
+                        <div className="flex items-start justify-between mb-6">
+                            <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center transition-all", metric.bg, metric.color)}>
+                                <metric.icon className="w-6 h-6" />
                             </div>
                         </div>
-
-                        {/* Vertical Divider */}
-                        <div className="absolute left-1/2 top-2 bottom-2 w-px bg-slate-100" />
-
-                        {/* Leads */}
-                        <div className="pl-12 space-y-4">
-                            <div className="flex items-center gap-3 opacity-60">
-                                <Users className="w-5 h-5 text-slate-900" />
-                                <span className="text-[14px] font-black uppercase tracking-widest leading-none">Leads</span>
-                                <div className="w-3 h-3 rounded-full bg-[#FF1A8C] shadow-[0_0_10px_rgba(255,26,140,0.4)]" />
-                            </div>
-                            <span className="text-[48px] font-black text-slate-900 leading-none">0</span>
+                        <div className="space-y-1">
+                            <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{metric.label}</p>
+                            <h3 className="text-[28px] font-black text-slate-900 tracking-tight">{metric.value}</h3>
+                            <p className="text-[12px] font-bold text-slate-400 mt-2">{metric.subValue}</p>
                         </div>
                     </div>
+                ))}
+            </div>
+
+            {/* Sales Chart */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <div className="space-y-2">
+                        <h2 className="text-[24px] font-black text-slate-900 tracking-tight">Satış Grafiği</h2>
+                        <p className="text-slate-400 font-bold">Kazanç ve Sipariş sayısı</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-50 border border-violet-100">
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#5500ff]" />
+                            <span className="text-[13px] font-black text-slate-700 uppercase">Kazanç</span>
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 border border-blue-100">
+                            <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                            <span className="text-[13px] font-black text-slate-700 uppercase">Siparişler</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="h-[400px] w-full">
+                    {loading ? (
+                        <div className="w-full h-full bg-slate-50 animate-pulse rounded-[32px]" />
+                    ) : (
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={chartData}>
+                                <defs>
+                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#5500ff" stopOpacity={0.25}/>
+                                        <stop offset="95%" stopColor="#5500ff" stopOpacity={0.02}/>
+                                    </linearGradient>
+                                    <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25}/>
+                                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.02}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <XAxis 
+                                    dataKey="date" 
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                                    dy={10}
+                                />
+                                <YAxis 
+                                    yAxisId="left"
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                                    tickFormatter={(val) => `₺${val}`}
+                                />
+                                <YAxis 
+                                    yAxisId="right"
+                                    orientation="right"
+                                    axisLine={false} 
+                                    tickLine={false} 
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                                />
+                                <Tooltip 
+                                    contentStyle={{ 
+                                        borderRadius: '16px', 
+                                        border: 'none', 
+                                        boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
+                                        padding: '16px 20px',
+                                        backgroundColor: '#1e1b4b',
+                                        color: '#ffffff'
+                                    }}
+                                    itemStyle={{ fontWeight: 800, color: '#e2e8f0' }}
+                                    labelStyle={{ fontWeight: 700, color: '#a5b4fc', marginBottom: 4 }}
+                                    cursor={{ stroke: '#5500ff', strokeWidth: 1, strokeDasharray: '4 4' }}
+                                />
+                                <Area 
+                                    yAxisId="left"
+                                    type="monotone" 
+                                    dataKey="revenue" 
+                                    name="Kazanç (₺)"
+                                    stroke="#5500ff" 
+                                    strokeWidth={4}
+                                    fillOpacity={1} 
+                                    fill="url(#colorRevenue)"
+                                    dot={{ r: 3, fill: '#5500ff', stroke: '#fff', strokeWidth: 2 }}
+                                    activeDot={{ r: 6, fill: '#5500ff', stroke: '#c4b5fd', strokeWidth: 3 }}
+                                />
+                                <Area 
+                                    yAxisId="right"
+                                    type="monotone" 
+                                    dataKey="orders" 
+                                    name="Siparişler"
+                                    stroke="#3b82f6" 
+                                    strokeWidth={4}
+                                    fillOpacity={1}
+                                    fill="url(#colorOrders)"
+                                    dot={{ r: 3, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }}
+                                    activeDot={{ r: 6, fill: '#3b82f6', stroke: '#bfdbfe', strokeWidth: 3 }}
+                                />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    )}
                 </div>
             </div>
 
-            {/* Secondary Sections */}
-            <div className="grid grid-cols-1 gap-8">
-                {/* Customers Origin Card - Redesigned to match Stan Horizontal Bar Chart */}
-                <div className="bg-white rounded-[44px] border border-slate-100/60 shadow-[0_30px_70px_-20px_rgba(0,0,0,0.03)] p-10 md:p-12 space-y-10">
-                    <h3 className="text-[24px] font-black text-slate-900 tracking-tight leading-none">Where are my customers from?</h3>
-
-                    <div className="space-y-8">
-                        {analytics.sources.length === 0 ? (
-                            <div className="space-y-3">
-                                <p className="text-[14px] font-black text-slate-900 opacity-60 uppercase tracking-widest">Other</p>
-                                <div className="relative h-10 w-full bg-slate-50 rounded-xl overflow-hidden">
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: "100%" }}
-                                        className="absolute inset-y-0 left-0 bg-[#5500ff] rounded-xl flex items-center justify-end px-4"
-                                    >
-                                        <span className="text-white font-black text-[14px]">4</span>
-                                    </motion.div>
-                                </div>
-                            </div>
-                        ) : (
-                            analytics.sources.map((source, i) => (
-                                <div key={i} className="space-y-3">
-                                    <p className="text-[14px] font-black text-slate-900 opacity-60 uppercase tracking-widest">{source.name}</p>
-                                    <div className="relative h-10 w-full bg-slate-50 rounded-xl overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${source.percent}%` }}
-                                            className={cn("absolute inset-y-0 left-0 rounded-xl flex items-center justify-end px-4", source.color)}
-                                        >
-                                            <span className="text-white font-black text-[14px]">{source.percent}%</span>
-                                        </motion.div>
-                                    </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
+            {/* Top Products Table */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
+                <div className="flex items-center justify-between mb-10">
+                    <h2 className="text-[24px] font-black text-slate-900 tracking-tight">En Çok Satan Ürünler</h2>
+                    <Package className="w-6 h-6 text-slate-300" />
                 </div>
 
-                {/* Top Products Table Section - Matched to Stan Aesthetics */}
-                <div className="space-y-8">
-                    <div className="flex items-center justify-between px-2">
-                        <h3 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight">Top Products</h3>
-                    </div>
-
-                    <div className="bg-white rounded-[44px] border border-slate-100/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="border-b border-slate-50">
-                                        <th className="text-left py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest underline decoration-[#5500ff]/20 underline-offset-8">Product Info</th>
-                                        <th className="text-center py-10 px-8 text-[12px] font-black text-slate-400 uppercase tracking-widest">Views</th>
-                                        <th className="text-center py-10 px-8 text-[12px] font-black text-slate-400 uppercase tracking-widest">Orders</th>
-                                        <th className="text-center py-10 px-8 text-[12px] font-black text-slate-400 uppercase tracking-widest">Conversion</th>
-                                        <th className="text-right py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest">Net Revenue</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {topProducts.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={5} className="py-24 text-center">
-                                                <div className="space-y-4">
-                                                    <div className="w-20 h-20 rounded-[28px] bg-slate-50 flex items-center justify-center mx-auto text-slate-200">
-                                                        <Box className="w-10 h-10" />
-                                                    </div>
-                                                    <p className="text-slate-400 font-bold text-[16px]">No data available yet</p>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        topProducts.map((p, i) => (
-                                            <tr key={i} className="group hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 cursor-pointer">
-                                                <td className="py-8 px-12">
-                                                    <div className="flex items-center gap-5">
-                                                        <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:scale-110 transition-transform">
-                                                            <Box className="w-6 h-6" />
-                                                        </div>
-                                                        <span className="font-black text-slate-900 text-[17px] tracking-tight">{p.name}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="py-8 px-8 text-center font-black text-slate-400">{(p.sales * 12) + 124}</td>
-                                                <td className="py-8 px-8 text-center font-black text-slate-400">{p.sales || 0}</td>
-                                                <td className="py-8 px-8 text-center">
-                                                    <span className="px-4 py-1.5 rounded-full bg-slate-100 text-slate-600 text-[12px] font-black">
-                                                        {p.conversion}
-                                                    </span>
-                                                </td>
-                                                <td className="py-8 px-12 text-right font-black text-slate-900 text-[19px] tracking-tight">{formatCurrency(p.revenue)}</td>
-                                            </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
+                <div className="space-y-6">
+                    {loading ? (
+                        [1, 2, 3].map(i => <div key={i} className="h-20 bg-slate-50 animate-pulse rounded-3xl" />)
+                    ) : topProducts.length === 0 ? (
+                        <div className="py-12 flex flex-col items-center justify-center text-center px-4 border-2 border-dashed border-slate-200 rounded-[32px] bg-slate-50/50">
+                            <div className="w-20 h-20 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
+                                <Package className="w-10 h-10 text-slate-300" />
+                            </div>
+                            <p className="text-lg font-black text-slate-800 tracking-tight">Henüz ürün verisi bulunmuyor</p>
                         </div>
-                    </div>
+                    ) : (
+                        topProducts.map((product, i) => {
+                            const rankBg = i === 0 ? 'bg-amber-50' : i === 1 ? 'bg-slate-100' : i === 2 ? 'bg-orange-50' : 'bg-indigo-50';
+                            const rankText = i === 0 ? 'text-amber-600' : i === 1 ? 'text-slate-500' : i === 2 ? 'text-orange-600' : 'text-indigo-600';
+                            const rankBorder = i === 0 ? 'ring-1 ring-amber-200' : i === 1 ? 'ring-1 ring-slate-200' : i === 2 ? 'ring-1 ring-orange-200' : '';
+                            const maxSales = topProducts[0]?.sales || 1;
+                            const barWidth = Math.max(((product.sales / maxSales) * 100), 8);
+                            return (
+                            <div key={i} className={cn(
+                                "flex items-center gap-4 p-4 rounded-3xl transition-all duration-300 border border-transparent hover:border-slate-100 hover:translate-x-1 cursor-default",
+                                i % 2 === 1 ? 'bg-slate-50/50' : 'hover:bg-slate-50/80'
+                            )}>
+                                <div className="relative w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden">
+                                    <div className={cn("absolute inset-0", rankBg)} style={{ width: `${barWidth}%` }} />
+                                    <div className={cn("absolute inset-0", rankBg, "opacity-30")} />
+                                    <span className={cn("relative font-black text-lg", rankText, rankBorder, "w-full h-full flex items-center justify-center rounded-2xl")}>
+                                        {i + 1}
+                                    </span>
+                                </div>
+                                <div className="flex-1">
+                                    <h4 className="font-black text-slate-900 line-clamp-1">{product.title}</h4>
+                                    <p className="text-sm font-bold text-slate-400">{product.sales} Başarılı Satış</p>
+                                </div>
+                                <div className="text-right">
+                                    <div className="font-black text-slate-900">{formatCurrency(product.revenue, product.currency)}</div>
+                                    <div className="text-xs font-bold text-emerald-500">{product.sales > 0 ? (product.revenue / product.sales).toFixed(0) : 0} ₺ Ort.</div>
+                                </div>
+                            </div>
+                            );
+                        })
+                    )}
                 </div>
             </div>
         </div>

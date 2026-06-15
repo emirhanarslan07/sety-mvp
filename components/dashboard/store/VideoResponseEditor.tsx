@@ -75,6 +75,7 @@ interface VideoResponseEditorProps {
     onSave: (data: any) => void;
     isSaving: boolean;
     isSuccess: boolean;
+    initialData?: any;
 }
 
 export default function VideoResponseEditor({
@@ -82,9 +83,9 @@ export default function VideoResponseEditor({
     onClose,
     onSave,
     isSaving: isSavingProp,
-    isSuccess: isSuccessProp
+    isSuccess: isSuccessProp,
+    initialData = null
 }: VideoResponseEditorProps) {
-    const { t } = useTranslation();
 
     const [activeTab, setActiveTab] = useState<'thumbnail' | 'checkout' | 'options'>('thumbnail');
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -92,26 +93,26 @@ export default function VideoResponseEditor({
 
     const [formData, setFormData] = useState({
         thumbnail: {
-            style: 'button', // 'button' | 'callout'
-            image_url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600',
-            title: t('dashboard.store.editors.video_response.title_default'),
-            subtitle: t('dashboard.store.editors.video_response.subtitle_default'),
-            button_text: t('dashboard.store.editors.video_response.button_text_default')
+            style: initialData?.thumbnail_style || 'button',
+            image_url: initialData?.image_url || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600',
+            title: initialData?.title || 'dashboard.store.editors.video_response.title_default',
+            subtitle: initialData?.subtitle || 'dashboard.store.editors.video_response.subtitle_default',
+            button_text: initialData?.button_text || 'dashboard.store.editors.video_response.button_text_default'
         },
         checkout: {
-            image_url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800',
-            title: t('dashboard.store.editors.video_response.title_default'),
-            description: t('dashboard.store.editors.video_response.checkout_desc_default'),
+            image_url: initialData?.image_url || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800',
+            title: initialData?.title || 'dashboard.store.editors.video_response.title_default',
+            description: initialData?.description || 'dashboard.store.editors.video_response.checkout_desc_default',
             subhead: 'Get Your Video!',
-            cta_button: 'PURCHASE',
-            price: '9.99',
-            discounted_price: '0',
-            collect_info: [
+            cta_button: initialData?.button_text || 'PURCHASE',
+            price: initialData?.price?.toString() || '9.99',
+            discounted_price: initialData?.discount_price?.toString() || '0',
+            collect_info: initialData?.fields || [
                 { id: '1', label: 'Name', required: true, type: 'text' },
                 { id: '2', label: 'Email', required: true, type: 'email' }
             ]
         },
-        options: {
+        options: initialData?.extra_options || {
             reviews: [],
             email_flow_enabled: false,
             email_flow_id: '',
@@ -181,19 +182,19 @@ export default function VideoResponseEditor({
                             active={activeTab === 'thumbnail'}
                             onClick={() => setActiveTab('thumbnail')}
                             icon={<ImageIcon className="w-4 h-4" />}
-                            label={t('dashboard.store.editors.tabs.thumbnail')}
+                            label={'dashboard.store.editors.tabs.thumbnail'}
                         />
                         <TabButton
                             active={activeTab === 'checkout'}
                             onClick={() => setActiveTab('checkout')}
                             icon={<CreditCard className="w-4 h-4" />}
-                            label={t('dashboard.store.editors.tabs.checkout')}
+                            label={'Ödeme Sayfası'}
                         />
                         <TabButton
                             active={activeTab === 'options'}
                             onClick={() => setActiveTab('options')}
                             icon={<Settings className="w-4 h-4" />}
-                            label={t('dashboard.store.editors.tabs.options')}
+                            label={'Ayarlar'}
                         />
                     </div>
                 </div>
@@ -204,11 +205,11 @@ export default function VideoResponseEditor({
 
                         {activeTab === 'thumbnail' && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                                <EditorSection title={t('dashboard.store.editors.general.style_selection')}>
+                                <EditorSection title={'Kart Stili Seçimi'}>
                                     <div className="grid grid-cols-2 gap-4">
                                         {[
-                                            { id: 'button', label: t('dashboard.store.editors.general.style_button'), icon: <MousePointer2 className="w-5 h-5" />, desc: t('dashboard.store.editors.general.style_button_desc') },
-                                            { id: 'callout', label: t('dashboard.store.editors.general.style_callout'), icon: <Layout className="w-5 h-5" />, desc: t('dashboard.store.editors.general.style_callout_desc') }
+                                            { id: 'button', label: 'Buton', icon: <MousePointer2 className="w-5 h-5" />, desc: 'dashboard.store.editors.general.style_button_desc' },
+                                            { id: 'callout', label: 'Geniş Kart', icon: <Layout className="w-5 h-5" />, desc: 'dashboard.store.editors.general.style_callout_desc' }
                                         ].map(style => (
                                             <button
                                                 key={style.id}
@@ -233,7 +234,7 @@ export default function VideoResponseEditor({
                                     </div>
                                 </EditorSection>
 
-                                <EditorSection title={t('dashboard.store.editors.general.image_selection')}>
+                                <EditorSection title={'dashboard.store.editors.general.image_selection'}>
                                     <div
                                         onClick={() => openImageSelector('thumbnail')}
                                         className="relative aspect-video rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50/50 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-all group overflow-hidden"
@@ -242,7 +243,7 @@ export default function VideoResponseEditor({
                                             <>
                                                 <img src={formData.thumbnail.image_url} className="w-full h-full object-cover" alt="" />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                    <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30 text-white font-bold text-[13px]">{t('dashboard.store.editors.general.image_change')}</div>
+                                                    <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30 text-white font-bold text-[13px]">{'dashboard.store.editors.general.image_change'}</div>
                                                 </div>
                                             </>
                                         ) : (
@@ -250,23 +251,23 @@ export default function VideoResponseEditor({
                                                 <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-slate-300 mb-3 group-hover:scale-110 transition-transform">
                                                     <Upload className="w-6 h-6" />
                                                 </div>
-                                                <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest">{t('dashboard.store.editors.general.image_upload')}</p>
+                                                <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.image_upload'}</p>
                                             </>
                                         )}
                                     </div>
                                 </EditorSection>
 
-                                <EditorSection title={t('dashboard.store.editors.general.text_selection')}>
+                                <EditorSection title={'dashboard.store.editors.general.text_selection'}>
                                     <div className="space-y-6">
                                         <PremiumInput
-                                            label={t('dashboard.store.editors.general.title')}
+                                            label={'dashboard.store.editors.general.title'}
                                             value={formData.thumbnail.title}
                                             onChange={(e: any) => updateData('thumbnail.title', e.target.value)}
                                             maxLength={50}
                                         />
                                         <div className="space-y-2">
                                             <div className="flex justify-between items-end px-1">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{t('dashboard.store.editors.general.subtitle')}</p>
+                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.subtitle'}</p>
                                                 <span className="text-[10px] font-bold text-slate-300">{formData.thumbnail.subtitle.length}/100</span>
                                             </div>
                                             <textarea
@@ -277,7 +278,7 @@ export default function VideoResponseEditor({
                                             />
                                         </div>
                                         <PremiumInput
-                                            label={t('dashboard.store.editors.general.button_text')}
+                                            label={'dashboard.store.editors.general.button_text'}
                                             value={formData.thumbnail.button_text}
                                             onChange={(e: any) => updateData('thumbnail.button_text', e.target.value)}
                                             maxLength={30}
@@ -289,10 +290,10 @@ export default function VideoResponseEditor({
 
                         {activeTab === 'checkout' && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-12">
-                                <EditorSection title={t('dashboard.store.editors.general.edit_appearance')}>
+                                <EditorSection title={'dashboard.store.editors.general.edit_appearance'}>
                                     <div className="space-y-8">
                                         <div className="space-y-4">
-                                            <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1 text-center">{t('dashboard.store.editors.general.header_image')}</p>
+                                            <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1 text-center">{'dashboard.store.editors.general.header_image'}</p>
                                             <div
                                                 onClick={() => openImageSelector('checkout')}
                                                 className="relative h-48 rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50/50 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-all group overflow-hidden"
@@ -302,23 +303,23 @@ export default function VideoResponseEditor({
                                                 ) : (
                                                     <div className="flex flex-col items-center">
                                                         <ImageIcon className="w-8 h-8 text-slate-200 mb-2" />
-                                                        <p className="text-[11px] font-black text-slate-300 uppercase tracking-widest">{t('dashboard.store.editors.general.image_selection')}</p>
+                                                        <p className="text-[11px] font-black text-slate-300 uppercase tracking-widest">{'dashboard.store.editors.general.image_selection'}</p>
                                                     </div>
                                                 )}
                                             </div>
                                         </div>
 
                                         <PremiumInput
-                                            label={t('dashboard.store.editors.general.title') + " *"}
+                                            label={'dashboard.store.editors.general.title' + " *"}
                                             value={formData.checkout.title}
                                             onChange={(e: any) => updateData('checkout.title', e.target.value)}
                                         />
 
                                         <div className="space-y-2">
                                             <div className="flex justify-between items-center px-1">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{t('dashboard.store.editors.general.description_text')} *</p>
+                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.description_text'} *</p>
                                                 <button className="flex items-center gap-1.5 text-[#5500ff] font-black text-[11px] hover:underline">
-                                                    <Sparkles className="w-3 h-3" /> {t('dashboard.store.editors.general.ai_generate')}
+                                                    <Sparkles className="w-3 h-3" /> {'dashboard.store.editors.general.ai_generate'}
                                                 </button>
                                             </div>
                                             <textarea
@@ -330,12 +331,12 @@ export default function VideoResponseEditor({
 
                                         <div className="grid grid-cols-2 gap-6">
                                             <PremiumInput
-                                                label={t('dashboard.store.editors.general.subtitle') + " *"}
+                                                label={'dashboard.store.editors.general.subtitle' + " *"}
                                                 value={formData.checkout.subhead}
                                                 onChange={(e: any) => updateData('checkout.subhead', e.target.value)}
                                             />
                                             <PremiumInput
-                                                label={t('dashboard.store.editors.general.cta_button') + " *"}
+                                                label={'dashboard.store.editors.general.cta_button' + " *"}
                                                 value={formData.checkout.cta_button}
                                                 onChange={(e: any) => updateData('checkout.cta_button', e.target.value)}
                                                 maxLength={30}
@@ -344,11 +345,11 @@ export default function VideoResponseEditor({
                                     </div>
                                 </EditorSection>
 
-                                <EditorSection title={t('dashboard.store.editors.general.set_price_title')}>
+                                <EditorSection title={'dashboard.store.editors.general.set_price_title'}>
                                     <div className="space-y-8">
                                         <div className="grid grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('dashboard.store.editors.general.price')} *</p>
+                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'dashboard.store.editors.general.price'} *</p>
                                                 <div className="relative">
                                                     <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 font-bold">$</div>
                                                     <input
@@ -358,10 +359,10 @@ export default function VideoResponseEditor({
                                                         className="w-full h-14 pl-10 pr-6 bg-slate-50 border-2 border-slate-50 rounded-2xl text-[14px] font-bold text-slate-800 outline-none focus:border-[#5500ff] focus:bg-white transition-all"
                                                     />
                                                 </div>
-                                                <p className="text-[10px] text-slate-400 font-bold px-1 italic">{t('dashboard.store.editors.general.price_hint')}</p>
+                                                <p className="text-[10px] text-slate-400 font-bold px-1 italic">{'dashboard.store.editors.general.price_hint'}</p>
                                             </div>
                                             <div className="space-y-2">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('dashboard.store.editors.general.discount_price')}</p>
+                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'dashboard.store.editors.general.discount_price'}</p>
                                                 <div className="relative">
                                                     <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 font-bold">$</div>
                                                     <input
@@ -376,19 +377,19 @@ export default function VideoResponseEditor({
 
                                         <div className="grid grid-cols-3 gap-3">
                                             <button className="h-12 rounded-xl bg-slate-50 text-slate-600 font-black text-[12px] border border-slate-100 hover:border-slate-200 transition-all flex items-center justify-center gap-2">
-                                                <CreditCard className="w-3.5 h-3.5" /> {t('dashboard.store.editors.general.add_payment_plan')}
+                                                <CreditCard className="w-3.5 h-3.5" /> {'dashboard.store.editors.general.add_payment_plan'}
                                             </button>
                                             <button className="h-12 rounded-xl bg-slate-50 text-slate-600 font-black text-[12px] border border-slate-100 hover:border-slate-200 transition-all flex items-center justify-center gap-2">
-                                                <Clock className="w-3.5 h-3.5" /> {t('dashboard.store.editors.general.limit_amount')}
+                                                <Clock className="w-3.5 h-3.5" /> {'dashboard.store.editors.general.limit_amount'}
                                             </button>
                                             <button className="h-12 rounded-xl bg-indigo-50 text-[#5500ff] font-black text-[12px] border border-indigo-100/50 hover:bg-indigo-100/50 transition-all flex items-center justify-center gap-2">
-                                                <Sparkles className="w-3.5 h-3.5" /> {t('dashboard.store.editors.general.discount_code')}
+                                                <Sparkles className="w-3.5 h-3.5" /> {'dashboard.store.editors.general.discount_code'}
                                             </button>
                                         </div>
                                     </div>
                                 </EditorSection>
 
-                                <EditorSection title={t('dashboard.store.editors.general.collect_info_title')}>
+                                <EditorSection title={'dashboard.store.editors.general.collect_info_title'}>
                                     <div className="space-y-4">
                                         <div className="p-4 bg-slate-50/50 border border-slate-100 rounded-[2rem] space-y-3">
                                             <div className="flex items-center justify-between px-4 py-3 bg-white border border-slate-50 rounded-2xl opacity-60">
@@ -407,7 +408,7 @@ export default function VideoResponseEditor({
                                             </div>
                                         </div>
                                         <button className="w-full h-14 rounded-2xl border-2 border-dashed border-slate-100 text-slate-400 font-black text-[14px] hover:border-[#5500ff]/20 hover:text-[#5500ff] transition-all flex items-center justify-center gap-2">
-                                            <Plus className="w-5 h-5" /> {t('dashboard.store.editors.general.add_field')}
+                                            <Plus className="w-5 h-5" /> {'dashboard.store.editors.general.add_field'}
                                         </button>
                                     </div>
                                 </EditorSection>
@@ -426,12 +427,12 @@ export default function VideoResponseEditor({
                         <div className="pt-20 border-t border-slate-100 mt-10">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <p className="text-[12px] text-slate-300 font-black italic">{t('dashboard.store.editors.general.improve_page')}</p>
+                                    <p className="text-[12px] text-slate-300 font-black italic">{'dashboard.store.editors.general.improve_page'}</p>
                                 </div>
 
                                 <div className="flex items-center gap-4">
                                     <button className="h-14 px-8 rounded-2xl font-black text-[14px] border border-indigo-100 text-[#5500ff] bg-indigo-50/20 hover:bg-slate-50 transition-colors">
-                                        {t('dashboard.store.editors.general.save_draft')}
+                                        {'dashboard.store.editors.general.save_draft'}
                                     </button>
                                     <button
                                         onClick={() => {
@@ -446,13 +447,13 @@ export default function VideoResponseEditor({
                                         )}
                                     >
                                         {isSuccessProp ? (
-                                            <><Check className="w-5 h-5" /> {t('dashboard.store.editors.general.saved')}</>
+                                            <><Check className="w-5 h-5" /> {'Kaydedildi'}</>
                                         ) : isSavingProp ? (
-                                            <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('common.loading')}</>
+                                            <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {'Yükleniyor...'}</>
                                         ) : activeTab === 'options' ? (
-                                            t('dashboard.store.editors.general.publish')
+                                            'Yayınla'
                                         ) : (
-                                            t('dashboard.store.editors.general.next')
+                                            'dashboard.store.editors.general.next'
                                         )}
                                     </button>
                                 </div>
@@ -500,7 +501,6 @@ export default function VideoResponseEditor({
 // --- Preview Components ---
 
 function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: string }) {
-    const { t } = useTranslation();
 
     if (activeTab === 'thumbnail') {
         return (
@@ -543,7 +543,7 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
                     <h2 className="text-[26px] font-black text-slate-900 leading-[1.1] tracking-tight">{data.checkout.title}</h2>
                     <div className="inline-flex items-center">
                         <span className="text-[26px] font-black text-pink-500">
-                            {data.checkout.price?.toString().replace('.', ',')} {t('dashboard.store.editors.general.currency_name')}
+                            {data.checkout.price?.toString().replace('.', ',')} {'dashboard.store.editors.general.currency_name'}
                         </span>
                     </div>
                 </div>
@@ -572,7 +572,7 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
                     </button>
 
                     <p className="text-center text-[11px] text-slate-400 font-bold">
-                        {t('dashboard.store.editors.general.secure_process')}
+                        {'dashboard.store.editors.general.secure_process'}
                     </p>
                 </div>
             </div>

@@ -78,9 +78,12 @@ export function Footer() {
                 </div>
 
                 {/* Bottom line */}
-                <div className="max-w-6xl mx-auto mt-20 pt-8 border-t border-border/10">
+                <div className="max-w-6xl mx-auto mt-20 pt-8 border-t border-border/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <p className="text-sm text-muted-foreground/60 font-medium">
                         © {new Date().getFullYear()} <span translate="no" className="notranslate">Sety</span>. {t('landing.footer.rights')}
+                    </p>
+                    <p className="text-sm text-muted-foreground/60 font-medium">
+                        Contact / İletişim: <a href="mailto:hello@sety.store" className="hover:text-primary transition-colors font-bold">hello@sety.store</a>
                     </p>
                 </div>
             </div>

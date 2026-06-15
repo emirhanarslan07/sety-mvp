@@ -17,8 +17,7 @@ export default function AddProductSection({
     setShowAddProduct,
     onSelectType,
 }: AddProductSectionProps) {
-    const { t } = useTranslation();
-    const productTypes = getProductTypes((key) => t(key));
+    const productTypes = getProductTypes((key) => key);
 
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -30,14 +29,14 @@ export default function AddProductSection({
                     <div className="w-10 h-10 rounded-full border border-slate-100 flex items-center justify-center group-hover:bg-slate-50">
                         <ArrowLeft className="w-5 h-5" />
                     </div>
-                    {t('dashboard.store.actions.back')}
+                    {''}
                 </button>
-                <div className="px-4 py-2 rounded-full bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest">{t('dashboard.store.states.step_select_type')}</div>
+                <div className="px-4 py-2 rounded-full bg-slate-50 text-slate-500 text-[11px] font-black uppercase tracking-widest">{'TÜR SEÇİN'}</div>
             </div>
 
             <div className="space-y-2">
-                <h2 className="text-[28px] font-black text-slate-900 tracking-tight">{t('dashboard.store.states.add_product_title')}</h2>
-                <p className="text-slate-400 font-bold">{t('dashboard.store.states.add_product_desc')}</p>
+                <h2 className="text-[28px] font-black text-slate-900 tracking-tight">{'Ürün Ekle'}</h2>
+                <p className="text-slate-400 font-bold">{'Mağazanızda satmak veya sunmak istediğiniz ürün türünü seçin.'}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -63,7 +62,7 @@ export default function AddProductSection({
                             <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/40 z-20" />
                             <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
 
-                            {type.isSetyLogo ? (
+                            {(type as any).isSetyLogo ? (
                                 <SetyLogo size="sm" showBackground={false} />
                             ) : type.iconUrl ? (
                                 <img
@@ -79,16 +78,16 @@ export default function AddProductSection({
                         <div className="flex-1 relative z-10">
                             <div className="flex items-center gap-3 mb-1.5">
                                 <h4 className="text-[17px] font-extrabold text-slate-800 tracking-tight group-hover:text-slate-900 transition-colors">
-                                    {t(`dashboard.store.product_types.${type.id}.title`) || type.title}
+                                    {type.title}
                                 </h4>
                                 {type.comingSoon && (
                                     <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-slate-100 text-slate-400">
-                                        {t('dashboard.store.states.coming_soon')}
+                                        {'YAKINDA'}
                                     </span>
                                 )}
                             </div>
                             <p className="text-[14px] font-bold text-slate-400 leading-snug group-hover:text-slate-500 transition-colors">
-                                {t(`dashboard.store.product_types.${type.id}.desc`) || type.description}
+                                {type.description}
                             </p>
                         </div>
                         {!type.comingSoon && (

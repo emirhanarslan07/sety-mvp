@@ -124,10 +124,10 @@ export default function AddLandingPageSection({
                         </div>
                         <div className="flex-1 relative z-10">
                             <h4 className="text-[17px] font-extrabold text-slate-800 tracking-tight group-hover:text-slate-900 transition-colors mb-1.5">
-                                {t(`dashboard.store.product_types.${type.id}.title`) || type.title}
+                                {type.title}
                             </h4>
                             <p className="text-[14px] font-bold text-slate-400 leading-snug group-hover:text-slate-500 transition-colors">
-                                {t(`dashboard.store.product_types.${type.id}.desc`) || type.description}
+                                {type.description}
                             </p>
                         </div>
                         <div className="relative z-10 w-11 h-11 rounded-full bg-slate-50 text-slate-300 flex items-center justify-center group-hover:bg-[#5500ff] group-hover:text-white transition-all duration-300 transform group-hover:translate-x-1 shadow-sm group-hover:shadow-md">

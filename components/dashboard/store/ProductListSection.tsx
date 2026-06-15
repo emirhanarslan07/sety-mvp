@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
 import { getProductTypes } from './StorePreview';
-import { useTranslation } from '@/lib/i18n/context';
+
 
 interface ProductListSectionProps {
     products: any[];
@@ -43,14 +43,13 @@ export default function ProductListSection({
     handleToggleStatus,
     handleDeleteProduct,
 }: ProductListSectionProps) {
-    const { t } = useTranslation();
-    const productTypes = getProductTypes((key) => t(key));
+    const productTypes = getProductTypes((key) => key);
 
     return (
         <div className="space-y-10">
             <div className="flex items-center justify-between px-2">
                 <h3 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">
-                    {t('dashboard.store.sections.my_products')}
+                    Ürünlerim
                 </h3>
                 <Button
                     onClick={() => setShowAddProduct(true)}
@@ -114,7 +113,7 @@ export default function ProductListSection({
                                     <h4 className="text-[17px] md:text-[19px] font-black text-slate-900 truncate tracking-tight leading-tight">{item.title}</h4>
                                     <div className="flex items-center gap-3">
                                         <span className="text-[14px] font-black text-[#5500ff]">
-                                            {item.price === 0 ? t('dashboard.store.preview.free_button').toUpperCase() : formatCurrency(item.price, item.currency)}
+                                            {item.price === 0 ? 'ÜCRETSİZ' : formatCurrency(item.price, item.currency)}
                                         </span>
                                     </div>
                                 </div>
@@ -123,11 +122,11 @@ export default function ProductListSection({
                                 <div className="hidden md:flex items-center gap-3">
                                     {isActive ? (
                                         <span className="px-5 py-2.5 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[13px] font-black tracking-tight">
-                                            {t('dashboard.store.states.active')}
+                                            Aktif
                                         </span>
                                     ) : (
                                         <span className="px-5 py-2.5 rounded-full bg-slate-100 text-slate-400 text-[13px] font-black tracking-tight">
-                                            {t('dashboard.store.states.draft')}
+                                            Taslak
                                         </span>
                                     )}
                                 </div>
@@ -149,7 +148,7 @@ export default function ProductListSection({
                                             />
                                             <div className="absolute right-0 top-14 w-52 bg-white rounded-[28px] shadow-[0_20px_60px_rgba(85,0,255,0.12)] border border-[#5500ff]/5 py-3 z-50 animate-in fade-in zoom-in-95 duration-200">
                                                 <button className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors">
-                                                    <PenLine className="w-5 h-5 text-slate-400" /> {t('dashboard.store.actions.edit')}
+                                                    <PenLine className="w-5 h-5 text-slate-400" /> Düzenle
                                                 </button>
                                                 <button
                                                     onClick={() => {
@@ -159,9 +158,9 @@ export default function ProductListSection({
                                                     className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors"
                                                 >
                                                     {isActive ? (
-                                                        <><EyeOff className="w-5 h-5 text-slate-400" /> {t('dashboard.store.actions.archive')}</>
+                                                        <><EyeOff className="w-5 h-5 text-slate-400" /> Arşivle</>
                                                     ) : (
-                                                        <><Eye className="w-5 h-5 text-slate-400" /> {t('dashboard.store.actions.publish')}</>
+                                                        <><Eye className="w-5 h-5 text-slate-400" /> Yayınla</>
                                                     )}
                                                 </button>
                                                 <div className="h-px bg-slate-50 my-2 mx-4" />
@@ -172,7 +171,7 @@ export default function ProductListSection({
                                                     }}
                                                     className="w-full px-5 py-3.5 text-[15px] font-black text-rose-500 hover:bg-rose-50 flex items-center gap-4 transition-colors"
                                                 >
-                                                    <Trash2 className="w-5 h-5" /> {t('dashboard.store.actions.delete')}
+                                                    <Trash2 className="w-5 h-5" /> Sil
                                                 </button>
                                             </div>
                                         </>
@@ -197,14 +196,14 @@ export default function ProductListSection({
                             </div>
                         </div>
 
-                        <h4 className="text-[28px] font-black text-slate-900 mb-4 tracking-tight leading-none">{t('dashboard.store.states.no_products')}</h4>
-                        <p className="text-slate-400 text-[17px] font-bold leading-relaxed max-w-[320px] mb-12">{t('dashboard.store.states.no_products_desc')}</p>
+                        <h4 className="text-[28px] font-black text-slate-900 mb-4 tracking-tight leading-none">Henüz ürün yok</h4>
+                        <p className="text-slate-400 text-[17px] font-bold leading-relaxed max-w-[320px] mb-12">İlk ürününüzü oluşturarak satış yapmaya başlayın.</p>
 
                         <Button
                             onClick={() => setShowAddProduct(true)}
                             className="h-16 px-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white text-[17px] font-black shadow-xl shadow-indigo-100 active:scale-95 transition-all"
                         >
-                            {t('dashboard.store.states.add_first_product')}
+                            İlk Ürününü Ekle
                         </Button>
                     </div>
                 )}

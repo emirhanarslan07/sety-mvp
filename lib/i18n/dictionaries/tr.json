@@ -18,39 +18,8 @@
         "greeting": "Merhaba",
         "subtitle": "Seni satışa hazırlayalım.",
         "payout_warning": "Ödeme Hesabı Gerekiyor",
-        "payout_warning_desc": "Kazançlarınızı alabilmek için ayarlar sayfasından ödeme bilgilerinizi doldurmalısınız.",
-        "payout_setup": "Ödemeleri Ayarla",
-        "actions": {
-            "market_products": "Ürünlerini Tanıt",
-            "market_products_desc": "Sosyal medyada paylaşım yaparak satışlarını artır.",
-            "add_product": "Ürün Ekle",
-            "add_product_desc": "Fikirden ürüne dakikalar içinde geçiş yap.",
-            "ask_sety": "Sety'ye Sor",
-            "ask_sety_desc": "Kendi yapay zeka içerik üretici koçun."
-        },
-        "customers": {
-            "title": "Müşteriler",
-            "search_placeholder": "Müşterilerde ara...",
-            "actions": {
-                "add_contact": "Kişi Ekle"
-            },
-            "filters": {
-                "name": "İsim",
-                "email": "E-posta",
-                "joined": "Kayıt Tarihi",
-                "orders": "Siparişler",
-                "spent": "Harcama",
-                "since": "Kayıt Tarihi",
-                "purchases": "Sipariş Sayısı",
-                "product": "Ürün",
-                "active_subscription": "Aktif Abonelik",
-                "tag": "Etiket"
-            },
-            "empty_title": "İlk müşterinizi kazanın",
-            "empty_cta": "Mağazanızı paylaşın ve satışa başlayın",
-            "empty_footer": "Müşteri listenizi nasıl büyüteceğinizi öğrenmek için eğitim videolarımıza göz atın."
-        },
-        "today_overview": "Mağazanızda bugün olup bitenler burada.",
+        "payout_warning_desc": "Ödemeleri alabilmek için bir ödeme yöntemi bağlamanız gerekiyor.",
+        "payout_warning_btn": "Ödemeleri Bağla",
         "stats": {
             "total_sales": "Toplam Satış",
             "total_revenue": "Toplam Gelir",
@@ -59,19 +28,21 @@
         },
         "recent_orders": "Son Siparişler",
         "quick_actions": "Hızlı İşlemler",
-        "new_product": "Yeni Ürün Ekle",
-        "preview_store": "Mağazayı Önizle",
+        "new_product": "Yeni Ürün",
+        "preview_store": "Mağazayı Gör",
         "menu": {
             "home": "Ana Sayfa",
             "my_store": "Mağazam",
-            "income": "Gelir",
+            "products": "Ürünler",
+            "orders": "Siparişler",
             "analytics": "Analitik",
+            "income": "Gelir",
             "customers": "Müşteriler",
             "settings": "Ayarlar",
             "logout": "Çıkış Yap",
-            "trial_badge": "{{days}} gün deneme kaldı",
-            "trial_expired": "Deneme süresi doldu",
-            "upgrade": "Yükselt"
+            "more": "Daha Fazla",
+            "add": "Ekle",
+            "subscribers": "Aboneler"
         },
         "notifications": {
             "title": "Bildirimler",
@@ -83,6 +54,56 @@
             "product_fallback": "Ürün",
             "registered": "kayıt oldu."
         },
+        "overview": {
+            "greeting": "Merhaba",
+            "subtitle": "İşte mağazanın güncel durumu.",
+            "stats": {
+                "today": "Bugün",
+                "month": "Bu Ay",
+                "total_revenue": "Toplam Gelir",
+                "average": "Ortalama"
+            },
+            "charts": {
+                "sales_title": "Satış Grafiği",
+                "sales_subtitle": "Son 7 günün özeti"
+            },
+            "recent_orders": {
+                "title": "Son Siparişler",
+                "view_all": "Tümünü Gör",
+                "no_orders": "Henüz sipariş yok",
+                "no_orders_desc": "İlk satışınız yakında burada görünecek."
+            }
+        },
+        "analytics": {
+            "title": "Analitik",
+            "subtitle": "Mağazanızın performansını anlık olarak takip edin.",
+            "metrics": {
+                "views": "Görüntülenme",
+                "clicks": "Tıklama",
+                "leads": "Potansiyel",
+                "revenue": "Gelir"
+            },
+            "funnel": {
+                "title": "Dönüşüm Hunisi",
+                "subtitle": "Ziyaretçiden müşteriye yolculuk",
+                "rate": "Genel Dönüşüm Oranı"
+            },
+            "sources": {
+                "title": "Trafik Kaynakları"
+            },
+            "top_products": {
+                "title": "En Çok Satanlar",
+                "no_data": "Henüz ürün verisi bulunamadı."
+            },
+            "subscribers": {
+                "title": "Aboneler",
+                "desc": "E-posta toplama bloklarından gelen kişiler.",
+                "search_placeholder": "E-posta veya isim ara...",
+                "empty_title": "Henüz abone yok",
+                "empty_desc": "Mağazanıza bir 'E-posta Toplama' bloğu ekleyerek abone toplamaya başlayın.",
+                "empty_cta": "Blok Ekle"
+            }
+        },
         "sidebar": {
             "plan_status": "Plan Durumu",
             "free_trial": "Ücretsiz Deneme",
@@ -92,436 +113,209 @@
             "add_account": "Hesap Ekle",
             "get_help": "Yardım Al"
         },
+        "products": {
+            "title": "Ürünlerim",
+            "subtitle": "Mağazanızdaki dijital ürünler ve koçluk paketleri.",
+            "add_btn": "Yeni Ürün Ekle",
+            "empty": {
+                "title": "Henüz ürün eklemediniz",
+                "desc": "Dijital ürün, e-kitap, koçluk veya abonelik satarak ilk kazancınızı elde etmeye başlayın.",
+                "btn": "İlk Ürününüzü Ekleyin"
+            },
+            "types": {
+                "digital": "Dijital",
+                "coaching": "Koçluk",
+                "subscription": "Abonelik"
+            },
+            "free": "ÜCRETSİZ",
+            "views": "Görüntülenme"
+        },
+        "settings": {
+            "title": "Hesap Ayarları",
+            "tabs": {
+                "profile": "Profil",
+                "store": "Mağaza",
+                "payments": "Ödemeler",
+                "integrations": "Entegrasyonlar",
+                "billing": "Abonelik",
+                "security": "Güvenlik"
+            },
+            "profile": {
+                "title": "Profil Bilgileri",
+                "subtitle": "Hesap bilgilerinizi ve iletişim detaylarınızı güncelleyin.",
+                "name": "Ad Soyad",
+                "username": "Kullanıcı Adı",
+                "email": "E-posta Adresi",
+                "phone": "Telefon Numarası",
+                "update_btn": "Profili Güncelle"
+            },
+            "store": {
+                "title": "Mağaza Ayarları",
+                "subtitle": "Mağazanızın arama motorlarında nasıl görüneceğini ayarlayın.",
+                "seo_title": "SEO Başlığı",
+                "seo_desc": "SEO Açıklaması (Meta Description)",
+                "social_image": "Sosyal Medya Paylaşım Görseli",
+                "currency": "Para Birimi",
+                "language": "Mağaza Dili"
+            },
+            "payments": {
+                "title": "Ödeme Yöntemleri",
+                "subtitle": "Ödemelerinizi doğrudan hesabınıza almak için bir sağlayıcı bağlayın.",
+                "connect_btn": "Bağlantıyı Kaydet",
+                "status_connected": "Bağlı",
+                "status_disconnected": "Bağlı Değil"
+            },
+            "security": {
+                "title": "Güvenlik",
+                "subtitle": "Şifrenizi ve hesap güvenliğinizi yönetin.",
+                "current_password": "Mevcut Şifre",
+                "new_password": "Yeni Şifre",
+                "confirm_password": "Yeni Şifre (Tekrar)",
+                "delete_account": "Hesabı Sil",
+                "delete_desc": "Hesabınızı ve tüm verilerinizi kalıcı olarak siler."
+            }
+        },
         "toast": {
+            "settings_updated": "Ayarlar başarıyla güncellendi.",
+            "password_updated": "Şifreniz başarıyla değiştirildi.",
             "store_link_copied": "Mağaza linki kopyalandı!"
         },
-        "cards": {
-            "theme": {
-                "title": "Mağaza temasını seçin",
-                "desc": "Mağaza tasarımınızı özelleştirin ve markanızı hayata geçirin."
-            },
-            "products": {
-                "title": "Ürünlerinizi yönetin",
-                "desc": "Yeni ürünler ekleyin veya mevcut ürünlerinizi düzenleyin."
-            },
-            "share": {
-                "title": "Mağazamı paylaş",
-                "desc": "{{url}} linkini kopyalayın ve paylaşın."
-            }
-        },
-        "analytics": {
-            "periods": {
-                "last_7_days": "Son 7 Gün",
-                "last_14_days": "Son 14 Gün",
-                "custom_range": "Özel Aralık",
-                "date_range": "1 Mar - 3 Mar 2026"
-            },
-            "stats": {
-                "store_views": "Mağaza Ziyaretleri",
-                "total_revenue": "Toplam Gelir",
-                "leads": "Aday Müşteriler (Leads)"
-            },
-            "customers_origin": {
-                "title": "Müşterilerim nereden geliyor?",
-                "empty_title": "Henüz lokasyon verisi yok",
-                "empty_desc": "Satışların başladığında burada bir harita belirecek."
-            },
-            "referral_channels": {
-                "title": "Referans kanalları",
-                "empty_title": "Trafik verisi bekleniyor",
-                "empty_desc": "Sosyal medya linklerini paylaştığında kanalları görebilirsin.",
-                "direct": "Doğrudan",
-                "other": "Diğer"
-            },
-            "top_products": {
-                "title": "En Çok Satan Ürünler",
-                "full_report": "Raporun Tamamı",
-                "table": {
-                    "product_info": "Ürün Bilgisi",
-                    "views": "Görüntülenme",
-                    "orders": "Sipariş",
-                    "conversion": "Dönüşüm",
-                    "net_revenue": "Net Gelir"
-                },
-                "empty_title": "Hadi satışa başlayalım! 🚀",
-                "empty_desc": "Ürünlerin görüntülendiğinde ve satıldığında tüm veriler saniyeler içinde burada belirecek."
-            }
-        },
         "store": {
-            "tabs": {
-                "products": "Ürünlerim",
-                "design": "Tasarım & Marka",
-                "pages": "Açılış Sayfaları"
-            },
             "header": {
-                "visit_store": "Mağazayı Gez",
+                "visit_store": "Mağazayı Gör",
                 "copy_link": "Linki Kopyala",
-                "save_changes": "Değişiklikleri Kaydet"
+                "save_changes": "Değişiklikleri Kaydet",
+                "qr_code": "QR"
+            },
+            "tabs": {
+                "products": "Ürünler",
+                "design": "Tasarım",
+                "pages": "Sayfalar"
             },
             "sections": {
-                "theme_selection": "Şablon Seçimi",
-                "style_tuning": "Görünüm Ayarları",
-                "my_products": "Ürünlerin",
-                "landing_pages": "Mağaza Sayfaları",
-                "color_palette": "Marka Rengi",
-                "font_selection": "Yazı Tipi",
-                "button_styles": "Buton Tarzı",
-                "logo_profile": "Logo / Profil",
-                "cover_image": "Kapak Görseli",
-                "display_name": "Görünen İsim",
-                "bio": "Biyografi",
-                "verified_badge": "Onaylı",
-                "announcement_banner": "Duyuru Panosu",
-                "announcement_desc": "Mağazanızın en üstünde dikkat çekici bir duyuru bandı gösterilir.",
-                "sety_badge": "Sety Rozeti",
-                "show_sety_badge": "Sety Rozeti Göster",
-                "sety_badge_desc": "Sety ile kurulmuştur rozeti ve iş ortaklığı linki.",
-                "social_media": "Sosyal Medya",
-                "social_media_desc": "Sosyal medya bağlantılarınızı ekleyin.",
-                "tiktok": "TikTok",
-                "basic_info": "Temel Bilgiler",
-                "product_title": "Ürün Başlığı",
-                "description": "Açıklama",
-                "price_payment": "Fiyat & Ödeme",
-                "price": "Fiyat",
-                "checkout_provider": "Ödeme Sağlayıcı",
-                "manual_payment_info": "Ödeme Detayları (IBAN, USDT vb.)",
-                "checkout_link": "Ödeme Sayfası Linki",
-                "manual_payment_desc": "Müşterileriniz ödeme yapmak için bu bilgileri görecektir.",
-                "checkout_link_desc": "Kendi ödeme altyapınızın (Shopier vb.) linkini yapıştırın."
+                "my_products": "Ürünlerim",
+                "theme_selection": "TEMA SEÇİMİ"
             },
-            "design": {
-                "themes": {
-                    "arctic-glass": "Arctic Glass",
-                    "midnight-neon": "Midnight Neon",
-                    "luxury-gold": "Luxury Gold",
-                    "soft-clay": "Soft Clay",
-                    "cyber-future": "Cyber Future",
-                    "sunset-pastel": "Sunset Pastel",
-                    "dreamy-mesh": "Dreamy Mesh",
-                    "neo-brutalist": "Neo Brutalist"
-                },
-                "button_styles": {
-                    "rounded": "Yuvarlak",
-                    "semi": "Yarı Oval",
-                    "sharp": "Keskin"
-                }
+            "states": {
+                "active": "Aktif",
+                "draft": "Taslak",
+                "no_products": "Henüz ürün yok",
+                "no_products_desc": "İlk ürününüzü ekleyerek satışa başlayın.",
+                "add_first_product": "İlk Ürünü Ekle",
+                "loading_editor": "Editör Yükleniyor...",
+                "logo_error": "Logo yüklenirken bir hata oluştu.",
+                "cover_error": "Kapak görseli yüklenirken bir hata oluştu."
             },
-            "product_types": {
-                "collect_emails": {
-                    "title": "E-postaları / Başvuruları Topla",
-                    "desc": "Potansiyel müşteri bilgilerini bir çekme aracıyla toplayın."
-                },
-                "digital_product": {
-                    "title": "Dijital Ürün",
-                    "desc": "PDF'ler, kılavuzlar, şablonlar, e-kitaplar vb. satın."
-                },
-                "coaching_call": {
-                    "title": "Koçluk Görüşmesi",
-                    "desc": "Tanışma görüşmeleri ve ücretli koçluk hizmetleri sunun."
-                },
-                "video_response": {
-                    "title": "Kişiselleştirilmiş Video Yanıtı",
-                    "desc": "Taleplere özel video veya ürün yanıtları gönderin."
-                },
-                "ask_me_anything": {
-                    "title": "Soru-Cevap (AMA)",
-                    "desc": "Takipçilerinizin size ücretli sorular sormasını sağlayın."
-                },
-                "private_group": {
-                    "title": "Telegram / Özel Grup",
-                    "desc": "Telegram kanalına veya kapalı gruplara ücretli abonelik satın."
-                },
-                "custom_product": {
-                    "title": "Özel Ürün",
-                    "desc": "Denetimler, analizler veya kişiye özel video incelemeleri."
-                },
-                "sety_affiliate": {
-                    "title": "Sety Affiliate Link",
-                    "desc": "Sety'yi önerin ve satışlardan %20 kazanın."
-                }
+            "stats": {
+                "clicks": "tıklama"
+            },
+            "preview": {
+                "brand_name_placeholder": "Marka Adı",
+                "bio_placeholder": "Kendinden bahset...",
+                "free_button": "Ücretsiz",
+                "affiliate_badge_text": "SETY İLE OLUŞTURULDU"
             },
             "actions": {
-                "save": "Kaydet",
-                "cancel": "Vazgeç",
-                "add_new": "Yeni Ekle",
-                "add_page": "Yeni Sayfa",
                 "edit": "Düzenle",
+                "archive": "Arşivle",
                 "publish": "Yayınla",
-                "archive": "Arşive Kaldır",
                 "delete": "Sil",
-                "back": "Geri Dön",
-                "create": "Oluştur",
-                "create_product": "Yeni Ürün Ekle",
-                "create_landing_page": "Açılış Sayfası Oluştur"
+                "cancel": "İptal",
+                "save": "Kaydet",
+                "create_product": "Yeni Ürün Oluştur",
+                "create_landing_page": "Yeni Sayfa Oluştur"
             },
             "editors": {
-                "fields": {
-                    "title_label": "Başlık",
-                    "bottom_title_label": "Alt Başlık",
-                    "button_text_label": "Buton Metni"
-                },
-                "placeholders": {
-                    "title": "Hemen [Şablon/eKitap/Kurs]'unu Al!",
-                    "bottom_title": "Rehberimi Al",
-                    "button_text": "SATIN AL"
-                },
                 "tabs": {
-                    "thumbnail": "Küçük Resim",
                     "checkout": "Ödeme Sayfası",
-                    "product": "Mağaza Ürünü",
-                    "options": "Seçenekler"
+                    "product": "Ürün Kartı",
+                    "options": "Ayarlar"
                 },
                 "general": {
-                    "style_selection": "1. Bir Stil Seçin",
-                    "style_button": "Düğme",
-                    "style_button_desc": "Basit ve etkili",
-                    "style_callout": "Çağrı",
-                    "style_callout_desc": "Daha büyük öne çıkan kart",
-                    "image_selection": "2. Resim Seç",
-                    "image_upload": "Resim Yükle",
-                    "image_change": "Değiştir",
-                    "image_and_icon": "Görsel ve İkon",
+                    "style_selection": "Kart Stili Seçimi",
+                    "style_button": "Buton",
+                    "style_callout": "Geniş Kart",
                     "style_preview": "Önizleme",
-                    "card_preview": "Kart Önizlemesi",
-                    "card_preview_desc": "Mağaza ana sayfasında böyle görünecek.",
-                    "text_selection": "3. Metin Ekle",
-                    "title": "Başlık",
-                    "subtitle": "Alt Başlık / Açıklama",
-                    "button_text": "Düğme Metni",
-                    "link": "Link",
-                    "edit_appearance": "1. Görünümü Düzenle",
-                    "header_image": "Üst Bilgi Görseli",
-                    "description_text": "Açıklama Metni",
-                    "ai_generate": "Yapay zeka ile üret",
-                    "cta_button": "Harekete Geçirme Düğmesi",
-                    "set_price_title": "2. Fiyat Belirle",
-                    "price": "Fiyat",
-                    "discount_price": "İndirimli Fiyat",
-                    "price_hint": "0,50 ile 25.000 dolar arasında olmalıdır.",
-                    "add_payment_plan": "Ödeme Planı Ekle",
-                    "limit_amount": "Limit Miktarı",
-                    "discount_code": "İndirim Kodu",
-                    "collect_info_title": "3. Bilgi Topla",
-                    "add_field": "Alan Ekle",
-                    "secure_process": "Sety tarafından güvenle işlenir 🔒",
-                    "save_draft": "Taslak olarak kaydet",
-                    "publish": "Yayınla ✨",
-                    "saved": "Kaydedildi",
-                    "next": "Sonraki",
-                    "improve_page": "💡 Sayfayı daha fazla detayla güçlendirin",
-                    "currency_name": "dolar",
+                    "image_and_icon": "Görsel ve İkon",
                     "product_active": "Ürün Aktif",
-                    "product_active_desc": "Mağazanızda yayına alınsın.",
-                    "success_publish": "Ürün başarıyla yayınlandı! ✨"
-                },
-                "upload": {
-                    "delivery_hint": "💡 Satın alan müşterilere otomatik olarak gönderilecek",
-                    "file_tab": "📁 Dosya Yükle",
-                    "url_tab": "🔗 URL'ye Yönlendir",
-                    "upload_success": "Dosya başarıyla yüklendi! ✅",
-                    "upload_error": "Yükleme hatası",
-                    "file_uploaded": "Dosya yüklendi",
-                    "auto_delivery_msg": "Müşteriye otomatik gönderilecek ✅",
-                    "drag_drop_title": "Dosyanı buraya sürükle",
-                    "or_choose": "veya tıkla ve seç",
-                    "file_types_hint": "PDF, ZIP, MP4, MP3, PNG, DOCX — Maks. 500MB",
-                    "url_placeholder": "https://drive.google.com/...",
-                    "url_hint": "Google Drive, Dropbox, Notion, YouTube gibi linkler kullanabilirsiniz."
-                },
-                "description": {
-                    "label": "Açıklama Metni *",
-                    "placeholder": "Buraya açıklama yazın...",
-                    "toolbar": {
-                        "h3": "Başlık",
-                        "bold": "Kalın",
-                        "strike": "Üstü Çizili",
-                        "italic": "İtalik",
-                        "list": "Madde İşaretli Liste",
-                        "image": "Görsel Ekle",
-                        "video": "Video Ekle",
-                        "link": "Bağlantı Ekle"
-                    },
-                    "modals": {
-                        "video_title": "Video Ekle",
-                        "video_placeholder": "Buraya bir YouTube, Loom veya Wistia video bağlantısı yazın",
-                        "embed_button": "Videoyu Göm",
-                        "upload_own": "Kendi içeriğinizi yükleyin.",
-                        "link_title": "Bağlantı Ekle",
-                        "link_name_placeholder": "İsim",
-                        "link_url_placeholder": "https://...",
-                        "remove_link": "Bağlantıyı kaldır",
-                        "save_button": "Kaydet"
-                    }
-                },
-                "fields_manager": {
-                    "title": "Bilgi Toplama Alanları",
-                    "subtitle": "Müşterilerden hangi bilgileri almak istiyorsunuz?",
-                    "required_section": "Zorunlu Alanlar",
-                    "extra_section": "Ek Alanlar",
-                    "required_badge": "Zorunlu",
-                    "add_field_button": "Yeni Alan Ekle",
-                    "select_type_title": "Alan Türü Seç",
-                    "placeholder_name": "Alan Adı",
-                    "options_title": "Seçenekler",
-                    "menu_items_title": "Menü Öğeleri",
-                    "no_options": "Henüz seçenek yok",
-                    "add_option": "Seçenek Ekle",
-                    "preview_title": "Önizleme",
-                    "checkbox_hint": "💡 Kullanıcı devam etmeden önce bu kutuyu işaretlemek zorunda kalır.",
-                    "checkbox_hint_default": "Şartları ve koşulları kabul ediyorum",
-                    "types": {
-                        "phone": "Telefon Numarası",
-                        "phone_desc": "Ülke kodlu telefon girişi",
-                        "text": "Metin Kutusu",
-                        "text_desc": "Serbest metin girişi",
-                        "multiple": "Çoktan Seçmeli",
-                        "multiple_desc": "Kullanıcı birden fazla seçer",
-                        "dropdown": "Açılır Menü",
-                        "dropdown_desc": "Kullanıcı tek seçim yapar",
-                        "checkbox": "Onay Kutusu",
-                        "checkbox_desc": "Şart onayı için işaret kutusu",
-                        "email": "E-posta",
-                        "metin": "Metin"
-                    }
-                },
-                "video_response": {
-                    "title_default": "Kişiselleştirilmiş Video Yanıtı",
-                    "subtitle_default": "İsteğinize özel bir video/ürün göndereceğim!",
-                    "button_text_default": "Talebinizi Gönderin",
-                    "checkout_desc_default": "Talebinizi bizzat inceleyeceğim ve başarıya ulaşmanız için bir plan oluşturmanıza yardımcı olacağım.\n\nBu ürünü satın alarak, sizin özel isteklerinizi ele aldığım ve en iyi önerilerimi sunduğum, size özel bir video/ürün oluşturacağım!"
-                },
-                "reviews": {
-                    "title": "Müşteri Yorumu Ekle",
-                    "subtitle": "Bu ürün için müşteri referanslarını ve yorumlarını gösterin. Güven tazelemek satışları artırır.",
-                    "add_button": "Yorum Ekle",
-                    "name_label": "Müşteri Adı",
-                    "name_placeholder": "Örn: Ahmet Yılmaz",
-                    "text_label": "Yorum",
-                    "text_placeholder": "Müşterinin deneyimini buraya yazın..."
-                },
-                "emails": {
-                    "title": "E-posta Akışı Ekle",
-                    "flow_title": "Otomatik E-posta Akışı",
-                    "flow_subtitle": "Satın alım sonrası müşteriye gönderilecek otomatik mesaj dizisi.",
-                    "select_flow": "Akış Seçin",
-                    "flows": [
-                        "Teşekkür & Karşılama",
-                        "Eğitim Serisi",
-                        "Geri Bildirim Talebi"
-                    ]
-                },
-                "reminders": {
-                    "title": "E-posta Hatırlatıcıları",
-                    "flow_title": "Zamanlı Hatırlatıcılar",
-                    "flow_subtitle": "Etkinlik veya teslimat öncesi otomatik hatırlatmalar gönderin.",
-                    "hours": "saat",
-                    "days": "gün",
-                    "before": "önce",
-                    "automatic": "Otomatik hatırlatma",
-                    "time_placeholder": "Süre",
-                    "hours_before": "saat önce"
-                },
-                "bump": {
-                    "title": "Sipariş Artışı Etkinleştir",
-                    "flow_title": "Sipariş Artışı (Order Bump)",
-                    "flow_subtitle": "Ödeme akışınıza tek seferlik bir teklif ekleyin.",
-                    "product_name": "Ürün Adı",
-                    "product_placeholder": "Örn: E-kitap, Bonus Video",
-                    "price": "Fiyat",
-                    "select_image": "Görsel Seç",
-                    "desc_placeholder": "Müşteriye neden bu teklifi alması gerektiğini söyleyin."
-                },
-                "affiliate": {
-                    "title": "İş Ortağı Paylaşımını Etkinleştir",
-                    "flow_title": "Ortaklık Sistemi",
-                    "flow_subtitle": "Müşterilerinizin bu ürünü yeniden satmasına izin verin.",
-                    "commission_rate": "Komisyon Oranı",
-                    "commission_desc": "İş ortaklarınız her satıştan bu oranda pay alacaktır."
+                    "product_active_desc": "Ürünü mağazada göster veya gizle.",
+                    "saved": "Kaydedildi",
+                    "publish": "Yayınla",
+                    "card_preview": "Kart Önizlemesi",
+                    "card_preview_desc": "Ürününüz mağazada bu şekilde görünecek."
                 }
-            },
-            "pages": {
-                "title": "Mağaza Sayfaları",
-                "desc": "Özel satış sayfaları ve mağaza sekmeleri oluşturun.",
-                "empty_title": "Bir Açılış Sayfası Oluşturun",
-                "empty_desc": "Özel bir açılış sayfası kullanarak müşterileri yalnızca belirli bir ürün bağlantısına yönlendirin! Bu sayfa mağazanızın vitrininden gizlenmiştir, böylece onu yalnızca belirli bir müşteri grubuna sunabilirsiniz.",
-                "default_badge": "Varsayılan"
             },
             "modals": {
                 "delete_product": {
                     "title": "Ürünü Sil",
-                    "desc": "Bu ürünü silmek istediğinize emin misiniz? Bu işlem geri alınamaz ve ürün mağazanızdan kalıcı olarak kaldırılır.",
-                    "confirm": "Evet, Kalıcı Olarak Sil"
+                    "desc": "Bu ürünü silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+                    "confirm": "Evet, Sil"
                 },
                 "edit_page": {
                     "title": "Sayfayı Düzenle",
-                    "desc": "Sayfa başlığını ve link uzantısını özelleştirin.",
+                    "desc": "Sayfa bilgilerini güncelleyin.",
                     "label_title": "Sayfa Başlığı",
-                    "placeholder_title": "Örn: Masterclass Tanıtımı",
-                    "label_slug": "Link Uzantısı (Slug)",
-                    "placeholder_slug": "ozel-link",
-                    "default_page_desc": "Ana sayfa linki değiştirilemez.",
-                    "main_page_title": "Ana Mağaza Sayfası"
+                    "label_slug": "Sayfa Yolu (Slug)",
+                    "placeholder_title": "Örn: Hakkımda",
+                    "placeholder_slug": "hakkimda",
+                    "default_page_desc": "Ana sayfanın yolu değiştirilemez.",
+                    "main_page_title": "Ana Sayfa"
                 }
             },
-            "states": {
-                "loading_editor": "Düzenleyici Yükleniyor...",
-                "logo_error": "Logo yüklenirken hata oluştu",
-                "cover_error": "Kapak görseli yüklenirken hata oluştu",
-                "active": "Aktif",
-                "draft": "Taslak",
-                "sales_count": "{{count}} Satış",
-                "no_products": "Henüz içerik eklemediniz",
-                "no_products_desc": "Dijital ürün, abonelik veya randevu ekleyerek para kazanmaya başlayın.",
-                "add_first_product": "İlk Ürününü Ekle",
-                "coming_soon": "YAKINDA",
-                "step_select_type": "Adım 1/2: Tip Seç",
-                "add_product_desc": "Mağazanıza eklemek istediğiniz ürün veya servis tipini seçin.",
-                "add_product_subtitle": "Saniyeler içinde mağazanıza ekleyin"
-            },
-            "preview": {
-                "brand_name_placeholder": "Sety Mağazam",
-                "bio_placeholder": "Mağaza açıklamanız burada görünecek. Takipçilerinize kendinizden bahsedin!",
-                "buy_button": "Al",
-                "free_button": "Ücretsiz",
-                "affiliate_badge_text": "Sety ile kendi markanı kur!",
-                "limited_stock": "Sınırlı Stok",
-                "no_image_selected": "Görsel Seçilmedi",
-                "or": "veya",
-                "installments": "taksit",
-                "selection_with": "seçeneği ile",
-                "per_month": "ay",
-                "units": "Adet",
-                "have_coupon": "İndirim kodunuz mu var?",
-                "coupon_placeholder": "KUPON",
-                "apply": "Uygula",
-                "secure_checkout": "Güvenli Ödeme",
-                "built_with": "Built with"
-            },
-            "placeholders": {
-                "display_name": "Adınız veya Markanız",
-                "bio": "Kısaca kendinizden bahsedin...",
-                "announcement": "Örn: Masterclass Rehberim Yayınlandı! 🚀",
-                "product_title_example": "Örn: Masterclass Video Seti",
-                "product_desc": "Ürününüz hakkında kısa bir bilgi...",
-                "payment_info": "Örn: IBAN: TR00... veya USDT (TRC20): ..."
+            "product_types": {
+                "digital_product": {
+                    "title": "Dijital Ürün",
+                    "desc": "E-kitap, dosya veya herhangi bir dijital içerik."
+                },
+                "private_group": {
+                    "title": "Özel Grup",
+                    "desc": "Telegram veya Discord grubuna erişim sat."
+                },
+                "collect_emails": {
+                    "title": "E-posta Topla",
+                    "desc": "Ücretsiz bir içerik karşılığında e-posta listeni büyüt."
+                },
+                "coaching_call": {
+                    "title": "Koçluk Görüşmesi",
+                    "desc": "Birebir görüşme veya danışmanlık randevusu al."
+                },
+                "video_response": {
+                    "title": "Video Yanıt",
+                    "desc": "Takipçilerinin sorularını video ile yanıtla."
+                },
+                "custom_product": {
+                    "title": "Özel Ürün",
+                    "desc": "Kişiselleştirilmiş herhangi bir hizmet veya ürün."
+                }
             }
         }
     },
+    "store": {
+        "my_store": "Mağazam",
+        "products": "Ürünler",
+        "add_product": "Ürün Ekle",
+        "no_products": "Henüz ürün eklenmemiş.",
+        "product_types": {
+            "digital": "Dijital Ürün",
+            "course": "E-Kurs",
+            "coaching": "Koçluk",
+            "community": "Topluluk"
+        }
+    },
     "public": {
-        "buy_now": "Satın Al",
-        "checkout": "Ödeme",
+        "buy_now": "Hemen Al",
+        "checkout": "Ödeme Yap",
         "free": "ÜCRETSİZ",
-        "built_with": "Sety ile oluşturuldu",
+        "built_with": "Sety ile Oluşturuldu",
         "success_title": "Harika!",
-        "coaching_success": "Randevu talebiniz alındı. Sizinle en kısa sürede iletişime geçeceğiz.",
+        "coaching_success": "Randevu talebiniz alındı. En kısa sürede sizinle iletişime geçeceğiz.",
         "delivery_ready": "Ürününüz hazır! Aşağıdaki butona tıklayarak erişebilirsiniz.",
         "manual_payment_instruction": "Ödemeyi tamamlamak için aşağıdaki bilgileri kullanın.",
         "order_captured": "Bilgileriniz başarıyla kaydedildi!",
         "order_email_sent": "Sipariş detayları e-posta adresinize de gönderildi.",
-        "payment_details": "Ödeme Bilgileri",
-        "manual_payment_footer": "Ödeme yaparken açıklama kısmına e-posta adresinizi yazmayı unutmayın.",
-        "go_to_link": "Bağlantıya Git",
+        "payment_details": "Ödeme Detayları",
+        "manual_payment_footer": "Ödeme yaparken açıklama kısmına e-posta adresinizi eklemeyi unutmayın.",
+        "go_to_link": "Linki Aç",
         "download_now": "Şimdi İndir"
     },
     "landing": {
@@ -532,12 +326,12 @@
         "hero": {
             "title": "Dijital Mağazanı 2 Dakikada Kur, ",
             "title_accent": "Hemen Satışa Başla.",
-            "subtitle": "Sety ile dijital ürünlerin, koçluk hizmetlerin ve aboneliklerin için tek bir merkezden satış yap. Sen sadece yaratmaya odaklan, gerisini biz hallederiz. Sosyal medyadaki etkini profesyonel bir mağazaya dönüştürmek hiç bu kadar kolay olmamıştı.",
-            "cta": "Hemen Mağazanı Aç"
+            "subtitle": "Dijital ürünlerini, koçluk hizmetlerini ve aboneliklerini Sety ile tek bir merkezden sat. Sen üretmeye odaklan, geri kalan her şeyi biz halledelim. Sosyal medya gücünü profesyonel bir mağazaya dönüştürmek hiç bu kadar kolay olmamıştı.",
+            "cta": "Mağazanı Hemen Aç"
         },
         "features": {
-            "title": "İşini Büyütmek ",
-            "title_accent": "İsteyenler İçin Tasarlandı",
+            "title": "İşini Büyütmek İsteyenler İçin ",
+            "title_accent": "Tasarlandı",
             "subtitle": "Karmaşık araçları unutun. Sety ile sadece işinize odaklanın.",
             "cards": [
                 {
@@ -547,8 +341,8 @@
                 },
                 {
                     "title": "Linkini Paylaş",
-                    "desc": "Sety linkini sosyal medya biyografine ekle, satışa hemen başla.",
-                    "footer": "Linkin Hazır"
+                    "desc": "Sety linkini sosyal medya biona ekle ve satış yapmaya hemen başla.",
+                    "footer": "Link Hazır"
                 },
                 {
                     "title": "Kazancını Çek",
@@ -560,66 +354,66 @@
         "footer": {
             "help": "Yardım",
             "privacy": "Gizlilik Politikası",
-            "terms": "Kullanım Koşulları",
+            "terms": "Kullanım Şartları",
             "rights": "Tüm hakları saklıdır."
         },
         "how_it_works": {
             "title": "Hayalindeki Mağaza, ",
             "title_accent": "Dakikalar İçinde Yayında",
             "step1": {
-                "title": "Tek Panelden <br />Hepsini Yönet",
-                "desc": "Ürün yüklemeden satış takibi, müşteri analizlerinden ödemelere kadar her şey tek bir akıllı panelde.",
+                "title": "Hepsini Tek Panelden <br />Yönet",
+                "desc": "Ürün yüklemeden satış takibine, müşteri analizinden ödemelere kadar her şey tek bir akıllı panelde.",
                 "badge": "Satıcı Paneli",
                 "metrics": {
-                    "earnings": "BU AYKİ KAZANÇ",
+                    "earnings": "BU AYKİ CİRO",
                     "customers": "AKTİF MÜŞTERİ",
                     "activity": "SON AKTİVİTELER"
                 }
             },
             "step2": {
                 "title": "Kendi Markan",
-                "desc": "Logon, renklerin ve domaininle mağazanı kişiselleştir. Platform altında ezilme."
+                "desc": "Mağazanı logonla, renklerinle ve alan adınla kişiselleştir. Bir platformun altında ezilme."
             },
             "step3": {
                 "title": "Anında Kazanç",
-                "desc": "Global ödeme yöntemleriyle tüm dünyadan ödeme al. Komisyon yok, kazancının tek sahibi sensin."
+                "desc": "Dünyanın her yerinden global ödeme yöntemleriyle ödeme al. Komisyon yok, kazancının tek sahibi sensin."
             }
         },
         "faq": {
             "title": "Sorularınız mı Var?",
-            "subtitle": "Sety hakkında en çok sorulan soruların cevaplarını burada bulabilirsiniz.",
+            "subtitle": "Sety hakkında en çok merak edilen soruları burada bulabilirsiniz.",
             "items": [
                 {
                     "q": "Ödemelerimi nasıl alırım?",
-                    "a": "Sety, ödeme sürecinde aracı olmaz. Kendi Iyzico, Stripe veya diğer ödeme altyapınızı sisteme bağlarsınız. Müşteriniz bir ürün aldığında, ödeme doğrudan sizin kendi ödeme kuruluşundaki hesabınıza yatar."
+                    "a": "Sety, ödeme sürecinde aracı kurum olarak yer almaz. Kendi Iyzico, Stripe veya diğer ödeme altyapınızı sisteme bağlarsınız. Müşteriniz ürün aldığında ödeme doğrudan ödeme sağlayıcınızdaki kendi hesabınıza yatar."
                 },
                 {
                     "q": "Sety satışlarımdan komisyon alıyor mu?",
-                    "a": "Hayır, Sety hiçbir satıştan komisyon almaz. Sadece aylık sabit abonelik ücreti ödersiniz. Satış hacminiz ne kadar artarsa artsın, kazancınızın %100'ü size kalır."
+                    "a": "Hayır, Sety hiçbir satıştan komisyon almaz. Sadece aylık sabit bir abonelik ücreti ödersiniz. Satış hacminiz ne kadar artarsa artsın, kazancınızın %100'ü sizin kalır."
                 },
                 {
-                    "q": "Kendi ödeme altyapımı bağlamam zor mu?",
-                    "a": "Hiç de değil! Panelimiz üzerinden Iyzico veya Stripe gibi popüler ödeme yöntemlerini sadece birkaç tıklamayla, API anahtarlarınızı girerek saniyeler içinde bağlayabilirsiniz."
+                    "q": "Kendi ödeme altyapımı bağlamak zor mu?",
+                    "a": "Kesinlikle hayır! Iyzico veya Stripe gibi popüler ödeme yöntemlerini, panelimiz üzerinden sadece birkaç tıklama ile API anahtarlarınızı girerek saniyeler içinde bağlayabilirsiniz."
                 },
                 {
                     "q": "İade ve iptal süreçleri nasıl işliyor?",
-                    "a": "Para akışı doğrudan sizin ve müşteriniz arasında (kendi ödeme altyapınız üzerinden) gerçekleştiği için, iade ve iptal işlemleri de tamamen sizin kontrolünüzdedir. Sety bu sürece müdahil olmaz."
+                    "a": "Para akışı doğrudan sizinle müşteriniz arasında (kendi ödeme altyapınız üzerinden) gerçekleştiği için, iade ve iptal süreçleri de tamamen sizin kontrolünüzdedir. Sety bu sürece müdahale etmez."
                 },
                 {
                     "q": "Vergi süreçleri nasıl yönetiliyor?",
-                    "a": "Satışlar kendi ödeme altyapınız üzerinden gerçekleştiği için faturalandırma ve vergi süreçleri de mevcut ticari modelinize göre sizin tarafınızdan yönetilir. Profesyonel bir mağaza sahibi olarak tüm süreç sizin kontrolünüzdedir."
+                    "a": "Satışlar kendi ödeme altyapınız üzerinden gerçekleştiği için faturalandırma ve vergi süreçleri, mevcut işletme modelinize göre sizin tarafınızdan yönetilir. Profesyonel bir mağaza sahibi olarak tüm süreçlerin kontrolü sizdedir."
                 },
                 {
-                    "q": "Teknik bilgim olmadan mağaza açabilir miyim?",
-                    "a": "Evet! Sety, hiçbir kodlama veya teknik kurulum gerektirmeden profesyonel bir mağaza sahibi olmanız için tasarlandı. Sadece ürününüzü yükleyin, ödeme yönteminizi seçin ve satışa başlayın."
+                    "q": "Teknik bilgi olmadan mağaza açabilir miyim?",
+                    "a": "Evet! Sety, kodlama veya teknik kurulum gerektirmeden profesyonel bir mağaza sahibi olmanız için tasarlandı. Sadece ürününüzü yükleyin, ödeme yönteminizi seçin ve satışa başlayın."
                 }
             ]
         },
         "product_showcase": {
-            "title": "Siz yaratmaya odaklanın, ",
-            "title_accent": "gerisini biz hallederiz.",
-            "subtitle": "Karmaşık kurulumlara veda edin. Sety, tek bir basit bağlantı üzerinden size profesyonel bir mağaza ve güçlü bir arka ofis sunar.",
-            "trial": "1 aylık ücretsiz deneme sürümünüze bugün başlayın.",
+            "title": "Sen üretmeye odaklan, ",
+            "title_accent": "gerisini biz halledelim.",
+            "subtitle": "Karmaşık kurulumlara elveda de. Sety sana profesyonel bir mağaza ve güçlü bir yönetim paneli sunar, hem de tek bir basit link üzerinden.",
+            "trial": "Hemen 1 aylık ücretsiz deneme süreni başlat.",
             "cards": {
                 "revenue": {
                     "title": "TOPLAM GELİR",
@@ -627,13 +421,13 @@
                 },
                 "live_sale": {
                     "title": "CANLI SATIŞ",
-                    "time": "Az önce",
+                    "time": "Şimdi",
                     "country": "Türkiye"
                 },
-                "pricing": {
-                    "title": "AKTİF ALICI",
+                "customers": {
+                    "title": "AKTİF MÜŞTERİ",
                     "count": "2,400 müşteri",
-                    "trend": "↑ 142 bu hafta"
+                    "trend": "↑ bu hafta 142"
                 },
                 "chart": {
                     "title": "BU HAFTA",
@@ -641,15 +435,15 @@
                         "Pzt",
                         "Çar",
                         "Cum",
-                        "Bug"
+                        "Bugün"
                     ]
                 },
                 "link_in_bio": {
-                    "title": "LİNK İN BİO"
+                    "title": "BİO LİNKİ"
                 },
                 "payment": {
                     "title": "Ödeme Alındı",
-                    "stripe": "Stripe · Az önce"
+                    "stripe": "Stripe · Şimdi"
                 }
             },
             "mockup": {
@@ -657,30 +451,30 @@
                 "badge": "POWERED BY SETY",
                 "products": {
                     "digital": "DİJİTAL ÜRÜN",
-                    "booking": "REZERVASYON",
+                    "booking": "RANDEVU",
                     "course": "E-KURS",
-                    "membership": "ÜYELİK"
+                    "membership": "ABONELİK"
                 },
                 "items": [
                     {
-                        "title": "7 Günlük Reset Rehberi",
-                        "price": "$24"
+                        "title": "7 Günlük Değişim Rehberi",
+                        "price": "₺450"
                     },
                     {
-                        "title": "1-e-1 Strateji Görüşmesi",
-                        "price": "$150"
+                        "title": "1-on-1 Strateji Görüşmesi",
+                        "price": "₺2,500"
                     },
                     {
-                        "title": "Pasif Gelir Kursu",
-                        "price": "$99"
+                        "title": "Pasif Gelir Eğitimi",
+                        "price": "₺1,200"
                     },
                     {
-                        "title": "Creator Mastermind",
-                        "price": "$299"
+                        "title": "İçerik Üretici Topluluğu",
+                        "price": "₺4,500"
                     },
                     {
                         "title": "Link-in-Bio Şablonları",
-                        "price": "$15"
+                        "price": "₺250"
                     }
                 ]
             }

@@ -137,6 +137,7 @@ CREATE TABLE IF NOT EXISTS products (
   checkout_provider TEXT DEFAULT 'manual', -- 'stripe', 'iyzico', 'shopier', 'paddle', 'manual'
   status TEXT DEFAULT 'active', -- 'active', 'draft'
   order_index INTEGER DEFAULT 0,
+  calendly_url TEXT,
   
   -- Modernized UI Styles (Stan-like)
   thumbnail_style TEXT DEFAULT 'callout', -- 'button', 'callout', 'preview'
@@ -298,3 +299,95 @@ BEGIN
   WHERE plan_type = 'founder';
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- =============================================
+-- Table 7: store_payment_settings
+-- =============================================
+CREATE TABLE IF NOT EXISTS store_payment_settings (
+  store_id UUID PRIMARY KEY REFERENCES stores(id) ON DELETE CASCADE,
+  default_provider TEXT, -- 'paddle', 'paypal', 'bank', 'other', null
+  paddle_checkout_url TEXT,
+  paypal_me_username TEXT,
+  bank_iban TEXT,
+  bank_account_holder TEXT,
+  bank_transfer_instructions TEXT,
+  other_payment_instructions TEXT,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- store_payment_settings Policies
+ALTER TABLE store_payment_settings ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can view store payment settings" ON store_payment_settings;
+CREATE POLICY "Public can view store payment settings" ON store_payment_settings FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Users can manage own store payment settings" ON store_payment_settings;
+CREATE POLICY "Users can manage own store payment settings" ON store_payment_settings FOR ALL 
+USING (EXISTS (SELECT 1 FROM stores WHERE stores.id = store_payment_settings.store_id AND stores.user_id = auth.uid()));
+
+-- =============================================
+-- Update products table for payment link override
+-- =============================================
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='products' AND column_name='payment_link_override') THEN
+        ALTER TABLE products ADD COLUMN payment_link_override TEXT;
+    END IF;
+END $$;
+
+-- =============================================
+-- Migration: Enhanced Orders & Delivery
+-- =============================================
+
+-- Table 8: download_tokens
+CREATE TABLE IF NOT EXISTS download_tokens (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  order_id UUID REFERENCES orders(id) ON DELETE CASCADE,
+  token TEXT UNIQUE NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  used_count INTEGER DEFAULT 0,
+  max_uses INTEGER DEFAULT 3,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- download_tokens Policies
+ALTER TABLE download_tokens ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can view own download tokens" ON download_tokens;
+CREATE POLICY "Public can view own download tokens" ON download_tokens FOR SELECT USING (true); -- Usually accessed via token string
+
+DROP POLICY IF EXISTS "Users can manage store download tokens" ON download_tokens;
+CREATE POLICY "Users can manage store download tokens" ON download_tokens FOR ALL 
+USING (EXISTS (SELECT 1 FROM orders JOIN stores ON orders.store_id = stores.id WHERE orders.id = download_tokens.order_id AND stores.user_id = auth.uid()));
+
+-- Update orders table
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='orders' AND column_name='order_number') THEN
+        ALTER TABLE orders ADD COLUMN order_number TEXT UNIQUE;
+        ALTER TABLE orders ADD COLUMN customer_email TEXT;
+        ALTER TABLE orders ADD COLUMN customer_name TEXT;
+        ALTER TABLE orders ADD COLUMN customer_telegram_chat_id BIGINT;
+        ALTER TABLE orders ADD COLUMN currency TEXT DEFAULT 'TRY';
+        ALTER TABLE orders ADD COLUMN payment_provider TEXT;
+        ALTER TABLE orders ADD COLUMN payment_link_type TEXT;
+        ALTER TABLE orders ADD COLUMN download_token_id UUID REFERENCES download_tokens(id) ON DELETE SET NULL;
+        ALTER TABLE orders ADD COLUMN confirmed_at TIMESTAMP;
+        ALTER TABLE orders ADD COLUMN cancelled_at TIMESTAMP;
+        ALTER TABLE orders ADD COLUMN notes TEXT;
+    END IF;
+END $$;
+
+-- =============================================
+-- Migration: Product Sorting
+-- =============================================
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='products' AND column_name='sort_order') THEN
+        ALTER TABLE products ADD COLUMN sort_order INTEGER DEFAULT 0;
+    END IF;
+END $$;
+
+

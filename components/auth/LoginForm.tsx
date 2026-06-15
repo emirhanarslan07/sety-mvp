@@ -42,7 +42,7 @@ export function LoginForm({
                 type="text"
                 value={email}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                placeholder="E-posta veya kullanıcı adı"
+                placeholder="Email or username"
                 autoComplete="username"
                 required
             />
@@ -51,7 +51,7 @@ export function LoginForm({
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                placeholder="Şifre"
+                placeholder="Password"
                 autoComplete="current-password"
                 required
             />
@@ -64,7 +64,7 @@ export function LoginForm({
                     onClick={() => setIsForgotPassword(true)}
                     className="text-[14px] text-[#5500ff] hover:text-[#4400cc] font-bold transition-colors"
                 >
-                    Şifremi unuttum?
+                    Forgot password?
                 </button>
             </div>
 
@@ -74,7 +74,7 @@ export function LoginForm({
                     disabled={loading}
                     className="w-full h-[54px] rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[17px] shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2 transform active:scale-[0.98] border-none"
                 >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Giriş Yap'}
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
                 </Button>
             </div>
         </motion.div>

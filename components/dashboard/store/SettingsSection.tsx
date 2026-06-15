@@ -5,7 +5,6 @@ import { Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { SetyLogo } from '@/components/ui/SetyLogo';
-import { useTranslation } from '@/lib/i18n/context';
 
 interface SettingsSectionProps {
     announcement: string;
@@ -20,18 +19,17 @@ export default function SettingsSection({
     showAffiliateBadge,
     setShowAffiliateBadge,
 }: SettingsSectionProps) {
-    const { t } = useTranslation();
 
     return (
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
             {/* Announcement Banner */}
             <div className="space-y-4">
                 <label className="text-[14px] font-black text-slate-900 uppercase tracking-widest px-1">
-                    {t('dashboard.store.sections.announcement_banner')}
+                    {'dashboard.store.sections.announcement_banner'}
                 </label>
                 <div className="relative">
                     <Input
-                        placeholder={t('dashboard.store.placeholders.announcement')}
+                        placeholder={'dashboard.store.placeholders.announcement'}
                         value={announcement}
                         onChange={(e) => setAnnouncement(e.target.value)}
                         className="h-16 px-6 rounded-[24px] bg-slate-50/50 border-slate-100 font-bold focus:ring-[#5500ff]/10 focus:border-[#5500ff] transition-all pr-16"
@@ -41,14 +39,14 @@ export default function SettingsSection({
                     </div>
                 </div>
                 <p className="text-[12px] font-medium text-slate-400 px-1">
-                    {t('dashboard.store.sections.announcement_desc')}
+                    {'dashboard.store.sections.announcement_desc'}
                 </p>
             </div>
 
             {/* Affiliate Badge Toggle */}
             <div className="space-y-4">
                 <label className="text-[14px] font-black text-slate-900 uppercase tracking-widest px-1">
-                    {t('dashboard.store.sections.sety_badge')}
+                    {'dashboard.store.sections.sety_badge'}
                 </label>
                 <div
                     onClick={() => setShowAffiliateBadge(!showAffiliateBadge)}
@@ -68,10 +66,10 @@ export default function SettingsSection({
                         </div>
                         <div>
                             <h4 className={cn("text-[16px] font-black tracking-tight", showAffiliateBadge ? "text-slate-900" : "text-slate-400")}>
-                                {t('dashboard.store.sections.show_sety_badge')}
+                                {'dashboard.store.sections.show_sety_badge'}
                             </h4>
                             <p className="text-[13px] font-bold opacity-60">
-                                {t('dashboard.store.sections.sety_badge_desc')}
+                                {'dashboard.store.sections.sety_badge_desc'}
                             </p>
                         </div>
                     </div>

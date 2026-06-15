@@ -9,8 +9,11 @@ import {
     Loader2,
     Check,
     Palette,
-    Layout
+    Layout,
+    Copy,
+    Sparkles
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase/client';
 import { useDashboard } from '@/context/DashboardContext';
 import { cn } from '@/lib/utils';
@@ -21,8 +24,7 @@ import { useTranslation } from '@/lib/i18n/context';
 // Modular Components
 import StoreHeader from '@/components/dashboard/store/StoreHeader';
 import StorePreview from '@/components/dashboard/store/StorePreview';
-import ThemeCarousel from '@/components/dashboard/store/ThemeCarousel';
-import StylingSection from '@/components/dashboard/store/StylingSection';
+import ThemeCarousel, { THEME_TEMPLATES } from '@/components/dashboard/store/ThemeCarousel';
 import ProductListSection from '@/components/dashboard/store/ProductListSection';
 import AddProductSection from '@/components/dashboard/store/AddProductSection';
 import AddLandingPageSection from '@/components/dashboard/store/AddLandingPageSection';
@@ -66,10 +68,7 @@ function StorePageContent() {
     const [selectedPage, setSelectedPage] = useState<any>(null);
 
     // Design States
-    const [selectedColor, setSelectedColor] = useState('#5500ff');
     const [selectedTheme, setSelectedTheme] = useState('minimal');
-    const [selectedFont, setSelectedFont] = useState('Inter');
-    const [buttonStyle, setButtonStyle] = useState('rounded');
     const [storeLogo, setStoreLogo] = useState<string | null>(null);
     const [socialLinks, setSocialLinks] = useState({
         instagram: '',
@@ -94,9 +93,6 @@ function StorePageContent() {
             setDisplayName(store.display_name || profile?.full_name || '');
             setBio(store.bio || '');
             setSelectedTheme(store.theme_id || 'minimal');
-            setSelectedColor(store.brand_color || '#5500ff');
-            setSelectedFont(store.font_family || 'Inter');
-            setButtonStyle(store.button_style || 'rounded');
             setStoreLogo(store.store_logo_url);
             setCoverImage(store.cover_image_url);
             setAnnouncement(store.announcement_text || '');
@@ -205,19 +201,22 @@ function StorePageContent() {
         if (!user || !store) return;
         setIsSavingDesign(true);
         try {
-            const updateData = dataOverride || {
+            const activeThemeData = THEME_TEMPLATES.find(t => t.id === selectedTheme);
+            
+            // Ignore click events passed automatically by React onClick
+            const isEvent = dataOverride && (dataOverride.target || dataOverride.nativeEvent);
+            const updateData = (dataOverride && !isEvent) ? dataOverride : {
                 display_name: displayName,
                 bio: bio,
                 store_logo_url: storeLogo,
                 cover_image_url: coverImage,
                 theme_id: selectedTheme,
-                brand_color: selectedColor,
-                font_family: selectedFont,
-                button_style: buttonStyle,
+                brand_color: activeThemeData?.color || '#5500ff',
+                font_family: activeThemeData?.font || 'Inter',
+                button_style: activeThemeData?.buttonStyle || 'rounded',
                 announcement_text: announcement,
                 show_affiliate_badge: showAffiliateBadge,
                 social_links: socialLinks,
-                is_verified: isVerified,
                 updated_at: new Date().toISOString()
             };
 
@@ -229,8 +228,10 @@ function StorePageContent() {
             if (error) throw error;
 
             await refreshData();
-        } catch (error) {
+            showToast('Değişiklikler başarıyla kaydedildi! 🎉', 'success');
+        } catch (error: any) {
             console.error('Save design error:', error);
+            showToast(error.message || 'Değişiklikler kaydedilirken bir hata oluştu.', 'error');
         } finally {
             setIsSavingDesign(false);
         }
@@ -241,9 +242,6 @@ function StorePageContent() {
         setDisplayName(store.display_name || profile?.full_name || '');
         setBio(store.bio || '');
         setSelectedTheme(store.theme_id || 'minimal');
-        setSelectedColor(store.brand_color || '#5500ff');
-        setSelectedFont(store.font_family || 'Inter');
-        setButtonStyle(store.button_style || 'rounded');
         setStoreLogo(store.store_logo_url);
         setCoverImage(store.cover_image_url);
         setAnnouncement(store.announcement_text || '');
@@ -410,7 +408,7 @@ function StorePageContent() {
     }
 
     return (
-        <div className="max-w-[1400px] mx-auto px-4 md:px-0 pb-24">
+        <div className="flex-1 flex flex-col h-full bg-[#FDFDFF] overflow-hidden">
             {/* Header Area */}
             <StoreHeader
                 username={store?.username || 'user'}
@@ -419,6 +417,9 @@ function StorePageContent() {
                 handleSaveDesign={handleSaveDesign}
                 isSavingDesign={isSavingDesign}
             />
+
+            <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+                <div className="max-w-[1400px] mx-auto pb-24">
 
             {/* Main Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
@@ -490,30 +491,24 @@ function StorePageContent() {
                                             selectedTheme={selectedTheme}
                                             onSelectTheme={(theme) => {
                                                 setSelectedTheme(theme.id);
-                                                setSelectedColor(theme.color);
-                                                setSelectedFont(theme.font);
-                                                setButtonStyle(theme.buttonStyle);
-                                            }}
-                                            activeProps={{
-                                                color: selectedColor,
-                                                font: selectedFont,
-                                                buttonStyle: buttonStyle
+                                                // Also auto-save the theme's default design values
+                                                // so the public store renders correctly
+                                                handleSaveDesign({
+                                                    display_name: displayName,
+                                                    bio: bio,
+                                                    store_logo_url: storeLogo,
+                                                    cover_image_url: coverImage,
+                                                    theme_id: theme.id,
+                                                    brand_color: theme.color,
+                                                    font_family: theme.font || 'Inter',
+                                                    button_style: theme.buttonStyle || 'rounded',
+                                                    announcement_text: announcement,
+                                                    show_affiliate_badge: showAffiliateBadge,
+                                                    social_links: socialLinks,
+                                                    updated_at: new Date().toISOString()
+                                                });
                                             }}
                                         />
-                                    </section>
-
-                                    {/* 2. Appearance Tuning */}
-                                    <section className="space-y-6">
-                                        <div className="bg-white p-6 md:p-10 rounded-[32px] md:rounded-[48px] border border-slate-100 shadow-sm">
-                                            <StylingSection
-                                                selectedColor={selectedColor}
-                                                setSelectedColor={setSelectedColor}
-                                                selectedFont={selectedFont}
-                                                setSelectedFont={setSelectedFont}
-                                                buttonStyle={buttonStyle}
-                                                setButtonStyle={setButtonStyle}
-                                            />
-                                        </div>
                                     </section>
                                 </div>
                             )}
@@ -542,15 +537,12 @@ function StorePageContent() {
                 </div>
 
                 {/* Sidebar Preview */}
-                <div className="hidden lg:block lg:col-span-4 sticky top-8">
+                <div className="hidden lg:block lg:col-span-4 sticky top-8 max-w-[340px] ml-auto w-full">
                     <StorePreview
                         profile={profile}
                         products={products}
                         designProps={{
                             theme: selectedTheme,
-                            color: selectedColor,
-                            font: selectedFont,
-                            buttonStyle: buttonStyle,
                             logo: storeLogo,
                             socialLinks: socialLinks,
                             displayName: displayName,
@@ -595,13 +587,17 @@ function StorePageContent() {
             {/* Modals */}
             <ActionConfirmModal
                 isOpen={isConfirmOpen}
-                onClose={() => setIsConfirmOpen(false)}
-                onConfirm={confirmDelete}
-                title={t('dashboard.store.modals.delete_product.title')}
-                description={t('dashboard.store.modals.delete_product.desc')}
-                confirmText={t('dashboard.store.modals.delete_product.confirm')}
-                variant="danger"
+                onClose={() => {
+                    setIsConfirmOpen(false);
+                    setProductToDelete(null);
+                }}
+                onConfirm={() => productToDelete && handleDeleteProduct(productToDelete)}
+                title="Ürünü Sil"
+                description="Bu ürünü silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+                confirmText="Sil"
+                cancelText="İptal"
                 isLoading={isDeleting}
+                variant="danger"
             />
 
             {/* Page Edit Modal */}
@@ -664,6 +660,8 @@ function StorePageContent() {
                     </div>
                 </div>
             )}
+        </div>
+        </div>
         </div>
     );
 }

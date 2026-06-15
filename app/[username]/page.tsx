@@ -28,6 +28,7 @@ async function getStoreData(username: string) {
         .select('*')
         .eq('store_id', storeData.id)
         .eq('status', 'active')
+        .order('sort_order', { ascending: true })
         .order('created_at', { ascending: false });
 
     return {

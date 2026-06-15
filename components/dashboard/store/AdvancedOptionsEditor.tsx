@@ -18,7 +18,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { PremiumInput } from '@/components/ui/PremiumInput';
-import { useTranslation } from '@/lib/i18n';
 
 interface AdvancedOptionsEditorProps {
     options: any;
@@ -35,7 +34,7 @@ export default function AdvancedOptionsEditor({
     const [newReview, setNewReview] = useState({ name: '', text: '', avatar: '' });
     const [openOptions, setOpenOptions] = useState<string[]>(['reviews']);
 
-    const { t } = useTranslation();
+
 
     const toggleOption = (id: string) => {
         setOpenOptions(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -58,13 +57,13 @@ export default function AdvancedOptionsEditor({
             {/* Customer Reviews */}
             <AccordionItem
                 id="reviews"
-                title={t('dashboard.store.editors.reviews.title')}
+                title={'Müşteri Yorumları'}
                 icon={<MessageSquare className="w-5 h-5" />}
                 isOpen={openOptions.includes('reviews')}
                 onToggle={() => toggleOption('reviews')}
             >
                 <div className="p-8 space-y-6">
-                    <p className="text-[14px] text-slate-500 font-medium italic">{t('dashboard.store.editors.reviews.subtitle')}</p>
+                    <p className="text-[14px] text-slate-500 font-medium italic">{'Müşteri yorumlarını ekleyin ve düzenleyin.'}</p>
 
                     {options.reviews?.length > 0 && (
                         <div className="space-y-4">
@@ -102,18 +101,18 @@ export default function AdvancedOptionsEditor({
                                 className="p-6 bg-slate-50 rounded-[2rem] border border-slate-100 space-y-4"
                             >
                                 <PremiumInput
-                                    label={t('dashboard.store.editors.reviews.name_label')}
-                                    placeholder={t('dashboard.store.editors.reviews.name_placeholder')}
+                                    label={'Müşteri Adı'}
+                                    placeholder={'Ad Soyad'}
                                     value={newReview.name}
                                     onChange={(e: any) => setNewReview({ ...newReview, name: e.target.value })}
                                 />
                                 <div className="space-y-2">
-                                    <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('dashboard.store.editors.reviews.text_label')}</p>
+                                    <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'Yorum'}</p>
                                     <textarea
                                         value={newReview.text}
                                         onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
                                         className="w-full h-24 p-4 bg-white border border-slate-100 rounded-2xl text-[14px] font-medium outline-none resize-none"
-                                        placeholder={t('dashboard.store.editors.reviews.text_placeholder')}
+                                        placeholder={'Yorumunuzu buraya yazın...'}
                                     />
                                 </div>
                                 <div className="flex gap-3">
@@ -122,13 +121,13 @@ export default function AdvancedOptionsEditor({
                                         disabled={!newReview.name || !newReview.text}
                                         className="flex-1 h-12 rounded-xl bg-[#5500ff] text-white font-black text-[13px] hover:opacity-90 transition-all disabled:opacity-50"
                                     >
-                                        {t('common.save')}
+                                        {'Kaydet'}
                                     </button>
                                     <button
                                         onClick={() => setShowAddReview(false)}
                                         className="h-12 px-6 rounded-xl border border-slate-200 text-slate-500 font-black text-[13px] hover:bg-white transition-all"
                                     >
-                                        {t('common.cancel')}
+                                        {'İptal'}
                                     </button>
                                 </div>
                             </motion.div>
@@ -137,7 +136,7 @@ export default function AdvancedOptionsEditor({
                                 onClick={() => setShowAddReview(true)}
                                 className="h-12 px-6 rounded-xl border-2 border-[#5500ff]/10 text-[#5500ff] font-black text-[13px] hover:bg-[#5500ff]/5 transition-all flex items-center gap-2"
                             >
-                                <Plus className="w-4 h-4" /> {t('dashboard.store.editors.reviews.add_button')}
+                                <Plus className="w-4 h-4" /> {'Yeni Yorum Ekle'}
                             </button>
                         )}
                     </AnimatePresence>
@@ -147,7 +146,7 @@ export default function AdvancedOptionsEditor({
             {/* Email Flow */}
             <AccordionItem
                 id="emails"
-                title={t('dashboard.store.editors.emails.title')}
+                title={'E-posta Akışı'}
                 icon={<Mail className="w-5 h-5" />}
                 isOpen={openOptions.includes('emails')}
                 onToggle={() => toggleOption('emails')}
@@ -155,8 +154,8 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{t('dashboard.store.editors.emails.flow_title')}</h4>
-                            <p className="text-[13px] text-slate-400 font-bold italic">{t('dashboard.store.editors.emails.flow_subtitle')}</p>
+                            <h4 className="text-[15px] font-black text-slate-900">{'E-posta Akışını Etkinleştir'}</h4>
+                            <p className="text-[13px] text-slate-400 font-bold italic">{'Müşterilere otomatik e-posta gönderin.'}</p>
                         </div>
                         <button
                             onClick={() => updateField('email_flow_enabled', !options.email_flow_enabled)}
@@ -172,9 +171,9 @@ export default function AdvancedOptionsEditor({
                     {options.email_flow_enabled && (
                         <div className="p-8 bg-slate-50/50 rounded-[32px] border border-slate-100 space-y-6 animate-in fade-in slide-in-from-top-2">
                             <div className="space-y-4">
-                                <p className="text-[14px] font-black text-slate-700">{t('dashboard.store.editors.emails.select_flow')}</p>
+                                <p className="text-[14px] font-black text-slate-700">{'Bir akış seçin:'}</p>
                                 <div className="grid grid-cols-1 gap-3">
-                                    {(t('dashboard.store.editors.emails.flows', { returnObjects: true }) as string[]).map(flow => (
+                                    {(['Hoşgeldin Akışı', 'Satın Alma Sonrası Akış']).map(flow => (
                                         <button
                                             key={flow}
                                             onClick={() => updateField('email_flow_id', flow)}
@@ -197,7 +196,7 @@ export default function AdvancedOptionsEditor({
             {/* Email Reminders */}
             <AccordionItem
                 id="reminders"
-                title={t('dashboard.store.editors.reminders.title')}
+                title={'E-posta Hatırlatıcıları'}
                 icon={<Bell className="w-5 h-5" />}
                 isOpen={openOptions.includes('reminders')}
                 onToggle={() => toggleOption('reminders')}
@@ -205,8 +204,8 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{t('dashboard.store.editors.reminders.flow_title')}</h4>
-                            <p className="text-[13px] text-slate-400 font-bold italic">{t('dashboard.store.editors.reminders.flow_subtitle')}</p>
+                            <h4 className="text-[15px] font-black text-slate-900">{'Hatırlatıcıları Etkinleştir'}</h4>
+                            <p className="text-[13px] text-slate-400 font-bold italic">{'Terk edilmiş sepet hatırlatıcıları gönderin.'}</p>
                         </div>
                         <button
                             onClick={() => updateField('email_reminders_enabled', !options.email_reminders_enabled)}
@@ -229,8 +228,8 @@ export default function AdvancedOptionsEditor({
                                                 <Bell className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <p className="text-[14px] font-black text-slate-800">{rem.time} {rem.unit === 'hour' ? t('dashboard.store.editors.reminders.hours') : t('dashboard.store.editors.reminders.days')} {t('dashboard.store.editors.reminders.before')}</p>
-                                                <p className="text-[12px] text-slate-400 font-bold">{t('dashboard.store.editors.reminders.automatic')}</p>
+                                                <p className="text-[14px] font-black text-slate-800">{rem.time} {rem.unit === 'hour' ? 'saat' : 'gün'} {'önce'}</p>
+                                                <p className="text-[12px] text-slate-400 font-bold">{'Otomatik'}</p>
                                             </div>
                                         </div>
                                         <button onClick={() => {
@@ -247,13 +246,13 @@ export default function AdvancedOptionsEditor({
                                 <div className="flex-1">
                                     <input
                                         type="number"
-                                        placeholder={t('dashboard.store.editors.reminders.time_placeholder')}
+                                        placeholder={'Süre (Örn: 24)'}
                                         value={options.newReminderTime || ''}
                                         onChange={e => updateField('newReminderTime', e.target.value)}
                                         className="w-full h-10 bg-transparent outline-none font-bold text-[14px] px-2"
                                     />
                                 </div>
-                                <span className="text-slate-400 font-bold text-[13px]">{t('dashboard.store.editors.reminders.hours_before')}</span>
+                                <span className="text-slate-400 font-bold text-[13px]">{'saat önce'}</span>
                                 <button
                                     onClick={() => {
                                         if (!options.newReminderTime) return;
@@ -274,7 +273,7 @@ export default function AdvancedOptionsEditor({
             {/* Order Bump */}
             <AccordionItem
                 id="bump"
-                title={t('dashboard.store.editors.bump.title')}
+                title={'Sipariş Artırıcı (Order Bump)'}
                 icon={<TrendingUp className="w-5 h-5" />}
                 isOpen={openOptions.includes('bump')}
                 onToggle={() => toggleOption('bump')}
@@ -282,8 +281,8 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{t('dashboard.store.editors.bump.flow_title')}</h4>
-                            <p className="text-[13px] text-slate-400 font-bold italic">{t('dashboard.store.editors.bump.flow_subtitle')}</p>
+                            <h4 className="text-[15px] font-black text-slate-900">{'Sipariş Artırıcıyı Etkinleştir'}</h4>
+                            <p className="text-[13px] text-slate-400 font-bold italic">{'Ödeme sayfasında ekstra ürün sunun.'}</p>
                         </div>
                         <button
                             onClick={() => updateField('order_bump_enabled', !options.order_bump_enabled)}
@@ -299,20 +298,20 @@ export default function AdvancedOptionsEditor({
                     {options.order_bump_enabled && (
                         <div className="space-y-6 p-8 bg-slate-50/50 rounded-[32px] border border-slate-100 animate-in fade-in slide-in-from-top-2">
                             <PremiumInput
-                                label={t('dashboard.store.editors.bump.product_name')}
+                                label={'Ürün Adı'}
                                 value={options.order_bump?.title || ''}
                                 onChange={(e: any) => updateField('order_bump', { ...options.order_bump, title: e.target.value })}
-                                placeholder={t('dashboard.store.editors.bump.product_placeholder')}
+                                placeholder={'Örn: Premium Destek'}
                             />
                             <div className="grid grid-cols-2 gap-4">
                                 <PremiumInput
-                                    label={t('dashboard.store.editors.bump.price')}
+                                    label={'Fiyat'}
                                     value={options.order_bump?.price || ''}
                                     onChange={(e: any) => updateField('order_bump', { ...options.order_bump, price: e.target.value })}
                                     placeholder="4.99"
                                 />
                                 <div className="space-y-2">
-                                    <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('dashboard.store.editors.bump.select_image')}</p>
+                                    <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'Görsel Seç'}</p>
                                     <button
                                         className="w-full h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-300 hover:text-[#5500ff] transition-colors"
                                         onClick={onOpenImageSelector}
@@ -322,12 +321,12 @@ export default function AdvancedOptionsEditor({
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{t('common.description')}</p>
+                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'Açıklama'}</p>
                                 <textarea
                                     className="w-full h-24 p-4 bg-white border border-slate-100 rounded-2xl text-[14px] font-medium outline-none resize-none"
                                     value={options.order_bump?.description || ''}
                                     onChange={(e: any) => updateField('order_bump', { ...options.order_bump, description: e.target.value })}
-                                    placeholder={t('dashboard.store.editors.bump.desc_placeholder')}
+                                    placeholder={'Ürün açıklamasını buraya yazın...'}
                                 />
                             </div>
                         </div>
@@ -338,7 +337,7 @@ export default function AdvancedOptionsEditor({
             {/* Affiliate */}
             <AccordionItem
                 id="affiliates"
-                title={t('dashboard.store.editors.affiliate.title')}
+                title={'Satış Ortaklığı'}
                 icon={<Users className="w-5 h-5" />}
                 isOpen={openOptions.includes('affiliates')}
                 onToggle={() => toggleOption('affiliates')}
@@ -346,8 +345,8 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{t('dashboard.store.editors.affiliate.flow_title')}</h4>
-                            <p className="text-[13px] text-slate-400 font-bold italic">{t('dashboard.store.editors.affiliate.flow_subtitle')}</p>
+                            <h4 className="text-[15px] font-black text-slate-900">{'Satış Ortaklığını Etkinleştir'}</h4>
+                            <p className="text-[13px] text-slate-400 font-bold italic">{'Başkalarının ürünlerinizi satmasına izin verin.'}</p>
                         </div>
                         <button
                             onClick={() => updateField('affiliates_enabled', !options.affiliates_enabled)}
@@ -363,7 +362,7 @@ export default function AdvancedOptionsEditor({
                     {options.affiliates_enabled && (
                         <div className="p-8 bg-slate-50/50 rounded-[32px] border border-slate-100 animate-in fade-in slide-in-from-top-2">
                             <div className="flex items-center justify-between max-w-xs">
-                                <p className="text-[14px] font-black text-slate-700">{t('dashboard.store.editors.affiliate.commission_rate')}</p>
+                                <p className="text-[14px] font-black text-slate-700">{'Komisyon Oranı (%)'}</p>
                                 <div className="flex items-center gap-3">
                                     <input
                                         type="number"
@@ -374,7 +373,7 @@ export default function AdvancedOptionsEditor({
                                     <span className="font-black text-slate-400">%</span>
                                 </div>
                             </div>
-                            <p className="text-[12px] text-slate-400 font-bold mt-4 italic">{t('dashboard.store.editors.affiliate.commission_desc')}</p>
+                            <p className="text-[12px] text-slate-400 font-bold mt-4 italic">{'Satış ortaklarınıza vereceğiniz komisyon oranını belirleyin.'}</p>
                         </div>
                     )}
                 </div>

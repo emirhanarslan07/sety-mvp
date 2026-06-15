@@ -84,11 +84,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     metadataBase: new URL('https://sety.store'),
     title: {
-        default: "Sety - Plan Your Revenue Before You Launch",
+        default: "Sety — Sell Your Digital Products | Creator Store Platform",
         template: "%s | Sety"
     },
-    description: "Simple revenue simulation for creators. Stop guessing—see your potential in 60 seconds.",
-    keywords: ["creator economy", "revenue simulation", "launch planning", "pricing calculator", "revenue clarity", "digital product sales", "stan store alternative", "link in bio"],
+    description: "Create your online store in 2 minutes. Sell digital products, coaching sessions, and more. The simplest way for creators to monetize their audience.",
+    keywords: ["creator economy", "digital products", "online store", "sell digital products", "creator store", "link in bio store", "stan store alternative"],
     authors: [{ name: "Sety" }],
     alternates: {
         canonical: '/',
@@ -106,8 +106,8 @@ export const metadata: Metadata = {
         },
     },
     openGraph: {
-        title: "Sety - Plan Your Revenue Before You Launch",
-        description: "Simple revenue simulation for creators. Stop guessing—see your potential in 60 seconds.",
+        title: "Sety — Sell Your Digital Products | Creator Store Platform",
+        description: "Create your online store in 2 minutes. Sell digital products, coaching sessions, and more. The simplest way for creators to monetize their audience.",
         type: "website",
         url: 'https://sety.store',
         siteName: 'Sety',
@@ -122,8 +122,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Sety - Plan Your Revenue Before You Launch',
-        description: 'Simple revenue simulation for creators.',
+        title: 'Sety — Sell Your Digital Products | Creator Store Platform',
+        description: 'Create your online store in 2 minutes. Sell digital products, coaching sessions, and more. The simplest way for creators to monetize their audience.',
         images: ['/og-image.png'],
     }
 };
@@ -157,6 +157,11 @@ export default function RootLayout({
                             });
                         `,
                     }}
+                />
+                <Script
+                    id="paddle-js"
+                    src="https://cdn.paddle.com/paddle/v2/paddle.js"
+                    strategy="afterInteractive"
                 />
             </head>
             <body className="antialiased font-sans">

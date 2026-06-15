@@ -3,7 +3,6 @@
 import React from 'react';
 import { Trash2, Plus, X, ChevronDown, CheckSquare, List, AlignLeft, Phone, Mail, User, GripVertical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from '@/lib/i18n/context';
 
 interface FormField {
     label: string;
@@ -35,46 +34,45 @@ export function FieldManager({
     isAddFieldMenuOpen,
     setIsAddFieldMenuOpen
 }: FieldManagerProps) {
-    const { t } = useTranslation();
 
     // Menu options for adding new fields
     const ADD_FIELD_OPTIONS = [
         {
             id: 'phone',
-            label: t('dashboard.store.editors.fields_manager.types.phone'),
-            description: t('dashboard.store.editors.fields_manager.types.phone_desc'),
+            label: 'dashboard.store.editors.fields_manager.types.phone',
+            description: 'dashboard.store.editors.fields_manager.types.phone_desc',
             icon: Phone,
             color: 'text-blue-500',
             bg: 'bg-blue-50',
         },
         {
             id: 'text',
-            label: t('dashboard.store.editors.fields_manager.types.text'),
-            description: t('dashboard.store.editors.fields_manager.types.text_desc'),
+            label: 'dashboard.store.editors.fields_manager.types.text',
+            description: 'dashboard.store.editors.fields_manager.types.text_desc',
             icon: AlignLeft,
             color: 'text-slate-500',
             bg: 'bg-slate-100',
         },
         {
             id: 'multiple',
-            label: t('dashboard.store.editors.fields_manager.types.multiple'),
-            description: t('dashboard.store.editors.fields_manager.types.multiple_desc'),
+            label: 'dashboard.store.editors.fields_manager.types.multiple',
+            description: 'dashboard.store.editors.fields_manager.types.multiple_desc',
             icon: List,
             color: 'text-violet-500',
             bg: 'bg-violet-50',
         },
         {
             id: 'dropdown',
-            label: t('dashboard.store.editors.fields_manager.types.dropdown'),
-            description: t('dashboard.store.editors.fields_manager.types.dropdown_desc'),
+            label: 'dashboard.store.editors.fields_manager.types.dropdown',
+            description: 'dashboard.store.editors.fields_manager.types.dropdown_desc',
             icon: ChevronDown,
             color: 'text-amber-500',
             bg: 'bg-amber-50',
         },
         {
             id: 'checkbox',
-            label: t('dashboard.store.editors.fields_manager.types.checkbox'),
-            description: t('dashboard.store.editors.fields_manager.types.checkbox_desc'),
+            label: 'dashboard.store.editors.fields_manager.types.checkbox',
+            description: 'dashboard.store.editors.fields_manager.types.checkbox_desc',
             icon: CheckSquare,
             color: 'text-emerald-500',
             bg: 'bg-emerald-50',
@@ -83,12 +81,12 @@ export function FieldManager({
 
     // Type → display config for existing fields
     const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; label: string }> = {
-        text: { icon: AlignLeft, color: 'text-slate-400', bg: 'bg-slate-100', label: t('dashboard.store.editors.fields_manager.types.text') },
-        email: { icon: Mail, color: 'text-violet-500', bg: 'bg-violet-50', label: t('dashboard.store.editors.fields_manager.types.email') },
-        phone: { icon: Phone, color: 'text-blue-500', bg: 'bg-blue-50', label: t('dashboard.store.editors.fields_manager.types.phone') },
-        multiple: { icon: List, color: 'text-violet-500', bg: 'bg-violet-50', label: t('dashboard.store.editors.fields_manager.types.multiple') },
-        dropdown: { icon: ChevronDown, color: 'text-amber-500', bg: 'bg-amber-50', label: t('dashboard.store.editors.fields_manager.types.dropdown') },
-        checkbox: { icon: CheckSquare, color: 'text-emerald-500', bg: 'bg-emerald-50', label: t('dashboard.store.editors.fields_manager.types.checkbox') },
+        text: { icon: AlignLeft, color: 'text-slate-400', bg: 'bg-slate-100', label: 'dashboard.store.editors.fields_manager.types.text' },
+        email: { icon: Mail, color: 'text-violet-500', bg: 'bg-violet-50', label: 'dashboard.store.editors.fields_manager.types.email' },
+        phone: { icon: Phone, color: 'text-blue-500', bg: 'bg-blue-50', label: 'dashboard.store.editors.fields_manager.types.phone' },
+        multiple: { icon: List, color: 'text-violet-500', bg: 'bg-violet-50', label: 'dashboard.store.editors.fields_manager.types.multiple' },
+        dropdown: { icon: ChevronDown, color: 'text-amber-500', bg: 'bg-amber-50', label: 'dashboard.store.editors.fields_manager.types.dropdown' },
+        checkbox: { icon: CheckSquare, color: 'text-emerald-500', bg: 'bg-emerald-50', label: 'dashboard.store.editors.fields_manager.types.checkbox' },
     };
 
     // Base (locked) field icons
@@ -103,14 +101,14 @@ export function FieldManager({
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h5 className="text-[16px] font-black text-slate-900 tracking-tight">{t('dashboard.store.editors.fields_manager.title')}</h5>
-                    <p className="text-[12px] text-slate-400 font-semibold mt-0.5">{t('dashboard.store.editors.fields_manager.subtitle')}</p>
+                    <h5 className="text-[16px] font-black text-slate-900 tracking-tight">{'dashboard.store.editors.fields_manager.title'}</h5>
+                    <p className="text-[12px] text-slate-400 font-semibold mt-0.5">{'dashboard.store.editors.fields_manager.subtitle'}</p>
                 </div>
             </div>
 
             {/* Locked/Base Fields */}
             <div className="space-y-2">
-                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-1">{t('dashboard.store.editors.fields_manager.required_section')}</p>
+                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-1">{'dashboard.store.editors.fields_manager.required_section'}</p>
                 {fields.slice(0, 2).map((field, idx) => {
                     const cfg = TYPE_CONFIG[field.type] || TYPE_CONFIG['text'];
                     const Icon = BASE_FIELD_ICONS[idx] || cfg.icon;
@@ -120,7 +118,7 @@ export function FieldManager({
                                 <Icon className="w-3.5 h-3.5" />
                             </div>
                             <span className="text-[14px] font-bold text-slate-700 flex-1">{field.label}</span>
-                            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{t('dashboard.store.editors.fields_manager.required_badge')}</span>
+                            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{'dashboard.store.editors.fields_manager.required_badge'}</span>
                         </div>
                     );
                 })}
@@ -129,7 +127,7 @@ export function FieldManager({
             {/* Custom Fields */}
             {fields.length > 2 && (
                 <div className="space-y-2">
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-1">{t('dashboard.store.editors.fields_manager.extra_section')}</p>
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-1">{'dashboard.store.editors.fields_manager.extra_section'}</p>
                     {fields.slice(2).map((field, relIdx) => {
                         const idx = relIdx + 2;
                         const cfg = TYPE_CONFIG[field.type] || TYPE_CONFIG['text'];
@@ -150,7 +148,7 @@ export function FieldManager({
                                         value={field.label}
                                         onChange={(e) => updateField(idx, e.target.value)}
                                         className="flex-1 bg-transparent border-none outline-none text-[14px] font-bold text-slate-800 placeholder:text-slate-300"
-                                        placeholder={t('dashboard.store.editors.fields_manager.placeholder_name')}
+                                        placeholder={'dashboard.store.editors.fields_manager.placeholder_name'}
                                     />
 
                                     {/* Type pill */}
@@ -171,7 +169,7 @@ export function FieldManager({
                                 {(field.type === 'multiple' || field.type === 'dropdown') && (
                                     <div className="mx-2 mb-2 mt-0 bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-2 animate-in slide-in-from-top-1 duration-200">
                                         <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3">
-                                            {field.type === 'multiple' ? t('dashboard.store.editors.fields_manager.options_title') : t('dashboard.store.editors.fields_manager.menu_items_title')}
+                                            {field.type === 'multiple' ? 'dashboard.store.editors.fields_manager.options_title' : 'dashboard.store.editors.fields_manager.menu_items_title'}
                                         </p>
                                         {field.options && field.options.length > 0 ? (
                                             field.options.map((opt, optIdx) => (
@@ -182,7 +180,7 @@ export function FieldManager({
                                                         value={opt}
                                                         onChange={(e) => updateOption(idx, optIdx, e.target.value)}
                                                         className="flex-1 bg-white border border-slate-100 rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-slate-700 focus:border-[#5500ff]/30 focus:ring-2 focus:ring-[#5500ff]/5 outline-none transition-all placeholder:text-slate-300"
-                                                        placeholder={`${t('dashboard.store.editors.fields_manager.options_title')} ${optIdx + 1}`}
+                                                        placeholder={`${'dashboard.store.editors.fields_manager.options_title'} ${optIdx + 1}`}
                                                     />
                                                     <button
                                                         onClick={() => removeOption(idx, optIdx)}
@@ -193,14 +191,14 @@ export function FieldManager({
                                                 </div>
                                             ))
                                         ) : (
-                                            <p className="text-[12px] text-slate-300 font-medium text-center py-2">{t('dashboard.store.editors.fields_manager.no_options')}</p>
+                                            <p className="text-[12px] text-slate-300 font-medium text-center py-2">{'dashboard.store.editors.fields_manager.no_options'}</p>
                                         )}
                                         <button
                                             onClick={() => addOption(idx)}
                                             className="flex items-center gap-2 text-[12px] font-bold text-[#5500ff]/60 hover:text-[#5500ff] transition-colors mt-1 ml-6"
                                         >
                                             <Plus className="w-3.5 h-3.5" />
-                                            {t('dashboard.store.editors.fields_manager.add_option')}
+                                            {'dashboard.store.editors.fields_manager.add_option'}
                                         </button>
                                     </div>
                                 )}
@@ -208,15 +206,15 @@ export function FieldManager({
                                 {/* Checkbox preview */}
                                 {field.type === 'checkbox' && (
                                     <div className="mx-2 mb-2 mt-0 bg-emerald-50/60 border border-emerald-100 rounded-2xl p-4">
-                                        <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-3">{t('dashboard.store.editors.fields_manager.preview_title')}</p>
+                                        <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-3">{'dashboard.store.editors.fields_manager.preview_title'}</p>
                                         <div className="flex items-start gap-3 px-1">
                                             <div className="w-5 h-5 rounded-md border-2 border-slate-200 bg-white mt-0.5 shrink-0 flex items-center justify-center shadow-sm">
                                             </div>
                                             <p className="text-[13px] font-medium text-slate-500 leading-snug">
-                                                {field.label || t('dashboard.store.editors.fields_manager.checkbox_hint_default')}
+                                                {field.label || 'dashboard.store.editors.fields_manager.checkbox_hint_default'}
                                             </p>
                                         </div>
-                                        <p className="text-[11px] text-emerald-500/70 font-medium mt-3 ml-1">{t('dashboard.store.editors.fields_manager.checkbox_hint')}</p>
+                                        <p className="text-[11px] text-emerald-500/70 font-medium mt-3 ml-1">{'dashboard.store.editors.fields_manager.checkbox_hint'}</p>
                                     </div>
                                 )}
                             </div>
@@ -232,7 +230,7 @@ export function FieldManager({
                     className="w-full h-12 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 font-bold text-[14px] hover:border-[#5500ff]/30 hover:text-[#5500ff] hover:bg-[#5500ff]/5 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
                 >
                     <Plus className="w-4 h-4" />
-                    {t('dashboard.store.editors.fields_manager.add_field_button')}
+                    {'dashboard.store.editors.fields_manager.add_field_button'}
                 </button>
 
                 <AnimatePresence>
@@ -251,7 +249,7 @@ export function FieldManager({
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                 className="absolute bottom-full left-0 right-0 mb-3 bg-white rounded-[28px] shadow-2xl border border-slate-100/80 overflow-hidden z-50 p-3 space-y-1"
                             >
-                                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-3 py-1">{t('dashboard.store.editors.fields_manager.select_type_title')}</p>
+                                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-3 py-1">{'dashboard.store.editors.fields_manager.select_type_title'}</p>
                                 {ADD_FIELD_OPTIONS.map((opt) => (
                                     <button
                                         key={opt.id}

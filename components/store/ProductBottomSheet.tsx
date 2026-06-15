@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ShieldCheck, Mail, ArrowRight, Loader2, CheckCircle2, Calendar, Clock, User, MessageSquare, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ShieldCheck, Mail, ArrowRight, Loader2, CheckCircle2, Calendar, Clock, User, MessageSquare, ChevronRight, X, Download, Video, Users2, Gift, Link2, Sparkles, Box } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,19 @@ import { useEffect, useState, useMemo } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
 import { useTranslation } from '@/lib/i18n/context';
+
+const getFallbackIcon = (type: string) => {
+    switch (type) {
+        case 'digital_product': return Download;
+        case 'coaching_call': return Clock;
+        case 'video_response': return Video;
+        case 'private_group': return Users2;
+        case 'collect_emails': return Mail;
+        case 'lead_magnet': return Gift;
+        case 'external_link': return Link2;
+        default: return Sparkles;
+    }
+};
 
 interface ProductBottomSheetProps {
     isOpen: boolean;
@@ -97,33 +110,74 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
     };
 
     const handleAction = async () => {
-        if (isCoaching && (!selectedDate || !selectedTime)) {
-            showToast('Lütfen tarih ve saat seçin.', 'error');
-            return;
-        }
+        // Native calendar bypassed for coaching, Calendly handled post-purchase
 
         if (!email || !email.includes('@')) {
             showToast('Lütfen geçerli bir e-posta adresi girin.', 'error');
+            const el = document.getElementById('checkout-email-input');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => el.focus(), 300);
+            }
             return;
         }
 
         setLoading(true);
         try {
             // 1. Capture/Update Customer
-            const { data: customerData, error: customerError } = await supabase
+            let customerData;
+            const { data: existingCustomer } = await supabase
                 .from('customers')
-                .upsert([{
-                    user_id: profile.user_id,
-                    store_id: profile.id,
-                    email: email.toLowerCase(),
-                    name: name || 'Müşteri'
-                }], { onConflict: 'email,store_id' })
                 .select()
-                .single();
+                .eq('email', email.toLowerCase())
+                .eq('store_id', profile.id)
+                .maybeSingle();
 
-            if (customerError) throw customerError;
+            if (existingCustomer) {
+                customerData = existingCustomer;
+            } else {
+                const { data: newCustomer, error: customerError } = await supabase
+                    .from('customers')
+                    .insert([{
+                        user_id: profile.user_id,
+                        store_id: profile.id,
+                        email: email.toLowerCase(),
+                        name: name || 'Müşteri'
+                    }])
+                    .select()
+                    .single();
+                if (customerError) throw customerError;
+                customerData = newCustomer;
+            }
 
-            // 2. Create an order record (generalized infrastructure test)
+            // If Paid Product
+            if (product.price > 0 && product.checkout_provider !== 'manual') {
+                if (product.external_checkout_url) {
+                    // Log the lead before redirecting
+                    await supabase.from('analytics_events').insert([{
+                        user_id: profile.user_id,
+                        store_id: profile.id,
+                        event_name: 'checkout_redirect',
+                        product_id: product.id,
+                        metadata: {
+                            email: email.toLowerCase(),
+                            name,
+                            price: product.price,
+                            source: 'product_detail_redirect'
+                        }
+                    }]);
+                    
+                    window.location.href = product.external_checkout_url;
+                    return; // Stop execution, user is redirecting
+                }
+                
+                // If no external URL provided but it's paid (shouldn't happen ideally)
+                showToast('Ödeme linki bulunamadı. Lütfen satıcıyla iletişime geçin.', 'error');
+                setLoading(false);
+                return;
+            }
+
+            // Free or Manual logic (Simulation)
             const { error: orderError } = await supabase
                 .from('orders')
                 .insert([{
@@ -131,9 +185,8 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                     store_id: profile.id,
                     product_id: product.id,
                     customer_id: customerData.id,
-                    customer_email: email.toLowerCase(),
                     amount: product.price || 0,
-                    status: 'paid'
+                    status: product.price === 0 ? 'paid' : 'pending' // manual is pending
                 }]);
 
             if (orderError) console.error('Order creation error:', orderError);
@@ -151,7 +204,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                     message,
                     selected_date: selectedDate?.toISOString(),
                     selected_time: selectedTime,
-                    source: 'product_detail'
+                    source: 'product_detail_free_or_manual'
                 }
             }]);
 
@@ -161,8 +214,6 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
             setTimeout(() => {
                 onPurchase(product, email);
 
-                // If it's a free product with a redirect or file, we might want to stay open or handle it in the parent
-                // For now, let's let onPurchase handle it.
                 if (product.external_checkout_url || product.redirect_url || product.digital_file_url) {
                     // We'll keep it open for a bit to show success if not redirecting immediately
                 } else {
@@ -172,8 +223,11 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
         } catch (err: any) {
             console.error(err);
             showToast('Bir hata oluştu: ' + err.message, 'error');
-        } finally {
             setLoading(false);
+        } finally {
+            if (product.price === 0 || product.checkout_provider === 'manual') {
+                setLoading(false);
+            }
         }
     };
 
@@ -235,7 +289,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                             </div>
                         )}
 
-                        {(product.digital_file_url || product.file_url || product.redirect_url) && (
+                        {(product.digital_file_url || product.file_url || product.redirect_url) && !isCoaching && (
                             <Button
                                 onClick={() => {
                                     const url = product.redirect_url || product.digital_file_url || product.file_url;
@@ -246,6 +300,22 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                 {product.redirect_url ? (t('public.go_to_link') || 'Bağlantıya Git') : (t('public.download_now') || 'Şimdi İndir')}
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Button>
+                        )}
+                        
+                        {/* Calendly / Cal.com Iframe Embed */}
+                        {isCoaching && product.calendly_url && (
+                            <div className="w-full h-[500px] mt-6 rounded-3xl overflow-hidden border-2 border-slate-100 shadow-inner bg-slate-50 relative">
+                                <div className="absolute inset-0 flex items-center justify-center text-slate-400">
+                                    <Loader2 className="w-8 h-8 animate-spin" />
+                                </div>
+                                <iframe 
+                                    src={`${product.calendly_url}?email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}`} 
+                                    width="100%" 
+                                    height="100%" 
+                                    frameBorder="0" 
+                                    className="relative z-10"
+                                />
+                            </div>
                         )}
                     </div>
 
@@ -331,13 +401,22 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     initial={{ opacity: 0, y: 16 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.5 }}
-                                    className="aspect-[16/9] w-full rounded-2xl bg-slate-100 overflow-hidden relative"
+                                    className="w-full rounded-[32px] overflow-hidden relative"
                                 >
                                     {product.image_url ? (
-                                        <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />
+                                        <img src={product.image_url} alt={product.title} className="w-full h-auto aspect-[16/9] object-cover shadow-sm" />
                                     ) : (
-                                        <div className="absolute inset-0 flex items-center justify-center text-slate-200">
-                                            <ShieldCheck className="w-20 h-20" strokeWidth={1} />
+                                        <div className="aspect-[21/9] w-full bg-slate-50 flex items-center justify-center relative shadow-sm border border-slate-100">
+                                            <div 
+                                                className="absolute inset-0 opacity-[0.03]" 
+                                                style={{ background: `radial-gradient(circle at center, ${profile?.brand_color || '#6C47FF'} 0%, transparent 70%)` }} 
+                                            />
+                                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-white shadow-xl shadow-slate-200/50 border border-slate-100 flex items-center justify-center relative z-10 transition-transform hover:scale-105">
+                                                {(() => {
+                                                    const Icon = getFallbackIcon(product.type);
+                                                    return <Icon className="w-8 h-8 md:w-10 md:h-10" style={{ color: profile?.brand_color || '#6C47FF' }} strokeWidth={2.5} />;
+                                                })()}
+                                            </div>
                                         </div>
                                     )}
                                 </motion.div>
@@ -347,14 +426,41 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     initial={{ opacity: 0, y: 12 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.5, delay: 0.1 }}
-                                    className="mt-8 space-y-3"
+                                    className="mt-8 space-y-4"
                                 >
-                                    <h1 className="text-[28px] md:text-[36px] font-black text-slate-900 tracking-tight leading-[1.1]">
+                                    <span
+                                        className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-black tracking-[0.15em] uppercase"
+                                        style={{
+                                            backgroundColor: `${profile?.brand_color || '#6C47FF'}14`,
+                                            color: profile?.brand_color || '#6C47FF'
+                                        }}
+                                    >
+                                        {(() => {
+                                            const Icon = getFallbackIcon(product.type);
+                                            return <Icon className="w-3.5 h-3.5" strokeWidth={2} />;
+                                        })()}
+                                        {product.type === 'digital_product' ? 'Dijital Ürün' :
+                                         product.type === 'coaching_call' ? 'Birebir Seans' :
+                                         product.type === 'video_response' ? 'Video Yanıt' :
+                                         product.type === 'private_group' ? 'Özel Grup' :
+                                         product.type === 'collect_emails' ? 'E-posta Toplama' :
+                                         product.type === 'lead_magnet' ? 'Ücretsiz İçerik' :
+                                         product.type === 'external_link' ? 'Harici Bağlantı' : 'Ürün'}
+                                    </span>
+                                    <h1 className="text-[28px] md:text-[36px] font-[1000] text-slate-900 tracking-tight leading-[1.1]">
                                         {product.title}
                                     </h1>
-                                    <p className="text-[24px] font-bold text-[#6C47FF]">
-                                        {product.price === 0 ? (t('public.free') || 'Free') : formatCurrency(product.price, product.currency || 'USD')}
-                                    </p>
+                                    <div>
+                                        <span
+                                            className="inline-flex items-center px-4 py-2 rounded-full text-[20px] md:text-[22px] font-extrabold"
+                                            style={{
+                                                backgroundColor: `${profile?.brand_color || '#6C47FF'}12`,
+                                                color: profile?.brand_color || '#6C47FF'
+                                            }}
+                                        >
+                                            {product.price === 0 ? (t('public.free') || 'Ücretsiz') : formatCurrency(product.price, product.currency || 'TRY')}
+                                        </span>
+                                    </div>
                                 </motion.div>
 
                                 {/* 3. DESCRIPTION */}
@@ -366,7 +472,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                         className="mt-6 space-y-4"
                                     >
                                         {product.subtitle && (
-                                            <p className="text-[16px] text-slate-600 font-medium leading-relaxed">
+                                            <p className="text-[18px] text-slate-600 font-bold leading-relaxed">
                                                 {product.subtitle}
                                             </p>
                                         )}
@@ -378,133 +484,21 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     </motion.div>
                                 )}
 
-                                {/* ─── COACHING: Date & Time Selection (inline, scrollable) ─── */}
+                                {/* ─── COACHING: Calendly happens after payment ─── */}
                                 {isCoaching && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 16 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.5, delay: 0.2 }}
-                                        className="mt-12 space-y-10"
+                                        className="mt-8 space-y-4 bg-emerald-50 border border-emerald-100 p-6 rounded-3xl"
                                     >
-                                        {/* Divider */}
-                                        <div className="h-px bg-slate-100" />
-
-                                        {/* ── Calendar ── */}
-                                        <section className="space-y-5">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-xl bg-[#6C47FF]/10 flex items-center justify-center">
-                                                    <Calendar className="w-5 h-5 text-[#6C47FF]" />
-                                                </div>
-                                                <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Tarih Seçin</h3>
-                                            </div>
-
-                                            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8">
-                                                {/* Month navigation */}
-                                                <div className="flex items-center justify-between mb-6">
-                                                    <button onClick={prevMonth} className="w-9 h-9 rounded-xl bg-slate-50 hover:bg-[#6C47FF]/10 flex items-center justify-center text-slate-400 hover:text-[#6C47FF] transition-all">
-                                                        <ChevronLeft className="w-4 h-4" />
-                                                    </button>
-                                                    <h4 className="text-[16px] font-black text-slate-800 capitalize tracking-tight">{monthName}</h4>
-                                                    <button onClick={nextMonth} className="w-9 h-9 rounded-xl bg-slate-50 hover:bg-[#6C47FF]/10 flex items-center justify-center text-slate-400 hover:text-[#6C47FF] transition-all">
-                                                        <ChevronRight className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-
-                                                {/* Day names */}
-                                                <div className="grid grid-cols-7 gap-1 mb-2">
-                                                    {['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'].map(d => (
-                                                        <div key={d} className="text-center text-[11px] font-bold text-slate-300 uppercase py-2">{d}</div>
-                                                    ))}
-                                                </div>
-
-                                                {/* Days grid */}
-                                                <div className="grid grid-cols-7 gap-1">
-                                                    {calendarDays.map((d: any, i: number) => {
-                                                        const isSelected = selectedDate && d.date && selectedDate.toDateString() === d.date.toDateString();
-                                                        return (
-                                                            <button
-                                                                key={i}
-                                                                disabled={!d.day || d.isPast}
-                                                                onClick={() => d.date && setSelectedDate(d.date)}
-                                                                className={cn(
-                                                                    "aspect-square rounded-xl flex items-center justify-center text-[14px] font-bold transition-all relative",
-                                                                    !d.day && "opacity-0 pointer-events-none",
-                                                                    d.isPast && "text-slate-200 cursor-not-allowed",
-                                                                    d.isWeekend && !isSelected && !d.isPast && "text-slate-300",
-                                                                    isSelected
-                                                                        ? "bg-[#6C47FF] text-white shadow-lg shadow-[#6C47FF]/25 scale-105 ring-4 ring-[#6C47FF]/10"
-                                                                        : !d.isPast && d.day ? "text-slate-700 hover:bg-[#6C47FF]/5 hover:text-[#6C47FF]" : "",
-                                                                    d.isToday && !isSelected && "ring-2 ring-[#6C47FF]/20 text-[#6C47FF] font-black"
-                                                                )}
-                                                            >
-                                                                {d.day}
-                                                                {d.isToday && !isSelected && (
-                                                                    <div className="absolute bottom-1 w-1 h-1 rounded-full bg-[#6C47FF]" />
-                                                                )}
-                                                            </button>
-                                                        );
-                                                    })}
-                                                </div>
-
-                                                {/* Selected date display */}
-                                                {selectedDate && (
-                                                    <div className="mt-5 pt-5 border-t border-slate-50 flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-lg bg-[#6C47FF] flex items-center justify-center">
-                                                            <Calendar className="w-4 h-4 text-white" />
-                                                        </div>
-                                                        <span className="text-[15px] font-bold text-slate-800">
-                                                            {selectedDate.toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </section>
-
-                                        {/* ── Time Slots ── */}
-                                        <section className="space-y-5">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-xl bg-[#6C47FF]/10 flex items-center justify-center">
-                                                    <Clock className="w-5 h-5 text-[#6C47FF]" />
-                                                </div>
-                                                <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Saat Seçin</h3>
-                                            </div>
-
-                                            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8 space-y-6">
-                                                {timeSlots.map((group) => (
-                                                    <div key={group.label} className="space-y-3">
-                                                        <p className="text-[12px] font-bold text-slate-300 uppercase tracking-widest">{group.label}</p>
-                                                        <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-                                                            {group.slots.map(time => {
-                                                                const isSelected = selectedTime === time;
-                                                                return (
-                                                                    <button
-                                                                        key={time}
-                                                                        onClick={() => setSelectedTime(time)}
-                                                                        className={cn(
-                                                                            "py-3 rounded-xl text-[14px] font-bold transition-all border-2",
-                                                                            isSelected
-                                                                                ? "border-[#6C47FF] bg-[#6C47FF] text-white shadow-lg shadow-[#6C47FF]/20"
-                                                                                : "border-slate-100 text-slate-500 hover:border-[#6C47FF]/30 hover:text-[#6C47FF] hover:bg-[#6C47FF]/5"
-                                                                        )}
-                                                                    >
-                                                                        {time}
-                                                                    </button>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    </div>
-                                                ))}
-
-                                                {selectedTime && (
-                                                    <div className="pt-4 border-t border-slate-50 flex items-center gap-3">
-                                                        <div className="w-8 h-8 rounded-lg bg-[#6C47FF] flex items-center justify-center">
-                                                            <Clock className="w-4 h-4 text-white" />
-                                                        </div>
-                                                        <span className="text-[15px] font-bold text-slate-800">{selectedTime}</span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </section>
+                                        <div className="flex items-center gap-3">
+                                            <Calendar className="w-6 h-6 text-emerald-600" />
+                                            <h3 className="text-[16px] font-black text-emerald-900">Takvim Randevusu</h3>
+                                        </div>
+                                        <p className="text-[14px] text-emerald-800/80 font-medium leading-relaxed">
+                                            Ödemenizi tamamladıktan sonra, bir sonraki ekranda doğrudan takvim üzerinden uygun bir tarih ve saat seçebileceksiniz.
+                                        </p>
                                     </motion.div>
                                 )}
 
@@ -515,39 +509,44 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     transition={{ duration: 0.5, delay: isCoaching ? 0.3 : 0.2 }}
                                     className="mt-12 space-y-5"
                                 >
-                                    <div className="h-px bg-slate-100" />
-
-                                    <div className="flex items-center gap-3 pt-2">
-                                        <div className="w-10 h-10 rounded-xl bg-[#6C47FF]/10 flex items-center justify-center">
-                                            <User className="w-5 h-5 text-[#6C47FF]" />
+                                    <div className="rounded-2xl bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent border border-slate-100/80 p-5 flex items-center gap-4">
+                                        <div
+                                            className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                                            style={{ backgroundColor: `${profile?.brand_color || '#6C47FF'}14` }}
+                                        >
+                                            <User className="w-5 h-5" style={{ color: profile?.brand_color || '#6C47FF' }} />
                                         </div>
-                                        <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Bilgileriniz</h3>
+                                        <div>
+                                            <h3 className="text-[18px] font-black text-slate-900 tracking-tight leading-tight">Bilgileriniz</h3>
+                                            <p className="text-[13px] text-slate-400 font-medium mt-0.5">Ürünü alabilmeniz için bilgilerinizi girin</p>
+                                        </div>
                                     </div>
 
                                     <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8 space-y-4">
                                         <div className="space-y-2">
                                             <label className="text-[13px] font-bold text-slate-500 ml-1">Adınız Soyadınız</label>
                                             <div className="relative group">
-                                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#6C47FF] transition-colors" />
+                                                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
                                                 <input
                                                     type="text"
                                                     value={name}
                                                     onChange={(e) => setName(e.target.value)}
                                                     placeholder="Adınız Soyadınız"
-                                                    className="w-full h-14 pl-12 pr-5 rounded-xl bg-slate-50 border-2 border-transparent text-[15px] font-semibold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-[#6C47FF]/30 outline-none transition-all"
+                                                    className="w-full h-14 pl-12 pr-5 rounded-xl bg-slate-50 border-2 border-slate-100 text-[15px] font-bold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
                                                 />
                                             </div>
                                         </div>
                                         <div className="space-y-2">
                                             <label className="text-[13px] font-bold text-slate-500 ml-1">E-posta Adresiniz</label>
                                             <div className="relative group">
-                                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#6C47FF] transition-colors" />
+                                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
                                                 <input
+                                                    id="checkout-email-input"
                                                     type="email"
                                                     value={email}
                                                     onChange={(e) => setEmail(e.target.value)}
                                                     placeholder="ornek@mail.com"
-                                                    className="w-full h-14 pl-12 pr-5 rounded-xl bg-slate-50 border-2 border-transparent text-[15px] font-semibold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-[#6C47FF]/30 outline-none transition-all"
+                                                    className="w-full h-14 pl-12 pr-5 rounded-xl bg-slate-50 border-2 border-slate-100 text-[15px] font-bold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
                                                 />
                                             </div>
                                         </div>
@@ -618,20 +617,24 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
 
                             <Button
                                 onClick={handleAction}
-                                disabled={loading || success || (isCoaching && (!selectedDate || !selectedTime))}
+                                disabled={loading || success}
                                 className={cn(
                                     "w-full h-16 rounded-2xl font-black text-[17px] shadow-2xl transition-all flex items-center justify-between px-8 group",
                                     success
                                         ? "bg-emerald-500 hover:bg-emerald-500"
-                                        : "bg-[#6C47FF] hover:bg-[#5835E0] shadow-[#6C47FF]/20"
+                                        : "shadow-lg"
                                 )}
+                                style={!success ? {
+                                    backgroundColor: profile?.brand_color || '#6C47FF',
+                                    boxShadow: `0 20px 40px -10px ${(profile?.brand_color || '#6C47FF')}33`
+                                } : {}}
                             >
                                 <span className="tracking-tight">
                                     {loading ? 'İşleniyor...' :
                                         success ? 'Harika! Yönlendiriliyorsunuz' :
-                                            isCoaching ? 'Randevuyu Onayla' :
+                                            isCoaching ? 'Randevu İçin İlerle' :
                                                 isVideoResponse ? 'Talebi Gönder' :
-                                                    product.price === 0 ? 'Ücretsiz Al' : `${formatCurrency(product.price)} — Hemen Al`}
+                                                    product.price === 0 ? 'Ücretsiz Al' : `${formatCurrency(product.price, product.currency || 'TRY')} — Hemen Al`}
                                 </span>
                                 {loading ? (
                                     <Loader2 className="w-6 h-6 animate-spin" />

@@ -22,6 +22,7 @@ interface CheckoutEditorProps {
     onSave: (data: any) => void;
     isSaving?: boolean;
     isSuccess?: boolean;
+    initialData?: any;
 }
 
 interface FormField {
@@ -45,7 +46,8 @@ export default function CheckoutEditor({
     onClose,
     onSave,
     isSaving = false,
-    isSuccess = false
+    isSuccess = false,
+    initialData = null
 }: CheckoutEditorProps) {
     const { showToast } = useToast();
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -53,19 +55,19 @@ export default function CheckoutEditor({
 
     // Form State
     const [formData, setFormData] = useState<CheckoutFormData>({
-        title: 'Get My FREE Guide Now!',
-        description: 'Join my email list and never miss an update from me!',
-        bottom_title: 'Get My FREE Guide',
-        button_text: 'Download',
-        image_url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800',
-        fields: [
+        title: initialData?.title || 'Get My FREE Guide Now!',
+        description: initialData?.description || 'Join my email list and never miss an update from me!',
+        bottom_title: initialData?.subtitle || 'Get My FREE Guide',
+        button_text: initialData?.button_text || 'Download',
+        image_url: initialData?.image_url || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800',
+        fields: initialData?.fields || [
             { label: 'İsim', placeholder: 'İsminizi girin', type: 'text', options: [] },
             { label: 'E-posta', placeholder: 'E-postanızı girin', type: 'email', options: [] }
         ]
     });
 
     const [activeTab, setActiveTab] = useState<'checkout' | 'options'>('checkout');
-    const [extraOptions, setExtraOptions] = useState({
+    const [extraOptions, setExtraOptions] = useState(initialData?.extra_options || {
         reviews: [],
         email_flow_enabled: false,
         email_flow_id: '',

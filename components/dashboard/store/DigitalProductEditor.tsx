@@ -27,6 +27,7 @@ interface DigitalProductEditorProps {
     onSave: (data: any) => void;
     isSaving?: boolean;
     isSuccess?: boolean;
+    initialData?: any;
 }
 
 interface FormField {
@@ -41,10 +42,10 @@ export default function DigitalProductEditor({
     onClose,
     onSave,
     isSaving = false,
-    isSuccess = false
+    isSuccess = false,
+    initialData = null
 }: DigitalProductEditorProps) {
     const { showToast } = useToast();
-    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'checkout' | 'options'>('checkout');
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [isAddFieldMenuOpen, setIsAddFieldMenuOpen] = useState(false);
@@ -59,31 +60,30 @@ export default function DigitalProductEditor({
 
     // Main form
     const [formData, setFormData] = useState({
-        title: 'Get My [Template/eBook/Course] Now!',
-        description: 'This is where you describe the value of your product.',
-        bottom_title: 'Get My Guide',
-        button_text: 'PURCHASE',
-        image_url: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&q=80&w=800',
-        fields: [
+        title: initialData?.title || 'Get My [Template/eBook/Course] Now!',
+        description: initialData?.description || 'This is where you describe the value of your product.',
+        bottom_title: initialData?.subtitle || 'Get My Guide',
+        button_text: initialData?.button_text || 'PURCHASE',
+        image_url: initialData?.image_url || 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&q=80&w=800',
+        fields: initialData?.fields || [
             { label: 'İsim', placeholder: 'İsminizi girin', type: 'text', options: [] },
             { label: 'E-posta', placeholder: 'E-postanızı girin', type: 'email', options: [] }
         ] as FormField[],
     });
 
-    // Pricing
     const [pricingData, setPricingData] = useState({
-        price: '9.99',
-        discount_price: '',
-        payment_plan_enabled: false,
-        payment_plan_installments: '3',
-        discount_code_enabled: false,
-        discount_code: '',
-        discount_percent: '',
-        quantity_limit_enabled: false,
-        quantity_limit: '',
+        price: initialData?.price?.toString() || '9.99',
+        discount_price: initialData?.discount_price?.toString() || '',
+        payment_plan_enabled: initialData?.payment_plan_enabled || false,
+        payment_plan_installments: initialData?.payment_plan_installments?.toString() || '3',
+        discount_code_enabled: initialData?.discount_code_enabled || false,
+        discount_code: initialData?.discount_code || '',
+        discount_percent: initialData?.discount_percent?.toString() || '',
+        quantity_limit_enabled: initialData?.quantity_limit_enabled || false,
+        quantity_limit: initialData?.quantity_limit?.toString() || '',
     });
 
-    const [extraOptions, setExtraOptions] = useState({
+    const [extraOptions, setExtraOptions] = useState(initialData?.extra_options || {
         reviews: [],
         email_flow_enabled: false,
         email_flow_id: '',
@@ -98,10 +98,10 @@ export default function DigitalProductEditor({
         affiliates_commission: '20'
     });
 
-    // File / Redirect
-    const [uploadedFileUrl, setUploadedFileUrl] = useState('');
+    const [uploadedFileUrl, setUploadedFileUrl] = useState(initialData?.file_url || '');
     const [uploadedFileName, setUploadedFileName] = useState('');
-    const [redirectUrl, setRedirectUrl] = useState('');
+    const [redirectUrl, setRedirectUrl] = useState(initialData?.redirect_url || '');
+    const [paymentLinkOverride, setPaymentLinkOverride] = useState('');
 
     const updateData = useCallback((field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -113,27 +113,27 @@ export default function DigitalProductEditor({
 
     // Field handlers
     const updateField = useCallback((index: number, newLabel: string) => {
-        setFormData(prev => ({ ...prev, fields: prev.fields.map((f, i) => i === index ? { ...f, label: newLabel } : f) }));
+        setFormData(prev => ({ ...prev, fields: prev.fields.map((f: any, i: number) => i === index ? { ...f, label: newLabel } : f) }));
     }, []);
 
     const updateOption = useCallback((fieldIdx: number, optIdx: number, val: string) => {
         setFormData(prev => ({
             ...prev,
-            fields: prev.fields.map((f, i) => i === fieldIdx ? { ...f, options: f.options?.map((opt, j) => j === optIdx ? val : opt) } : f)
+            fields: prev.fields.map((f: any, i: number) => i === fieldIdx ? { ...f, options: f.options?.map((opt: string, j: number) => j === optIdx ? val : opt) } : f)
         }));
     }, []);
 
     const addOption = useCallback((fieldIdx: number) => {
         setFormData(prev => ({
             ...prev,
-            fields: prev.fields.map((f, i) => i === fieldIdx ? { ...f, options: [...(f.options || []), `Seçenek ${(f.options?.length || 0) + 1}`] } : f)
+            fields: prev.fields.map((f: any, i: number) => i === fieldIdx ? { ...f, options: [...(f.options || []), `Seçenek ${(f.options?.length || 0) + 1}`] } : f)
         }));
     }, []);
 
     const removeOption = useCallback((fieldIdx: number, optIdx: number) => {
         setFormData(prev => ({
             ...prev,
-            fields: prev.fields.map((f, i) => i === fieldIdx ? { ...f, options: f.options?.filter((_, j) => j !== optIdx) } : f)
+            fields: prev.fields.map((f: any, i: number) => i === fieldIdx ? { ...f, options: f.options?.filter((_: any, j: number) => j !== optIdx) } : f)
         }));
     }, []);
 
@@ -151,7 +151,7 @@ export default function DigitalProductEditor({
     }, []);
 
     const removeField = useCallback((index: number) => {
-        setFormData(prev => ({ ...prev, fields: prev.fields.filter((_, i) => i !== index) }));
+        setFormData(prev => ({ ...prev, fields: prev.fields.filter((_: any, i: number) => i !== index) }));
     }, []);
 
     const [saveError, setSaveError] = useState<string | null>(null);
@@ -167,6 +167,7 @@ export default function DigitalProductEditor({
                 discount_price: parseFloat(pricingData.discount_price) || 0,
                 digital_file_url: uploadedFileUrl,
                 redirect_url: redirectUrl,
+                payment_link_override: paymentLinkOverride || null,
                 extra_options: extraOptions,
             });
 
@@ -185,13 +186,13 @@ export default function DigitalProductEditor({
                         active={activeTab === 'checkout'}
                         onClick={() => handleTabChange('checkout')}
                         icon={<ShoppingBag className="w-4 h-4" />}
-                        label={t('dashboard.store.editors.tabs.checkout')}
+                        label={'Ödeme Sayfası'}
                     />
                     <TabButton
                         active={activeTab === 'options'}
                         onClick={() => handleTabChange('options')}
                         icon={<Sparkles className="w-4 h-4" />}
-                        label={t('dashboard.store.editors.tabs.options')}
+                        label={'Ayarlar'}
                     />
                 </div>
 
@@ -201,7 +202,7 @@ export default function DigitalProductEditor({
                         {activeTab === 'checkout' && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-16">
                                 {/* Section 1: Image */}
-                                <EditorSection number={1} title={t('dashboard.store.editors.sections.select_image')}>
+                                <EditorSection number={1} title={'dashboard.store.editors.sections.select_image'}>
                                     <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 flex items-center gap-10 group transition-all hover:shadow-2xl hover:shadow-slate-200/30">
                                         <div className="relative w-40 h-40 rounded-[32px] overflow-hidden bg-slate-50 border-2 border-slate-50 shadow-inner group-hover:scale-[1.02] transition-transform">
                                             {formData.image_url ? (
@@ -222,27 +223,27 @@ export default function DigitalProductEditor({
                                         </div>
                                         <div className="flex-1 space-y-6">
                                             <div className="space-y-2">
-                                                <h4 className="text-[17px] font-black text-slate-900 tracking-tight leading-none">{t('dashboard.store.editors.image_selection')}</h4>
-                                                <p className="text-[13px] text-slate-400 font-bold uppercase tracking-wider">{t('dashboard.store.editors.image_hint')}</p>
+                                                <h4 className="text-[17px] font-black text-slate-900 tracking-tight leading-none">{'dashboard.store.editors.image_selection'}</h4>
+                                                <p className="text-[13px] text-slate-400 font-bold uppercase tracking-wider">{'dashboard.store.editors.image_hint'}</p>
                                             </div>
                                             <button
                                                 onClick={() => setIsImageModalOpen(true)}
                                                 className="h-14 px-8 rounded-2xl border-2 border-[#5500ff]/10 text-[#5500ff] font-black text-[14px] hover:bg-[#5500ff] hover:text-white transition-all shadow-sm active:scale-95"
                                             >
-                                                {t('dashboard.store.editors.select_button')}
+                                                {'dashboard.store.editors.select_button'}
                                             </button>
                                         </div>
                                     </div>
                                 </EditorSection>
 
                                 {/* Section 2: Write Description */}
-                                <EditorSection number={2} title={t('dashboard.store.editors.sections.write_description')}>
+                                <EditorSection number={2} title={'dashboard.store.editors.sections.write_description'}>
                                     <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 space-y-10 transition-all hover:shadow-2xl hover:shadow-slate-200/30">
                                         <PremiumInput
-                                            label={t('dashboard.store.editors.fields.title_label')}
+                                            label={'dashboard.store.editors.fields.title_label'}
                                             value={formData.title}
                                             onChange={(e) => updateData('title', e.target.value)}
-                                            placeholder={t('dashboard.store.editors.placeholders.title')}
+                                            placeholder={'dashboard.store.editors.placeholders.title'}
                                         />
 
                                         <div className="space-y-4">
@@ -253,22 +254,22 @@ export default function DigitalProductEditor({
                                         </div>
 
                                         <PremiumInput
-                                            label={t('dashboard.store.editors.fields.bottom_title_label')}
+                                            label={'dashboard.store.editors.fields.bottom_title_label'}
                                             value={formData.bottom_title}
                                             onChange={(e) => updateData('bottom_title', e.target.value)}
-                                            placeholder={t('dashboard.store.editors.placeholders.bottom_title')}
+                                            placeholder={'dashboard.store.editors.placeholders.bottom_title'}
                                         />
                                         <PremiumInput
-                                            label={t('dashboard.store.editors.fields.button_text_label')}
+                                            label={'dashboard.store.editors.fields.button_text_label'}
                                             value={formData.button_text}
                                             onChange={(e) => updateData('button_text', e.target.value)}
-                                            placeholder={t('dashboard.store.editors.placeholders.button_text')}
+                                            placeholder={'dashboard.store.editors.placeholders.button_text'}
                                         />
                                     </div>
                                 </EditorSection>
 
                                 {/* Section 3: Pricing */}
-                                <EditorSection number={3} title={t('dashboard.store.editors.sections.pricing')}>
+                                <EditorSection number={3} title={'dashboard.store.editors.sections.pricing'}>
                                     <PricingSection
                                         data={pricingData}
                                         onChange={(field: string, value: string | boolean) => updatePricing(field, value)}
@@ -276,7 +277,7 @@ export default function DigitalProductEditor({
                                 </EditorSection>
 
                                 {/* Section 4: Collect Info */}
-                                <EditorSection number={4} title={t('dashboard.store.editors.sections.collect_info')}>
+                                <EditorSection number={4} title={'dashboard.store.editors.sections.collect_info'}>
                                     <FieldManager
                                         fields={formData.fields}
                                         updateField={updateField}
@@ -291,25 +292,27 @@ export default function DigitalProductEditor({
                                 </EditorSection>
 
                                 {/* Section 5: Upload */}
-                                <EditorSection number={5} title={t('dashboard.store.editors.sections.upload_product')}>
+                                <EditorSection number={5} title={'dashboard.store.editors.sections.upload_product'}>
                                     <FileUploadSection
                                         uploadedFileUrl={uploadedFileUrl}
                                         redirectUrl={redirectUrl}
+                                        paymentLinkOverride={paymentLinkOverride}
                                         onFileUploaded={(url: string, name: string) => { setUploadedFileUrl(url); setUploadedFileName(name); }}
                                         onRedirectUrlChange={setRedirectUrl}
+                                        onPaymentLinkOverrideChange={setPaymentLinkOverride}
                                     />
                                 </EditorSection>
 
                                 {/* Unified Action Bar */}
                                 <div className="pt-20 border-t border-slate-100 mt-10">
                                     <div className="flex items-center justify-between">
-                                        <p className="text-[12px] text-slate-300 font-black italic">{t('dashboard.store.editors.improve_page')}</p>
+                                        <p className="text-[12px] text-slate-300 font-black italic">{'Sayfanızı iyileştirmek için ayarları kullanın'}</p>
                                         <div className="flex items-center gap-4">
                                             <button
-                                                onClick={() => showToast(t('dashboard.store.editors.draft_saved'), 'success')}
+                                                onClick={() => showToast('Taslak olarak kaydedildi', 'success')}
                                                 className="h-14 px-8 rounded-2xl font-black text-[14px] text-slate-400 hover:text-slate-900 transition-colors"
                                             >
-                                                {t('dashboard.store.editors.save_draft')}
+                                                {'Taslağı Kaydet'}
                                             </button>
                                             <button
                                                 onClick={handleSave}
@@ -320,11 +323,11 @@ export default function DigitalProductEditor({
                                                 )}
                                             >
                                                 {isSuccess ? (
-                                                    <><Check className="w-5 h-5 text-[#C4FF00]" /> {t('dashboard.store.editors.published')}</>
+                                                    <><Check className="w-5 h-5 text-[#C4FF00]" /> {'dashboard.store.editors.published'}</>
                                                 ) : isSaving ? (
-                                                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('dashboard.store.editors.publishing')}</>
+                                                    <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {'dashboard.store.editors.publishing'}</>
                                                 ) : (
-                                                    t('dashboard.store.editors.publish')
+                                                    'Sayfayı Yayınla'
                                                 )}
                                             </button>
                                         </div>

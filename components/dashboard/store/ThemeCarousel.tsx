@@ -259,17 +259,12 @@ export const THEME_TEMPLATES = [
     }
 ];
 
-interface ThemeCarouselProps {
+export interface ThemeCarouselProps {
     selectedTheme: string;
     onSelectTheme: (theme: any) => void;
-    activeProps?: {
-        color: string;
-        font: string;
-        buttonStyle: string;
-    }
 }
 
-export default function ThemeCarousel({ selectedTheme, onSelectTheme, activeProps }: ThemeCarouselProps) {
+export default function ThemeCarousel({ selectedTheme, onSelectTheme }: ThemeCarouselProps) {
     const { t } = useTranslation();
 
     const currentThemeIndex = THEME_TEMPLATES.findIndex(t => t.id === selectedTheme);
@@ -288,8 +283,8 @@ export default function ThemeCarousel({ selectedTheme, onSelectTheme, activeProp
     return (
         <div className="space-y-12 py-10">
             {/* The Stan Store UI Centered Carousel */}
-            <div className="relative h-[440px] md:h-[560px] flex items-center justify-center overflow-visible px-4">
-                <div className="relative w-full max-w-[260px] md:max-w-[300px] h-full flex items-center justify-center">
+            <div className="relative h-[340px] md:h-[440px] flex items-center justify-center overflow-visible px-4">
+                <div className="relative w-full max-w-[200px] md:max-w-[240px] h-full flex items-center justify-center">
                     <AnimatePresence mode='popLayout'>
                         {THEME_TEMPLATES.map((theme, index) => {
                             const isActive = selectedTheme === theme.id;
@@ -312,7 +307,7 @@ export default function ThemeCarousel({ selectedTheme, onSelectTheme, activeProp
                                     key={theme.id}
                                     initial={false}
                                     animate={{
-                                        x: typeof window !== 'undefined' && window.innerWidth < 768 ? position * 110 : position * 140,
+                                        x: typeof window !== 'undefined' && window.innerWidth < 768 ? position * 90 : position * 110,
                                         scale: isActive ? 1.05 : 0.82 - (Math.abs(position) * 0.1),
                                         zIndex: 50 - Math.abs(position) * 10,
                                         opacity: 1 - (Math.abs(position) * 0.35),
@@ -326,7 +321,7 @@ export default function ThemeCarousel({ selectedTheme, onSelectTheme, activeProp
                                     }}
                                     onClick={() => onSelectTheme(theme)}
                                     className={cn(
-                                        "absolute w-full h-[380px] md:h-[520px] rounded-[32px] md:rounded-[48px] overflow-hidden border-2 bg-white flex flex-col shadow-2xl transition-colors duration-500",
+                                        "absolute w-full h-[300px] md:h-[400px] rounded-[24px] md:rounded-[36px] overflow-hidden border-2 bg-white flex flex-col shadow-2xl transition-colors duration-500",
                                         isActive ? "border-[#5500ff] shadow-[#5500ff]/20" : "border-slate-100"
                                     )}
                                     style={{
@@ -336,9 +331,9 @@ export default function ThemeCarousel({ selectedTheme, onSelectTheme, activeProp
                                     <div className="flex-1 relative overflow-hidden">
                                         <MiniStorePreview
                                             themeId={theme.id}
-                                            color={isActive && activeProps ? activeProps.color : theme.color}
-                                            font={isActive && activeProps ? activeProps.font : theme.font}
-                                            buttonStyle={isActive && activeProps ? activeProps.buttonStyle : theme.buttonStyle}
+                                            color={theme.color}
+                                            font={theme.font}
+                                            buttonStyle={theme.buttonStyle}
                                         />
                                     </div>
                                 </motion.button>
@@ -360,10 +355,10 @@ export default function ThemeCarousel({ selectedTheme, onSelectTheme, activeProp
 
                     <div className="text-center space-y-1 min-w-[200px]">
                         <h4 className="text-[26px] font-black tracking-tight text-slate-900">
-                            {t(`dashboard.store.design.themes.${currentTheme.id}`)}
+                            {currentTheme.name}
                         </h4>
                         <p className="text-[14px] font-bold text-slate-400 tracking-wider uppercase opacity-60">
-                            {t(`dashboard.store.editors.general.style_preview`)}
+                            STİL ÖNİZLEMESİ
                         </p>
                     </div>
 

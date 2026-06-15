@@ -6,7 +6,6 @@ import { PremiumInput } from '@/components/ui/PremiumInput';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { useTranslation } from '@/lib/i18n/context';
 
 interface IdentitySectionProps {
     displayName: string;
@@ -37,7 +36,6 @@ export default function IdentitySection({
     handleCoverUpload,
     coverUploading,
 }: IdentitySectionProps) {
-    const { t } = useTranslation();
 
     return (
         <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-12">
@@ -46,7 +44,7 @@ export default function IdentitySection({
                 {/* Logo Upload */}
                 <div className="space-y-6">
                     <label className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
-                        {t('dashboard.store.sections.logo_profile')}
+                        {'dashboard.store.sections.logo_profile'}
                     </label>
                     <div className="relative group w-fit">
                         <div className="w-36 h-36 rounded-full bg-slate-50 border-[6px] border-white shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] flex items-center justify-center overflow-hidden relative transition-transform duration-500 group-hover:scale-[1.02]">
@@ -77,7 +75,7 @@ export default function IdentitySection({
                 {/* Cover Upload */}
                 <div className="space-y-6">
                     <label className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
-                        {t('dashboard.store.sections.cover_image')}
+                        {'dashboard.store.sections.cover_image'}
                     </label>
                     <div className="relative h-36 rounded-[44px] bg-slate-50 border-[6px] border-white shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] overflow-hidden group transition-transform duration-500 hover:scale-[1.01]">
                         {coverImage ? (
@@ -109,11 +107,11 @@ export default function IdentitySection({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div className="space-y-6">
                     <label className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
-                        {t('dashboard.store.sections.display_name')}
+                        {'dashboard.store.sections.display_name'}
                     </label>
                     <div className="relative group">
                         <PremiumInput
-                            placeholder={t('dashboard.store.placeholders.display_name')}
+                            placeholder={'dashboard.store.placeholders.display_name'}
                             value={displayName}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDisplayName(e.target.value)}
                         />
@@ -121,7 +119,7 @@ export default function IdentitySection({
                             onClick={() => setIsVerified(!isVerified)}>
                             <Zap className={cn("w-4 h-4 transition-all duration-500", isVerified ? "text-[#C4FF00] fill-[#C4FF00] drop-shadow-[0_0_8px_rgba(196,255,0,0.5)]" : "text-slate-200")} />
                             <span className={cn("text-[11px] font-black uppercase tracking-tight transition-colors", isVerified ? "text-slate-900" : "text-slate-400")}>
-                                {t('dashboard.store.sections.verified_badge')}
+                                {'dashboard.store.sections.verified_badge'}
                             </span>
                         </div>
                     </div>
@@ -129,11 +127,11 @@ export default function IdentitySection({
 
                 <div className="space-y-6">
                     <label className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
-                        {t('dashboard.store.sections.bio')}
+                        {'dashboard.store.sections.bio'}
                     </label>
                     <div className="relative">
                         <Textarea
-                            placeholder={t('dashboard.store.placeholders.bio')}
+                            placeholder={'dashboard.store.placeholders.bio'}
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
                             className="min-h-[64px] h-16 px-8 py-5 rounded-[32px] bg-slate-50 border-2 border-slate-100/60 font-black text-[15px] placeholder:text-slate-400 placeholder:font-bold focus-visible:ring-4 focus-visible:ring-[#5500ff]/5 focus-visible:border-[#5500ff] focus-visible:bg-white transition-all resize-none shadow-none outline-none scrollbar-hide"

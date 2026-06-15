@@ -43,7 +43,7 @@ export default function SocialsSection({
                 {socialInputs.map((social) => (
                     <div key={social.id} className="space-y-6">
                         <label className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
-                            {t(social.labelKey)}
+                            {social.id}
                         </label>
                         <PremiumInput
                             icon={<social.icon size={22} className={social.color} />}

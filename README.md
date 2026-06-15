@@ -1,14 +1,14 @@
-# SETY MVP - Creator Revenue Clarity Tool
+# SETY MVP - Creator Store Platform
 
-A validation MVP for helping creators (1K-50K followers) plan their revenue before launching products.
+A validation MVP for helping creators (1K-50K followers) launch a %0 commission digital store to sell digital products, coaching, and subscriptions.
 
 ## 🎯 Project Overview
 
-**Value Proposition:** "Plan your revenue before you launch"
+**Value Proposition:** "Launch your digital store in 2 minutes, start selling now."
 
-SETY provides simple revenue simulation, pricing clarity, and goal feasibility checks based on audience data.
+SETY provides a seamless, all-in-one storefront where creators can sell digital products, host coaching sessions, and offer subscriptions without losing a cut of their earnings to platform commissions.
 
-**Product Philosophy:** Clarity over complexity. Transparency over AI mystery. Structured thinking over hype.
+**Product Philosophy:** Empower creators. Zero commission. Full control over earnings and brand.
 
 ## 🚀 Tech Stack
 
@@ -51,34 +51,31 @@ npm run dev
 
 - `/` - Landing page with hero, how it works, example projection, testimonials, FAQ
 - `/auth` - Login/Signup with Supabase Auth
-- `/onboarding` - 3-step form to collect audience data
-- `/dashboard` - Main app with 4 revenue intelligence tools
+- `/onboarding` - 3-step form to collect audience data (legacy/optional)
+- `/dashboard` - Main app with store builder and analytics
+- `/dashboard/store` - Store management, themes, and products
+- `/[username]` - Public creator store pages
 - `/settings` - Profile settings and account management
 - `/privacy` - Privacy policy
 - `/terms` - Terms of service
 
-## 🧮 Revenue Clarity Tools
+## 🛍️ Store Platform Features
 
-### 1. Revenue Breakdown
-- Active audience calculation
-- Conversion rate estimation
-- Monthly revenue projection
-- Formula explanation
+### 1. Digital Products
+- Sell e-books, files, or any digital content
+- Instant delivery post-purchase
 
-### 2. Smart Pricing Optimizer
-- Market average comparison
-- Recommended pricing
-- Potential revenue increase
+### 2. Coaching & Bookings
+- Direct integration for booking 1-on-1 sessions
+- Calendly/Zoom supported
 
-### 3. Income Goal Calculator
-- Reverse engineering from goal
-- 3 pricing strategy options
-- Feasibility ratings (Easy/Possible/Challenging)
+### 3. Subscriptions & Communities
+- Sell access to Telegram/Discord
+- Recurring revenue models
 
-### 4. Break-Even Timeline
-- Monthly cost tracking
-- Break-even point calculation
-- 6-month profit projection
+### 4. Zero Commission & Custom Brand
+- 0% fee on sales (creators keep 100%)
+- Custom themes, colors, and branding
 
 ## 🔒 Security
 

@@ -124,9 +124,9 @@ export function ExampleProjection() {
                             {/* Footer */}
                             <div className="mt-6 border-t border-gray-200 pt-6 text-center">
                                 <p className="text-sm text-gray-600">
-                                    ⚡ This calculation took{' '}
+                                    ⚡ Start your journey and go{' '}
                                     <span className="font-semibold text-purple-600">
-                                        60 seconds
+                                        live in minutes
                                     </span>
                                 </p>
                             </div>

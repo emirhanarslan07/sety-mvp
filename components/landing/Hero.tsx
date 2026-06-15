@@ -15,17 +15,16 @@ export function Hero() {
 
                         {/* Headline */}
                         <h1 className="mb-6">
-                            Plan Your Revenue
+                            Launch Your Digital Store in 2 Minutes,
                             <br />
                             <span className="gradient-text">
-                                Before You Launch
+                                Start Selling Now.
                             </span>
                         </h1>
 
                         {/* Subheadline */}
                         <p className="mb-10 text-lg text-gray-600">
-                            Simple revenue simulation for creators. Stop guessing—see your
-                            potential in 60 seconds.
+                            Sell your digital products, coaching services, and subscriptions from a single hub with Sety. Focus on creating, we&apos;ll handle the rest.
                         </p>
 
                         {/* CTAs */}

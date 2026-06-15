@@ -39,6 +39,7 @@ interface CoachingEditorProps {
     onSave: (data: any) => void;
     isSaving?: boolean;
     isSuccess?: boolean;
+    initialData?: any;
 }
 
 const DAYS = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
@@ -70,7 +71,8 @@ export default function CoachingEditor({
     onClose,
     onSave,
     isSaving = false,
-    isSuccess = false
+    isSuccess = false,
+    initialData = null
 }: CoachingEditorProps) {
     const { showToast } = useToast();
     const [activeTab, setActiveTab] = useState<'checkout' | 'availability' | 'options'>('checkout');
@@ -89,8 +91,8 @@ export default function CoachingEditor({
 
     // Form State
     const [formData, setFormData] = useState({
-        title: 'Book a 1:1 Call with Me',
-        description: `
+        title: initialData?.title || 'Book a 1:1 Call with Me',
+        description: initialData?.description || `
             <p>I am here to help you achieve your goals.</p>
             <p>On this 1:1 Video Call, I will personally help you:</p>
             <ul>
@@ -99,41 +101,24 @@ export default function CoachingEditor({
                 <li>Walk you through all of your questions</li>
             </ul>
         `,
-        bottom_title: 'Work With Me 1:1',
-        button_text: 'Book a Call',
-        image_url: 'https://images.unsplash.com/photo-1506784919141-93503140507d?auto=format&fit=crop&q=80&w=800',
-        price: '9.99',
-        discount_price: '0',
-        payment_plan_enabled: false,
-        payment_plan_installments: '3',
-        discount_code_enabled: false,
-        discount_code: '',
-        discount_percent: '20',
-        quantity_limit_enabled: false,
-        quantity_limit: '100',
-        fields: [
+        bottom_title: initialData?.subtitle || 'Work With Me 1:1',
+        button_text: initialData?.button_text || 'Book a Call',
+        image_url: initialData?.image_url || 'https://images.unsplash.com/photo-1506784919141-93503140507d?auto=format&fit=crop&q=80&w=800',
+        price: initialData?.price?.toString() || '9.99',
+        discount_price: initialData?.discount_price?.toString() || '0',
+        payment_plan_enabled: initialData?.payment_plan_enabled || false,
+        payment_plan_installments: initialData?.payment_plan_installments?.toString() || '3',
+        discount_code_enabled: initialData?.discount_code_enabled || false,
+        discount_code: initialData?.discount_code || '',
+        discount_percent: initialData?.discount_percent?.toString() || '20',
+        quantity_limit_enabled: initialData?.quantity_limit_enabled || false,
+        quantity_limit: initialData?.quantity_limit?.toString() || '100',
+        fields: initialData?.fields || [
             { label: 'İsim', placeholder: 'Adınızı Soyadınızı girin', type: 'text' },
             { label: 'E-posta', placeholder: 'E-posta adresinizi girin', type: 'email' }
         ],
-        availability: {
-            timezone: 'TDT - İstanbul | UTC +3',
-            location_type: 'varsayilan',
-            custom_location: '',
-            duration: '30',
-            min_notice: '12',
-            max_participants: '1',
-            buffer_before: '15',
-            buffer_before_enabled: false,
-            buffer_after: '15',
-            buffer_after_enabled: false,
-            booking_window: '60',
-            booking_window_enabled: false,
-            schedule: DAYS.reduce((acc, day) => ({
-                ...acc,
-                [day]: { enabled: day !== 'Cumartesi' && day !== 'Pazar', start: '09:00', end: '17:00' }
-            }), {}) as any
-        },
-        options: {
+        calendly_url: initialData?.calendly_url || '',
+        options: initialData?.extra_options || {
             reminders: [
                 { time: '1', unit: 'hour' },
                 { time: '24', unit: 'hour' }
@@ -157,18 +142,7 @@ export default function CoachingEditor({
         setFormData(prev => ({ ...prev, [field]: value }));
     }, []);
 
-    const updateSchedule = (day: string, field: string, value: any) => {
-        setFormData(prev => ({
-            ...prev,
-            availability: {
-                ...prev.availability,
-                schedule: {
-                    ...prev.availability.schedule,
-                    [day]: { ...prev.availability.schedule[day], [field]: value }
-                }
-            }
-        }));
-    };
+
 
     const handleSave = async () => {
         if (isSaving) return;
@@ -250,7 +224,7 @@ export default function CoachingEditor({
                                             updateData('fields', newFields);
                                         }}
                                         removeField={(idx) => {
-                                            updateData('fields', formData.fields.filter((_, i) => i !== idx));
+                                            updateData('fields', formData.fields.filter((_: any, i: number) => i !== idx));
                                         }}
                                         addField={(type, label) => {
                                             updateData('fields', [...formData.fields, { label, placeholder: label, type }]);
@@ -266,237 +240,23 @@ export default function CoachingEditor({
                             </motion.div>
                         )}
 
+
                         {activeTab === 'availability' && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-16">
-                                {/* Section 1: Settings */}
-                                <EditorSection number={1} title="Ayarları Yapılandırın">
-                                    <div className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/10 space-y-10 transition-all hover:shadow-2xl hover:shadow-slate-200/20">
-                                        {/* Timezone */}
+                                {/* Calendly Integration */}
+                                <EditorSection number={1} title="Takvim Bağlantısı (Calendly / Cal.com)">
+                                    <div className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/10 space-y-6 transition-all hover:shadow-2xl hover:shadow-slate-200/20">
+                                        <p className="text-[14px] text-slate-500 font-medium">
+                                            Müşterileriniz ödemeyi tamamladıktan sonra otomatik olarak bu takvim bağlantısına yönlendirilecek veya ekranda göreceklerdir. Ücretsiz Calendly veya Cal.com bağlantınızı buraya yapıştırabilirsiniz.
+                                        </p>
                                         <div className="space-y-4">
-                                            <p className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1">Saat Dilimi *</p>
-                                            <div className="relative group">
-                                                <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-[#5500ff]">
-                                                    <Globe className="w-5 h-5" />
-                                                </div>
-                                                <select
-                                                    value={formData.availability.timezone}
-                                                    onChange={(e) => updateData('availability', { ...formData.availability, timezone: e.target.value })}
-                                                    className="w-full h-16 pl-14 pr-12 bg-slate-50 border-2 border-slate-50 rounded-2xl text-[14px] font-bold text-slate-800 outline-none focus:border-[#5500ff] focus:bg-white focus:shadow-lg focus:shadow-[#5500ff]/5 transition-all appearance-none"
-                                                >
-                                                    {TIMEZONES.map(tz => (
-                                                        <option key={tz.value} value={tz.value}>{tz.label}</option>
-                                                    ))}
-                                                </select>
-                                                <div className="absolute inset-y-0 right-5 flex items-center pointer-events-none text-slate-300 group-focus-within:text-[#5500ff]">
-                                                    <ChevronDown className="w-5 h-5 transition-transform" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Meeting Location - Custom Dropdown */}
-                                        <div className="space-y-4">
-                                            <p className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1">Toplantı Konumu *</p>
-                                            <LocationSelect
-                                                value={formData.availability.location_type}
-                                                onChange={(id) => updateData('availability', { ...formData.availability, location_type: id })}
+                                            <p className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1">Takvim Linki *</p>
+                                            <PremiumInput
+                                                value={formData.calendly_url}
+                                                onChange={(e) => updateData('calendly_url', e.target.value)}
+                                                placeholder="Örn: https://calendly.com/kullaniciadi/30dk"
                                             />
-
-                                            {formData.availability.location_type === 'custom' && (
-                                                <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                                                    <PremiumInput
-                                                        label="Konum Ayrıntıları"
-                                                        value={formData.availability.custom_location}
-                                                        onChange={(e) => updateData('availability', { ...formData.availability, custom_location: e.target.value })}
-                                                        placeholder="Örn: Google Meet linki, Zoom linki veya fiziksel adres"
-                                                    />
-                                                </div>
-                                            )}
                                         </div>
-
-                                        {/* Duration & Notice */}
-                                        <div className="grid grid-cols-2 gap-8 pt-4">
-                                            <div className="space-y-4">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Süre *</p>
-                                                <CustomSelect
-                                                    value={formData.availability.duration}
-                                                    onChange={(val) => updateData('availability', { ...formData.availability, duration: val })}
-                                                    options={[
-                                                        { value: '15', label: '15 Dakika' },
-                                                        { value: '30', label: '30 Dakika' },
-                                                        { value: '45', label: '45 Dakika' },
-                                                        { value: '60', label: '60 Dakika' },
-                                                        { value: '75', label: '75 Dakika' },
-                                                        { value: '90', label: '90 Dakika' },
-                                                        { value: '105', label: '105 Dakika' },
-                                                        { value: '120', label: '120 Dakika' },
-                                                        { value: '150', label: '150 Dakika' },
-                                                        { value: '180', label: '180 Dakika' },
-                                                        { value: '240', label: '240 Dakika' },
-                                                        { value: '300', label: '300 Dakika' },
-                                                        { value: '360', label: '360 Dakika' },
-                                                        { value: '420', label: '420 Dakika' },
-                                                        { value: '480', label: '480 Dakika' },
-                                                    ]}
-                                                />
-                                            </div>
-                                            <div className="space-y-4">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">En Az Bildirim *</p>
-                                                <CustomSelect
-                                                    value={formData.availability.min_notice}
-                                                    onChange={(val) => updateData('availability', { ...formData.availability, min_notice: val })}
-                                                    options={[
-                                                        { value: '1', label: '1 Saat' },
-                                                        { value: '2', label: '2 Saat' },
-                                                        { value: '4', label: '4 Saat' },
-                                                        { value: '8', label: '8 Saat' },
-                                                        { value: '12', label: '12 Saat' },
-                                                        { value: '24', label: '24 Saat' },
-                                                        { value: '48', label: '48 Saat' },
-                                                        { value: '72', label: '3 Gün' },
-                                                    ]}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Buffers with Toggles */}
-                                        <div className="space-y-6 pt-4">
-                                            <p className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1">Toplantı Arası Mola</p>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                                <div className="p-6 rounded-[2rem] bg-slate-50/50 border border-slate-100 space-y-4 flex flex-col justify-between">
-                                                    <div className="flex items-center justify-between">
-                                                        <p className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Toplantı Öncesi</p>
-                                                        <button
-                                                            onClick={() => updateData('availability', { ...formData.availability, buffer_before_enabled: !formData.availability.buffer_before_enabled })}
-                                                            className={cn(
-                                                                "w-12 h-6 rounded-full transition-all relative flex items-center px-1",
-                                                                formData.availability.buffer_before_enabled ? "bg-[#5500ff]" : "bg-slate-200"
-                                                            )}
-                                                        >
-                                                            <div className={cn("w-4 h-4 bg-white rounded-full transition-all shadow-sm", formData.availability.buffer_before_enabled ? "translate-x-6" : "translate-x-0")} />
-                                                        </button>
-                                                    </div>
-                                                    <div className={cn("transition-opacity", !formData.availability.buffer_before_enabled && "opacity-40 pointer-events-none")}>
-                                                        <CustomSelect
-                                                            value={formData.availability.buffer_before}
-                                                            onChange={(val) => updateData('availability', { ...formData.availability, buffer_before: val })}
-                                                            options={[
-                                                                { value: '5', label: '5 Dakika' },
-                                                                { value: '10', label: '10 Dakika' },
-                                                                { value: '15', label: '15 Dakika' },
-                                                                { value: '30', label: '30 Dakika' },
-                                                            ]}
-                                                            small
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                <div className="p-6 rounded-[2rem] bg-slate-50/50 border border-slate-100 space-y-4 flex flex-col justify-between">
-                                                    <div className="flex items-center justify-between">
-                                                        <p className="text-[12px] font-bold text-slate-500 uppercase tracking-widest">Toplantı Sonrası</p>
-                                                        <button
-                                                            onClick={() => updateData('availability', { ...formData.availability, buffer_after_enabled: !formData.availability.buffer_after_enabled })}
-                                                            className={cn(
-                                                                "w-12 h-6 rounded-full transition-all relative flex items-center px-1",
-                                                                formData.availability.buffer_after_enabled ? "bg-[#5500ff]" : "bg-slate-200"
-                                                            )}
-                                                        >
-                                                            <div className={cn("w-4 h-4 bg-white rounded-full transition-all shadow-sm", formData.availability.buffer_after_enabled ? "translate-x-6" : "translate-x-0")} />
-                                                        </button>
-                                                    </div>
-                                                    <div className={cn("transition-opacity", !formData.availability.buffer_after_enabled && "opacity-40 pointer-events-none")}>
-                                                        <CustomSelect
-                                                            value={formData.availability.buffer_after}
-                                                            onChange={(val) => updateData('availability', { ...formData.availability, buffer_after: val })}
-                                                            options={[
-                                                                { value: '5', label: '5 Dakika' },
-                                                                { value: '10', label: '10 Dakika' },
-                                                                { value: '15', label: '15 Dakika' },
-                                                                { value: '30', label: '30 Dakika' },
-                                                            ]}
-                                                            small
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Booking Window */}
-                                        <div className="space-y-6 pt-4">
-                                            <div className="flex items-center justify-between ml-1">
-                                                <p className="text-[13px] font-black text-slate-700 uppercase tracking-widest">Sonraki tarih için rezervasyon yap</p>
-                                                <button
-                                                    onClick={() => updateData('availability', { ...formData.availability, booking_window_enabled: !formData.availability.booking_window_enabled })}
-                                                    className={cn(
-                                                        "w-12 h-6 rounded-full transition-all relative flex items-center px-1",
-                                                        formData.availability.booking_window_enabled ? "bg-[#5500ff]" : "bg-slate-200"
-                                                    )}
-                                                >
-                                                    <div className={cn("w-4 h-4 bg-white rounded-full transition-all shadow-sm", formData.availability.booking_window_enabled ? "translate-x-6" : "translate-x-0")} />
-                                                </button>
-                                            </div>
-                                            <div className={cn("flex items-center gap-4 transition-all", !formData.availability.booking_window_enabled && "opacity-40 pointer-events-none")}>
-                                                <div className="flex-1 flex items-center h-14 px-6 bg-slate-50 border-2 border-slate-50 rounded-2xl group focus-within:border-[#5500ff] focus-within:bg-white transition-all">
-                                                    <span className="text-[13px] font-bold text-slate-400 mr-4">En fazla</span>
-                                                    <input
-                                                        type="number"
-                                                        value={formData.availability.booking_window}
-                                                        onChange={(e) => updateData('availability', { ...formData.availability, booking_window: e.target.value })}
-                                                        className="flex-1 h-full bg-transparent text-[14px] font-black text-slate-800 outline-none"
-                                                    />
-                                                    <span className="text-[13px] font-bold text-slate-400 ml-4">Gün önceden</span>
-                                                </div>
-                                            </div>
-                                            <p className="text-[12px] text-slate-400 font-bold italic ml-1">Müşterilerinizin ne kadar ileriye dönük randevu alabileceğini belirleyin.</p>
-                                        </div>
-                                    </div>
-                                </EditorSection>
-
-                                {/* Section 2: Weekly Availability */}
-                                <EditorSection number={2} title="Müsait Zamanları Seçin">
-                                    <div className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/10 space-y-6">
-                                        <p className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1 mb-8">Müsaitlik durumunuz *</p>
-                                        {DAYS.map(day => {
-                                            const active = formData.availability.schedule[day].enabled;
-                                            return (
-                                                <div key={day} className="flex flex-col md:flex-row md:items-center gap-4 py-4 border-b border-slate-50 last:border-0">
-                                                    <div className="w-[120px]">
-                                                        <button
-                                                            onClick={() => updateSchedule(day, 'enabled', !active)}
-                                                            className={cn(
-                                                                "h-10 px-4 rounded-xl text-[13px] font-black transition-all border",
-                                                                active ? "bg-[#5500ff] text-white border-[#5500ff]" : "bg-white text-slate-400 border-slate-100"
-                                                            )}
-                                                        >
-                                                            {day}
-                                                        </button>
-                                                    </div>
-                                                    {active ? (
-                                                        <div className="flex-1 flex items-center gap-3">
-                                                            <span className="text-[13px] font-bold text-[#1E293B]">İtibaren</span>
-                                                            <TimePicker
-                                                                value={formData.availability.schedule[day].start}
-                                                                onChange={(val) => updateSchedule(day, 'start', val)}
-                                                            />
-                                                            <span className="text-[13px] font-bold text-[#1E293B]">ile</span>
-                                                            <TimePicker
-                                                                value={formData.availability.schedule[day].end}
-                                                                onChange={(val) => updateSchedule(day, 'end', val)}
-                                                            />
-                                                            <Plus className="w-5 h-5 text-slate-300 cursor-pointer hover:text-[#5500ff] transition-colors ml-2" />
-                                                            <Trash2
-                                                                onClick={() => updateSchedule(day, 'enabled', false)}
-                                                                className="w-5 h-5 text-slate-300 cursor-pointer hover:text-rose-500 transition-colors"
-                                                            />
-                                                        </div>
-                                                    ) : (
-                                                        <div className="flex-1 flex items-center h-10 text-[13px] font-bold text-slate-300">Bu gün müsait değil</div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
-                                        <button className="flex items-center gap-2 text-[#5500ff] font-black text-[13px] mt-6 hover:underline">
-                                            <Plus className="w-4 h-4" /> Belirli tarihleri engelle
-                                        </button>
                                     </div>
                                 </EditorSection>
                             </motion.div>

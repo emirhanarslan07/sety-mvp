@@ -18,7 +18,6 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { formatCurrency } from '@/lib/utils/format';
 import { tr, enUS } from 'date-fns/locale';
-import { useTranslation } from '@/lib/i18n/context';
 import { SetyLogo } from '@/components/ui/SetyLogo';
 import { useDashboard } from '@/context/DashboardContext';
 import {
@@ -48,12 +47,6 @@ const chartData = [
 export default function IncomePage() {
     const router = useRouter();
 
-    // DEBUG: Render Logger
-    const renders = useRef(0);
-    renders.current++;
-    console.debug(`%c[RENDER] IncomePage #${renders.current}`, 'color: #10b981');
-
-    const { t, lang } = useTranslation();
     const { store } = useDashboard();
     const [orders, setOrders] = useState<any[]>([]);
     const [stats, setStats] = useState({
@@ -131,13 +124,25 @@ export default function IncomePage() {
     };
 
     return (
-        <div className="max-w-[1200px] mx-auto space-y-12 pb-32 px-4 md:px-8 pt-8">
+        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12 pb-32 space-y-10">
+
+            {/* Header Area */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="space-y-1">
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                        Gelirler 💰
+                    </h1>
+                    <p className="text-slate-500 mt-2 font-bold">
+                        Mağazanızın kazançlarını ve ödemelerini takip edin.
+                    </p>
+                </div>
+            </div>
 
             {/* Total Revenue Section (Stan Style) */}
             <div className="space-y-8 pt-4">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2 text-slate-400">
-                        <span className="text-[15px] font-black uppercase tracking-widest">Total Revenue</span>
+                        <span className="text-[15px] font-black uppercase tracking-widest">Toplam Gelir</span>
                         <HelpCircle className="w-4 h-4 cursor-help" />
                     </div>
                     <h2 className="text-[64px] md:text-[80px] font-black text-slate-900 tracking-tighter leading-none">
@@ -180,20 +185,20 @@ export default function IncomePage() {
             {/* Payout & Settings Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[800px]">
                 {/* Available for Cashout Card */}
-                <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-[0_4px_25px_rgba(0,0,0,0.02)] space-y-6">
+                <div className="bg-white p-6 md:p-8 rounded-[32px] md:rounded-[44px] border border-slate-100/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] space-y-6">
                     <div className="space-y-4">
                         <div className="space-y-1">
-                            <p className="text-[13px] font-bold text-slate-400">Available for Cashout</p>
+                            <p className="text-[13px] font-bold text-slate-400">Çekilebilir Bakiye</p>
                             <h3 className="text-[42px] font-black text-slate-900 tracking-tight leading-none">
                                 {formatCurrency(stats.available)}
                             </h3>
                         </div>
                         <div className="space-y-1 opacity-50">
-                            <p className="text-[13px] font-bold text-slate-400">Available Soon</p>
-                            <h4 className="text-[20px] font-black text-slate-900 tracking-tight leading-none leading-none">
+                            <p className="text-[13px] font-bold text-slate-400">Yakında Çekilebilir</p>
+                            <h4 className="text-[20px] font-black text-slate-900 tracking-tight leading-none">
                                 {formatCurrency(stats.pending)}
                             </h4>
-                            <button className="text-[12px] font-black text-[#5500ff] hover:underline underline-offset-4">View breakdown</button>
+                            <button className="text-[12px] font-black text-[#5500ff] hover:underline underline-offset-4">Detayları gör</button>
                         </div>
                     </div>
                 </div>
@@ -206,14 +211,14 @@ export default function IncomePage() {
                             stats.available > 0 ? "bg-[#5500ff] hover:bg-[#4400cc] text-white" : "bg-slate-50 text-slate-300 border border-slate-100 cursor-not-allowed"
                         )}
                     >
-                        <Plus className="w-6 h-6 mr-2" /> Cash Out
+                        <Plus className="w-6 h-6 mr-2" /> Para Çek
                     </Button>
                     <button
                         onClick={() => router.push('/dashboard/settings?tab=payout')}
                         className="w-full flex items-center justify-center gap-2 h-16 rounded-[32px] text-[16px] font-black text-[#5500ff] hover:bg-indigo-50 transition-all border border-transparent active:scale-[0.98]"
                     >
                         <SettingsIcon className="w-5 h-5" />
-                        Settings
+                        Ayarlar
                     </button>
                 </div>
             </div>
@@ -221,22 +226,22 @@ export default function IncomePage() {
             {/* Latest Orders Section (Stan Style) */}
             <div className="space-y-10 pt-12">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">Latest Orders</h2>
+                    <h2 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">Son Siparişler</h2>
                     <Button variant="outline" className="h-10 px-5 rounded-2xl border-slate-200 text-slate-500 font-black text-[13px] gap-2 hover:bg-slate-50 shadow-sm">
-                        <Download className="w-4 h-4" /> Download CSV
+                        <Download className="w-4 h-4" /> CSV İndir
                     </Button>
                 </div>
 
                 {/* Filters (Stan Style Tags) */}
                 <div className="flex flex-wrap items-center gap-2.5">
                     {[
-                        { label: 'Date & Time', active: false },
-                        { label: 'Email', active: false },
-                        { label: 'Product', active: false },
-                        { label: 'Amount', active: false },
-                        { label: 'Discount Code', active: false },
-                        { label: 'Payment Method', active: false },
-                        { label: 'Status', active: false },
+                        { label: 'Tarih & Saat', active: false },
+                        { label: 'E-posta', active: false },
+                        { label: 'Ürün', active: false },
+                        { label: 'Tutar', active: false },
+                        { label: 'İndirim Kodu', active: false },
+                        { label: 'Ödeme Yöntemi', active: false },
+                        { label: 'Durum', active: false },
                     ].map((filter, i) => (
                         <button
                             key={i}
@@ -250,28 +255,20 @@ export default function IncomePage() {
 
                 {/* Table Header Labels */}
                 <div className="grid grid-cols-3 gap-4 px-4 py-2 opacity-60">
-                    <span className="text-[14px] font-black text-slate-900">Date</span>
-                    <span className="text-[14px] font-black text-slate-900">Product</span>
-                    <span className="text-[14px] font-black text-slate-900 text-right">Amount</span>
+                    <span className="text-[14px] font-black text-slate-900">Tarih</span>
+                    <span className="text-[14px] font-black text-slate-900">Ürün</span>
+                    <span className="text-[14px] font-black text-slate-900 text-right">Tutar</span>
                 </div>
 
-                {/* Empty State (Sety Adapted) */}
+                {/* Empty State */}
                 {orders.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-in fade-in duration-500 bg-white rounded-[40px] border border-slate-100/50">
-                        <div className="relative mb-10 group">
-                            <div className="absolute inset-0 bg-[#5500ff]/5 rounded-full blur-[40px] group-hover:blur-[60px] transition-all duration-700 scale-150" />
-                            <div className="relative w-48 h-48 flex items-center justify-center">
-                                <SetyLogo size="lg" className="brightness-125 opacity-20 grayscale" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-24 h-24 bg-[#5500ff] rounded-full flex items-center justify-center text-white shadow-2xl">
-                                        <DollarSign className="w-12 h-12" strokeWidth={3} />
-                                    </div>
-                                </div>
-                            </div>
+                    <div className="py-24 flex flex-col items-center justify-center text-center px-4 border-2 border-dashed border-slate-200 rounded-[40px] bg-slate-50/50">
+                        <div className="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
+                            <DollarSign className="w-10 h-10 text-slate-300" />
                         </div>
-                        <h3 className="text-[28px] font-black text-slate-900 tracking-tight leading-none mb-4">No Transactions Matching Filters</h3>
-                        <p className="text-slate-400 text-[16px] font-bold leading-relaxed max-w-[320px]">
-                            Update filters to find what you're looking for!
+                        <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">İşlem Yok</h3>
+                        <p className="text-slate-500 font-medium max-w-[320px]">
+                            Henüz mağazanızdan bir ödeme almadınız.
                         </p>
                     </div>
                 ) : (

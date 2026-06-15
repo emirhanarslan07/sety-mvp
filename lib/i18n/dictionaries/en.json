@@ -17,7 +17,9 @@
         "welcome": "Welcome",
         "greeting": "Hello",
         "subtitle": "Let's get you ready for sales.",
-        "today_overview": "Here's what's happening in your store today.",
+        "payout_warning": "Payout Account Required",
+        "payout_warning_desc": "You need to connect a payment method to receive payouts.",
+        "payout_warning_btn": "Connect Payments",
         "stats": {
             "total_sales": "Total Sales",
             "total_revenue": "Total Revenue",
@@ -31,11 +33,15 @@
         "menu": {
             "home": "Home",
             "my_store": "My Store",
-            "income": "Income",
+            "products": "Products",
+            "orders": "Orders",
             "analytics": "Analytics",
+            "income": "Income",
             "customers": "Customers",
             "settings": "Settings",
-            "logout": "Logout"
+            "logout": "Logout",
+            "more": "More",
+            "add": "Add"
         },
         "notifications": {
             "title": "Notifications",
@@ -47,6 +53,48 @@
             "product_fallback": "Product",
             "registered": "registered."
         },
+        "overview": {
+            "greeting": "Hello",
+            "subtitle": "Here's what's happening in your store today.",
+            "stats": {
+                "today": "Today",
+                "month": "This Month",
+                "total_revenue": "Total Revenue",
+                "average": "Average"
+            },
+            "charts": {
+                "sales_title": "Sales Chart",
+                "sales_subtitle": "Summary of last 7 days"
+            },
+            "recent_orders": {
+                "title": "Recent Orders",
+                "view_all": "View All",
+                "no_orders": "No orders yet",
+                "no_orders_desc": "Your first sale will appear here soon."
+            }
+        },
+        "analytics": {
+            "title": "Analytics",
+            "subtitle": "Track your store's performance in real-time.",
+            "metrics": {
+                "views": "Views",
+                "clicks": "Clicks",
+                "leads": "Leads",
+                "revenue": "Revenue"
+            },
+            "funnel": {
+                "title": "Conversion Funnel",
+                "subtitle": "Journey from visitor to customer",
+                "rate": "Overall Conversion Rate"
+            },
+            "sources": {
+                "title": "Traffic Sources"
+            },
+            "top_products": {
+                "title": "Top Selling Products",
+                "no_data": "No product data found yet."
+            }
+        },
         "sidebar": {
             "plan_status": "Plan Status",
             "free_trial": "Free Trial",
@@ -56,366 +104,180 @@
             "add_account": "Add Account",
             "get_help": "Get Help"
         },
+        "products": {
+            "title": "My Products",
+            "subtitle": "Digital products and coaching packages in your store.",
+            "add_btn": "Add New Product",
+            "empty": {
+                "title": "No products added yet",
+                "desc": "Start earning by selling digital products, e-books, coaching or subscriptions.",
+                "btn": "Add Your First Product"
+            },
+            "types": {
+                "digital": "Digital",
+                "coaching": "Coaching",
+                "subscription": "Subscription"
+            },
+            "free": "FREE",
+            "views": "Views"
+        },
+        "settings": {
+            "title": "Account Settings",
+            "tabs": {
+                "profile": "Profile",
+                "store": "Store",
+                "payments": "Payments",
+                "integrations": "Integrations",
+                "billing": "Subscription",
+                "security": "Security"
+            },
+            "profile": {
+                "title": "Profile Information",
+                "subtitle": "Update your account info and contact details.",
+                "name": "Full Name",
+                "username": "Username",
+                "email": "Email Address",
+                "phone": "Phone Number",
+                "update_btn": "Update Profile"
+            },
+            "store": {
+                "title": "Store Settings",
+                "subtitle": "Configure how your store appears in search engines.",
+                "seo_title": "SEO Title",
+                "seo_desc": "SEO Description (Meta Description)",
+                "social_image": "Social Media Share Image",
+                "currency": "Currency",
+                "language": "Store Language"
+            },
+            "payments": {
+                "title": "Payment Methods",
+                "subtitle": "Connect a provider to receive payments directly to your account.",
+                "connect_btn": "Save Connection",
+                "status_connected": "Connected",
+                "status_disconnected": "Not Connected"
+            },
+            "security": {
+                "title": "Security",
+                "subtitle": "Manage your password and account security.",
+                "current_password": "Current Password",
+                "new_password": "New Password",
+                "confirm_password": "Confirm Password (Again)",
+                "delete_account": "Delete Account",
+                "delete_desc": "Permanently delete your account and all data."
+            }
+        },
         "toast": {
+            "settings_updated": "Settings updated successfully.",
+            "password_updated": "Password changed successfully.",
             "store_link_copied": "Store link copied!"
         },
-        "cards": {
-            "theme": {
-                "title": "Select store theme",
-                "desc": "Customize your store design and bring your brand to life."
-            },
-            "products": {
-                "title": "Manage your products",
-                "desc": "Add new products or edit your existing ones."
-            },
-            "share": {
-                "title": "Share my store",
-                "desc": "Copy and share the {{url}} link."
-            }
-        },
-        "analytics": {
-            "periods": {
-                "last_7_days": "Last 7 Days",
-                "last_14_days": "Last 14 Days",
-                "custom_range": "Custom Range",
-                "date_range": "Mar 1 - Mar 3, 2026"
-            },
-            "stats": {
-                "store_views": "Store Views",
-                "total_revenue": "Total Revenue",
-                "leads": "Leads"
-            },
-            "customers_origin": {
-                "title": "Where are my customers coming from?",
-                "empty_title": "No location data yet",
-                "empty_desc": "A map will appear here when sales start."
-            },
-            "referral_channels": {
-                "title": "Referral channels",
-                "empty_title": "Waiting for traffic data",
-                "empty_desc": "You can see channels when you share social media links.",
-                "direct": "Direct",
-                "other": "Other"
-            },
-            "top_products": {
-                "title": "Best Selling Products",
-                "full_report": "Full Report",
-                "table": {
-                    "product_info": "Product Info",
-                    "views": "Views",
-                    "orders": "Orders",
-                    "conversion": "Conversion",
-                    "net_revenue": "Net Revenue"
-                },
-                "empty_title": "Let's start selling! 🚀",
-                "empty_desc": "When your products are viewed and sold, all data will appear here in seconds."
-            }
-        },
         "store": {
-            "tabs": {
-                "products": "My Products",
-                "design": "Design & Brand",
-                "pages": "Landing Pages"
-            },
             "header": {
                 "visit_store": "Visit Store",
                 "copy_link": "Copy Link",
-                "save_changes": "Save Changes"
+                "save_changes": "Save Changes",
+                "qr_code": "QR"
+            },
+            "tabs": {
+                "products": "Products",
+                "design": "Design",
+                "pages": "Pages"
             },
             "sections": {
-                "theme_selection": "Theme Selection",
-                "style_tuning": "Appearance Tuning",
                 "my_products": "My Products",
-                "landing_pages": "Store Pages",
-                "color_palette": "Brand Color",
-                "font_selection": "Typography",
-                "button_styles": "Button Style",
-                "logo_profile": "Logo / Profile",
-                "cover_image": "Cover Image",
-                "display_name": "Display Name",
-                "bio": "Bio",
-                "verified_badge": "Verified",
-                "announcement_banner": "Announcement Banner",
-                "announcement_desc": "A prominent announcement banner is displayed at the top of your store.",
-                "sety_badge": "Sety Badge",
-                "show_sety_badge": "Show Sety Badge",
-                "sety_badge_desc": "Built with Sety badge and affiliate link.",
-                "social_media": "Social Media",
-                "social_media_desc": "Add your social media links.",
-                "basic_info": "Basic Info",
-                "product_title": "Product Title",
-                "description": "Description",
-                "price_payment": "Price & Payment",
-                "price": "Price",
-                "checkout_provider": "Payment Provider",
-                "manual_payment_info": "Payment Details (IBAN, USDT etc.)",
-                "checkout_link": "Checkout Link",
-                "manual_payment_desc": "Your customers will see this info to make a payment.",
-                "checkout_link_desc": "Paste your external checkout link (Shopier, Stripe etc.)."
+                "theme_selection": "THEME SELECTION"
             },
-            "product_types": {
-                "collect_emails": {
-                    "title": "Collect Emails / Applications",
-                    "desc": "Collect potential customer information with a lead tool."
-                },
-                "digital_product": {
-                    "title": "Digital Product",
-                    "desc": "Sell PDFs, guides, templates, e-books, etc."
-                },
-                "coaching_call": {
-                    "title": "Coaching Call",
-                    "desc": "Offer discovery calls and paid coaching services."
-                },
-                "video_response": {
-                    "title": "Personalized Video Response",
-                    "desc": "Send custom video or product responses to requests."
-                },
-                "ask_me_anything": {
-                    "title": "Q&A (AMA)",
-                    "desc": "Let your followers ask you paid questions."
-                },
-                "private_group": {
-                    "title": "Telegram Subscription",
-                    "desc": "Sell paid access to your Telegram channel or group."
-                },
-                "custom_product": {
-                    "title": "Custom Product",
-                    "desc": "Audits, analyses, or personalized video reviews."
-                },
-                "sety_affiliate": {
-                    "title": "Sety Affiliate Link",
-                    "desc": "Recommend Sety and earn 20% from sales."
-                }
+            "states": {
+                "active": "Active",
+                "draft": "Draft",
+                "no_products": "No products yet",
+                "no_products_desc": "Start selling by adding your first product.",
+                "add_first_product": "Add First Product",
+                "loading_editor": "Loading Editor...",
+                "logo_error": "An error occurred while uploading the logo.",
+                "cover_error": "An error occurred while uploading the cover image."
             },
-            "design": {
-                "themes": {
-                    "arctic_glass": "Modern, transparent premium glass design.",
-                    "midnight_neon": "Dark mode with glowing neon details.",
-                    "luxury_gold": "Elegant serif fonts and gold touches.",
-                    "soft_clay": "3D soft edges and modern depth.",
-                    "cyber_future": "Grid and techno-vibes from the future.",
-                    "sunset_pastel": "Fun, soft, and aesthetic colors.",
-                    "dreamy_mesh": "Soft and artistic color transitions.",
-                    "neo_brutalist": "Sharp lines and bold contrasts."
-                },
-                "button_styles": {
-                    "rounded": "Full Oval",
-                    "semi": "Soft Corner",
-                    "sharp": "Sharp Corner"
-                }
+            "stats": {
+                "clicks": "clicks"
+            },
+            "preview": {
+                "brand_name_placeholder": "Brand Name",
+                "bio_placeholder": "Tell about yourself...",
+                "free_button": "Free",
+                "affiliate_badge_text": "BUILT WITH SETY"
             },
             "actions": {
-                "save": "Save Changes",
-                "cancel": "Cancel",
-                "add_new": "Add New",
-                "add_page": "New Page",
                 "edit": "Edit",
-                "publish": "Publish",
                 "archive": "Archive",
+                "publish": "Publish",
                 "delete": "Delete",
-                "back": "Go Back",
-                "create": "Create"
+                "cancel": "Cancel",
+                "save": "Save",
+                "create_product": "Create New Product",
+                "create_landing_page": "Create New Page"
             },
             "editors": {
-                "fields": {
-                    "title_label": "Title",
-                    "bottom_title_label": "Bottom Title",
-                    "button_text_label": "Button Text"
-                },
-                "placeholders": {
-                    "title": "Get My [Template/eBook/Course] Now!",
-                    "bottom_title": "Get My Guide",
-                    "button_text": "PURCHASE"
-                },
                 "tabs": {
-                    "thumbnail": "Thumbnail",
                     "checkout": "Checkout Page",
-                    "product": "Store Product",
+                    "product": "Product Card",
                     "options": "Options"
                 },
                 "general": {
-                    "style_selection": "1. Select a Style",
+                    "style_selection": "Card Style Selection",
                     "style_button": "Button",
-                    "style_button_desc": "Simple and effective",
                     "style_callout": "Callout",
-                    "style_callout_desc": "Larger standout card",
-                    "image_selection": "2. Select Image",
-                    "image_upload": "Upload Image",
-                    "image_change": "Change",
-                    "image_and_icon": "Image and Icon",
                     "style_preview": "Preview",
+                    "image_and_icon": "Image and Icon",
+                    "product_active": "Product Active",
+                    "product_active_desc": "Show or hide the product in the store.",
+                    "saved": "Saved",
+                    "publish": "Publish",
                     "card_preview": "Card Preview",
-                    "card_preview_desc": "This is how it will look on your store homepage.",
-                    "text_selection": "3. Add Text",
-                    "title": "Title",
-                    "subtitle": "Subtitle / Description",
-                    "button_text": "Button Text",
-                    "link": "Link",
-                    "edit_appearance": "1. Edit Appearance",
-                    "header_image": "Header Image",
-                    "description_text": "Description Text",
-                    "ai_generate": "Generate with AI",
-                    "cta_button": "Call to Action Button",
-                    "set_price_title": "2. Set Price"
-                },
-                "sections": {
-                    "select_image": "1. Select Image",
-                    "write_description": "2. Title & Description",
-                    "pricing": "3. Pricing",
-                    "collect_info": "4. Collect Information",
-                    "upload_product": "5. Product Delivery"
-                },
-                "image_selection": "Image Selection",
-                "image_hint": "Select the best image that describes your product.",
-                "select_button": "Select Image",
-                "pricing": {
-                    "price_label": "Price *",
-                    "price_hint": "Price must be between $0.50 and $25,000.",
-                    "min_price_error": "Minimum price must be $0.50.",
-                    "discount_price_label": "Discount Price",
-                    "discount_price_hint": "Enter discounted price (optional).",
-                    "discount_price_error": "Discounted price must be lower than the original price.",
-                    "payment_plan_title": "Add Payment Plan",
-                    "payment_plan_desc": "Offer installment payment options",
-                    "installments_label": "installments",
-                    "discount_code_title": "Add Discount Code",
-                    "discount_code_desc": "Create a custom coupon code",
-                    "discount_code_placeholder": "DISCOUNT20",
-                    "quantity_limit_title": "Limit Quantity",
-                    "quantity_limit_desc": "Set how many units can be sold",
-                    "quantity_limit_placeholder": "100",
-                    "quantity_unit": "units"
-                },
-                "upload": {
-                    "delivery_hint": "💡 Will be automatically sent to the customers who purchase",
-                    "file_tab": "📁 Upload File",
-                    "url_tab": "🔗 Redirect to URL",
-                    "upload_success": "File uploaded successfully! ✅",
-                    "upload_error": "Upload error",
-                    "file_uploaded": "File uploaded",
-                    "auto_delivery_msg": "Will be automatically sent to the customer ✅",
-                    "drag_drop_title": "Drag and drop your file here",
-                    "or_choose": "or click to select",
-                    "file_types_hint": "PDF, ZIP, MP4, MP3, PNG, DOCX — Max. 500MB",
-                    "url_placeholder": "https://drive.google.com/...",
-                    "url_hint": "You can use links like Google Drive, Dropbox, Notion, YouTube."
-                },
-                "description": {
-                    "label": "Description text *",
-                    "placeholder": "Write your description here...",
-                    "toolbar": {
-                        "h3": "Heading",
-                        "bold": "Bold",
-                        "strike": "Strikethrough",
-                        "italic": "Italic",
-                        "list": "Bulleted List",
-                        "image": "Add Image",
-                        "video": "Add Video",
-                        "link": "Add Link"
-                    },
-                    "modals": {
-                        "video_title": "Add Video",
-                        "video_placeholder": "Enter a YouTube, Loom or Wistia video link here",
-                        "embed_button": "Embed Video",
-                        "upload_own": "Upload your own content.",
-                        "link_title": "Add Link",
-                        "link_name_placeholder": "Name",
-                        "link_url_placeholder": "https://...",
-                        "remove_link": "Remove link",
-                        "save_button": "Save"
-                    }
-                },
-                "fields_manager": {
-                    "title": "Collect Information",
-                    "subtitle": "What information do you want to collect from customers?",
-                    "required_section": "Required Fields",
-                    "extra_section": "Extra Fields",
-                    "required_badge": "Required",
-                    "add_field_button": "Add New Field",
-                    "select_type_title": "Select Field Type",
-                    "placeholder_name": "Field Name",
-                    "options_title": "Options",
-                    "menu_items_title": "Menu Items",
-                    "no_options": "No options yet",
-                    "add_option": "Add Option",
-                    "preview_title": "Preview",
-                    "checkbox_hint": "💡 User must check this box before proceeding.",
-                    "checkbox_hint_default": "I agree to the terms and conditions",
-                    "types": {
-                        "phone": "Phone Number",
-                        "phone_desc": "Country code phone input",
-                        "text": "Text Box",
-                        "text_desc": "Free text input",
-                        "multiple": "Multiple Choice",
-                        "multiple_desc": "User selects multiple",
-                        "dropdown": "Dropdown Menu",
-                        "dropdown_desc": "User selects one",
-                        "checkbox": "Checkbox",
-                        "checkbox_desc": "Check box for logic/consent",
-                        "email": "Email",
-                        "metin": "Text"
-                    }
-                },
-                "improve_page": "💡 Improve your store page by adding more details",
-                "save_draft": "Save as Draft",
-                "draft_saved": "Draft saved successfully!",
-                "publish": "Publish ✨",
-                "publishing": "Uploading...",
-                "published": "Published ✨"
-            },
-            "pages": {
-                "title": "Store Pages",
-                "desc": "Create specialized sales pages and store tabs.",
-                "empty_title": "Create a Landing Page",
-                "empty_desc": "Use a specialized landing page to direct customers to only a specific product link! This page is hidden from your store storefront, so you can offer it only to a specific group of customers.",
-                "default_badge": "Default"
+                    "card_preview_desc": "This is how your product will look in the store."
+                }
             },
             "modals": {
                 "delete_product": {
                     "title": "Delete Product",
-                    "desc": "Are you sure you want to delete this product? This action cannot be undone and the product will be permanently removed from your store.",
-                    "confirm": "Yes, Permanently Delete"
+                    "desc": "Are you sure you want to delete this product? This action cannot be undone.",
+                    "confirm": "Yes, Delete"
                 },
                 "edit_page": {
                     "title": "Edit Page",
-                    "desc": "Customize the page title and link extension.",
+                    "desc": "Update page information.",
                     "label_title": "Page Title",
-                    "placeholder_title": "e.g. Masterclass Intro",
-                    "label_slug": "Link Extension (Slug)",
-                    "placeholder_slug": "custom-link",
-                    "default_page_desc": "Home page link cannot be changed.",
-                    "main_page_title": "Main Store Page"
+                    "label_slug": "Page Path (Slug)",
+                    "placeholder_title": "Ex: About Me",
+                    "placeholder_slug": "about-me",
+                    "default_page_desc": "Main page path cannot be changed.",
+                    "main_page_title": "Main Page"
                 }
             },
-            "states": {
-                "loading_editor": "Loading Editor...",
-                "logo_error": "Error uploading logo",
-                "cover_error": "Error uploading cover image",
-                "active": "Active",
-                "draft": "Draft",
-                "sales_count": "{{count}} Sales",
-                "no_products": "You haven't added any content yet",
-                "no_products_desc": "Start earning by adding digital products, subscriptions, or appointments.",
-                "add_first_product": "Add Your First Product",
-                "coming_soon": "COMING SOON",
-                "step_select_type": "Step 1/2: Select Type",
-                "add_product_desc": "Select the product or service type you want to add to your store.",
-                "add_product_subtitle": "Add to your store in seconds"
-            },
-            "preview": {
-                "brand_name_placeholder": "My Sety Store",
-                "bio_placeholder": "Your store description will appear here. Tell your followers about yourself!",
-                "buy_button": "Buy",
-                "free_button": "Free",
-                "affiliate_badge_text": "Build your own brand with Sety!"
-            },
-            "placeholders": {
-                "display_name": "Your Name or Brand",
-                "bio": "Briefly tell about yourself...",
-                "announcement": "e.g. My Masterclass Guide is Live! 🚀",
-                "product_title_example": "e.g. Masterclass Video Series",
-                "product_desc": "A brief info about your product...",
-                "payment_info": "e.g. IBAN: TR00... or USDT (TRC20): ..."
+            "product_types": {
+                "digital_product": {
+                    "title": "Digital Product",
+                    "desc": "E-book, file or any digital content."
+                },
+                "private_group": {
+                    "title": "Private Group",
+                    "desc": "Sell access to Telegram or Discord group."
+                },
+                "collect_emails": {
+                    "title": "Collect Emails",
+                    "desc": "Grow your email list in exchange for free content."
+                },
+                "coaching_call": {
+                    "title": "Coaching Call",
+                    "desc": "Book a 1-on-1 meeting or consultation."
+                },
+                "video_response": {
+                    "title": "Video Response",
+                    "desc": "Answer follower questions with a video."
+                },
+                "custom_product": {
+                    "title": "Custom Product",
+                    "desc": "Any personalized service or product."
+                }
             }
         }
     },
@@ -494,7 +356,7 @@
                 "desc": "Everything from product uploads to sales tracking, customer analysis to payments, all in one smart panel.",
                 "badge": "Seller Panel",
                 "metrics": {
-                    "earnings": "EARNINGS THIS MONTH",
+                    "earnings": "REVENUE THIS MONTH",
                     "customers": "ACTIVE CUSTOMERS",
                     "activity": "RECENT ACTIVITIES"
                 }

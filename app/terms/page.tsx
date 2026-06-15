@@ -179,9 +179,22 @@ export default function TermsPage() {
                             </div>
                         </section>
 
+                        <section className="space-y-4">
+                            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-3">
+                                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-50 text-slate-500 text-sm">12</span>
+                                SaaS Model ve Komisyonsuz Satış Esasları
+                            </h2>
+                            <div className="pl-11 space-y-3 text-slate-600 leading-relaxed">
+                                <p>Sety, kullanıcılara (creator'lara) yalnızca dijital mağaza altyapısı ve teknik araçlar sağlayan bulut tabanlı bir SaaS (Software as a Service) platformudur.</p>
+                                <p>Sety, kullanıcıların kendi mağazaları üzerinden yaptıkları dijital ürün veya hizmet satışlarının hiçbir şekilde tarafı, aracısı veya garantörü değildir. Bu satışlardan Sety hiçbir komisyon, işlem ücreti veya pay almaz; elde edilen gelirlerin tamamı (%100) kullanıcıya aittir.</p>
+                                <p>Alıcıların gerçekleştirdiği ödemeler, platformumuz üzerinden geçmez ve bizim tarafımızdan tahsil edilmez. Tüm ödeme işlemleri, doğrudan mağaza sahibinin kendi entegre ettiği ödeme kanalları (Stripe, PayPal, iyzico vb.) üzerinden doğrudan satıcı ile alıcı arasında gerçekleşir.</p>
+                                <p>Sety, yalnızca mağaza sahiplerinden platformun teknik kullanımı için sabit aylık Sety Pro yazılım abonelik bedeli tahsil eder.</p>
+                            </div>
+                        </section>
+
                         <section className="space-y-4 p-6 bg-slate-50 rounded-2xl border border-slate-100">
                             <h2 className="text-lg font-bold text-slate-900">İletişim</h2>
-                            <p className="text-slate-600">E-posta: <a href="mailto:support@sety.co" className="text-[#6a5fff] font-medium hover:underline">support@sety.co</a></p>
+                            <p className="text-slate-600">E-posta: <a href="mailto:hello@sety.store" className="text-[#6a5fff] font-medium hover:underline">hello@sety.store</a></p>
                         </section>
                     </div>
                 </div>
