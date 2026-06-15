@@ -176,7 +176,7 @@ function AuthContent() {
     const performSignUp = async () => {
         try {
             setLoading(true);
-            const { error: signUpError } = await supabase.auth.signUp({
+            const { data, error: signUpError } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
@@ -189,9 +189,38 @@ function AuthContent() {
             });
 
             if (signUpError) throw signUpError;
-            setStep(2);
-            window.scrollTo(0, 0);
-            showToast('Verification code sent.', 'success');
+
+            // If session exists, it means email confirmation is disabled in Supabase
+            if (data?.session) {
+                // Initialize Profile and Store immediately
+                const { error: profileError } = await supabase.from('user_profiles').upsert({
+                    user_id: data.user!.id,
+                    email: data.user!.email!,
+                    plan_type: 'founder',
+                    subscription_status: 'trialing',
+                    trial_ends_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    is_active: true,
+                    onboarding_completed: true,
+                });
+                if (profileError) console.error('Profile init error:', profileError);
+
+                const { error: storeError } = await supabase.from('stores').insert({
+                    user_id: data.user!.id,
+                    username: username.toLowerCase() || `user${Math.floor(Math.random() * 10000)}`,
+                    niche: 'Digital Store',
+                    platform: 'Instagram',
+                });
+                if (storeError) console.error('Store init error:', storeError);
+
+                setIsSuccess(true);
+                await analytics.signup('email');
+                showToast('Welcome!', 'success');
+            } else {
+                // Email confirmation is enabled, show OTP screen
+                setStep(2);
+                window.scrollTo(0, 0);
+                showToast('Verification code sent.', 'success');
+            }
         } catch (err: any) {
             setError(err.message || 'An error occurred during signup.');
             showToast(err.message || 'Signup failed.', 'error');
