@@ -86,7 +86,7 @@ function DashboardLayoutContent({
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        router.push('/');
+        window.location.href = '/';
     };
 
     const [copied, setCopied] = useState(false);

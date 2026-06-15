@@ -93,7 +93,7 @@ export default function SettingsPage() {
 
             // Sign out
             await supabase.auth.signOut();
-            router.push('/');
+            window.location.href = '/';
         } catch (err: any) {
             showToast('Hesap silinirken hata oluştu: ' + err.message, 'error');
         }
@@ -101,7 +101,7 @@ export default function SettingsPage() {
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        router.push('/');
+        window.location.href = '/';
     };
 
     if (loading) {
