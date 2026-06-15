@@ -19,7 +19,7 @@ export default function TermsPage() {
                         SETY HİZMET ŞARTLARI
                     </h1>
                     <p className="text-slate-400 text-sm mb-10">
-                        Son Güncelleme Tarihi: 14.02.2026
+                        Son Güncelleme Tarihi: 15.06.2026
                     </p>
 
                     <div className="prose prose-slate max-w-none space-y-8">
