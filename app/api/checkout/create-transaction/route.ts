@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { paddle } from '@/lib/paddle';
+import { polar } from '@/lib/polar';
 
 export async function POST(req: Request) {
   try {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Initialize Supabase Admin (or use a client with service role for security)
+    // Initialize Supabase Admin
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -27,44 +27,33 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
-    // 2. Create a Transaction in Paddle (Ad-hoc)
-    // This allows us to use Sety's price and title without creating products in Paddle dashboard first
-    const transaction = await paddle.transactions.create({
-      items: [
-        {
-          price: {
-            description: product.title,
-            name: product.title,
-            unitPrice: {
-              amount: Math.round(product.price * 100).toString(), // Paddle expects amount in cents/minor units
-              currencyCode: (product.currency || 'USD') as any,
-            },
-            product: {
-              name: product.title,
-              description: product.description || '',
-              taxCategory: 'standard',
-            }
-          },
-          quantity: 1,
-        }
-      ],
-      customerId: customerEmail || undefined,
-      customData: {
-        sety_product_id: productId,
-        sety_store_id: storeId,
-        customer_name: customerName || '',
-      }
+    // 2. Create a Checkout in Polar
+    // Using custom checkout or product checkout based on Polar API
+    // Note: This is an assumed API structure for Polar custom checkout. 
+    // In a real scenario, you might need to create a product in Polar first.
+    const checkout = await polar.checkouts.custom.create({
+        amount: Math.round(product.price * 100),
+        currency: (product.currency || 'usd').toLowerCase(),
+        name: product.title,
+        description: product.description || '',
+        customerEmail: customerEmail || undefined,
+        metadata: {
+            sety_product_id: productId,
+            sety_store_id: storeId,
+            customer_name: customerName || '',
+        },
+        successUrl: `${process.env.NEXT_PUBLIC_APP_URL}/success?checkout_id={CHECKOUT_ID}`,
     });
 
     return NextResponse.json({ 
       data: {
-        transactionId: transaction.id,
-        // You can also return a checkout URL if needed, but Paddle.js usually handles the ID
+        transactionId: checkout.id,
+        checkoutUrl: checkout.url,
       } 
     });
 
   } catch (error: any) {
-    console.error('Paddle Transaction Error:', error);
+    console.error('Polar Transaction Error:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

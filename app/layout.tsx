@@ -158,11 +158,6 @@ export default function RootLayout({
                         `,
                     }}
                 />
-                <Script
-                    id="paddle-js"
-                    src="https://cdn.paddle.com/paddle/v2/paddle.js"
-                    strategy="afterInteractive"
-                />
             </head>
             <body className="antialiased font-sans">
                 <PHProvider>

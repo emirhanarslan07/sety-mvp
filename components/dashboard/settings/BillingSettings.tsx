@@ -1,102 +1,39 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Zap, CreditCard, Bell, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { Zap, CreditCard, Bell, CheckCircle2 } from 'lucide-react';
 import { useDashboard } from '@/context/DashboardContext';
 import { useToast } from '@/context/ToastContext';
-import { useTranslation } from '@/lib/i18n/context';
 import { format } from 'date-fns';
 
 export default function BillingSettings() {
     const { profile, user, refreshData } = useDashboard();
     const { showToast } = useToast();
-    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
 
-    // Initialize Paddle on the client
-    useEffect(() => {
-        if (typeof window !== 'undefined' && (window as any).Paddle) {
-            const clientToken = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || 'live_0cece6c0d24cdc0f17461df383b';
-            try {
-                const paddle = (window as any).Paddle;
-                const env = clientToken.startsWith('live_') ? 'production' : 'sandbox';
-                paddle.Environment.set(env);
-                paddle.Initialize({
-                    token: clientToken
-                });
-            } catch (err) {
-                console.error('Paddle initialization error:', err);
-            }
-        }
-    }, []);
-
-    const handleUpgrade = () => {
-        if (typeof window === 'undefined' || !(window as any).Paddle) {
-            showToast('Paddle checkout is loading. Please wait a moment and try again.', 'error');
-            return;
-        }
-
-        const paddle = (window as any).Paddle;
+    const handleUpgrade = async () => {
         setLoading(true);
-
-        const priceId = 'pri_01kv4p41r3xjjzp2qae6zne1e8';
-        const userEmail = user?.email || '';
-
         try {
-            paddle.Checkout.open({
-                items: [
-                    {
-                        priceId: priceId,
-                        quantity: 1,
-                    },
-                ],
-                customer: {
-                    email: userEmail,
-                },
-                customData: {
-                    userId: user?.id || '',
-                },
-                settings: {
-                    displayMode: 'overlay',
-                    theme: 'light',
-                    locale: 'en',
-                },
-                eventCallback: async (event: any) => {
-                    console.log('Paddle checkout event callback:', event);
-                    if (event.name === 'checkout.completed') {
-                        showToast('Payment successful! Upgrading your account...', 'success');
-                        try {
-                            const response = await fetch('/api/settings/update-subscription', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    planType: 'pro',
-                                    status: 'active'
-                                }),
-                            });
-
-                            const data = await response.json();
-                            if (response.ok && data.success) {
-                                showToast('Welcome to Sety Pro! Your account is now active.', 'success');
-                                await refreshData();
-                            } else {
-                                throw new Error(data.error || 'Upgrade process failed');
-                            }
-                        } catch (error: any) {
-                            console.error('Failed to update subscription in DB:', error);
-                            showToast(`Verification failed: ${error.message || 'database error'}. Please contact support.`, 'error');
-                        }
-                    } else if (event.name === 'checkout.closed') {
-                        setLoading(false);
-                    }
-                },
+            // Note: In a real implementation, this would call your backend endpoint 
+            // to generate a Polar checkout URL for the 'Sety Pro' subscription product.
+            showToast('Generating checkout session...', 'info');
+            
+            const response = await fetch('/api/checkout/create-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: user?.email })
             });
+            
+            const data = await response.json();
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                throw new Error('Failed to create checkout session');
+            }
         } catch (error: any) {
-            console.error('Error opening Paddle checkout:', error);
-            showToast(`Checkout error: ${error.message || 'unknown error'}`, 'error');
+            console.error('Checkout error:', error);
+            showToast(`Checkout error: ${error.message}`, 'error');
             setLoading(false);
         }
     };
@@ -141,14 +78,16 @@ export default function BillingSettings() {
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <button 
-                                onClick={() => showToast('Subscription details and portal are managed securely via Paddle. Check your email inbox for billing receipts or update links.', 'info')}
-                                className="h-20 px-10 rounded-[28px] bg-white text-slate-900 hover:bg-[#C4FF00] font-black text-[17px] shadow-2xl transition-all active:scale-95"
+                            <a 
+                                href="https://polar.sh/purchases"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="h-20 px-10 rounded-[28px] bg-white text-slate-900 hover:bg-[#C4FF00] font-black text-[17px] shadow-2xl transition-all active:scale-95 flex items-center justify-center"
                             >
                                 Manage Plan
-                            </button>
+                            </a>
                             <button 
-                                onClick={() => showToast('To cancel your subscription, please use the cancel link in your Paddle billing confirmation email, or contact support at support@sety.store.', 'info')}
+                                onClick={() => showToast('To cancel your subscription, please use the customer portal via the Manage Plan button.', 'info')}
                                 className="h-20 px-10 rounded-[28px] bg-white/5 hover:bg-white/10 text-white font-black text-[17px] border border-white/10 transition-all active:scale-95"
                             >
                                 Cancel Subscription
