@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatCurrency } from '@/lib/utils/format';
 
+import Image from 'next/image';
 interface StoryCardGeneratorProps {
     isOpen: boolean;
     onClose: () => void;
@@ -88,7 +89,7 @@ export default function StoryCardGenerator({ isOpen, onClose, product, profile }
                                     <div className="w-full flex flex-col items-center space-y-12">
                                         <div className="w-[700px] h-[700px] rounded-[100px] bg-white p-4 shadow-3xl overflow-hidden">
                                             {product.image_url ? (
-                                                <img src={product.image_url} className="w-full h-full object-cover rounded-[80px]" />
+                                                <Image src={product.image_url} className="w-full h-full object-cover rounded-[80px]" alt="" width={800} height={800} />
                                             ) : (
                                                 <div className="w-full h-full bg-slate-50 flex items-center justify-center">
                                                     <Sparkles className="w-64 h-64 text-[#5500ff]" />
@@ -112,7 +113,7 @@ export default function StoryCardGenerator({ isOpen, onClose, product, profile }
                                         <div className="bg-white/10 backdrop-blur-xl border border-white/20 px-10 py-6 rounded-[40px] flex items-center gap-6">
                                             <div className="w-16 h-16 rounded-full border-4 border-white overflow-hidden bg-white/20 flex items-center justify-center">
                                                 {profile.profile_image_url ? (
-                                                    <img src={profile.profile_image_url} />
+                                                    <Image src={profile.profile_image_url} alt="" width={800} height={800} />
                                                 ) : (
                                                     <span className="text-2xl font-black">{profile.username[0].toUpperCase()}</span>
                                                 )}
@@ -139,7 +140,7 @@ export default function StoryCardGenerator({ isOpen, onClose, product, profile }
                                     <div className="w-full flex flex-col items-center space-y-4">
                                         <div className="w-40 h-40 rounded-[40px] bg-white p-1 shadow-2xl overflow-hidden">
                                             {product.image_url ? (
-                                                <img src={product.image_url} className="w-full h-full object-cover rounded-[35px]" />
+                                                <Image src={product.image_url} className="w-full h-full object-cover rounded-[35px]" alt="" width={800} height={800} />
                                             ) : (
                                                 <div className="w-full h-full bg-slate-50 flex items-center justify-center">
                                                     <Sparkles className="w-12 h-12 text-[#5500ff]" />

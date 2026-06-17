@@ -32,6 +32,7 @@ import ImageSelectorModal from './ImageSelectorModal';
 import AdvancedOptionsEditor from './AdvancedOptionsEditor';
 import { analytics } from '@/lib/analytics/tracker';
 
+import Image from 'next/image';
 // --- Shared Components ---
 
 function EditorSection({ title, children }: { title: string, children: React.ReactNode }) {
@@ -241,7 +242,7 @@ export default function VideoResponseEditor({
                                     >
                                         {formData.thumbnail.image_url ? (
                                             <>
-                                                <img src={formData.thumbnail.image_url} className="w-full h-full object-cover" alt="" />
+                                                <Image src={formData.thumbnail.image_url} className="w-full h-full object-cover" alt=""  width={800} height={800}  />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                     <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30 text-white font-bold text-[13px]">{'dashboard.store.editors.general.image_change'}</div>
                                                 </div>
@@ -299,7 +300,7 @@ export default function VideoResponseEditor({
                                                 className="relative h-48 rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50/50 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-all group overflow-hidden"
                                             >
                                                 {formData.checkout.image_url ? (
-                                                    <img src={formData.checkout.image_url} className="w-full h-full object-cover" alt="" />
+                                                    <Image src={formData.checkout.image_url} className="w-full h-full object-cover" alt=""  width={800} height={800}  />
                                                 ) : (
                                                     <div className="flex flex-col items-center">
                                                         <ImageIcon className="w-8 h-8 text-slate-200 mb-2" />
@@ -511,7 +512,7 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
                 )}>
                     {data.thumbnail.image_url && (
                         <div className="aspect-video rounded-[1.5rem] overflow-hidden mb-4">
-                            <img src={data.thumbnail.image_url} className="w-full h-full object-cover" alt="" />
+                            <Image src={data.thumbnail.image_url} className="w-full h-full object-cover" alt=""  width={800} height={800}  />
                         </div>
                     )}
                     <div className="px-3 pb-3 space-y-2">
@@ -532,7 +533,7 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
         <div className="h-full flex flex-col bg-white">
             <div className="relative h-48 bg-slate-100">
                 {data.checkout.image_url && (
-                    <img src={data.checkout.image_url} className="w-full h-full object-cover" alt="" />
+                    <Image src={data.checkout.image_url} className="w-full h-full object-cover" alt=""  width={800} height={800}  />
                 )}
                 {/* Header Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />

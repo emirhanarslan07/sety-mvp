@@ -10,41 +10,53 @@ import {
     Eye,
     EyeOff,
     Trash2,
-    Mail,
-    Download,
-    Video,
-    Sparkles,
-    Heart,
-    Gift,
-    Book,
-    Music,
-    ShoppingBag
+    ShoppingBag,
+    Package,
+    Target,
+    Link2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
-import { getProductTypes } from './StorePreview';
-
+import Image from 'next/image';
 
 interface ProductListSectionProps {
     products: any[];
-    setShowAddProduct: (val: boolean) => void;
+    onAddProduct: () => void;
+    onEditProduct: (product: any) => void;
     activeActionMenu: string | null;
     setActiveActionMenu: (val: string | null) => void;
     handleToggleStatus: (item: any) => void;
     handleDeleteProduct: (id: string) => void;
 }
 
+function getProductIcon(type: string) {
+    switch (type) {
+        case 'digital_product': return Package;
+        case 'coaching_call': return Target;
+        case 'external_link': return Link2;
+        default: return Package;
+    }
+}
+
+function getProductColor(type: string) {
+    switch (type) {
+        case 'digital_product': return 'bg-blue-50 text-blue-600';
+        case 'coaching_call': return 'bg-emerald-50 text-emerald-600';
+        case 'external_link': return 'bg-violet-50 text-[#5500ff]';
+        default: return 'bg-slate-50 text-slate-500';
+    }
+}
+
 export default function ProductListSection({
     products,
-    setShowAddProduct,
+    onAddProduct,
+    onEditProduct,
     activeActionMenu,
     setActiveActionMenu,
     handleToggleStatus,
     handleDeleteProduct,
 }: ProductListSectionProps) {
-    const productTypes = getProductTypes((key) => key);
-
     return (
         <div className="space-y-10">
             <div className="flex items-center justify-between px-2">
@@ -52,7 +64,7 @@ export default function ProductListSection({
                     Ürünlerim
                 </h3>
                 <Button
-                    onClick={() => setShowAddProduct(true)}
+                    onClick={onAddProduct}
                     className="h-12 w-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white transition-all shadow-lg shadow-indigo-100 flex items-center justify-center p-0"
                 >
                     <Plus className="w-6 h-6 stroke-[3px]" />
@@ -61,8 +73,9 @@ export default function ProductListSection({
 
             <div className="space-y-4">
                 <AnimatePresence mode="popLayout">
-                    {products.map((item, index) => {
-                        const typeInfo = productTypes.find(t => t.id === item.type) || productTypes[1];
+                    {products.map((item) => {
+                        const IconComponent = getProductIcon(item.type);
+                        const colorClass = getProductColor(item.type);
                         const isActive = item.status === 'active';
 
                         return (
@@ -83,27 +96,12 @@ export default function ProductListSection({
                                 </div>
 
                                 {/* Icon / Image */}
-                                <div className="w-16 h-16 rounded-[20px] bg-slate-50 flex-shrink-0 overflow-hidden relative border border-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                                <div className="w-16 h-16 rounded-[20px] flex-shrink-0 overflow-hidden relative border border-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                                     {item.image_url ? (
-                                        <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                                        <Image src={item.image_url} alt="" fill className="object-cover" sizes="64px" />
                                     ) : (
-                                        <div className={cn("w-full h-full flex items-center justify-center", typeInfo.color)}>
-                                            {item.icon_id ? (() => {
-                                                const iconMap: Record<string, any> = {
-                                                    mail: Mail,
-                                                    download: Download,
-                                                    video: Video,
-                                                    sparkles: Sparkles,
-                                                    heart: Heart,
-                                                    gift: Gift,
-                                                    book: Book,
-                                                    music: Music
-                                                };
-                                                const IconComponent = iconMap[item.icon_id as string] || typeInfo.icon;
-                                                return <IconComponent className="w-6 h-6" strokeWidth={1.5} />;
-                                            })() : (
-                                                <typeInfo.icon className="w-6 h-6" strokeWidth={1.5} />
-                                            )}
+                                        <div className={cn("w-full h-full flex items-center justify-center", colorClass)}>
+                                            <IconComponent className="w-7 h-7" strokeWidth={1.8} />
                                         </div>
                                     )}
                                 </div>
@@ -118,7 +116,7 @@ export default function ProductListSection({
                                     </div>
                                 </div>
 
-                                {/* Status Toggle (Stan Style Tags) */}
+                                {/* Status Badge */}
                                 <div className="hidden md:flex items-center gap-3">
                                     {isActive ? (
                                         <span className="px-5 py-2.5 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[13px] font-black tracking-tight">
@@ -131,7 +129,7 @@ export default function ProductListSection({
                                     )}
                                 </div>
 
-                                {/* Action Button */}
+                                {/* Action Menu */}
                                 <div className="relative">
                                     <button
                                         onClick={() => setActiveActionMenu(activeActionMenu === item.id ? null : item.id)}
@@ -147,7 +145,10 @@ export default function ProductListSection({
                                                 onClick={() => setActiveActionMenu(null)}
                                             />
                                             <div className="absolute right-0 top-14 w-52 bg-white rounded-[28px] shadow-[0_20px_60px_rgba(85,0,255,0.12)] border border-[#5500ff]/5 py-3 z-50 animate-in fade-in zoom-in-95 duration-200">
-                                                <button className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors">
+                                                <button
+                                                    onClick={() => onEditProduct(item)}
+                                                    className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors"
+                                                >
                                                     <PenLine className="w-5 h-5 text-slate-400" /> Düzenle
                                                 </button>
                                                 <button
@@ -182,6 +183,7 @@ export default function ProductListSection({
                     })}
                 </AnimatePresence>
 
+                {/* Empty State */}
                 {products.length === 0 && (
                     <div className="py-24 flex flex-col items-center justify-center text-center px-6 bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden relative group">
                         <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -197,10 +199,12 @@ export default function ProductListSection({
                         </div>
 
                         <h4 className="text-[28px] font-black text-slate-900 mb-4 tracking-tight leading-none">Henüz ürün yok</h4>
-                        <p className="text-slate-400 text-[17px] font-bold leading-relaxed max-w-[320px] mb-12">İlk ürününüzü oluşturarak satış yapmaya başlayın.</p>
+                        <p className="text-slate-400 text-[17px] font-bold leading-relaxed max-w-[320px] mb-12">
+                            İlk ürününüzü oluşturarak satış yapmaya başlayın.
+                        </p>
 
                         <Button
-                            onClick={() => setShowAddProduct(true)}
+                            onClick={onAddProduct}
                             className="h-16 px-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white text-[17px] font-black shadow-xl shadow-indigo-100 active:scale-95 transition-all"
                         >
                             İlk Ürününü Ekle

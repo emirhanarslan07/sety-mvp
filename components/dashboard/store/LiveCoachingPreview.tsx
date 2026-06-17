@@ -4,6 +4,7 @@ import React from 'react';
 import { formatCurrency } from '@/lib/utils/format';
 import { ShieldCheck } from 'lucide-react';
 
+import Image from 'next/image';
 interface LiveCoachingPreviewProps {
     data: {
         title: string;
@@ -23,7 +24,7 @@ export default function LiveCoachingPreview({ data, brandColor = '#5500ff' }: Li
             {/* Top Image */}
             <div className="w-full h-[180px] bg-[#F8FAFC] relative shrink-0 overflow-hidden">
                 {data.image_url ? (
-                    <img src={data.image_url} alt="" className="w-full h-full object-cover" />
+                    <Image src={data.image_url} alt="" className="w-full h-full object-cover"  width={800} height={800}  />
                 ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-slate-300">
                         <div className="w-14 h-14 rounded-[1.8rem] bg-white shadow-xl shadow-slate-200/50 flex items-center justify-center border border-slate-100">

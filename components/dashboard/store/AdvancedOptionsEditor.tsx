@@ -19,6 +19,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { PremiumInput } from '@/components/ui/PremiumInput';
 
+import Image from 'next/image';
 interface AdvancedOptionsEditorProps {
     options: any;
     updateOptions: (newOptions: any) => void;
@@ -71,7 +72,7 @@ export default function AdvancedOptionsEditor({
                                 <div key={idx} className="p-6 bg-white border border-slate-100 rounded-[2rem] flex items-center justify-between shadow-sm">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-100 border border-slate-50">
-                                            {rev.avatar && <img src={rev.avatar} className="w-full h-full object-cover" alt="" />}
+                                            {rev.avatar && <Image src={rev.avatar} className="w-full h-full object-cover" alt=""  width={800} height={800}  />}
                                         </div>
                                         <div>
                                             <p className="text-[14px] font-black text-slate-900">{rev.name}</p>

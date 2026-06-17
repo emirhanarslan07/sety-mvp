@@ -258,25 +258,32 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
     // Track initial page view on client-side
     useEffect(() => {
         if (profile) {
-            supabase.from('analytics_events').insert([{
-                user_id: profile.user_id,
-                store_id: profile.id,
-                event_name: 'store_view',
-                metadata: {
-                    referrer: document.referrer || 'direct',
-                    visitor_id: localStorage.getItem('s_vid') || (() => {
-                        const id = Math.random().toString(36).substring(2);
-                        localStorage.setItem('s_vid', id);
-                        return id;
-                    })()
-                }
-            }]).then(() => { });
+            fetch('/api/analytics/track', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: profile.username,
+                    event_type: 'store_view'
+                })
+            }).catch(console.error);
+
         }
-    }, [profile?.id]);
+    }, [profile?.id, profile?.username]);
 
     const handleProductClick = (product: any) => {
         setSelectedProduct(product);
         setIsSheetOpen(true);
+        
+        fetch('/api/analytics/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: profile?.username,
+                product_id: product.id,
+                event_type: 'product_click'
+            })
+        }).catch(console.error);
+
         supabase.from('analytics_events').insert([{
             user_id: profile?.user_id,
             store_id: profile?.id,
@@ -287,6 +294,17 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
     };
 
     const handlePurchase = async (product: any, email?: string) => {
+        // Also count as click just in case
+        fetch('/api/analytics/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: profile?.username,
+                product_id: product.id,
+                event_type: 'product_click'
+            })
+        }).catch(console.error);
+
         await supabase.from('analytics_events').insert([{
             user_id: profile?.user_id,
             store_id: profile?.id,

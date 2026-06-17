@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
 import { useToast } from '@/context/ToastContext';
 
+import Image from 'next/image';
 interface CheckoutModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -178,9 +179,9 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                 </form>
 
                                 <div className="flex items-center justify-center gap-6 pt-4 grayscale opacity-40">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className="h-4" alt="Visa" />
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-6" alt="Mastercard" />
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" className="h-4" alt="Paypal" />
+                                    <Image src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" className="h-4" alt="Visa"  width={800} height={800}  />
+                                    <Image src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" className="h-6" alt="Mastercard"  width={800} height={800}  />
+                                    <Image src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" className="h-4" alt="Paypal"  width={800} height={800}  />
                                 </div>
                             </motion.div>
                         )}

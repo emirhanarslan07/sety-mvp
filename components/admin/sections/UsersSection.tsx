@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
 
+import Image from 'next/image';
 export default function UsersSection() {
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState<any[]>([]);
@@ -106,7 +107,7 @@ export default function UsersSection() {
                                             <div className="flex items-center gap-4">
                                                 <div className="w-12 h-12 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 group-hover:scale-105 transition-transform flex items-center justify-center shrink-0">
                                                     {user.profile_image_url ? (
-                                                        <img src={user.profile_image_url} className="w-full h-full object-cover" />
+                                                        <Image src={user.profile_image_url} className="w-full h-full object-cover" alt="" width={800} height={800} />
                                                     ) : (
                                                         <User className="w-6 h-6 text-slate-300" />
                                                     )}

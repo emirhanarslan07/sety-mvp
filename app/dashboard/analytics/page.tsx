@@ -14,12 +14,11 @@ import {
 import { 
     TrendingUp, 
     Users, 
-    DollarSign, 
     Calendar,
-    ChevronDown,
     Package,
     Zap,
-    Target
+    MousePointerClick,
+    Eye
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
@@ -29,12 +28,10 @@ export default function AnalyticsPage() {
     const [period, setPeriod] = useState<'7' | '14' | '30' | 'all'>('14');
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
-        totalRevenue: 0,
-        totalOrders: 0,
-        monthlyRevenue: 0,
-        monthlyOrders: 0,
-        averageOrderValue: 0,
-        conversionRate: 0,
+        totalViews: 0,
+        monthlyViews: 0,
+        todayViews: 0,
+        totalClicks: 0,
         totalSubscribers: 0
     });
     const [chartData, setChartData] = useState<any[]>([]);
@@ -62,30 +59,20 @@ export default function AnalyticsPage() {
                     const date = new Date(item.date);
                     return {
                         date: date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }),
-                        revenue: item.revenue,
-                        orders: item.orders,
+                        views: item.views,
+                        clicks: item.clicks,
                     };
                 });
                 setChartData(formattedChartData);
             }
 
-            let newStats = {
-                totalRevenue: statsData.total?.revenue || 0,
-                totalOrders: statsData.total?.orders || 0,
-                monthlyRevenue: statsData.this_month?.revenue || 0,
-                monthlyOrders: statsData.this_month?.orders || 0,
-                averageOrderValue: 0,
-                conversionRate: 0,
+            setStats({
+                totalViews: statsData.total?.views || 0,
+                monthlyViews: statsData.this_month?.views || 0,
+                todayViews: statsData.today?.views || 0,
+                totalClicks: statsData.total?.clicks || 0,
                 totalSubscribers: Array.isArray(subscribersData) ? subscribersData.length : 0
-            };
-
-            newStats.averageOrderValue = newStats.totalOrders > 0 
-                ? newStats.totalRevenue / newStats.totalOrders 
-                : 0;
-
-            // Simple conversion calculation: can be refined later if needed
-            // For now, let's keep it based on what we have
-            setStats(newStats);
+            });
 
             if (productsData.data) {
                 setTopProducts(productsData.data);
@@ -104,40 +91,28 @@ export default function AnalyticsPage() {
 
     const metrics = [
         { 
-            label: 'Toplam Kazanç', 
-            value: formatCurrency(stats.totalRevenue), 
-            subValue: `${stats.totalOrders} Sipariş`,
-            icon: DollarSign, 
+            label: 'Toplam Ziyaretçi', 
+            value: stats.totalViews.toLocaleString(), 
+            subValue: 'Tüm Zamanlar',
+            icon: Eye, 
             color: 'text-[#5500ff]', 
             bg: 'bg-violet-50',
-            borderColor: 'border-l-[#5500ff]',
-            gradientFrom: 'from-white',
-            gradientTo: 'to-violet-50/40',
-            ringHover: 'hover:ring-violet-500/10'
         },
         { 
-            label: 'Bu Ay Kazanç', 
-            value: formatCurrency(stats.monthlyRevenue), 
-            subValue: `${stats.monthlyOrders} Sipariş`,
+            label: 'Bu Ay Ziyaretçi', 
+            value: stats.monthlyViews.toLocaleString(), 
+            subValue: 'Bu Ay',
             icon: Calendar, 
             color: 'text-indigo-600', 
             bg: 'bg-indigo-50',
-            borderColor: 'border-l-indigo-500',
-            gradientFrom: 'from-white',
-            gradientTo: 'to-indigo-50/40',
-            ringHover: 'hover:ring-indigo-500/10'
         },
         { 
-            label: 'Ortalama Sipariş', 
-            value: formatCurrency(stats.averageOrderValue), 
-            subValue: 'Sipariş Başına',
-            icon: Target, 
+            label: 'Toplam Tıklanma', 
+            value: stats.totalClicks.toLocaleString(), 
+            subValue: 'Tüm Ürünlerde',
+            icon: MousePointerClick, 
             color: 'text-emerald-600', 
             bg: 'bg-emerald-50',
-            borderColor: 'border-l-emerald-500',
-            gradientFrom: 'from-white',
-            gradientTo: 'to-emerald-50/40',
-            ringHover: 'hover:ring-emerald-500/10'
         },
         { 
             label: 'Toplam Abone', 
@@ -146,10 +121,6 @@ export default function AnalyticsPage() {
             icon: Users, 
             color: 'text-pink-600', 
             bg: 'bg-pink-50',
-            borderColor: 'border-l-pink-500',
-            gradientFrom: 'from-white',
-            gradientTo: 'to-pink-50/40',
-            ringHover: 'hover:ring-pink-500/10'
         },
         { 
             label: 'Performans', 
@@ -158,10 +129,6 @@ export default function AnalyticsPage() {
             icon: Zap, 
             color: 'text-blue-600', 
             bg: 'bg-blue-50',
-            borderColor: 'border-l-blue-500',
-            gradientFrom: 'from-white',
-            gradientTo: 'to-blue-50/40',
-            ringHover: 'hover:ring-blue-500/10'
         }
     ];
 
@@ -174,7 +141,7 @@ export default function AnalyticsPage() {
                         Analitikler 📈
                     </h1>
                     <p className="text-slate-500 mt-2 font-bold">
-                        Mağazanızın performansı ve satış analizleri.
+                        Mağazanızın performansı ve tıklanma analizleri.
                     </p>
                 </div>
 
@@ -220,21 +187,21 @@ export default function AnalyticsPage() {
                 ))}
             </div>
 
-            {/* Sales Chart */}
+            {/* Ziyaretçi Grafiği */}
             <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                     <div className="space-y-2">
-                        <h2 className="text-[24px] font-black text-slate-900 tracking-tight">Satış Grafiği</h2>
-                        <p className="text-slate-400 font-bold">Kazanç ve Sipariş sayısı</p>
+                        <h2 className="text-[24px] font-black text-slate-900 tracking-tight">Tıklanma ve Ziyaretçi Grafiği</h2>
+                        <p className="text-slate-400 font-bold">Mağaza görüntülenmeleri ve ürün tıklanmaları</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-50 border border-violet-100">
                             <div className="w-2.5 h-2.5 rounded-full bg-[#5500ff]" />
-                            <span className="text-[13px] font-black text-slate-700 uppercase">Kazanç</span>
+                            <span className="text-[13px] font-black text-slate-700 uppercase">Ziyaretçi</span>
                         </div>
                         <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-50 border border-blue-100">
                             <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-                            <span className="text-[13px] font-black text-slate-700 uppercase">Siparişler</span>
+                            <span className="text-[13px] font-black text-slate-700 uppercase">Tıklanma</span>
                         </div>
                     </div>
                 </div>
@@ -246,11 +213,11 @@ export default function AnalyticsPage() {
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={chartData}>
                                 <defs>
-                                    <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                    <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#5500ff" stopOpacity={0.25}/>
                                         <stop offset="95%" stopColor="#5500ff" stopOpacity={0.02}/>
                                     </linearGradient>
-                                    <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
+                                    <linearGradient id="colorClicks" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.25}/>
                                         <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.02}/>
                                     </linearGradient>
@@ -268,7 +235,6 @@ export default function AnalyticsPage() {
                                     axisLine={false} 
                                     tickLine={false} 
                                     tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
-                                    tickFormatter={(val) => `₺${val}`}
                                 />
                                 <YAxis 
                                     yAxisId="right"
@@ -293,24 +259,24 @@ export default function AnalyticsPage() {
                                 <Area 
                                     yAxisId="left"
                                     type="monotone" 
-                                    dataKey="revenue" 
-                                    name="Kazanç (₺)"
+                                    dataKey="views" 
+                                    name="Ziyaretçi"
                                     stroke="#5500ff" 
                                     strokeWidth={4}
                                     fillOpacity={1} 
-                                    fill="url(#colorRevenue)"
+                                    fill="url(#colorViews)"
                                     dot={{ r: 3, fill: '#5500ff', stroke: '#fff', strokeWidth: 2 }}
                                     activeDot={{ r: 6, fill: '#5500ff', stroke: '#c4b5fd', strokeWidth: 3 }}
                                 />
                                 <Area 
                                     yAxisId="right"
                                     type="monotone" 
-                                    dataKey="orders" 
-                                    name="Siparişler"
+                                    dataKey="clicks" 
+                                    name="Tıklanma"
                                     stroke="#3b82f6" 
                                     strokeWidth={4}
                                     fillOpacity={1}
-                                    fill="url(#colorOrders)"
+                                    fill="url(#colorClicks)"
                                     dot={{ r: 3, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }}
                                     activeDot={{ r: 6, fill: '#3b82f6', stroke: '#bfdbfe', strokeWidth: 3 }}
                                 />
@@ -323,7 +289,7 @@ export default function AnalyticsPage() {
             {/* Top Products Table */}
             <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
                 <div className="flex items-center justify-between mb-10">
-                    <h2 className="text-[24px] font-black text-slate-900 tracking-tight">En Çok Satan Ürünler</h2>
+                    <h2 className="text-[24px] font-black text-slate-900 tracking-tight">En Çok Tıklanan Ürünler</h2>
                     <Package className="w-6 h-6 text-slate-300" />
                 </div>
 
@@ -335,15 +301,15 @@ export default function AnalyticsPage() {
                             <div className="w-20 h-20 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
                                 <Package className="w-10 h-10 text-slate-300" />
                             </div>
-                            <p className="text-lg font-black text-slate-800 tracking-tight">Henüz ürün verisi bulunmuyor</p>
+                            <p className="text-lg font-black text-slate-800 tracking-tight">Henüz tıklanan ürün yok</p>
                         </div>
                     ) : (
                         topProducts.map((product, i) => {
                             const rankBg = i === 0 ? 'bg-amber-50' : i === 1 ? 'bg-slate-100' : i === 2 ? 'bg-orange-50' : 'bg-indigo-50';
                             const rankText = i === 0 ? 'text-amber-600' : i === 1 ? 'text-slate-500' : i === 2 ? 'text-orange-600' : 'text-indigo-600';
                             const rankBorder = i === 0 ? 'ring-1 ring-amber-200' : i === 1 ? 'ring-1 ring-slate-200' : i === 2 ? 'ring-1 ring-orange-200' : '';
-                            const maxSales = topProducts[0]?.sales || 1;
-                            const barWidth = Math.max(((product.sales / maxSales) * 100), 8);
+                            const maxClicks = topProducts[0]?.sales || 1;
+                            const barWidth = Math.max(((product.sales / maxClicks) * 100), 8);
                             return (
                             <div key={i} className={cn(
                                 "flex items-center gap-4 p-4 rounded-3xl transition-all duration-300 border border-transparent hover:border-slate-100 hover:translate-x-1 cursor-default",
@@ -358,11 +324,10 @@ export default function AnalyticsPage() {
                                 </div>
                                 <div className="flex-1">
                                     <h4 className="font-black text-slate-900 line-clamp-1">{product.title}</h4>
-                                    <p className="text-sm font-bold text-slate-400">{product.sales} Başarılı Satış</p>
+                                    <p className="text-sm font-bold text-slate-400">Fiyat: {formatCurrency(product.price, product.currency)}</p>
                                 </div>
                                 <div className="text-right">
-                                    <div className="font-black text-slate-900">{formatCurrency(product.revenue, product.currency)}</div>
-                                    <div className="text-xs font-bold text-emerald-500">{product.sales > 0 ? (product.revenue / product.sales).toFixed(0) : 0} ₺ Ort.</div>
+                                    <div className="font-black text-emerald-600">{product.sales} Tıklanma</div>
                                 </div>
                             </div>
                             );

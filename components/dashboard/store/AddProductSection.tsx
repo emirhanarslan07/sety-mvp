@@ -5,9 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import { getProductTypes } from './StorePreview';
 import { cn } from '@/lib/utils';
-import { SetyLogo } from '@/components/ui/SetyLogo';
 import { useTranslation } from '@/lib/i18n/context';
-
 interface AddProductSectionProps {
     setShowAddProduct: (val: boolean) => void;
     onSelectType: (type: any) => void;
@@ -17,7 +15,8 @@ export default function AddProductSection({
     setShowAddProduct,
     onSelectType,
 }: AddProductSectionProps) {
-    const productTypes = getProductTypes((key) => key);
+    const { t } = useTranslation();
+    const productTypes = getProductTypes(t);
 
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -62,17 +61,7 @@ export default function AddProductSection({
                             <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/40 z-20" />
                             <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
 
-                            {(type as any).isSetyLogo ? (
-                                <SetyLogo size="sm" showBackground={false} />
-                            ) : type.iconUrl ? (
-                                <img
-                                    src={type.iconUrl}
-                                    className="w-10 h-10 object-contain relative z-10 transition-transform group-hover:scale-110 duration-500"
-                                    alt=""
-                                />
-                            ) : (
-                                <type.icon className="w-8 h-8 relative z-10 transition-transform group-hover:scale-110 duration-500" strokeWidth={2.5} />
-                            )}
+                            <type.icon className="w-8 h-8 relative z-10 transition-transform group-hover:scale-110 duration-500" strokeWidth={2.5} />
                         </div>
 
                         <div className="flex-1 relative z-10">

@@ -17,10 +17,9 @@ export default function DashboardPage() {
     
     const [stats, setStats] = useState<any>(null);
     const [chartData, setChartData] = useState<any[]>([]);
-    const [recentOrders, setRecentOrders] = useState<any[]>([]);
+    const [popularProducts, setPopularProducts] = useState<any[]>([]);
     const [chartDays, setChartDays] = useState(7);
     const [loading, setLoading] = useState(true);
-    const [paymentSettings, setPaymentSettings] = useState<any>(null);
 
     useEffect(() => {
         if (!store?.id) {
@@ -31,24 +30,19 @@ export default function DashboardPage() {
         const loadDashboardData = async () => {
             setLoading(true);
             try {
-                const [statsRes, chartRes, ordersRes] = await Promise.all([
+                const [statsRes, chartRes, productsRes] = await Promise.all([
                     fetch('/api/dashboard/stats'),
                     fetch(`/api/dashboard/chart?days=${chartDays}`),
-                    fetch('/api/dashboard/recent-orders?limit=5')
+                    fetch('/api/analytics/products')
                 ]);
 
                 const statsData = await statsRes.json();
                 const chartJson = await chartRes.json();
-                const ordersData = await ordersRes.json();
+                const productsData = await productsRes.json();
                 
-                // Fetch payment settings to check Paddle status
-                const paymentRes = await fetch('/api/settings/payment');
-                const paymentData = await paymentRes.json();
-                setPaymentSettings(paymentData.data);
-
                 setStats(statsData);
                 setChartData(chartJson.data || []);
-                setRecentOrders(ordersData.data || []);
+                setPopularProducts((productsData.data || []).slice(0, 5));
 
             } catch (error) {
                 console.error("Error loading dashboard data:", error);
@@ -68,10 +62,10 @@ export default function DashboardPage() {
                 <div className="bg-slate-900 p-4 rounded-2xl shadow-2xl border border-slate-700/50 backdrop-blur-sm">
                     <p className="text-sm font-bold text-slate-400 mb-1">{label}</p>
                     <p className="text-lg font-black text-white">
-                        {formatCurrency(payload[0].value)}
+                        {payload[0].payload.views || 0} Ziyaretçi
                     </p>
-                    <p className="text-xs font-bold text-slate-400 mt-1">
-                        {payload[0].payload.orders} sipariş
+                    <p className="text-xs font-bold text-emerald-400 mt-1">
+                        {payload[0].payload.clicks || 0} Ürün Tıklanması
                     </p>
                 </div>
             );
@@ -93,57 +87,13 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {/* Paddle Connection Status */}
-            <div className={cn(
-                "flex items-center justify-between p-4 px-6 rounded-[24px] border transition-all",
-                paymentSettings?.default_provider === 'paddle' 
-                    ? "bg-emerald-50 border-emerald-100/50" 
-                    : "bg-amber-50 border-amber-100/50"
-            )}>
-                <div className="flex items-center gap-4">
-                    <div className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center",
-                        paymentSettings?.default_provider === 'paddle' ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"
-                    )}>
-                        <DollarSign className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <h4 className={cn(
-                            "font-black text-[15px]",
-                            paymentSettings?.default_provider === 'paddle' ? "text-emerald-900" : "text-amber-900"
-                        )}>
-                            Paddle Entegrasyon Durumu
-                        </h4>
-                        <p className={cn(
-                            "text-[13px] font-bold",
-                            paymentSettings?.default_provider === 'paddle' ? "text-emerald-600" : "text-amber-600"
-                        )}>
-                            {paymentSettings?.default_provider === 'paddle' 
-                                ? "Aktif: Global ödemeler Sety altyapısıyla alınıyor." 
-                                : "Pasif: Ödemeler şu an manuel veya diğer yöntemlerle alınıyor."}
-                        </p>
-                    </div>
-                </div>
-                <button 
-                    onClick={() => router.push('/dashboard/settings/payment')}
-                    className={cn(
-                        "px-6 h-10 rounded-xl font-black text-[13px] transition-all",
-                        paymentSettings?.default_provider === 'paddle'
-                            ? "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-200"
-                            : "bg-amber-500 text-white hover:bg-amber-600 shadow-lg shadow-amber-200"
-                    )}
-                >
-                    {paymentSettings?.default_provider === 'paddle' ? "Ayarları Yönet" : "Aktifleştir"}
-                </button>
-            </div>
-
             {/* Stats Cards Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 {[
-                    { label: 'Bugün', value: stats?.today?.revenue, sub: `${stats?.today?.orders} satış`, icon: Zap, color: 'text-amber-500', bg: 'bg-amber-50' },
-                    { label: 'Bu Ay', value: stats?.this_month?.revenue, sub: `${stats?.this_month?.orders} satış`, icon: Calendar, color: 'text-blue-500', bg: 'bg-blue-50' },
-                    { label: 'Toplam Kazanç', value: stats?.total?.revenue, sub: `${stats?.total?.orders} satış`, icon: DollarSign, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-                    { label: 'Bekleyen Onay', value: stats?.pending, sub: 'sipariş', icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-50' }
+                    { label: 'Bugün', value: stats?.today?.views, sub: 'ziyaretçi', icon: Zap, color: 'text-amber-500', bg: 'bg-amber-50' },
+                    { label: 'Bu Ay', value: stats?.this_month?.views, sub: 'ziyaretçi', icon: Calendar, color: 'text-blue-500', bg: 'bg-blue-50' },
+                    { label: 'Toplam Ziyaretçi', value: stats?.total?.views, sub: 'tüm zamanlar', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+                    { label: 'Ürün Tıklanma', value: stats?.total?.clicks, sub: 'toplam tıklanma', icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-50' }
                 ].map((stat, i) => (
                     <div key={i} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:border-slate-200 transition-all duration-200">
                         <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center mb-4", stat.bg, stat.color)}>
@@ -151,7 +101,7 @@ export default function DashboardPage() {
                         </div>
                         <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
                         <h3 className="text-[22px] md:text-[24px] font-black text-slate-900 leading-none">
-                            {i === 3 ? stat.value : formatCurrency(stat.value || 0)}
+                            {stat.value || 0}
                         </h3>
                         <p className="text-[11px] font-bold text-slate-400 mt-2">{stat.sub}</p>
                     </div>
@@ -244,7 +194,7 @@ export default function DashboardPage() {
                                 <Tooltip content={renderCustomTooltip} />
                                 <Area 
                                     type="monotone" 
-                                    dataKey="revenue" 
+                                    dataKey="views" 
                                     stroke="#5500ff" 
                                     strokeWidth={3} 
                                     fill="url(#dashGradient)"
@@ -256,58 +206,49 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Recent Orders List */}
+                {/* Popular Products List */}
                 <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm flex flex-col">
                     <div className="flex items-center justify-between mb-8">
-                        <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Son Siparişler</h3>
+                        <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Popüler Ürünler</h3>
                         <button 
-                            onClick={() => router.push('/dashboard/orders')}
+                            onClick={() => router.push('/dashboard/analytics')}
                             className="text-[13px] font-black text-[#5500ff] hover:text-[#4400cc] transition-colors"
                         >
-                            Tümünü Gör →
+                            Analitikleri Gör →
                         </button>
                     </div>
                     
                     <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
-                        {recentOrders.length === 0 ? (
+                        {popularProducts.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-10 border-2 border-dashed border-slate-200 rounded-[32px] bg-slate-50/50">
                                 <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center text-slate-300 shadow-sm">
                                     <Package className="w-8 h-8" />
                                 </div>
                                 <div>
-                                    <p className="text-lg font-black text-slate-800">Henüz sipariş yok</p>
-                                    <p className="text-sm font-medium text-slate-500 mt-1 px-4">İlk siparişiniz geldiğinde burada görünecek.</p>
+                                    <p className="text-lg font-black text-slate-800">Henüz tıklanma yok</p>
+                                    <p className="text-sm font-medium text-slate-500 mt-1 px-4">Ürünleriniz tıklandıkça burada görünecek.</p>
                                 </div>
                             </div>
                         ) : (
-                            recentOrders.map((order, i) => (
-                                <div key={i} className="flex flex-col gap-2 p-4 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 cursor-pointer" onClick={() => router.push('/dashboard/orders')}>
+                            popularProducts.map((product, i) => (
+                                <div key={i} className="flex flex-col gap-2 p-4 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 cursor-pointer" onClick={() => router.push('/dashboard/analytics')}>
                                     <div className="flex justify-between items-start">
                                         <div className="flex items-center gap-2">
-                                            <span className={cn(
-                                                "w-2 h-2 rounded-full",
-                                                order.status === 'pending' ? 'bg-amber-400' : 
-                                                order.status === 'completed' || order.status === 'paid' ? 'bg-emerald-400' : 'bg-slate-300'
-                                            )} />
-                                            <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{order.order_number}</span>
+                                            <span className="text-[15px] font-black text-slate-900 truncate">
+                                                {product.title}
+                                            </span>
                                         </div>
-                                        <span className="text-[15px] font-black text-slate-900">
-                                            {formatCurrency(order.amount, order.currency)}
+                                        <span className="text-[15px] font-black text-emerald-600">
+                                            {product.sales} tık
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-end mt-1">
                                         <div className="min-w-0 flex-1">
-                                            <p className="text-[15px] font-black text-slate-900 truncate">
-                                                {order.product_name}
-                                            </p>
                                             <p className="text-[12px] font-bold text-slate-400 truncate mt-0.5">
-                                                {order.customer_email}
+                                                Fiyat: {formatCurrency(product.price, product.currency)}
                                             </p>
                                         </div>
                                     </div>
-                                    <p className="text-[11px] font-bold text-slate-400 mt-2">
-                                        {formatDistanceToNow(new Date(order.created_at), { addSuffix: true, locale: tr })}
-                                    </p>
                                 </div>
                             ))
                         )}

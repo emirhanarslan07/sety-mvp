@@ -21,7 +21,7 @@ import { useDashboard } from '@/context/DashboardContext';
 export default function CustomersPage() {
     const { t } = useTranslation();
     const router = useRouter();
-    const { store } = useDashboard();
+    const { store, loading: contextLoading } = useDashboard();
     const [customers, setCustomers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -29,8 +29,10 @@ export default function CustomersPage() {
     useEffect(() => {
         if (store?.id) {
             fetchCustomers();
+        } else if (!contextLoading && !store) {
+            setLoading(false);
         }
-    }, [store?.id]);
+    }, [store?.id, contextLoading]);
 
     const fetchCustomers = async () => {
         if (!store?.id) return;

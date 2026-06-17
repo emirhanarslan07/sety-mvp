@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ExternalLink, Plus, CheckCircle2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+import Image from 'next/image';
 interface IntegrationCardProps {
     id: string;
     name: string;
@@ -45,11 +46,12 @@ export function IntegrationCard({
                         {typeof icon === 'string' ? (
                             !hasError ? (
                                 <div className="relative w-full h-full">
-                                    <img 
-                                        src={icon} 
+                                    <Image src={icon} 
                                         alt={name} 
                                         className="w-full h-full object-contain"
                                         onError={() => setHasError(true)}
+                                        width={800}
+                                        height={800}
                                     />
                                 </div>
                             ) : (

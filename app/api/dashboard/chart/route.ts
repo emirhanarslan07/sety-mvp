@@ -28,39 +28,41 @@ export async function GET(req: Request) {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - days);
 
-        const { data: orders, error } = await supabase
-            .from('orders')
-            .select('amount, created_at')
-            .eq('store_id', store.id)
-            .in('status', ['completed', 'paid'])
+        const { data: analytics, error } = await supabase
+            .from('store_analytics')
+            .select('event_type, created_at')
+            .eq('user_id', user.id)
             .gte('created_at', startDate.toISOString());
 
         if (error) throw error;
 
         // Group by date
-        const grouped: Record<string, { revenue: number; orders: number }> = {};
+        const grouped: Record<string, { views: number; clicks: number }> = {};
         
         // Initialize all dates in range with 0
         for (let i = 0; i < days; i++) {
             const d = new Date();
             d.setDate(d.getDate() - i);
             const dateStr = d.toISOString().split('T')[0];
-            grouped[dateStr] = { revenue: 0, orders: 0 };
+            grouped[dateStr] = { views: 0, clicks: 0 };
         }
 
-        (orders || []).forEach(order => {
-            const dateStr = order.created_at.split('T')[0];
+        (analytics || []).forEach(item => {
+            const dateStr = item.created_at.split('T')[0];
             if (grouped[dateStr]) {
-                grouped[dateStr].revenue += Number(order.amount) || 0;
-                grouped[dateStr].orders += 1;
+                if (item.event_type === 'store_view') {
+                    grouped[dateStr].views += 1;
+                } else if (item.event_type === 'product_click') {
+                    grouped[dateStr].clicks += 1;
+                }
             }
         });
 
         // Convert to array and sort by date ascending
         const chartData = Object.keys(grouped).map(date => ({
             date,
-            revenue: grouped[date].revenue,
-            orders: grouped[date].orders
+            views: grouped[date].views,
+            clicks: grouped[date].clicks
         })).sort((a, b) => a.date.localeCompare(b.date));
 
         return NextResponse.json({ data: chartData });

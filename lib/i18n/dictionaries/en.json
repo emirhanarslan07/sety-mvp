@@ -36,7 +36,7 @@
             "products": "Products",
             "orders": "Orders",
             "analytics": "Analytics",
-            "income": "Income",
+            "performance": "Performance",
             "customers": "Customers",
             "settings": "Settings",
             "logout": "Logout",
@@ -214,7 +214,8 @@
                 "cancel": "Cancel",
                 "save": "Save",
                 "create_product": "Create New Product",
-                "create_landing_page": "Create New Page"
+                "create_landing_page": "Create New Page",
+                "back": "Back"
             },
             "editors": {
                 "tabs": {
@@ -233,7 +234,12 @@
                     "saved": "Saved",
                     "publish": "Publish",
                     "card_preview": "Card Preview",
-                    "card_preview_desc": "This is how your product will look in the store."
+                    "card_preview_desc": "This is how your product will look in the store.",
+                    "visibility": "Visibility Settings",
+                    "public": "Public",
+                    "public_desc": "Visible to everyone on your storefront.",
+                    "hidden": "Hidden",
+                    "hidden_desc": "Hidden from your storefront — only accessible via direct link."
                 }
             },
             "modals": {
@@ -256,7 +262,7 @@
             "product_types": {
                 "digital_product": {
                     "title": "Digital Product",
-                    "desc": "E-book, file or any digital content."
+                    "desc": "PDF, e-book, template, video, course — any kind of digital file or content"
                 },
                 "private_group": {
                     "title": "Private Group",
@@ -267,8 +273,8 @@
                     "desc": "Grow your email list in exchange for free content."
                 },
                 "coaching_call": {
-                    "title": "Coaching Call",
-                    "desc": "Book a 1-on-1 meeting or consultation."
+                    "title": "Coaching / Consultation",
+                    "desc": "One-on-one paid consultation or coaching session"
                 },
                 "video_response": {
                     "title": "Video Response",
@@ -277,7 +283,15 @@
                 "custom_product": {
                     "title": "Custom Product",
                     "desc": "Any personalized service or product."
+                },
+                "external_link": {
+                    "title": "Link",
+                    "desc": "Redirect to any URL — free or paid"
                 }
+            },
+            "pages": {
+                "empty_title": "No pages yet",
+                "empty_desc": "Create a new page to get started."
             }
         }
     },

@@ -36,7 +36,7 @@
             "products": "Ürünler",
             "orders": "Siparişler",
             "analytics": "Analitik",
-            "income": "Gelir",
+            "performance": "Performans",
             "customers": "Müşteriler",
             "settings": "Ayarlar",
             "logout": "Çıkış Yap",
@@ -223,7 +223,8 @@
                 "cancel": "İptal",
                 "save": "Kaydet",
                 "create_product": "Yeni Ürün Oluştur",
-                "create_landing_page": "Yeni Sayfa Oluştur"
+                "create_landing_page": "Yeni Sayfa Oluştur",
+                "back": "Geri"
             },
             "editors": {
                 "tabs": {
@@ -242,7 +243,12 @@
                     "saved": "Kaydedildi",
                     "publish": "Yayınla",
                     "card_preview": "Kart Önizlemesi",
-                    "card_preview_desc": "Ürününüz mağazada bu şekilde görünecek."
+                    "card_preview_desc": "Ürününüz mağazada bu şekilde görünecek.",
+                    "visibility": "Erişim Ayarları",
+                    "public": "Herkese Açık",
+                    "public_desc": "Ürün vitrininde herkese görünür.",
+                    "hidden": "Gizli",
+                    "hidden_desc": "Ürün vitrininde gizlenir, sadece direkt link ile erişilebilir."
                 }
             },
             "modals": {
@@ -265,7 +271,7 @@
             "product_types": {
                 "digital_product": {
                     "title": "Dijital Ürün",
-                    "desc": "E-kitap, dosya veya herhangi bir dijital içerik."
+                    "desc": "PDF, e-kitap, şablon, video, kurs — her türlü dijital dosya veya içerik"
                 },
                 "private_group": {
                     "title": "Özel Grup",
@@ -276,8 +282,8 @@
                     "desc": "Ücretsiz bir içerik karşılığında e-posta listeni büyüt."
                 },
                 "coaching_call": {
-                    "title": "Koçluk Görüşmesi",
-                    "desc": "Birebir görüşme veya danışmanlık randevusu al."
+                    "title": "Koçluk / Görüşme",
+                    "desc": "Birebir ücretli görüşme veya koçluk seansı"
                 },
                 "video_response": {
                     "title": "Video Yanıt",
@@ -286,7 +292,15 @@
                 "custom_product": {
                     "title": "Özel Ürün",
                     "desc": "Kişiselleştirilmiş herhangi bir hizmet veya ürün."
+                },
+                "external_link": {
+                    "title": "Link",
+                    "desc": "Herhangi bir URL'ye yönlendirme — ücretsiz veya ücretli"
                 }
+            },
+            "pages": {
+                "empty_title": "Henüz sayfa yok",
+                "empty_desc": "Yeni bir sayfa oluşturarak başlayın."
             }
         }
     },

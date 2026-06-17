@@ -22,32 +22,36 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: 'Store not found' }, { status: 404 });
         }
 
-        // Fetch products and their completed/paid orders
+        // Fetch products
         const { data: products, error } = await supabase
             .from('products')
-            .select(`
-                id, 
-                title, 
-                price, 
-                currency,
-                orders (
-                    amount,
-                    status
-                )
-            `)
+            .select('id, title, price, currency')
             .eq('store_id', store.id)
             .eq('status', 'active');
 
         if (error) throw error;
 
+        // Fetch clicks
+        const { data: clicks, error: clicksError } = await supabase
+            .from('store_analytics')
+            .select('product_id')
+            .eq('user_id', user.id)
+            .eq('event_type', 'product_click');
+
+        if (clicksError) throw clicksError;
+
+        // Count clicks per product
+        const clickCounts: Record<string, number> = {};
+        (clicks || []).forEach(click => {
+            if (click.product_id) {
+                clickCounts[click.product_id] = (clickCounts[click.product_id] || 0) + 1;
+            }
+        });
+
         // Aggregate data
         const aggregatedProducts = (products || []).map(product => {
-            const validOrders = (product.orders as any[] || []).filter(o => 
-                o.status === 'completed' || o.status === 'paid'
-            );
-            
-            const sales = validOrders.length;
-            const revenue = validOrders.reduce((sum, order) => sum + (Number(order.amount) || 0), 0);
+            const sales = clickCounts[product.id] || 0; // Using 'sales' field name for clicks to keep frontend intact
+            const revenue = 0; // No revenue tracking
 
             return {
                 id: product.id,
@@ -59,7 +63,7 @@ export async function GET(req: Request) {
             };
         });
 
-        // Sort by sales descending
+        // Sort by clicks descending
         aggregatedProducts.sort((a, b) => b.sales - a.sales);
 
         // Take top 10

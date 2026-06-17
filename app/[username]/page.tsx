@@ -3,6 +3,8 @@ import PublicStoreClient from '@/components/store/PublicStoreClient';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
+export const revalidate = 60;
+
 interface Props {
     params: { username: string };
     searchParams: { [key: string]: string | string[] | undefined };
@@ -11,34 +13,35 @@ interface Props {
 async function getStoreData(username: string) {
     const { data: storeData, error: storeError } = await supabase
         .from('stores')
-        .select('*')
+        .select('*, user_profiles(*), products(*)')
         .eq('username', username.toLowerCase())
         .single();
 
     if (storeError || !storeData) return null;
 
-    const { data: profileData } = await supabase
-        .from('user_profiles')
-        .select('full_name, profile_image_url, is_verified')
-        .eq('user_id', storeData.user_id)
-        .single();
+    // Supabase will return arrays for joined tables, but user_profiles is 1-to-1 based on user_id usually.
+    // products is a 1-to-many. Let's format the return properly.
+    const userProfile = Array.isArray(storeData.user_profiles) ? storeData.user_profiles[0] : storeData.user_profiles;
+    let products = Array.isArray(storeData.products) ? storeData.products : [];
 
-    const { data: productsData } = await supabase
-        .from('products')
-        .select('*')
-        .eq('store_id', storeData.id)
-        .eq('status', 'active')
-        .order('sort_order', { ascending: true })
-        .order('created_at', { ascending: false });
+    // Filter active products and sort them
+    products = products
+        .filter((p: any) => p.status === 'active')
+        .sort((a: any, b: any) => {
+            if (a.sort_order === b.sort_order) {
+                return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            }
+            return (a.sort_order || 0) - (b.sort_order || 0);
+        });
 
     return {
         profile: {
             ...storeData,
-            full_name: profileData?.full_name,
-            profile_image_url: profileData?.profile_image_url || storeData.store_logo_url,
-            is_verified: profileData?.is_verified,
+            full_name: userProfile?.full_name,
+            profile_image_url: userProfile?.profile_image_url || storeData.store_logo_url,
+            is_verified: userProfile?.is_verified,
         },
-        products: productsData || [],
+        products: products,
     };
 }
 

@@ -62,7 +62,7 @@ function DashboardLayoutContent({
 
     const menuItems = [
         { label: t('dashboard.menu.home'), icon: Home, href: '/dashboard' },
-        { label: t('dashboard.menu.income'), icon: Wallet, href: '/dashboard/income' },
+        { label: t('dashboard.menu.performance'), icon: Wallet, href: '/dashboard/performance' },
         { label: t('dashboard.menu.my_store'), icon: Layers, href: '/dashboard/store' },
         { label: t('dashboard.menu.analytics'), icon: BarChart3, href: '/dashboard/analytics' },
         { label: t('dashboard.menu.customers'), icon: Users, href: '/dashboard/customers' },
@@ -70,17 +70,17 @@ function DashboardLayoutContent({
 
     const mobileMenuItems = [
         { label: t('dashboard.menu.home'), icon: Home, href: '/dashboard' },
-        { label: t('dashboard.menu.income'), icon: Wallet, href: '/dashboard/income' },
+        { label: t('dashboard.menu.performance'), icon: Wallet, href: '/dashboard/performance' },
         { label: t('dashboard.menu.my_store'), icon: Layers, href: '/dashboard/store' },
         { label: t('dashboard.menu.analytics'), icon: BarChart3, href: '/dashboard/analytics' },
         { label: t('dashboard.menu.more'), icon: Plus, onClick: () => setShowMobileMenu(true) },
     ];
 
     useEffect(() => {
-        // if (!contextLoading && !user) {
-        //     router.push('/auth');
-        //     return;
-        // }
+        if (!contextLoading && !user) {
+            router.push('/auth');
+            return;
+        }
     }, [contextLoading, user, store, router]);
 
 
@@ -330,8 +330,8 @@ function DashboardLayoutContent({
                     <div className="flex items-center gap-6">
                         <h2 className="text-[22px] md:text-[24px] font-black text-slate-900 tracking-tight leading-tight">
                             {pathname === '/dashboard' ? t('dashboard.menu.home') :
-                                pathname.includes('/store') ? t('dashboard.menu.my_store') :
-                                    pathname.includes('/income') ? t('dashboard.menu.income') :
+                                pathname.includes('/performance') ? t('dashboard.menu.performance') :
+                                    pathname.includes('/store') ? t('dashboard.menu.my_store') :
                                         pathname.includes('/analytics') ? t('dashboard.menu.analytics') :
                                             pathname.includes('/customers') ? t('dashboard.menu.customers') :
                                                 pathname.includes('/settings') ? t('dashboard.menu.settings') :
@@ -378,17 +378,6 @@ function DashboardLayoutContent({
                     {children}
                 </div>
 
-                {/* Mascot FAB (Stan Style) */}
-                <div className="fixed bottom-24 right-5 lg:bottom-10 lg:right-10 z-[60]">
-                    <button
-                        className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#5500ff] shadow-[0_8px_30px_rgba(85,0,255,0.3)] flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all group overflow-hidden"
-                        onClick={() => router.push('/dashboard/ai')}
-                    >
-                        <div className="relative w-8 h-8 md:w-10 md:h-10">
-                            <SetyLogo size="sm" className="brightness-0 invert opacity-90 group-hover:scale-110 transition-transform" />
-                        </div>
-                    </button>
-                </div>
 
                 {/* Mobile Bottom Nav (Stan Style Refined) */}
                 <nav className="fixed bottom-0 inset-x-0 h-[85px] bg-white border-t border-slate-100 flex lg:hidden items-center justify-around px-2 z-[70] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">

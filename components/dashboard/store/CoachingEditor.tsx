@@ -33,6 +33,7 @@ import { PricingSection } from './checkout/PricingSection';
 import { PremiumInput } from '@/components/ui/PremiumInput';
 import { cn } from '@/lib/utils';
 
+import Image from 'next/image';
 interface CoachingEditorProps {
     productType: any;
     onClose: () => void;
@@ -175,7 +176,7 @@ export default function CoachingEditor({
                                     <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 flex items-center gap-10 group transition-all hover:shadow-2xl hover:shadow-slate-200/30">
                                         <div className="relative w-40 h-40 rounded-[32px] overflow-hidden bg-slate-50 border-2 border-slate-50 shadow-inner group-hover:scale-[1.02] transition-transform">
                                             {formData.image_url ? (
-                                                <img src={formData.image_url} alt="" className="w-full h-full object-cover" />
+                                                <Image src={formData.image_url} alt="" className="w-full h-full object-cover"  width={800} height={800}  />
                                             ) : (
                                                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-300">
                                                     <ImageLucide className="w-10 h-10" />
@@ -413,10 +414,10 @@ function LocationSelect({ value, onChange }: { value: string, onChange: (id: str
             >
                 <div className="flex items-center gap-4">
                     {current.id === 'google_meet' ? (
-                        <img src={current.icon} className="w-6 h-6 object-contain" />
+                        <Image src={current.icon || ''} className="w-6 h-6 object-contain" alt="" width={800} height={800} />
                     ) : current.id === 'zoom' ? (
                         <div className="p-1.5 rounded-lg bg-[#2D8CFF] flex items-center justify-center">
-                            <img src={current.icon} className="w-4 h-4 object-contain invert" />
+                            <Image src={current.icon || ''} className="w-4 h-4 object-contain invert" alt="" width={800} height={800} />
                         </div>
                     ) : (
                         <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-[#5500ff]">
@@ -447,10 +448,10 @@ function LocationSelect({ value, onChange }: { value: string, onChange: (id: str
                                 className="w-full h-16 px-8 flex items-center gap-4 hover:bg-slate-50 transition-colors group"
                             >
                                 <div className="w-8 h-8 flex items-center justify-center">
-                                    {loc.id === 'google_meet' ? <img src={loc.icon} className="w-6 h-6" /> :
+                                    {loc.id === 'google_meet' ? <Image src={loc.icon || ''} className="w-6 h-6" alt="" width={800} height={800} /> :
                                         loc.id === 'zoom' ? (
                                             <div className="p-1 rounded-md bg-[#2D8CFF] flex items-center justify-center">
-                                                <img src={loc.icon} className="w-3.5 h-3.5 invert" />
+                                                <Image src={loc.icon || ''} className="w-3.5 h-3.5 invert" alt="" width={800} height={800} />
                                             </div>
                                         ) : (
                                             <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-[#5500ff]"><Calendar className="w-4 h-4" /></div>

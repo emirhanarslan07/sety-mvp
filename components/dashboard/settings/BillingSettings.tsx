@@ -104,7 +104,7 @@ export default function BillingSettings() {
     const isPro = profile?.plan_type === 'pro' && profile?.subscription_status === 'active';
 
     const mockHistory = [
-        { id: 'inv-01', date: new Date(), amount: '₺99.00', status: 'Paid' }
+        { id: 'inv-01', date: new Date(), amount: '$19.00', status: 'Paid' }
     ];
 
     return (
@@ -136,7 +136,7 @@ export default function BillingSettings() {
                                 </div>
                             </div>
                             <div className="bg-white/5 backdrop-blur-md rounded-[40px] p-10 border border-white/10 text-right min-w-[280px]">
-                                <div className="text-6xl font-black text-white tracking-tighter leading-none italic">₺99<span className="text-2xl text-slate-400 ml-1">/mo</span></div>
+                                <div className="text-6xl font-black text-white tracking-tighter leading-none italic">$19<span className="text-2xl text-slate-400 ml-1">/mo</span></div>
                                 <p className="text-slate-400 font-black uppercase tracking-widest text-[11px] opacity-80 mt-2">All Features Unlocked</p>
                             </div>
                         </div>
@@ -195,7 +195,7 @@ export default function BillingSettings() {
 
                             <div className="bg-white/5 backdrop-blur-md rounded-[32px] p-8 border border-white/10 text-center min-w-[280px] flex flex-col justify-center">
                                 <p className="text-slate-400 font-black uppercase tracking-wider text-[11px] mb-2">Flat Rate Pricing</p>
-                                <div className="text-5xl font-black text-white tracking-tighter leading-none italic">₺99<span className="text-xl text-slate-400 ml-1">/mo</span></div>
+                                <div className="text-5xl font-black text-white tracking-tighter leading-none italic">$19<span className="text-xl text-slate-400 ml-1">/mo</span></div>
                                 <p className="text-slate-400 text-[13px] font-semibold mt-3">Cancel anytime. 14-day money back guarantee.</p>
                             </div>
                         </div>

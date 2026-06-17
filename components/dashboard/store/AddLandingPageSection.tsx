@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { SetyLogo } from '@/components/ui/SetyLogo';
 import { useTranslation } from '@/lib/i18n/context';
 
+import Image from 'next/image';
 export const landingPageTypes = [
     {
         id: 'collect_emails',
@@ -113,11 +114,10 @@ export default function AddLandingPageSection({
                             {type.id === 'sety_affiliate' ? (
                                 <SetyLogo size="sm" showBackground={false} />
                             ) : type.iconUrl ? (
-                                <img
-                                    src={type.iconUrl}
+                                <Image src={type.iconUrl}
                                     className="w-10 h-10 object-contain relative z-10 transition-transform group-hover:scale-110 duration-500"
                                     alt=""
-                                />
+                                 width={800} height={800}  />
                             ) : (
                                 <type.icon className="w-8 h-8 relative z-10 transition-transform group-hover:scale-110 duration-500" strokeWidth={2.5} />
                             )}

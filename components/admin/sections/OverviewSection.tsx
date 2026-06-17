@@ -13,6 +13,7 @@ import {
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
+import Image from 'next/image';
 interface OverviewSectionProps {
     metrics: any;
     recentUsers: any[];
@@ -139,7 +140,7 @@ export default function OverviewSection({ metrics, recentUsers, stores }: Overvi
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 group-hover:scale-105 transition-transform">
                                         {user.profile_image_url ? (
-                                            <img src={user.profile_image_url} className="w-full h-full object-cover" />
+                                            <Image src={user.profile_image_url} className="w-full h-full object-cover" alt="" width={800} height={800} />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-slate-300">
                                                 <UserPlus className="w-6 h-6" />

@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
 
+import Image from 'next/image';
 interface ImageSelectorModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -208,7 +209,7 @@ export default function ImageSelectorModal({ isOpen, onClose, onSelect }: ImageS
                                     selectedId === img.id ? "ring-4 ring-[#5500ff]" : "ring-1 ring-slate-100"
                                 )}
                             >
-                                <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                                <Image src={img.url} alt={img.name} className="w-full h-full object-cover"  width={800} height={800}  />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
                                     <p className="text-white text-[13px] font-black tracking-tight">{img.name}</p>
                                 </div>

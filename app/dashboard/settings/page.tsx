@@ -1,244 +1,142 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
     User,
     Lock,
     CreditCard,
-    Camera,
     Shield,
-    CheckCircle2,
-    AlertCircle,
-    Trash2,
-    Zap,
-    Bell,
     Wallet,
     Copy,
     Check,
     Smartphone,
-    MapPin,
-    BarChart3,
-    MoreHorizontal,
-    ExternalLink,
-    Plug,
-    Calendar,
-    Video,
+    Loader2,
+    Camera,
+    ImageIcon,
     Instagram,
-    Search
+    Youtube,
+    Twitter,
+    Video as TiktokIcon,
+    Zap,
+    Trash2,
+    CheckCircle2,
+    Eye,
+    EyeOff,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { PremiumInput } from '@/components/ui/PremiumInput';
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
-import { format } from 'date-fns';
-import { tr, enUS } from 'date-fns/locale';
+import { motion } from 'framer-motion';
 import { useTranslation } from '@/lib/i18n/context';
 import PaymentSettings from '@/components/dashboard/PaymentSettings';
 import { useToast } from '@/context/ToastContext';
-import { IntegrationCard, IntegrationRequestCard } from '@/components/dashboard/settings/IntegrationCard';
-import { ZapierLogoSVG, ZoomLogoSVG, InstagramLogoSVG, GoogleCalendarLogoSVG } from '@/components/dashboard/settings/IntegrationLogos';
 import BillingSettings from '@/components/dashboard/settings/BillingSettings';
+import Image from 'next/image';
 
-type TabType = 'profile' | 'integrations' | 'billing' | 'payments' | 'notifications' | 'security';
+type TabType = 'profile' | 'payments' | 'billing' | 'security';
 
-const INTEGRATIONS = [
-    {
-        id: 'google-calendar',
-        name: 'Google Calendar',
-        subtitle: 'Our Built-in Calendar Product',
-        description: "Stop paying for boring calendar scheduling tools and instead use Sety's built-in calendar feature to keep everything under one roof.",
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg',
-        isComingSoon: true,
-    },
-    {
-        id: 'zoom',
-        name: 'Zoom',
-        subtitle: 'Meet with Customers on Zoom',
-        description: 'Integrate Zoom with your Sety account to simplify the scheduling process and automatically send Zoom meeting links to customers who book a time on your calendar.',
-        icon: <ZoomLogoSVG />,
-        isComingSoon: true,
-    },
-    {
-        id: 'zapier',
-        name: 'Zapier',
-        subtitle: 'Connect Sety With 3rd Party Tools',
-        description: "Have a favorite tool that you'd like to connect to Sety? Use Zapier to remove the manual work and automate your processes.",
-        icon: <ZapierLogoSVG />,
-        isComingSoon: false,
-    },
-    {
-        id: 'instagram',
-        name: 'Instagram',
-        subtitle: 'Send Automated Replies',
-        description: 'Connect your Instagram account to automatically reply to Instagram messages and comments!',
-        icon: 'https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg',
-        isComingSoon: true,
-    }
-];
-
-export default function SettingsPage() {
+function SettingsContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { lang, t } = useTranslation();
+    const { t } = useTranslation();
     const { showToast } = useToast();
+
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<TabType>((searchParams.get('tab') as TabType) || 'profile');
-    const [imageUploading, setImageUploading] = useState(false);
-    const [paymentConfig, setPaymentConfig] = useState<any>(null);
-    const [copied, setCopied] = useState(false);
-    const [profile, setProfile] = useState<any>(null);
+    const [activeTab, setActiveTab] = useState<TabType>(
+        (searchParams.get('tab') as TabType) || 'profile'
+    );
 
-    // Form States
+    // Profile state
     const [email, setEmail] = useState('');
     const [fullName, setFullName] = useState('');
     const [username, setUsername] = useState('');
     const [profileImage, setProfileImage] = useState('');
-    const [phone, setPhone] = useState('');
+    const [coverImage, setCoverImage] = useState('');
+    const [bio, setBio] = useState('');
+    const [isVerified, setIsVerified] = useState(false);
+    const [imageUploading, setImageUploading] = useState(false);
+    const [coverUploading, setCoverUploading] = useState(false);
+    const [paymentConfig, setPaymentConfig] = useState<any>(null);
 
-    // Password States
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-
-    // Analytics States
-    const [fbPixelId, setFbPixelId] = useState('');
-    const [gaId, setGaId] = useState('');
-    const [tiktokPixelId, setTiktokPixelId] = useState('');
-    const [pinterestTagId, setPinterestTagId] = useState('');
-
-    // Address States
-    const [address, setAddress] = useState({
-        street: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        country: ''
+    // Social links
+    const [socialLinks, setSocialLinks] = useState({
+        instagram: '',
+        twitter: '',
+        youtube: '',
+        tiktok: '',
     });
 
-    // Username Checking
+    // Username check
     const [usernameError, setUsernameError] = useState('');
     const [isCheckingUsername, setIsCheckingUsername] = useState(false);
     const [usernameSuccess, setUsernameSuccess] = useState(false);
 
-    const [showWarning, setShowWarning] = useState(false);
+    // Password
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPass, setShowPass] = useState(false);
+
+    // Store link copy
+    const [copied, setCopied] = useState(false);
 
     useEffect(() => {
-        const loadInitialData = async () => {
+        const load = async () => {
             const { data: { user } } = await supabase.auth.getUser();
-            // if (!user) {
-            //     router.push('/auth');
-            //     return;
-            // }
+            if (!user) { setLoading(false); return; }
 
-            if (user) {
-                setEmail(user.email || '');
+            setEmail(user.email || '');
 
-                const { data: profileData } = await supabase
-                    .from('user_profiles')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .single();
+            const { data: profileData } = await supabase
+                .from('user_profiles')
+                .select('*')
+                .eq('user_id', user.id)
+                .single();
 
-                if (profileData) {
-                    setProfile(profileData);
-                    setFullName(profileData.full_name || '');
-                    setProfileImage(profileData.profile_image_url || '');
-                    setPaymentConfig(profileData.payment_config || {});
-                    setPhone(profileData.phone || '');
+            if (profileData) {
+                setFullName(profileData.full_name || '');
+                setProfileImage(profileData.profile_image_url || '');
+                setPaymentConfig(profileData.payment_config || {});
+            }
 
-                    // Check if 24 hours have passed since account creation
-                    const createdAt = new Date(profileData.created_at);
-                    const now = new Date();
-                    const hoursSinceCreation = (now.getTime() - createdAt.getTime()) / (1000 * 60 * 60);
-                    
-                    const hasPayments = profileData.payment_config?.stripe?.connected || 
-                                       profileData.payment_config?.manual?.enabled;
+            const { data: storeData } = await supabase
+                .from('stores')
+                .select('username, bio, store_logo_url, cover_image_url, is_verified, social_links')
+                .eq('user_id', user.id)
+                .single();
 
-                    if (hoursSinceCreation > 24 && !hasPayments) {
-                        setShowWarning(true);
-                    }
-                }
-
-                const { data: store } = await supabase
-                    .from('stores')
-                    .select('username')
-                    .eq('user_id', user.id)
-                    .single();
-
-                if (store) {
-                    setUsername(store.username || '');
-                }
+            if (storeData) {
+                setUsername(storeData.username || '');
+                setBio(storeData.bio || '');
+                setCoverImage(storeData.cover_image_url || '');
+                setIsVerified(storeData.is_verified || false);
+                setSocialLinks(storeData.social_links || {
+                    instagram: '', twitter: '', youtube: '', tiktok: ''
+                });
+                if (storeData.store_logo_url) setProfileImage(storeData.store_logo_url);
             }
 
             setLoading(false);
         };
-        loadInitialData();
-    }, [router]);
+        load();
+    }, []);
 
-    // Update URL when tab changes
+    // Update URL tab param
     useEffect(() => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(Array.from(searchParams.entries()));
         params.set('tab', activeTab);
         router.push(`?${params.toString()}`, { scroll: false });
-    }, [activeTab, router, searchParams]);
+    }, [activeTab]);
 
-    const copyStoreLink = () => {
-        const url = `sety.store/${username}`;
-        navigator.clipboard.writeText(`https://${url}`);
-        setCopied(true);
-        showToast(t('dashboard.toast.store_link_copied'), 'success');
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setImageUploading(true);
-        try {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('Oturum bulunamadı');
-
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${user.id}-${Math.random()}.${fileExt}`;
-            const filePath = `profile-images/${fileName}`;
-
-            const { error: uploadError } = await supabase.storage
-                .from('products')
-                .upload(filePath, file, { upsert: true });
-
-            if (uploadError) throw uploadError;
-
-            const { data: { publicUrl } } = supabase.storage
-                .from('products')
-                .getPublicUrl(filePath);
-
-            setProfileImage(publicUrl);
-
-            await supabase.from('user_profiles').update({
-                profile_image_url: publicUrl
-            }).eq('user_id', user.id);
-
-            showToast('Profil fotoğrafınız güncellendi.', 'success');
-        } catch (err: any) {
-            showToast(`Hata: ${err.message}`, 'error');
-        } finally {
-            setImageUploading(false);
-        }
-    };
-
+    // Username availability check
     useEffect(() => {
-        const checkUsername = async () => {
-            if (!username || username.length < 3) {
-                setUsernameError('');
-                setUsernameSuccess(false);
-                return;
-            }
-
+        if (!username || username.length < 3) {
+            setUsernameError('');
+            setUsernameSuccess(false);
+            return;
+        }
+        const timer = setTimeout(async () => {
             setIsCheckingUsername(true);
             try {
                 const { data: { user } } = await supabase.auth.getUser();
@@ -256,43 +154,102 @@ export default function SettingsPage() {
                     setUsernameError('');
                     setUsernameSuccess(true);
                 }
-            } catch (err) {
-                console.error(err);
             } finally {
                 setIsCheckingUsername(false);
             }
-        };
-
-        const timer = setTimeout(checkUsername, 500);
+        }, 500);
         return () => clearTimeout(timer);
     }, [username]);
 
-    const handleUpdateProfile = async () => {
+    const handleProfileImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setImageUploading(true);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('Oturum bulunamadı');
+            const fileExt = file.name.split('.').pop();
+            const filePath = `profile-images/${user.id}-${Math.random()}.${fileExt}`;
+            const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file, { upsert: true });
+            if (uploadError) throw uploadError;
+            const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
+            setProfileImage(publicUrl);
+            await supabase.from('user_profiles').update({ profile_image_url: publicUrl }).eq('user_id', user.id);
+            await supabase.from('stores').update({ store_logo_url: publicUrl }).eq('user_id', user.id);
+            showToast('Profil fotoğrafınız güncellendi.', 'success');
+        } catch (err: any) {
+            showToast(`Hata: ${err.message}`, 'error');
+        } finally {
+            setImageUploading(false);
+        }
+    };
+
+    const handleCoverImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setCoverUploading(true);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('Oturum bulunamadı');
+            const fileExt = file.name.split('.').pop();
+            const filePath = `${user.id}/store-assets/${Math.random()}.${fileExt}`;
+            const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file);
+            if (uploadError) throw uploadError;
+            const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
+            setCoverImage(publicUrl);
+            await supabase.from('stores').update({ cover_image_url: publicUrl }).eq('user_id', user.id);
+            showToast('Kapak görseli güncellendi.', 'success');
+        } catch (err: any) {
+            showToast(`Hata: ${err.message}`, 'error');
+        } finally {
+            setCoverUploading(false);
+        }
+    };
+
+    const handleSaveProfile = async () => {
         setSaving('profile');
         try {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
 
             if (username && usernameSuccess) {
-                const { error: storeError } = await supabase
-                    .from('stores')
-                    .update({ username })
-                    .eq('user_id', user.id);
-                if (storeError) throw storeError;
+                const { error } = await supabase.from('stores').update({ username }).eq('user_id', user.id);
+                if (error) throw error;
             }
 
             const { error: profileError } = await supabase
                 .from('user_profiles')
-                .update({ 
-                    full_name: fullName,
-                    // phone: phone // Only if column exists
-                })
+                .update({ full_name: fullName })
                 .eq('user_id', user.id);
             if (profileError) throw profileError;
 
-            showToast('Profil bilgileriniz başarıyla kaydedildi.', 'success');
+            const { error: storeError } = await supabase
+                .from('stores')
+                .update({ bio, is_verified: isVerified })
+                .eq('user_id', user.id);
+            if (storeError) throw storeError;
+
+            showToast('Profil bilgileriniz kaydedildi. ✅', 'success');
         } catch (err: any) {
-            showToast(err.message || 'Güncelleme sırasında hata oluştu.', 'error');
+            showToast(err.message || 'Kayıt sırasında hata oluştu.', 'error');
+        } finally {
+            setSaving(null);
+        }
+    };
+
+    const handleSaveSocials = async () => {
+        setSaving('socials');
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            const { error } = await supabase
+                .from('stores')
+                .update({ social_links: socialLinks })
+                .eq('user_id', user.id);
+            if (error) throw error;
+            showToast('Sosyal medya linkleri kaydedildi. ✅', 'success');
+        } catch (err: any) {
+            showToast(err.message, 'error');
         } finally {
             setSaving(null);
         }
@@ -307,10 +264,9 @@ export default function SettingsPage() {
         try {
             const { error } = await supabase.auth.updateUser({ password: newPassword });
             if (error) throw error;
-            showToast('Şifreniz güncellendi.', 'success');
+            showToast('Şifreniz güncellendi. ✅', 'success');
             setNewPassword('');
             setConfirmPassword('');
-            setCurrentPassword('');
         } catch (err: any) {
             showToast(err.message, 'error');
         } finally {
@@ -322,391 +278,415 @@ export default function SettingsPage() {
         try {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
-
             const { error } = await supabase
                 .from('user_profiles')
                 .update({ payment_config: config })
                 .eq('user_id', user.id);
-
             if (error) throw error;
             setPaymentConfig(config);
-            showToast('Ödeme ayarlarınız başarıyla kaydedildi.', 'success');
+            showToast('Ödeme ayarlarınız kaydedildi. ✅', 'success');
         } catch (err: any) {
-            showToast(err.message || 'Ödeme ayarları kaydedilirken hata oluştu.', 'error');
+            showToast(err.message, 'error');
         }
     };
 
-    if (loading) return null;
+    const copyStoreLink = () => {
+        navigator.clipboard.writeText(`https://sety.store/${username}`);
+        setCopied(true);
+        showToast('Mağaza linki kopyalandı!', 'success');
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-screen">
+            <Loader2 className="w-8 h-8 animate-spin text-[#5500ff]" />
+        </div>
+    );
 
     const tabs: { id: TabType; label: string; icon: any }[] = [
-        { id: 'profile', label: 'Profile', icon: User },
-        { id: 'integrations', label: 'Integrations', icon: Plug },
-        { id: 'billing', label: 'Billing', icon: CreditCard },
-        { id: 'payments', label: 'Payments', icon: Wallet },
-        { id: 'notifications', label: 'Email Notifications', icon: Bell },
-        { id: 'security', label: 'Security', icon: Shield },
+        { id: 'profile', label: 'Profil', icon: User },
+        { id: 'payments', label: 'Ödeme Yöntemleri', icon: Wallet },
+        { id: 'billing', label: 'Abonelik', icon: CreditCard },
+        { id: 'security', label: 'Güvenlik', icon: Shield },
     ];
+
+    const SectionCard = ({ children }: { children: React.ReactNode }) => (
+        <Card className="rounded-[32px] border border-slate-100 shadow-sm bg-white overflow-hidden">
+            <CardContent className="p-8 md:p-10">
+                {children}
+            </CardContent>
+        </Card>
+    );
+
+    const SaveButton = ({ sectionKey, label = 'Kaydet' }: { sectionKey: string; label?: string }) => (
+        <button
+            onClick={() => {
+                if (sectionKey === 'profile') handleSaveProfile();
+                if (sectionKey === 'socials') handleSaveSocials();
+                if (sectionKey === 'password') handleUpdatePassword();
+            }}
+            disabled={saving === sectionKey}
+            className="h-12 px-8 rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white font-black text-[14px] flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+        >
+            {saving === sectionKey ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Kaydediliyor...</>
+            ) : (
+                label
+            )}
+        </button>
+    );
 
     return (
         <div className="min-h-screen bg-[#F8FAFF] pb-32">
-            {/* Header with Title and Link */}
-            <div className="max-w-[1240px] mx-auto px-6 pt-12">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div className="max-w-[860px] mx-auto px-4 md:px-6 pt-10">
+
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
                     <div>
-                        <h1 className="text-[32px] font-black text-slate-900 tracking-tight leading-none">My Account Settings</h1>
+                        <h1 className="text-[28px] font-black text-slate-900 tracking-tight leading-none">Hesap Ayarları</h1>
+                        <p className="text-slate-400 font-bold mt-2">Profil, ödeme ve güvenlik ayarlarınızı yönetin.</p>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <button 
+                    {username && (
+                        <button
                             onClick={copyStoreLink}
-                            className="flex items-center gap-2 group cursor-pointer"
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-100 hover:border-[#5500ff]/30 transition-all group shrink-0"
                         >
-                            <span className="text-[16px] font-bold text-[#5500ff] border-b-2 border-transparent group-hover:border-[#5500ff] transition-all">
-                                sety.store/{username || 'username'}
-                            </span>
+                            <span className="text-[14px] font-bold text-[#5500ff]">sety.store/{username}</span>
                             {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4 text-[#5500ff]" />}
                         </button>
-                    </div>
+                    )}
                 </div>
 
                 {/* Tab Navigation */}
-                <div className="flex items-center gap-1 overflow-x-auto pb-4 -mx-6 px-6 no-scrollbar mb-12">
+                <div className="flex items-center gap-1 overflow-x-auto pb-2 mb-10 no-scrollbar">
                     {tabs.map((tab) => {
                         const isActive = activeTab === tab.id;
+                        const Icon = tab.icon;
                         return (
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={cn(
-                                    "flex items-center gap-3 px-6 py-4 rounded-2xl text-[14px] font-black whitespace-nowrap transition-all border-2",
+                                    'flex items-center gap-2.5 px-5 py-3 rounded-2xl text-[14px] font-black whitespace-nowrap transition-all',
                                     isActive
-                                        ? "bg-white border-indigo-100 text-[#5500ff] shadow-[0_12px_24px_rgba(85,0,255,0.06)] scale-[1.02]"
-                                        : "bg-transparent border-transparent text-slate-400 hover:text-slate-600"
+                                        ? 'bg-white text-[#5500ff] shadow-md shadow-slate-200/50 border border-slate-100'
+                                        : 'text-slate-400 hover:text-slate-600 hover:bg-white/60'
                                 )}
                             >
-                                <tab.icon className={cn("w-5 h-5", isActive ? "text-[#5500ff]" : "text-slate-400")} />
+                                <Icon className={cn('w-4 h-4', isActive ? 'text-[#5500ff]' : 'text-slate-400')} />
                                 {tab.label}
                             </button>
                         );
                     })}
                 </div>
 
-                {/* Warning Bar */}
-                {showWarning && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-[#5500ff] text-white p-6 rounded-[32px] mb-12 flex items-center gap-4 shadow-xl shadow-indigo-200"
-                    >
-                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                            <Zap className="w-5 h-5 text-white" fill="currentColor" />
-                        </div>
-                        <p className="font-bold text-[15px] leading-tight">
-                            Heads up, customers can't purchase from you yet! Please set up your Payments to start selling.
-                        </p>
-                    </motion.div>
-                )}
+                {/* PROFILE TAB */}
+                {activeTab === 'profile' && (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-                {/* Main Content Area */}
-                <div className="space-y-12">
-                    {/* PROFILE TAB */}
-                    {activeTab === 'profile' && (
-                        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            {/* Section: My Profile */}
-                            <Card className="rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] bg-white overflow-hidden">
-                                <CardContent className="p-10 md:p-14">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
-                                        <div className="space-y-1">
-                                            <h2 className="text-[24px] font-black text-slate-900 tracking-tight">My Profile</h2>
-                                            <p className="text-slate-400 font-bold text-[15px]">Update your public profile information.</p>
+                        {/* ── Profil Fotoğrafı + Kapak */}
+                        <SectionCard>
+                            <h2 className="text-[20px] font-black text-slate-900 tracking-tight mb-6">Profil Görselleri</h2>
+                            <div className="space-y-6">
+                                {/* Cover image */}
+                                <div className="relative h-32 rounded-[20px] bg-slate-100 overflow-hidden">
+                                    {coverImage ? (
+                                        <Image src={coverImage} alt="Kapak" fill className="object-cover" sizes="100vw" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center">
+                                            <ImageIcon className="w-8 h-8 text-slate-300" />
                                         </div>
-                                    </div>
+                                    )}
+                                    {coverUploading && (
+                                        <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+                                            <Loader2 className="w-6 h-6 animate-spin text-[#5500ff]" />
+                                        </div>
+                                    )}
+                                    <label className="absolute inset-0 flex items-end justify-end p-3 cursor-pointer">
+                                        <span className="h-9 px-4 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 text-slate-700 font-black text-[12px] flex items-center gap-1.5 hover:bg-white transition-all">
+                                            <Camera className="w-3.5 h-3.5" />
+                                            {coverUploading ? 'Yükleniyor...' : 'Kapak Değiştir'}
+                                        </span>
+                                        <input type="file" accept="image/*" className="hidden" onChange={handleCoverImageUpload} disabled={coverUploading} />
+                                    </label>
+                                </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
-                                        <PremiumInput
-                                            label="Name"
-                                            placeholder="Emirhan Arslan"
+                                {/* Profile photo */}
+                                <div className="flex items-center gap-5">
+                                    <div className="relative w-20 h-20 rounded-full bg-slate-100 border-4 border-white shadow-lg overflow-hidden flex-shrink-0">
+                                        {profileImage ? (
+                                            <Image src={profileImage} alt="Profil" fill className="object-cover" sizes="80px" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center">
+                                                <User className="w-8 h-8 text-slate-300" />
+                                            </div>
+                                        )}
+                                        {imageUploading && (
+                                            <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
+                                                <Loader2 className="w-5 h-5 animate-spin text-[#5500ff]" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-slate-900 text-[15px] mb-1">Profil Fotoğrafı</p>
+                                        <p className="text-[13px] font-bold text-slate-400 mb-3">JPG, PNG veya WEBP — maks. 5MB</p>
+                                        <label className="cursor-pointer h-10 px-5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[13px] inline-flex items-center gap-2 transition-all active:scale-95">
+                                            <Camera className="w-4 h-4" />
+                                            {imageUploading ? 'Yükleniyor...' : profileImage ? 'Değiştir' : 'Fotoğraf Seç'}
+                                            <input type="file" accept="image/*" className="hidden" onChange={handleProfileImageUpload} disabled={imageUploading} />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </SectionCard>
+
+                        {/* ── Temel Bilgiler */}
+                        <SectionCard>
+                            <h2 className="text-[20px] font-black text-slate-900 tracking-tight mb-6">Temel Bilgiler</h2>
+                            <div className="space-y-5">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    {/* Full name */}
+                                    <div className="space-y-2">
+                                        <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Ad Soyad</label>
+                                        <input
+                                            type="text"
                                             value={fullName}
                                             onChange={(e) => setFullName(e.target.value)}
-                                            icon={<User className="w-5 h-5" />}
-                                        />
-                                        <PremiumInput
-                                            label="Username"
-                                            placeholder="emirhan00777"
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
-                                            error={usernameError}
-                                            success={usernameSuccess && !isCheckingUsername}
-                                            helperText={isCheckingUsername ? "Checking..." : undefined}
-                                        />
-                                        <PremiumInput
-                                            label="Email"
-                                            placeholder="emirhanarslan0571@gmail.com"
-                                            value={email}
-                                            disabled
-                                            icon={<Lock className="w-5 h-5 opacity-30" />}
-                                            helperText="Registered email cannot be changed."
-                                        />
-                                        <PremiumInput
-                                            label="Phone Number"
-                                            placeholder="0531 352 05 71"
-                                            value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
-                                            innerPrefix="+90"
+                                            placeholder="Emirhan Arslan"
+                                            className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
                                         />
                                     </div>
 
-                                    <div className="mt-12 flex">
-                                        <button 
-                                            onClick={handleUpdateProfile}
-                                            disabled={saving === 'profile'}
-                                            className="h-14 px-12 rounded-2xl bg-[#F0F4FF] text-slate-500 font-black text-[15px] hover:bg-slate-200 transition-all active:scale-95 disabled:opacity-50"
-                                        >
-                                            {saving === 'profile' ? 'Updating...' : 'Update'}
-                                        </button>
+                                    {/* Username */}
+                                    <div className="space-y-2">
+                                        <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Kullanıcı Adı</label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                value={username}
+                                                onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                                                placeholder="emirhan"
+                                                className={cn(
+                                                    'w-full h-14 px-5 pr-10 bg-slate-50 rounded-2xl border-2 outline-none font-bold text-[15px] text-slate-900 transition-all',
+                                                    usernameError ? 'border-rose-300' : usernameSuccess ? 'border-emerald-300' : 'border-transparent focus:border-[#5500ff]/30'
+                                                )}
+                                            />
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                                                {isCheckingUsername ? (
+                                                    <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+                                                ) : usernameSuccess ? (
+                                                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                                ) : null}
+                                            </div>
+                                        </div>
+                                        {usernameError && <p className="text-[12px] text-rose-500 font-bold px-1">{usernameError}</p>}
                                     </div>
-                                </CardContent>
-                            </Card>
 
-                            {/* Section: Password */}
-                            <Card className="rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] bg-white overflow-hidden">
-                                <CardContent className="p-10 md:p-14">
-                                    <h2 className="text-[24px] font-black text-slate-900 tracking-tight mb-10">Password</h2>
-                                    
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                        <PremiumInput
-                                            label="Current Password"
-                                            type="password"
-                                            placeholder="••••••••"
-                                            value={currentPassword}
-                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                    {/* Email — readonly */}
+                                    <div className="space-y-2">
+                                        <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">E-posta</label>
+                                        <div className="relative">
+                                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+                                            <input
+                                                type="email"
+                                                value={email}
+                                                disabled
+                                                className="w-full h-14 pl-11 pr-5 bg-slate-50 rounded-2xl border-2 border-transparent outline-none font-bold text-[15px] text-slate-400 opacity-70 cursor-not-allowed"
+                                            />
+                                        </div>
+                                        <p className="text-[12px] text-slate-400 font-bold px-1">Kayıtlı e-posta değiştirilemez.</p>
+                                    </div>
+
+                                    {/* Bio */}
+                                    <div className="space-y-2">
+                                        <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Biyografi</label>
+                                        <textarea
+                                            value={bio}
+                                            onChange={(e) => setBio(e.target.value)}
+                                            placeholder="Kendinizi kısaca tanıtın..."
+                                            rows={2}
+                                            className="w-full px-5 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[14px] text-slate-900 transition-all resize-none"
                                         />
-                                        <PremiumInput
-                                            label="New Password"
-                                            type="password"
-                                            placeholder="••••••••"
+                                    </div>
+                                </div>
+
+                                {/* Verified badge toggle */}
+                                <div
+                                    onClick={() => setIsVerified(!isVerified)}
+                                    className={cn(
+                                        'flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all w-fit',
+                                        isVerified ? 'border-yellow-200 bg-yellow-50' : 'border-slate-100 bg-slate-50 hover:border-slate-200'
+                                    )}
+                                >
+                                    <Zap className={cn('w-5 h-5', isVerified ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300')} />
+                                    <div>
+                                        <p className={cn('text-[14px] font-black', isVerified ? 'text-yellow-700' : 'text-slate-500')}>
+                                            {isVerified ? 'Doğrulanmış Rozet Aktif' : 'Doğrulanmış Rozet'}
+                                        </p>
+                                        <p className="text-[12px] font-bold text-slate-400">Mağazanızda ⚡ rozeti gösterilir</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="mt-8">
+                                <SaveButton sectionKey="profile" label="Profili Kaydet" />
+                            </div>
+                        </SectionCard>
+
+                        {/* ── Sosyal Medya */}
+                        <SectionCard>
+                            <h2 className="text-[20px] font-black text-slate-900 tracking-tight mb-2">Sosyal Medya</h2>
+                            <p className="text-[14px] font-bold text-slate-400 mb-6">Mağazanızda gösterilecek sosyal medya profilleri.</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                {[
+                                    { id: 'instagram', label: 'Instagram', icon: Instagram, placeholder: 'instagram.com/@username', color: 'text-pink-500' },
+                                    { id: 'twitter', label: 'X (Twitter)', icon: Twitter, placeholder: 'x.com/@username', color: 'text-slate-800' },
+                                    { id: 'youtube', label: 'YouTube', icon: Youtube, placeholder: 'youtube.com/@username', color: 'text-red-500' },
+                                    { id: 'tiktok', label: 'TikTok', icon: TiktokIcon, placeholder: 'tiktok.com/@username', color: 'text-slate-900' },
+                                ].map((social) => (
+                                    <div key={social.id} className="space-y-2">
+                                        <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">{social.label}</label>
+                                        <div className="relative">
+                                            <social.icon className={cn('absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5', social.color)} />
+                                            <input
+                                                type="text"
+                                                value={(socialLinks as any)[social.id] || ''}
+                                                onChange={(e) => setSocialLinks({ ...socialLinks, [social.id]: e.target.value })}
+                                                placeholder={social.placeholder}
+                                                className="w-full h-14 pl-12 pr-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[14px] text-slate-900 transition-all"
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-8">
+                                <SaveButton sectionKey="socials" label="Linkleri Kaydet" />
+                            </div>
+                        </SectionCard>
+
+                    </div>
+                )}
+
+                {/* PAYMENTS TAB */}
+                {activeTab === 'payments' && (
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <PaymentSettings
+                            initialConfig={paymentConfig}
+                            onSave={handleUpdatePayment}
+                        />
+                    </div>
+                )}
+
+                {/* BILLING TAB */}
+                {activeTab === 'billing' && (
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <BillingSettings />
+                    </div>
+                )}
+
+                {/* SECURITY TAB */}
+                {activeTab === 'security' && (
+                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
+                        {/* Şifre Değiştir */}
+                        <SectionCard>
+                            <h2 className="text-[20px] font-black text-slate-900 tracking-tight mb-2">Şifre Değiştir</h2>
+                            <p className="text-[14px] font-bold text-slate-400 mb-6">Hesabınızı güvende tutmak için güçlü bir şifre kullanın.</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div className="space-y-2">
+                                    <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Yeni Şifre</label>
+                                    <div className="relative">
+                                        <input
+                                            type={showPass ? 'text' : 'password'}
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
-                                        />
-                                        <PremiumInput
-                                            label="Confirm Password"
-                                            type="password"
                                             placeholder="••••••••"
+                                            className="w-full h-14 px-5 pr-12 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
+                                        />
+                                        <button onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                            {showPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Şifre Tekrar</label>
+                                    <div className="relative">
+                                        <input
+                                            type={showPass ? 'text' : 'password'}
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
-                                            error={newPassword && confirmPassword && newPassword !== confirmPassword ? "Passwords don't match" : ""}
+                                            placeholder="••••••••"
+                                            className={cn(
+                                                'w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 outline-none font-bold text-[15px] text-slate-900 transition-all',
+                                                confirmPassword && newPassword !== confirmPassword ? 'border-rose-300' : 'border-transparent focus:border-[#5500ff]/30'
+                                            )}
                                         />
                                     </div>
+                                    {confirmPassword && newPassword !== confirmPassword && (
+                                        <p className="text-[12px] text-rose-500 font-bold px-1">Şifreler eşleşmiyor.</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="mt-8">
+                                <SaveButton sectionKey="password" label="Şifreyi Güncelle" />
+                            </div>
+                        </SectionCard>
 
-                                    <div className="mt-10 flex">
-                                        <button 
-                                            onClick={handleUpdatePassword}
-                                            disabled={saving === 'password'}
-                                            className="h-14 px-12 rounded-2xl bg-[#F0F4FF] text-slate-500 font-black text-[15px] hover:bg-slate-200 transition-all active:scale-95 disabled:opacity-50"
-                                        >
-                                            {saving === 'password' ? 'Updating...' : 'Update'}
-                                        </button>
+                        {/* 2FA */}
+                        <SectionCard>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#5500ff] shrink-0">
+                                        <Smartphone className="w-7 h-7" />
                                     </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Section: Analytics */}
-                            <Card className="rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] bg-white overflow-hidden">
-                                <CardContent className="p-10 md:p-14">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-                                        <div>
-                                            <h2 className="text-[24px] font-black text-slate-900 tracking-tight">Analytics</h2>
-                                            <p className="text-slate-400 font-bold text-[15px] mt-1">Want to include your Facebook/Google Pixel?</p>
-                                        </div>
-                                        <button className="h-12 px-6 rounded-2xl bg-indigo-50 text-[#5500ff] font-black text-[14px] hover:bg-indigo-100 transition-all active:scale-95">
-                                            Upgrade Now ✨
-                                        </button>
-                                    </div>
-                                    
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 opacity-50 pointer-events-none">
-                                        <PremiumInput label="Facebook Pixel Id" placeholder="Ex: 123456789" value={fbPixelId} onChange={(e) => setFbPixelId(e.target.value)} />
-                                        <PremiumInput label="Google Analytics Id" placeholder="Ex: G-XXXXXXXXXX" value={gaId} onChange={(e) => setGaId(e.target.value)} />
-                                        <PremiumInput label="Tiktok Pixel Id" placeholder="Ex: XXXXXXXXXXXXXXXXXXXX" value={tiktokPixelId} onChange={(e) => setTiktokPixelId(e.target.value)} />
-                                        <PremiumInput label="Pinterest Claim Tag Id" placeholder="Ex: XXXXXXXXXXXXXXXXXXXX" value={pinterestTagId} onChange={(e) => setPinterestTagId(e.target.value)} />
-                                    </div>
-
-                                    <div className="mt-12 flex">
-                                        <button className="h-14 px-12 rounded-2xl bg-[#F0F4FF] text-slate-400 font-black text-[15px] cursor-not-allowed">
-                                            Update
-                                        </button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Section: Address */}
-                            <Card className="rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] bg-white overflow-hidden">
-                                <CardContent className="p-10 md:p-14">
-                                    <h2 className="text-[24px] font-black text-slate-900 tracking-tight mb-10">Address</h2>
-                                    
-                                    <div className="space-y-10">
-                                        <PremiumInput 
-                                            label="Street Address" 
-                                            placeholder="Start typing your address..." 
-                                            value={address.street} 
-                                            onChange={(e) => setAddress({...address, street: e.target.value})}
-                                            icon={<MapPin className="w-5 h-5" />}
-                                        />
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <PremiumInput label="City" placeholder="City" value={address.city} onChange={(e) => setAddress({...address, city: e.target.value})} />
-                                            <PremiumInput label="State/Province" placeholder="State/Province" value={address.state} onChange={(e) => setAddress({...address, state: e.target.value})} />
-                                            <PremiumInput label="Postal Code" placeholder="Postal Code" value={address.postalCode} onChange={(e) => setAddress({...address, postalCode: e.target.value})} />
-                                            <PremiumInput label="Country" placeholder="Country" value={address.country} onChange={(e) => setAddress({...address, country: e.target.value})} />
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-12 flex">
-                                        <button className="h-14 px-12 rounded-2xl bg-[#F0F4FF] text-slate-500 font-black text-[15px] hover:bg-slate-200 transition-all active:scale-95">
-                                            Update
-                                        </button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            {/* Section: Other */}
-                            <Card className="rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] bg-white overflow-hidden">
-                                <CardContent className="p-10 md:p-14">
-                                    <h2 className="text-[24px] font-black text-slate-900 tracking-tight mb-8">Other</h2>
-                                    
-                                    <div className="flex items-center justify-between p-8 bg-slate-50 rounded-[32px] border border-slate-100">
-                                        <div className="space-y-1">
-                                            <p className="font-black text-slate-900">Stan Store Referral Banner</p>
-                                            <p className="text-slate-400 font-bold text-[14px]">Upgrade to Creator Pro to hide the Stan Store Referral Banner.</p>
-                                        </div>
-                                        <div className="w-14 h-8 rounded-full bg-slate-200 relative p-1 cursor-not-allowed">
-                                            <div className="w-6 h-6 rounded-full bg-white shadow-sm" />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    )}
-
-                    {/* PAYMENTS TAB */}
-                    {activeTab === 'payments' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <PaymentSettings
-                                initialConfig={paymentConfig}
-                                onSave={handleUpdatePayment}
-                            />
-                        </div>
-                    )}
-
-                    {/* BILLING TAB */}
-                    {activeTab === 'billing' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <BillingSettings />
-                        </div>
-                    )}
-
-                    {/* SECURITY TAB */}
-                    {activeTab === 'security' && (
-                        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <Card className="rounded-[40px] border-none shadow-[0_30px_60px_rgba(0,0,0,0.03)] bg-white">
-                                <CardContent className="p-10 md:p-14 space-y-10">
                                     <div>
-                                        <h2 className="text-[28px] font-black text-slate-900 tracking-tight mb-2">Security Settings</h2>
-                                        <p className="text-slate-400 font-bold text-lg opacity-80">Manage your account security and authentication.</p>
+                                        <p className="font-black text-slate-900 text-[17px]">İki Faktörlü Doğrulama</p>
+                                        <p className="text-slate-400 font-bold text-[14px]">Hesabınıza ekstra güvenlik katmanı ekleyin.</p>
                                     </div>
-
-                                    <div className="space-y-8 pb-12 border-b border-slate-50">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-6">
-                                                <div className="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center text-[#5500ff]">
-                                                    <Smartphone className="w-8 h-8" />
-                                                </div>
-                                                <div>
-                                                    <p className="font-black text-slate-900 text-lg">Two-Factor Authentication</p>
-                                                    <p className="text-slate-400 font-bold">Add an extra layer of security to your account.</p>
-                                                </div>
-                                            </div>
-                                            <button className="h-12 px-8 rounded-full bg-slate-900 text-white font-black text-[14px] hover:bg-[#5500ff] transition-all">
-                                                Enable
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="text-[20px] font-black text-slate-900 mb-6">Danger Zone</h3>
-                                        <div className="p-8 rounded-[32px] bg-rose-50 border border-rose-100 flex items-center justify-between">
-                                            <div>
-                                                <p className="font-black text-rose-600">Delete Account</p>
-                                                <p className="text-rose-400 font-bold text-[14px]">Permanently remove your account and all data.</p>
-                                            </div>
-                                            <button className="h-12 px-8 rounded-full bg-rose-600 text-white font-black text-[14px] hover:bg-rose-700 transition-all">
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
-                    )}
-
-                    {/* INTEGRATIONS TAB */}
-                    {activeTab === 'integrations' && (
-                        <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div>
-                                <h1 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight mb-2 italic uppercase">Integrations</h1>
-                                <p className="text-slate-400 font-bold text-lg max-w-2xl opacity-80 leading-relaxed">
-                                    Connect your favorite tools to automate your workflow and focus on what you do best.
-                                </p>
+                                </div>
+                                <button className="h-11 px-6 rounded-full bg-slate-900 text-white font-black text-[14px] hover:bg-[#5500ff] transition-all active:scale-95">
+                                    Etkinleştir
+                                </button>
                             </div>
+                        </SectionCard>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {INTEGRATIONS.map((integration) => (
-                                    <IntegrationCard
-                                        key={integration.id}
-                                        {...integration}
-                                        onConnect={(id) => {
-                                            if (id === 'zapier') {
-                                                showToast('Zapier integration is being prepared!', 'info');
-                                            } else {
-                                                showToast(`${integration.name} integration is coming soon!`, 'info');
-                                            }
-                                        }}
-                                    />
-                                ))}
-                                <IntegrationRequestCard />
+                        {/* Danger Zone */}
+                        <div className="p-8 rounded-[32px] bg-rose-50 border border-rose-100">
+                            <h3 className="text-[18px] font-black text-rose-700 mb-2">Tehlikeli Bölge</h3>
+                            <p className="text-rose-400 font-bold text-[14px] mb-6">Hesabınızı silmek geri alınamaz bir işlemdir.</p>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="font-black text-rose-600">Hesabı Sil</p>
+                                    <p className="text-rose-400 font-bold text-[13px]">Tüm verileriniz kalıcı olarak silinir.</p>
+                                </div>
+                                <button className="h-11 px-6 rounded-full bg-rose-600 text-white font-black text-[14px] hover:bg-rose-700 transition-all active:scale-95 flex items-center gap-2">
+                                    <Trash2 className="w-4 h-4" />
+                                    Sil
+                                </button>
                             </div>
                         </div>
-                    )}
 
-                    {/* NOTIFICATIONS TAB */}
-                    {activeTab === 'notifications' && (
-                        <div className="flex flex-col items-center justify-center py-32 space-y-8 animate-in zoom-in duration-500">
-                            <div className="w-32 h-32 rounded-[48px] bg-white shadow-2xl flex items-center justify-center text-[#5500ff]">
-                                <MoreHorizontal className="w-12 h-12" />
-                            </div>
-                            <div className="text-center">
-                                <h2 className="text-[32px] font-black text-slate-900 mb-2">Coming Soon</h2>
-                                <p className="text-slate-400 font-bold text-lg max-w-sm mx-auto">
-                                    We're working hard to bring this feature to life. Stay tuned!
-                                </p>
-                            </div>
-                            <button 
-                                onClick={() => setActiveTab('profile')}
-                                className="h-14 px-12 rounded-2xl bg-slate-900 text-white font-black hover:bg-[#5500ff] transition-all"
-                            >
-                                Back to Profile
-                            </button>
-                        </div>
-                    )}
-                </div>
+                    </div>
+                )}
+
             </div>
 
-            <style jsx global>{`
-                .no-scrollbar::-webkit-scrollbar {
-                    display: none;
-                }
-                .no-scrollbar {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
+            <style>{`
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
         </div>
+    );
+}
+
+export default function SettingsPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+                <Loader2 className="w-8 h-8 animate-spin text-[#5500ff]" />
+            </div>
+        }>
+            <SettingsContent />
+        </Suspense>
     );
 }

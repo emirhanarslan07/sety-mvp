@@ -8,6 +8,7 @@ import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
 import { useTranslation } from '@/lib/i18n/context';
 
+import Image from 'next/image';
 const getFallbackIcon = (type: string) => {
     switch (type) {
         case 'digital_product': return Download;
@@ -347,7 +348,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                             <div className="flex flex-col items-center gap-5 text-center">
                                 <div className="w-32 h-32 rounded-full overflow-hidden shadow-xl border-4 border-white bg-white shrink-0">
                                     {profile?.profile_image_url ? (
-                                        <img src={profile.profile_image_url} alt={profile.full_name} className="w-full h-full object-cover" />
+                                        <Image src={profile.profile_image_url} alt={profile.full_name} className="w-full h-full object-cover"  width={800} height={800}  />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-slate-100 text-slate-300 text-5xl font-black uppercase">
                                             {(profile?.full_name || profile?.username)?.[0]}
@@ -380,7 +381,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     <div className="flex md:hidden items-center gap-2.5">
                                         <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 border-2 border-white shadow-sm">
                                             {profile?.profile_image_url ? (
-                                                <img src={profile.profile_image_url} alt="" className="w-full h-full object-cover" />
+                                                <Image src={profile.profile_image_url} alt="" className="w-full h-full object-cover"  width={800} height={800}  />
                                             ) : (
                                                 <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-black">
                                                     {(profile?.full_name || profile?.username)?.[0]}
@@ -404,7 +405,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     className="w-full rounded-[32px] overflow-hidden relative"
                                 >
                                     {product.image_url ? (
-                                        <img src={product.image_url} alt={product.title} className="w-full h-auto aspect-[16/9] object-cover shadow-sm" />
+                                        <Image src={product.image_url} alt={product.title} className="w-full h-auto aspect-[16/9] object-cover shadow-sm"  width={800} height={800}  />
                                     ) : (
                                         <div className="aspect-[21/9] w-full bg-slate-50 flex items-center justify-center relative shadow-sm border border-slate-100">
                                             <div 

@@ -26,52 +26,47 @@ export async function GET(req: Request) {
         const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-        // 1. Toplam (Tümü)
-        const { data: totalData } = await supabase
-            .from('orders')
-            .select('amount, status')
-            .eq('store_id', store.id)
-            .in('status', ['completed', 'paid']);
+        // 1. Toplam (Tümü) Ziyaretçi
+        const { count: totalViews } = await supabase
+            .from('store_analytics')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('event_type', 'store_view');
 
-        // 2. Bugün (Tümü, sonra JS'de ayıracağız performans için veya DB'de sorgulayabiliriz. DB query daha iyi.)
-        const { data: todayData } = await supabase
-            .from('orders')
-            .select('amount')
-            .eq('store_id', store.id)
-            .in('status', ['completed', 'paid'])
+        // 2. Bugün Ziyaretçi
+        const { count: todayViews } = await supabase
+            .from('store_analytics')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('event_type', 'store_view')
             .gte('created_at', startOfToday);
 
-        // 3. Bu Ay
-        const { data: monthData } = await supabase
-            .from('orders')
-            .select('amount')
-            .eq('store_id', store.id)
-            .in('status', ['completed', 'paid'])
+        // 3. Bu Ay Ziyaretçi
+        const { count: monthViews } = await supabase
+            .from('store_analytics')
+            .select('*', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('event_type', 'store_view')
             .gte('created_at', startOfMonth);
 
-        // 4. Bekleyen siparişler
-        const { count: pendingCount } = await supabase
-            .from('orders')
+        // 4. Toplam Tıklanma (product_click)
+        const { count: totalClicks } = await supabase
+            .from('store_analytics')
             .select('*', { count: 'exact', head: true })
-            .eq('store_id', store.id)
-            .eq('status', 'pending');
-
-        const calculateTotal = (data: any[]) => data?.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0) || 0;
+            .eq('user_id', user.id)
+            .eq('event_type', 'product_click');
 
         return NextResponse.json({
             today: {
-                revenue: calculateTotal(todayData || []),
-                orders: todayData?.length || 0
+                views: todayViews || 0,
             },
             this_month: {
-                revenue: calculateTotal(monthData || []),
-                orders: monthData?.length || 0
+                views: monthViews || 0,
             },
             total: {
-                revenue: calculateTotal(totalData || []),
-                orders: totalData?.length || 0
-            },
-            pending: pendingCount || 0
+                views: totalViews || 0,
+                clicks: totalClicks || 0
+            }
         });
 
     } catch (err: any) {

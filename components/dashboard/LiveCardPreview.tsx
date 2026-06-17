@@ -123,16 +123,15 @@ export default function LiveCardPreview({ data, icon: OverrideIcon }: LiveCardPr
                     <div className="p-4 flex items-center justify-between gap-4">
                         <div className="w-12 h-12 rounded-xl bg-slate-50 flex-shrink-0 flex items-center justify-center border border-slate-100 overflow-hidden transition-all">
                             {data.image_url ? (
-                                <img
-                                    src={data.image_url}
+                                <Image src={data.image_url}
                                     alt=""
                                     className="w-full h-full object-cover transition-transform duration-300"
                                     style={{ transform: `scale(${data.image_zoom || 1})` }}
-                                />
+                                 width={800} height={800}  />
                             ) : data.type === 'sety_affiliate' ? (
                                 <SetyLogo size="sm" showBackground={false} />
                             ) : iconUrl ? (
-                                <img src={iconUrl} alt="" className="w-8 h-8 object-contain" />
+                                <Image src={iconUrl} alt="" className="w-8 h-8 object-contain"  width={800} height={800}  />
                             ) : (
                                 <Icon className="w-6 h-6 text-[#5500ff]" strokeWidth={1.5} />
                             )}

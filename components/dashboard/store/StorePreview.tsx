@@ -20,7 +20,9 @@ import {
     Video,
     Users2,
     MessageSquare,
-    ShieldCheck
+    ShieldCheck,
+    Package,
+    Target
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SetyLogo } from '@/components/ui/SetyLogo';
@@ -34,55 +36,22 @@ export const getProductTypes = (t: (key: string) => string) => [
         id: 'digital_product',
         title: t('dashboard.store.product_types.digital_product.title'),
         description: t('dashboard.store.product_types.digital_product.desc'),
-        icon: Download,
+        icon: Package,
         color: 'bg-blue-50 text-blue-600',
         comingSoon: false,
-    },
-    {
-        id: 'private_group',
-        title: t('dashboard.store.product_types.private_group.title'),
-        description: t('dashboard.store.product_types.private_group.desc'),
-        icon: ShieldCheck,
-        color: 'bg-[#0088cc] text-white', // Telegram Blue
-        comingSoon: false,
-    },
-    {
-        id: 'collect_emails',
-        title: t('dashboard.store.product_types.collect_emails.title'),
-        description: t('dashboard.store.product_types.collect_emails.desc'),
-        icon: Mail,
-        color: 'bg-indigo-50 text-indigo-600',
-        comingSoon: true,
     },
     {
         id: 'coaching_call',
         title: t('dashboard.store.product_types.coaching_call.title'),
         description: t('dashboard.store.product_types.coaching_call.desc'),
-        icon: Clock,
-        iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg',
+        icon: Target,
         color: 'bg-emerald-50 text-emerald-600',
-        comingSoon: true,
-    },
-    {
-        id: 'video_response',
-        title: t('dashboard.store.product_types.video_response.title'),
-        description: t('dashboard.store.product_types.video_response.desc'),
-        icon: Video,
-        color: 'bg-teal-50 text-teal-600',
-        comingSoon: true,
-    },
-    {
-        id: 'custom_product',
-        title: t('dashboard.store.product_types.custom_product.title'),
-        description: t('dashboard.store.product_types.custom_product.desc'),
-        icon: Sparkles,
-        color: 'bg-amber-50 text-amber-600',
-        comingSoon: true,
+        comingSoon: false,
     },
     {
         id: 'external_link',
-        title: 'Dış Bağlantı',
-        description: 'Herhangi bir URL\'ye yönlendirin.',
+        title: t('dashboard.store.product_types.external_link.title'),
+        description: t('dashboard.store.product_types.external_link.desc'),
         icon: Link2,
         color: 'bg-violet-50 text-[#5500ff]',
         comingSoon: false,
