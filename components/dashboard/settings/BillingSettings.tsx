@@ -1,16 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Zap, CreditCard, Bell, CheckCircle2 } from 'lucide-react';
 import { useDashboard } from '@/context/DashboardContext';
 import { useToast } from '@/context/ToastContext';
 import { format } from 'date-fns';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 
 export default function BillingSettings() {
     const { profile, user, refreshData } = useDashboard();
     const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
+    
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    useEffect(() => {
+        if (searchParams.get('payment') === 'success') {
+            showToast('Subscription created successfully! Updating your plan...', 'success');
+            refreshData();
+            // Clean up the URL
+            router.replace(pathname, { scroll: false });
+        }
+    }, [searchParams, refreshData, router, pathname, showToast]);
 
     const handleUpgrade = async () => {
         setLoading(true);
@@ -21,15 +35,14 @@ export default function BillingSettings() {
             
             const response = await fetch('/api/checkout/create-subscription', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: user?.email })
+                headers: { 'Content-Type': 'application/json' }
             });
             
             const data = await response.json();
-            if (data.url) {
+            if (response.ok && data.url) {
                 window.location.href = data.url;
             } else {
-                throw new Error('Failed to create checkout session');
+                throw new Error(data.error || 'Failed to create checkout session');
             }
         } catch (error: any) {
             console.error('Checkout error:', error);

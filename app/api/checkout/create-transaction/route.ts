@@ -27,15 +27,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
-    // 2. Create a Checkout in Polar
-    // Using custom checkout or product checkout based on Polar API
-    // Note: This is an assumed API structure for Polar custom checkout. 
-    // In a real scenario, you might need to create a product in Polar first.
-    const checkout = await polar.checkouts.custom.create({
-        amount: Math.round(product.price * 100),
-        currency: (product.currency || 'usd').toLowerCase(),
+    // 2. Create a Product in Polar first (required by the latest SDK)
+    const polarProduct = await polar.products.create({
         name: product.title,
         description: product.description || '',
+        prices: [{
+            amountType: 'fixed',
+            priceAmount: Math.round(product.price * 100),
+            priceCurrency: (product.currency || 'usd').toLowerCase(),
+        }],
+        organizationId: process.env.NEXT_PUBLIC_POLAR_ORGANIZATION_ID || '',
+    });
+
+    // 3. Create a Checkout using the new Product
+    const checkout = await polar.checkouts.create({
+        products: [polarProduct.id],
         customerEmail: customerEmail || undefined,
         metadata: {
             sety_product_id: productId,
