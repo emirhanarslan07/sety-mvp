@@ -3,6 +3,8 @@ import PublicStoreClient from '@/components/store/PublicStoreClient';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { cache } from 'react';
+
 export const revalidate = 60;
 
 interface Props {
@@ -10,11 +12,11 @@ interface Props {
     searchParams: { [key: string]: string | string[] | undefined };
 }
 
-async function getStoreData(username: string) {
+const getStoreData = cache(async (username: string) => {
     const { data: storeData, error: storeError } = await supabase
         .from('stores')
         .select('*, user_profiles(*), products(*)')
-        .eq('username', username.toLowerCase())
+        .ilike('username', username)
         .single();
 
     if (storeError || !storeData) return null;
@@ -43,7 +45,7 @@ async function getStoreData(username: string) {
         },
         products: products,
     };
-}
+});
 
 export async function generateMetadata(
     { params }: Props,

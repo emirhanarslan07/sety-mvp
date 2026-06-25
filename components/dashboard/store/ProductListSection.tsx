@@ -186,7 +186,7 @@ export default function ProductListSection({
                 {/* Empty State */}
                 {products.length === 0 && (
                     <div className="py-24 flex flex-col items-center justify-center text-center px-6 bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden relative group">
-                        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
                         <div className="relative w-48 h-48 mb-10">
                             <div className="absolute inset-0 bg-[#5500ff]/5 rounded-full blur-3xl animate-pulse" />
@@ -205,7 +205,7 @@ export default function ProductListSection({
 
                         <Button
                             onClick={onAddProduct}
-                            className="h-16 px-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white text-[17px] font-black shadow-xl shadow-indigo-100 active:scale-95 transition-all"
+                            className="relative z-10 h-16 px-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white text-[17px] font-black shadow-xl shadow-indigo-100 active:scale-95 transition-all"
                         >
                             İlk Ürününü Ekle
                         </Button>

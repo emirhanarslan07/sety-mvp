@@ -314,14 +314,19 @@ function AuthContent() {
     }
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-10">
-            <div className="w-full max-w-[400px] flex flex-col items-center">
-                <Link href="/" className="mb-8 flex items-center gap-2">
+        <div className="relative min-h-screen bg-[#F8F9FF] flex flex-col items-center justify-center px-6 py-10 overflow-hidden">
+            {/* Animated Background Orbs */}
+            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-400/20 blur-[120px] animate-pulse pointer-events-none" style={{ animationDuration: '8s' }} />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-400/20 blur-[120px] animate-pulse pointer-events-none" style={{ animationDuration: '12s' }} />
+            <div className="absolute top-[40%] left-[60%] w-[400px] h-[400px] rounded-full bg-pink-400/15 blur-[100px] animate-pulse pointer-events-none" style={{ animationDuration: '10s' }} />
+
+            <div className="relative z-10 w-full max-w-[440px] flex flex-col items-center bg-white/70 backdrop-blur-2xl p-8 md:p-10 rounded-[40px] border border-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
+                <Link href="/" className="mb-8 flex items-center gap-2 transition-transform hover:scale-105">
                     <SetyLogo size="md" />
                     <span className="text-[28px] font-bold tracking-tight text-slate-950 font-logo">Sety</span>
                 </Link>
 
-                <div className="text-center mb-6 w-full">
+                <div className="text-center mb-8 w-full">
                     <h1 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">
                         {isForgotPassword ? "Forgot password?" : isLogin ? "Welcome back 👋" : "Create your account"}
                     </h1>
@@ -333,7 +338,12 @@ function AuthContent() {
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-900 z-10" />
                             <Input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="pl-12 h-[52px] rounded-xl border-slate-200" required />
                         </div>
-                        <Button type="submit" disabled={loading || resetSent} className="w-full h-[54px] rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold">{loading ? '...' : 'Send'}</Button>
+                        <Button type="submit" disabled={loading || resetSent} className="relative w-full h-[54px] rounded-full bg-gradient-to-r from-[#5500ff] to-[#6C47FF] hover:from-[#4400cc] hover:to-[#5500ff] text-white font-black text-[17px] shadow-[0_10px_30px_-10px_rgba(85,0,255,0.5)] transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] border-none overflow-hidden group">
+                            <span className="relative z-10 flex items-center gap-2">
+                                {loading ? '...' : 'Send'}
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                        </Button>
                         <button type="button" onClick={() => setIsForgotPassword(false)} className="w-full text-sm text-slate-500 font-bold hover:text-slate-900">Go Back</button>
                     </form>
                 ) : (
@@ -421,8 +431,11 @@ function AuthContent() {
 
                         {!isLogin && (
                             <div className="mt-6 flex flex-col gap-4">
-                                <Button type="submit" className="w-full h-[54px] rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[17px]">
-                                    {step === 1 ? (loading ? 'Creating Account...' : 'Create Account') : (loading ? 'Verifying...' : 'Verify Email')}
+                                <Button type="submit" className="relative w-full h-[54px] rounded-full bg-gradient-to-r from-[#5500ff] to-[#6C47FF] hover:from-[#4400cc] hover:to-[#5500ff] text-white font-black text-[17px] shadow-[0_10px_30px_-10px_rgba(85,0,255,0.5)] transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] border-none overflow-hidden group">
+                                    <span className="relative z-10 flex items-center gap-2">
+                                        {step === 1 ? (loading ? 'Creating Account...' : 'Create Account') : (loading ? 'Verifying...' : 'Verify Email')}
+                                    </span>
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                                 </Button>
                                 {step > 1 && (
                                     <button type="button" onClick={() => setStep(1)} className="text-sm text-slate-400 font-bold hover:text-slate-900">Go Back</button>

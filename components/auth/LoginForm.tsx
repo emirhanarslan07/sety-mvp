@@ -72,9 +72,12 @@ export function LoginForm({
                 <Button
                     onClick={handleAuth}
                     disabled={loading}
-                    className="w-full h-[54px] rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[17px] shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2 transform active:scale-[0.98] border-none"
+                    className="relative w-full h-[54px] rounded-full bg-gradient-to-r from-[#5500ff] to-[#6C47FF] hover:from-[#4400cc] hover:to-[#5500ff] text-white font-black text-[17px] shadow-[0_10px_30px_-10px_rgba(85,0,255,0.5)] transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] border-none overflow-hidden group"
                 >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
+                    <span className="relative z-10 flex items-center gap-2">
+                        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
                 </Button>
             </div>
         </motion.div>

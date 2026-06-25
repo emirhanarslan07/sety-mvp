@@ -17,7 +17,7 @@ export function ProductShowcase() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-5xl md:text-7xl font-[1000] tracking-tighter text-gray-900 mb-8 font-logo leading-[0.9] text-balance"
+                        className="text-5xl md:text-7xl font-extrabold tracking-tighter text-gray-900 mb-8 font-logo leading-[0.9] text-balance"
                     >
                         {t('landing.product_showcase.title')} <br />
                         <span className="text-[#5500ff]">{t('landing.product_showcase.title_accent')}</span>

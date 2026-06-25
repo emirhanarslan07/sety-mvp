@@ -267,7 +267,7 @@ function StorePageContent() {
     }
 
     return (
-        <div className="flex-1 flex flex-col h-full bg-[#FDFDFF] overflow-hidden">
+        <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden">
             {/* Header */}
             <StoreHeader
                 username={store?.username || 'user'}
@@ -283,8 +283,8 @@ function StorePageContent() {
                     <div className="max-w-[900px] space-y-12">
 
                         {/* Tab Navigation */}
-                        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl -mx-4 px-4 py-4 md:static md:bg-transparent md:p-0 md:m-0 border-b border-slate-100 md:border-none">
-                            <div className="flex items-center gap-1.5 p-1.5 bg-slate-100/50 md:bg-slate-100/80 rounded-[28px] max-w-fit shadow-sm border border-slate-200/50">
+                        <div className="sticky top-0 z-40 md:static flex justify-center w-full mb-8 pt-4">
+                            <div className="flex items-center gap-2 p-2 bg-white/60 backdrop-blur-xl rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white mx-auto">
                                 {[
                                     { id: 'store', label: t('dashboard.store.tabs.products'), icon: ShoppingBag },
                                     { id: 'design', label: t('dashboard.store.tabs.design'), icon: Palette },
@@ -296,13 +296,13 @@ function StorePageContent() {
                                             key={tab.id}
                                             onClick={() => setActiveTab(tab.id as any)}
                                             className={cn(
-                                                "flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3.5 rounded-[22px] text-[13px] md:text-[15px] font-black transition-all active:scale-95 whitespace-nowrap",
+                                                "flex items-center gap-2 px-6 py-3 rounded-full text-[15px] font-black transition-all active:scale-95",
                                                 isActive
-                                                    ? "bg-white text-[#5500ff] shadow-md shadow-slate-200/50"
-                                                    : "text-slate-400 hover:text-slate-600 hover:bg-white/50"
+                                                    ? "bg-gradient-to-r from-[#5500ff] to-[#6C47FF] text-white shadow-lg shadow-indigo-500/30"
+                                                    : "text-slate-500 hover:text-slate-900 hover:bg-white/80"
                                             )}
                                         >
-                                            <Icon className={cn("w-4 h-4", isActive ? "text-[#5500ff]" : "text-slate-400")} />
+                                            <Icon className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-400")} />
                                             <span>{tab.label}</span>
                                         </button>
                                     );

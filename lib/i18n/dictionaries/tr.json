@@ -516,7 +516,7 @@
                     "7/24 Öncelikli Destek"
                 ],
                 "cost_label": "Maliyet",
-                "price": "$19",
+                "price": "₺199",
                 "period": "/AY"
             },
             "others": {
@@ -531,15 +531,15 @@
                     "Kısıtlı müşteri iletişimi"
                 ],
                 "cost_label": "Maliyet",
-                "price": "$49",
+                "price": "₺499",
                 "period": "/AY"
             },
             "banner": {
                 "title": "Geleceğinize Yılda ",
-                "title_accent": "$4,200+ Daha Fazla ",
+                "title_accent": "₺42.000+ Daha Fazla ",
                 "title_end": "Yatırım Yapın",
-                "description": "Büyüdükçe cezalandırılmayın. Ayda sadece $2,000 ciro yapsanız bile, komisyonlu platformlar yıllık kazancınızın ",
-                "description_accent": "$4,000'dan fazlasını ",
+                "description": "Büyüdükçe cezalandırılmayın. Ayda sadece ₺20.000 ciro yapsanız bile, komisyonlu platformlar yıllık kazancınızın ",
+                "description_accent": "₺40.000'dan fazlasını ",
                 "description_end": "cebinizden alır. Sety ile kazancınızın %100'ü size aittir.",
                 "button": "Hemen Kazancını Korumaya Başla",
                 "button_mobile": "Hemen Başla"

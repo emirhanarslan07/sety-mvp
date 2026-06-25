@@ -146,7 +146,7 @@ export default function AnalyticsPage() {
                 </div>
 
                 {/* Period Selector */}
-                <div className="bg-white p-1.5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-1 self-start md:self-auto">
+                <div className="bg-white/60 backdrop-blur-xl p-1.5 rounded-2xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center gap-1 self-start md:self-auto">
                     {[
                         { id: '7', label: '7 Gün' },
                         { id: '14', label: '14 Gün' },
@@ -159,8 +159,8 @@ export default function AnalyticsPage() {
                             className={cn(
                                 "px-6 py-2.5 rounded-xl text-[14px] font-black transition-all",
                                 period === p.id 
-                                    ? "bg-slate-900 text-white shadow-lg shadow-slate-200" 
-                                    : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                                    ? "bg-gradient-to-r from-[#5500ff] to-[#6C47FF] text-white shadow-lg shadow-indigo-500/20" 
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-white/60"
                             )}
                         >
                             {p.label}
@@ -172,7 +172,7 @@ export default function AnalyticsPage() {
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                 {metrics.map((metric, i) => (
-                    <div key={i} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:border-slate-200 transition-all duration-200">
+                    <div key={i} className="bg-white/70 backdrop-blur-xl rounded-[28px] p-6 border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
                         <div className="flex items-start justify-between mb-6">
                             <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center transition-all", metric.bg, metric.color)}>
                                 <metric.icon className="w-6 h-6" />
@@ -188,7 +188,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Ziyaretçi Grafiği */}
-            <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
+            <div className="bg-white/70 backdrop-blur-xl rounded-[32px] p-6 md:p-8 border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                     <div className="space-y-2">
                         <h2 className="text-[24px] font-black text-slate-900 tracking-tight">Tıklanma ve Ziyaretçi Grafiği</h2>
@@ -287,7 +287,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Top Products Table */}
-            <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
+            <div className="bg-white/70 backdrop-blur-xl rounded-[32px] p-6 md:p-8 border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div className="flex items-center justify-between mb-10">
                     <h2 className="text-[24px] font-black text-slate-900 tracking-tight">En Çok Tıklanan Ürünler</h2>
                     <Package className="w-6 h-6 text-slate-300" />

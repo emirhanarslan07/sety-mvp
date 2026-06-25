@@ -13,7 +13,7 @@ export function Comparison() {
         <section className="py-20 md:py-28 bg-white relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
                 <div className="text-center max-w-2xl mx-auto mb-16">
-                    <h2 className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 mb-6 leading-tight">
+                    <h2 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-tight">
                         {t('landing.comparison.title')}<span className="text-[#5500ff]">{t('landing.comparison.title_accent')}</span>
                     </h2>
                     <p className="text-slate-500 text-lg font-medium leading-relaxed">
@@ -26,7 +26,7 @@ export function Comparison() {
                     <div className="flex flex-col">
                         <div className="mb-8 flex items-center gap-4 px-4">
                             <SetyLogo size="lg" />
-                            <h3 translate="no" className="notranslate text-3xl font-black text-slate-900 tracking-tight">{t('landing.comparison.sety.title')}</h3>
+                            <h3 translate="no" className="notranslate text-3xl font-extrabold text-slate-900 tracking-tight">{t('landing.comparison.sety.title')}</h3>
                         </div>
 
                         <div className="bg-white rounded-[48px] p-10 md:p-14 border border-slate-100 flex-grow flex flex-col shadow-sm hover:shadow-md transition-all duration-500">
@@ -59,7 +59,7 @@ export function Comparison() {
                             <div className="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center shrink-0 border border-rose-100">
                                 <X className="w-7 h-7 text-rose-500" />
                             </div>
-                            <h3 className="text-3xl font-black text-slate-900 tracking-tight">{t('landing.comparison.others.title')}</h3>
+                            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('landing.comparison.others.title')}</h3>
                         </div>
 
                         <div className="bg-white rounded-[48px] p-10 md:p-14 border border-slate-200 flex-grow flex flex-col shadow-sm hover:shadow-md transition-all duration-500">
@@ -93,7 +93,7 @@ export function Comparison() {
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-[#5500ff] to-transparent opacity-50" />
 
                         <div className="relative z-10">
-                            <h3 className="text-3xl md:text-5xl font-black text-white mb-8 tracking-tight leading-tight">
+                            <h3 className="text-3xl md:text-5xl font-extrabold text-white mb-8 tracking-tight leading-tight">
                                 {t('landing.comparison.banner.title')}<span className="text-[#5500ff] drop-shadow-[0_0_20px_rgba(85,0,255,0.4)]">{t('landing.comparison.banner.title_accent')}</span> <br className="hidden md:block" /> {t('landing.comparison.banner.title_end')}
                             </h3>
                             <p className="text-slate-300 font-bold text-xl mb-12 max-w-4xl mx-auto leading-relaxed">

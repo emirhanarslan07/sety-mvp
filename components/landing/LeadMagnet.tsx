@@ -56,9 +56,9 @@ export function LeadMagnet() {
                             </div>
 
                             <div className="space-y-4">
-                                <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                                    14-Day Revenue <br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5500ff] to-fuchsia-500">Launch Playbook</span>
+                                <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+                                    14 Günlük İlk <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5500ff] to-fuchsia-500">Kazanç Rehberi</span>
                                 </h2>
                                 <p className="text-lg md:text-xl text-slate-600 font-medium max-w-xl mx-auto lg:mx-0">
                                     Sıfırdan ilk dijital ürününüzü nasıl oluşturup satışa sunabileceğinizi adım adım anlatan ücretsiz rehberimizi hemen indirin.
@@ -129,8 +129,8 @@ export function LeadMagnet() {
                                     </div>
                                     
                                     <div className="space-y-4">
-                                        <h3 className="text-4xl font-black leading-tight">
-                                            14-Day<br/>Revenue<br/>Launch<br/>Playbook
+                                        <h3 className="text-3xl font-extrabold leading-tight">
+                                            14 Günlük<br/>İlk Kazanç<br/>Rehberi
                                         </h3>
                                         <p className="text-white/80 font-medium text-lg">By Sety</p>
                                     </div>

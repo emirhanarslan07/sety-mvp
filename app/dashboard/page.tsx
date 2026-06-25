@@ -95,7 +95,7 @@ export default function DashboardPage() {
                     { label: 'Toplam Ziyaretçi', value: stats?.total?.views, sub: 'tüm zamanlar', icon: TrendingUp, color: 'text-emerald-500', bg: 'bg-emerald-50' },
                     { label: 'Ürün Tıklanma', value: stats?.total?.clicks, sub: 'toplam tıklanma', icon: Package, color: 'text-indigo-500', bg: 'bg-indigo-50' }
                 ].map((stat, i) => (
-                    <div key={i} className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:border-slate-200 transition-all duration-200">
+                    <div key={i} className="bg-white/70 backdrop-blur-xl rounded-[28px] p-6 border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300">
                         <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center mb-4", stat.bg, stat.color)}>
                             <stat.icon className="w-5 h-5" />
                         </div>
@@ -110,39 +110,39 @@ export default function DashboardPage() {
 
             {/* Quick Actions */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button onClick={() => window.open(`/${store?.username}`, '_blank')} className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 hover:border-[#5500ff]/30 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300 text-left group">
-                    <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+                <button onClick={() => window.open(`/${store?.username}`, '_blank')} className="flex items-center gap-4 p-5 bg-white/60 backdrop-blur-md rounded-[24px] border border-white shadow-sm hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 text-left group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 group-hover:scale-110 transition-all">
                         <ExternalLink className="w-5 h-5 text-slate-600 group-hover:text-[#5500ff]" />
                     </div>
-                    <span className="font-bold text-slate-700 group-hover:text-slate-900">Mağazamı Gör</span>
+                    <span className="font-bold text-[15px] text-slate-700 group-hover:text-slate-900">Mağazamı Gör</span>
                 </button>
-                <button onClick={() => router.push('/dashboard/store?action=add')} className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 hover:border-[#5500ff]/30 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300 text-left group">
-                    <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+                <button onClick={() => router.push('/dashboard/store?action=add')} className="flex items-center gap-4 p-5 bg-white/60 backdrop-blur-md rounded-[24px] border border-white shadow-sm hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 text-left group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 group-hover:scale-110 transition-all">
                         <Plus className="w-5 h-5 text-slate-600 group-hover:text-[#5500ff]" />
                     </div>
-                    <span className="font-bold text-slate-700 group-hover:text-slate-900">Ürün Ekle</span>
+                    <span className="font-bold text-[15px] text-slate-700 group-hover:text-slate-900">Ürün Ekle</span>
                 </button>
-                <button onClick={() => router.push('/dashboard/orders')} className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 hover:border-[#5500ff]/30 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300 text-left group">
-                    <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+                <button onClick={() => router.push('/dashboard/orders')} className="flex items-center gap-4 p-5 bg-white/60 backdrop-blur-md rounded-[24px] border border-white shadow-sm hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 text-left group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 group-hover:scale-110 transition-all">
                         <Package className="w-5 h-5 text-slate-600 group-hover:text-[#5500ff]" />
                     </div>
-                    <span className="font-bold text-slate-700 group-hover:text-slate-900">Siparişler</span>
+                    <span className="font-bold text-[15px] text-slate-700 group-hover:text-slate-900">Siparişler</span>
                 </button>
-                <button onClick={() => router.push('/dashboard/settings')} className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 hover:border-[#5500ff]/30 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300 text-left group">
-                    <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
+                <button onClick={() => router.push('/dashboard/settings')} className="flex items-center gap-4 p-5 bg-white/60 backdrop-blur-md rounded-[24px] border border-white shadow-sm hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all duration-300 text-left group">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:bg-indigo-50 group-hover:scale-110 transition-all">
                         <Settings className="w-5 h-5 text-slate-600 group-hover:text-[#5500ff]" />
                     </div>
-                    <span className="font-bold text-slate-700 group-hover:text-slate-900">Ayarlar</span>
+                    <span className="font-bold text-[15px] text-slate-700 group-hover:text-slate-900">Ayarlar</span>
                 </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                 {/* Sales Chart */}
-                <div className="lg:col-span-2 bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm">
+                <div className="lg:col-span-2 bg-white/70 backdrop-blur-xl rounded-[32px] p-6 md:p-8 border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <div>
-                            <h3 className="text-[18px] font-black text-slate-900 tracking-tight">Satış Grafiği</h3>
-                            <p className="text-[13px] font-bold text-slate-400">Zaman içindeki gelir tablonuz</p>
+                            <h3 className="text-[18px] font-black text-slate-900 tracking-tight">Mağaza Ziyaretçi Trendi</h3>
+                            <p className="text-[13px] font-bold text-slate-400">Zaman içindeki mağaza ziyaretleriniz</p>
                         </div>
                         <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl w-fit">
                             {[7, 30, 90, 365].map(days => (
@@ -188,7 +188,7 @@ export default function DashboardPage() {
                                     axisLine={false} 
                                     tickLine={false} 
                                     tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 700 }}
-                                    tickFormatter={(val) => `₺${val}`}
+                                    tickFormatter={(val) => val.toString()}
                                     dx={-10}
                                 />
                                 <Tooltip content={renderCustomTooltip} />
@@ -207,7 +207,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Popular Products List */}
-                <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-100 shadow-sm flex flex-col">
+                <div className="bg-white/70 backdrop-blur-xl rounded-[32px] p-6 md:p-8 border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
                     <div className="flex items-center justify-between mb-8">
                         <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Popüler Ürünler</h3>
                         <button 

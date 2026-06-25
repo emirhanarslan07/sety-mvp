@@ -1,5 +1,5 @@
 import { Navbar } from '@/components/landing/Navbar';
-import TurkishCreatorHero from '@/components/landing/TurkishCreatorHero';
+import { FloatingIconsHero } from '@/components/ui/floating-icons-hero-section';
 import { ProductShowcase } from '@/components/landing/ProductShowcase';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { CommissionBand } from '@/components/landing/CommissionBand';
@@ -17,7 +17,7 @@ export default function Home() {
         <main className="min-h-screen relative bg-background transition-colors duration-500">
             <Navbar />
 
-            <TurkishCreatorHero />
+            <FloatingIconsHero />
 
             <ProductShowcase />
 
@@ -33,9 +33,11 @@ export default function Home() {
 
             <Comparison />
 
+            {/* 
             <div id="testimonials">
                 <SocialProof />
             </div>
+            */}
 
             <div id="faq">
                 <FAQ />
