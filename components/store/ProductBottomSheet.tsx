@@ -4,7 +4,8 @@ import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState, useMemo } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { supabasePublic } from '@/lib/supabase/client';
+import { processCheckoutAction } from '@/app/actions/checkout';
 import { useToast } from '@/context/ToastContext';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -20,6 +21,33 @@ const getFallbackIcon = (type: string) => {
         case 'external_link': return Link2;
         default: return Sparkles;
     }
+};
+
+const DEFAULT_COVERS: Record<string, string[]> = {
+    digital_product: [
+        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2574&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1557683311-eac922347aa1?q=80&w=2629&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=2670&auto=format&fit=crop',
+    ],
+    coaching_call: [
+        'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2669&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=2574&auto=format&fit=crop',
+    ],
+    external_link: [
+        'https://images.unsplash.com/photo-1512758684065-94ed158f5612?q=80&w=2574&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1614850715649-1d0106293bd1?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1520869562399-e772f042f422?q=80&w=2673&auto=format&fit=crop',
+    ]
 };
 
 interface ProductBottomSheetProps {
@@ -125,37 +153,11 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
 
         setLoading(true);
         try {
-            // 1. Capture/Update Customer
-            let customerData;
-            const { data: existingCustomer } = await supabase
-                .from('customers')
-                .select()
-                .eq('email', email.toLowerCase())
-                .eq('store_id', profile.id)
-                .maybeSingle();
-
-            if (existingCustomer) {
-                customerData = existingCustomer;
-            } else {
-                const { data: newCustomer, error: customerError } = await supabase
-                    .from('customers')
-                    .insert([{
-                        user_id: profile.user_id,
-                        store_id: profile.id,
-                        email: email.toLowerCase(),
-                        name: name || 'Müşteri'
-                    }])
-                    .select()
-                    .single();
-                if (customerError) throw customerError;
-                customerData = newCustomer;
-            }
-
-            // If Paid Product
+            // Check for direct redirect if external checkout exists for paid products
             if (product.price > 0 && product.checkout_provider !== 'manual') {
-                if (product.external_checkout_url) {
-                    // Log the lead before redirecting
-                    await supabase.from('analytics_events').insert([{
+                const checkoutUrl = product.external_checkout_url || profile?.payment_url;
+                if (checkoutUrl) {
+                    await supabasePublic.from('analytics_events').insert([{
                         user_id: profile.user_id,
                         store_id: profile.id,
                         event_name: 'checkout_redirect',
@@ -167,60 +169,43 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                             source: 'product_detail_redirect'
                         }
                     }]);
-                    
-                    window.location.href = product.external_checkout_url;
-                    return; // Stop execution, user is redirecting
+                    window.location.href = checkoutUrl;
+                    return;
                 }
-                
-                // If no external URL provided but it's paid (shouldn't happen ideally)
-                showToast('Ödeme linki bulunamadı. Lütfen satıcıyla iletişime geçin.', 'error');
-                setLoading(false);
-                return;
             }
 
-            // Free or Manual logic (Simulation)
-            const { error: orderError } = await supabase
-                .from('orders')
-                .insert([{
-                    user_id: profile.user_id,
-                    store_id: profile.id,
-                    product_id: product.id,
-                    customer_id: customerData.id,
-                    amount: product.price || 0,
-                    status: product.price === 0 ? 'paid' : 'pending' // manual is pending
-                }]);
+            // For Free or Manual products, or just to capture lead
+            // Call Server Action to bypass RLS for customers, orders, and analytics insertion
+            const checkoutResult = await processCheckoutAction({
+                profileUserId: profile.user_id,
+                profileId: profile.id,
+                email: email.toLowerCase(),
+                name: name || 'Müşteri',
+                productId: product.id,
+                productPrice: product.price || 0,
+                isCoaching
+            });
 
-            if (orderError) console.error('Order creation error:', orderError);
-
-            // 3. Track Analytics
-            await supabase.from('analytics_events').insert([{
-                user_id: profile.user_id,
-                store_id: profile.id,
-                event_name: isCoaching ? 'appointment_booked' : 'purchase_complete',
-                product_id: product.id,
-                metadata: {
-                    email: email.toLowerCase(),
-                    name,
-                    price: product.price,
-                    message,
-                    selected_date: selectedDate?.toISOString(),
-                    selected_time: selectedTime,
-                    source: 'product_detail_free_or_manual'
-                }
-            }]);
+            if (!checkoutResult.success) {
+                throw new Error(checkoutResult.error || 'Checkout failed');
+            }
 
             setSuccess(true);
-
-            // Handle delivery/redirection
             setTimeout(() => {
-                onPurchase(product, email);
-
-                if (product.external_checkout_url || product.redirect_url || product.digital_file_url) {
-                    // We'll keep it open for a bit to show success if not redirecting immediately
+                const checkoutUrl = product.external_checkout_url || profile?.payment_url;
+                if (checkoutUrl && product.price > 0 && product.checkout_provider !== 'manual') {
+                    // This case shouldn't be reached here as it's handled above, but just in case
+                } else if (product.file_url || product.digital_file_url) {
+                    window.open(product.file_url || product.digital_file_url, '_blank');
+                    showToast('Dosyanız yeni sekmede açıldı.', 'success');
+                } else if (product.calendly_url) {
+                    window.location.href = product.calendly_url;
                 } else {
-                    onClose();
+                    showToast('İşlem başarılı.', 'success');
                 }
-            }, 1500);
+                setLoading(false);
+                setTimeout(() => onClose(), 2000);
+            }, 2000);
         } catch (err: any) {
             console.error(err);
             showToast('Bir hata oluştu: ' + err.message, 'error');
@@ -236,7 +221,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
     
     if (success) {
         const isManual = product.checkout_provider === 'manual';
-        const paymentInfo = product.external_checkout_url || '';
+        const paymentInfo = product.external_checkout_url || profile?.payment_url || '';
 
         return (
             <AnimatePresence>
@@ -404,8 +389,8 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     transition={{ duration: 0.5 }}
                                     className="w-full rounded-[32px] overflow-hidden relative"
                                 >
-                                    {product.image_url ? (
-                                        <Image src={product.image_url} alt={product.title} className="w-full h-auto aspect-[16/9] object-cover shadow-sm"  width={800} height={800}  />
+                                    {(product.image_url || (typeof DEFAULT_COVERS !== 'undefined' && DEFAULT_COVERS[product.type]?.[0])) ? (
+                                        <Image src={product.image_url || (typeof DEFAULT_COVERS !== 'undefined' ? DEFAULT_COVERS[product.type]?.[0] : '')} alt={product.title} className="w-full h-auto aspect-[16/9] object-cover shadow-sm"  width={800} height={800}  />
                                     ) : (
                                         <div className="aspect-[21/9] w-full bg-slate-50 flex items-center justify-center relative shadow-sm border border-slate-100">
                                             <div 

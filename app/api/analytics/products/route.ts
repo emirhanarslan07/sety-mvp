@@ -66,8 +66,8 @@ export async function GET(req: Request) {
         // Sort by clicks descending
         aggregatedProducts.sort((a, b) => b.sales - a.sales);
 
-        // Take top 10
-        const topProducts = aggregatedProducts.slice(0, 10);
+        // Take top 50
+        const topProducts = aggregatedProducts.slice(0, 50);
 
         return NextResponse.json({ data: topProducts });
     } catch (err: any) {

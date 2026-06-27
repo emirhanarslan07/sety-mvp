@@ -42,7 +42,7 @@ export default function DashboardPage() {
                 
                 setStats(statsData);
                 setChartData(chartJson.data || []);
-                setPopularProducts((productsData.data || []).slice(0, 5));
+                setPopularProducts(productsData.data || []);
 
             } catch (error) {
                 console.error("Error loading dashboard data:", error);
@@ -170,12 +170,12 @@ export default function DashboardPage() {
                                         <stop offset="100%" stopColor="#5500ff" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#94a3b8" strokeOpacity={0.1} />
                                 <XAxis 
                                     dataKey="date" 
                                     axisLine={false} 
                                     tickLine={false} 
-                                    tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 700 }}
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                                     tickFormatter={(val) => {
                                         const d = new Date(val);
                                         return chartDays > 30 
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                                 <YAxis 
                                     axisLine={false} 
                                     tickLine={false} 
-                                    tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 700 }}
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                                     tickFormatter={(val) => val.toString()}
                                     dx={-10}
                                 />
@@ -200,6 +200,7 @@ export default function DashboardPage() {
                                     fill="url(#dashGradient)"
                                     dot={{ fill: '#5500ff', strokeWidth: 3, r: 4, stroke: '#fff' }}
                                     activeDot={{ r: 8, fill: '#5500ff', stroke: '#fff', strokeWidth: 3 }}
+                                    isAnimationActive={true}
                                 />
                             </AreaChart>
                         </ResponsiveContainer>

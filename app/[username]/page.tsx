@@ -42,6 +42,7 @@ const getStoreData = cache(async (username: string) => {
             full_name: userProfile?.full_name,
             profile_image_url: userProfile?.profile_image_url || storeData.store_logo_url,
             is_verified: userProfile?.is_verified,
+            payment_url: userProfile?.payment_url,
         },
         products: products,
     };

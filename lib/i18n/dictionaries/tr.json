@@ -359,9 +359,9 @@
                     "footer": "Link Hazır"
                 },
                 {
-                    "title": "Kazancını Çek",
-                    "desc": "Satışlarını anlık takip et ve paranı saniyeler içinde bankana aktar.",
-                    "footer": "Hızlı Transfer"
+                    "title": "Ödemeni Al",
+                    "desc": "Satışların gerçek zamanlı sana bildirilir, ödeme doğrudan kendi hesabına geçer. Aracısız.",
+                    "footer": "Aracısız"
                 }
             ]
         },
@@ -389,8 +389,8 @@
                 "desc": "Mağazanı logonla, renklerinle ve alan adınla kişiselleştir. Bir platformun altında ezilme."
             },
             "step3": {
-                "title": "Anında Kazanç",
-                "desc": "Dünyanın her yerinden global ödeme yöntemleriyle ödeme al. Komisyon yok, kazancının tek sahibi sensin."
+                "title": "Ödemen Doğrudan Sana Gelir",
+                "desc": "Kendi ödeme sağlayıcınla (Iyzico, Stripe, Shopier vb.) bağlan. Sety parayı tutmaz — satış anında ödeme doğrudan senin hesabına düşer."
             }
         },
         "faq": {
@@ -403,7 +403,7 @@
                 },
                 {
                     "q": "Sety satışlarımdan komisyon alıyor mu?",
-                    "a": "Hayır, Sety hiçbir satıştan komisyon almaz. Sadece aylık sabit bir abonelik ücreti ödersiniz. Satış hacminiz ne kadar artarsa artsın, kazancınızın %100'ü sizin kalır."
+                    "a": "Hayır, lansman döneminde satışlardan hiçbir komisyon almıyoruz."
                 },
                 {
                     "q": "Kendi ödeme altyapımı bağlamak zor mu?",
@@ -414,8 +414,8 @@
                     "a": "Para akışı doğrudan sizinle müşteriniz arasında (kendi ödeme altyapınız üzerinden) gerçekleştiği için, iade ve iptal süreçleri de tamamen sizin kontrolünüzdedir. Sety bu sürece müdahale etmez."
                 },
                 {
-                    "q": "Vergi süreçleri nasıl yönetiliyor?",
-                    "a": "Satışlar kendi ödeme altyapınız üzerinden gerçekleştiği için faturalandırma ve vergi süreçleri, mevcut işletme modelinize göre sizin tarafınızdan yönetilir. Profesyonel bir mağaza sahibi olarak tüm süreçlerin kontrolü sizdedir."
+                    "q": "Sety bir fatura kesme aracı mı?",
+                    "a": "Sety bir ödeme aracısı değildir. Fatura kesimi, vergilendirme ve mali sorumluluk tamamen sana aittir. Satışların doğrudan kendi bağladığın ödeme sağlayıcısı üzerinden, kendi hesabına işlenir."
                 },
                 {
                     "q": "Teknik bilgi olmadan mağaza açabilir miyim?",
@@ -427,7 +427,7 @@
             "title": "Sen üretmeye odaklan, ",
             "title_accent": "gerisini biz halledelim.",
             "subtitle": "Karmaşık kurulumlara elveda de. Sety sana profesyonel bir mağaza ve güçlü bir yönetim paneli sunar, hem de tek bir basit link üzerinden.",
-            "trial": "Hemen 1 aylık ücretsiz deneme süreni başlat.",
+            "trial": "Hemen ücretsiz mağazanı aç.",
             "cards": {
                 "revenue": {
                     "title": "TOPLAM GELİR",
@@ -501,9 +501,9 @@
             "button": "Hemen Mağazanı Aç"
         },
         "comparison": {
-            "title": "Kazandıkça ",
-            "title_accent": "Kaybetme",
-            "subtitle": "Yüksek komisyon oranları büyümeni engeller. Sety ile ne kadar satarsan sat, kazancının tamamı sende kalır.",
+            "title": "Lansmana Özel: %0 Komisyon, ",
+            "title_accent": "Ücretsiz",
+            "subtitle": "Diğer platformlar satışından komisyon keser, üstüne aylık ücret de ister. Sety lansman döneminde tamamen ücretsiz — ne komisyon ne bedel.",
             "sety": {
                 "title": "Sety",
                 "items": [
@@ -516,8 +516,8 @@
                     "7/24 Öncelikli Destek"
                 ],
                 "cost_label": "Maliyet",
-                "price": "₺199",
-                "period": "/AY"
+                "price": "Şu an tamamen ücretsiz",
+                "period": ""
             },
             "others": {
                 "title": "Diğerleri",
@@ -535,14 +535,14 @@
                 "period": "/AY"
             },
             "banner": {
-                "title": "Geleceğinize Yılda ",
-                "title_accent": "₺42.000+ Daha Fazla ",
-                "title_end": "Yatırım Yapın",
-                "description": "Büyüdükçe cezalandırılmayın. Ayda sadece ₺20.000 ciro yapsanız bile, komisyonlu platformlar yıllık kazancınızın ",
-                "description_accent": "₺40.000'dan fazlasını ",
-                "description_end": "cebinizden alır. Sety ile kazancınızın %100'ü size aittir.",
-                "button": "Hemen Kazancını Korumaya Başla",
-                "button_mobile": "Hemen Başla"
+                "title": "Kazancının Tek Sahibi ",
+                "title_accent": "Sensin",
+                "title_end": "",
+                "description": "Komisyon yok, bekleme yok, aracı yok. ",
+                "description_accent": "Satış anında",
+                "description_end": " ödeme doğrudan sana geçer.",
+                "button": "Hemen Mağazanı Aç",
+                "button_mobile": "Hemen Mağazanı Aç"
             }
         },
         "social_proof": {
@@ -565,8 +565,8 @@
             ]
         },
         "sticky_cta": {
-            "label": "HEMEN BAŞLA",
-            "subtitle": "1 Ay Ücretsiz",
+            "label": "🎉 Lansmana Özel",
+            "subtitle": "Ücretsiz mağazanı şimdi aç",
             "button": "Mağazanı Aç"
         }
     }

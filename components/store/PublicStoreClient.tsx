@@ -63,6 +63,33 @@ const iconMap: Record<string, any> = {
     dollar: DollarSign,
 };
 
+const DEFAULT_COVERS: Record<string, string[]> = {
+    digital_product: [
+        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2574&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1557683311-eac922347aa1?q=80&w=2629&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=2670&auto=format&fit=crop',
+    ],
+    coaching_call: [
+        'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2669&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=2574&auto=format&fit=crop',
+    ],
+    external_link: [
+        'https://images.unsplash.com/photo-1512758684065-94ed158f5612?q=80&w=2574&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1614850715649-1d0106293bd1?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1520869562399-e772f042f422?q=80&w=2673&auto=format&fit=crop',
+    ]
+};
+
 const getFallbackIcon = (type: string) => {
     switch (type) {
         case 'digital_product': return Download;
@@ -335,8 +362,9 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
         }
 
         // If it's manual, we don't open a link, the details are shown in the bottom sheet success state
-        if (product.external_checkout_url && product.checkout_provider !== 'manual') {
-            let url = product.external_checkout_url;
+        const checkoutUrl = product.external_checkout_url || profile?.payment_url;
+        if (checkoutUrl && product.checkout_provider !== 'manual') {
+            let url = checkoutUrl;
             if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
             }
@@ -373,7 +401,6 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
     }
 
     const {
-        theme_id = 'minimal',
         brand_color = '#5500ff',
         font_family = 'Inter',
         button_style = 'rounded',
@@ -381,6 +408,8 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
         show_affiliate_badge = true,
         cover_image_url,
     } = profile || {};
+
+    const theme_id = 'arctic-glass' as string;
 
     const fontStyles = ({
         'Inter': 'font-inter',
@@ -647,16 +676,12 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                                     "w-16 h-16 bg-slate-50 flex-shrink-0 overflow-hidden flex items-center justify-center relative",
                                                     theme_id === 'neo-brutalist' ? "rounded-lg border-2 border-black" : "rounded-2xl border border-slate-100"
                                                 )}>
-                                                    {product.image_url ? (
-                                                        <Image
-                                                            src={product.image_url}
-                                                            fill
-                                                            className="object-cover"
-                                                            alt=""
-                                                        />
-                                                    ) : (
-                                                        <IconComponent className="w-7 h-7 text-slate-400 group-hover:scale-110 transition-transform" />
-                                                    )}
+                                                    <Image
+                                                        src={product.image_url || DEFAULT_COVERS[product.type]?.[0] || DEFAULT_COVERS['digital_product'][0]}
+                                                        fill
+                                                        className="object-cover"
+                                                        alt=""
+                                                    />
                                                 </div>
 
                                                 <div className="flex-1 flex items-center justify-between gap-4">
@@ -720,32 +745,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                 </div>
             </div>
 
-            {/* ═══ BRANDING BADGE ═══ */}
-            {show_affiliate_badge && (
-                <div className="fixed bottom-6 left-6 z-50 animate-in slide-in-from-bottom-10 duration-1000 delay-500">
-                    <div className={cn(
-                        "flex items-center gap-3 bg-white rounded-full p-2 pr-6 shadow-2xl border transition-all hover:scale-105 active:scale-95 group",
-                        isDarkTheme ? "bg-slate-900 border-slate-800" :
-                        theme_id === 'neo-brutalist' ? "bg-white border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rounded-xl" :
-                        "bg-white border-slate-100"
-                    )}>
-                        <div className="p-1 bg-primary/10 rounded-full">
-                            <SetyLogo size="sm" />
-                        </div>
-                        <span className={cn(
-                            "text-[15px] font-black tracking-tight",
-                            isDarkTheme ? "text-white" : "text-slate-900"
-                        )}>Sety</span>
-                        <span className="text-slate-200 text-[14px]">·</span>
-                        <button
-                            onClick={() => window.open('https://sety.store', '_blank')}
-                            className="text-[14px] font-extrabold text-[#5c4fff] hover:opacity-70 transition-opacity tracking-tight whitespace-nowrap"
-                        >
-                            30 Gün Ücretsiz Deneyin
-                        </button>
-                    </div>
-                </div>
-            )}
+
 
             <ProductBottomSheet
                 isOpen={isSheetOpen}

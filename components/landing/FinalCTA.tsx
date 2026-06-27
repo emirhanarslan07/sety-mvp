@@ -3,9 +3,11 @@
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { BadgeCheck, Sparkles, Zap } from 'lucide-react';
-import Link from 'next/link';
+import { useAuthModal } from '@/context/AuthModalContext';
 
 export function FinalCTA() {
+    const { openModal } = useAuthModal();
+    
     return (
         <section className="py-24 md:py-40 bg-background relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
@@ -62,12 +64,10 @@ export function FinalCTA() {
                             transition={{ delay: 0.5 }}
                             className="flex flex-col sm:flex-row items-center justify-center gap-6"
                         >
-                            <Link href="/auth?mode=signup">
-                                <Button size="xl" className="group relative bg-[#5500ff] hover:bg-[#4400cc] text-white px-16 h-20 rounded-full font-black text-xl shadow-[0_20px_40px_rgba(85,0,255,0.3)] transition-all hover:scale-105 active:scale-95 border-none">
-                                    Hemen Ücretsiz Başla
-                                    <div className="absolute inset-x-0 h-1 bottom-0 bg-white/20 blur-sm group-hover:bg-white/30 transition-colors" />
-                                </Button>
-                            </Link>
+                            <Button onClick={() => openModal('signup')} size="xl" className="group relative bg-[#5500ff] hover:bg-[#4400cc] text-white px-16 h-20 rounded-full font-black text-xl shadow-[0_20px_40px_rgba(85,0,255,0.3)] transition-all hover:scale-105 active:scale-95 border-none">
+                                Hemen Ücretsiz Başla
+                                <div className="absolute inset-x-0 h-1 bottom-0 bg-white/20 blur-sm group-hover:bg-white/30 transition-colors" />
+                            </Button>
 
                             <div className="flex flex-col items-start gap-1 text-left sm:ml-4">
                                 <div className="flex items-center gap-2 text-white/60 font-black text-sm uppercase tracking-wider">

@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 import { useTranslation } from '@/lib/i18n/context';
+import { useAuthModal } from '@/context/AuthModalContext';
 
 export function CommissionBand() {
     const { t } = useTranslation();
+    const { openModal } = useAuthModal();
     return (
         <section className="relative py-32 md:py-48 flex justify-center items-center overflow-hidden bg-background">
             <div className="w-full max-w-6xl mx-auto px-6 text-center">
@@ -48,10 +50,10 @@ export function CommissionBand() {
 
                         {/* Balanced Typography on the Right */}
                         <div className="flex flex-col justify-center relative z-10 space-y-1">
-                            <h2 className="text-5xl md:text-7xl font-black text-foreground tracking-tighter leading-none font-logo">
+                            <h2 className="text-5xl md:text-7xl font-extrabold text-foreground tracking-tighter leading-none font-logo">
                                 {t('landing.commission_band.title')}
                             </h2>
-                            <p className="text-5xl md:text-7xl font-black text-slate-950 tracking-tighter leading-none font-logo max-w-xl">
+                            <p className="text-5xl md:text-7xl font-extrabold text-slate-950 tracking-tighter leading-none font-logo max-w-xl">
                                 {t('landing.commission_band.subtitle')}<span className="text-[#5500ff]">{t('landing.commission_band.subtitle_accent')}</span>{t('landing.commission_band.subtitle_end')}
                             </p>
                         </div>
@@ -63,15 +65,13 @@ export function CommissionBand() {
                         transition={{ delay: 0.5 }}
                         className="mt-12"
                     >
-                        <Link href="/auth?mode=signup">
-                            <Button size="xl" className="px-16 rounded-full font-black text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none">
-                                {t('landing.commission_band.button')} <motion.span
-                                    animate={{ x: [0, 5, 0] }}
-                                    transition={{ repeat: Infinity, duration: 1.5 }}
-                                    className="inline-block ml-2"
-                                >→</motion.span>
-                            </Button>
-                        </Link>
+                        <Button onClick={() => openModal('signup')} size="xl" className="px-16 rounded-full font-black text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none">
+                            {t('landing.commission_band.button')} <motion.span
+                                animate={{ x: [0, 5, 0] }}
+                                transition={{ repeat: Infinity, duration: 1.5 }}
+                                className="inline-block ml-2"
+                            >→</motion.span>
+                        </Button>
 
                     </motion.div>
                 </motion.div>

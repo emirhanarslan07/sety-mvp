@@ -16,7 +16,7 @@ import {
     Check,
     ArrowRight
 } from 'lucide-react';
-import Link from 'next/link';
+import { useAuthModal } from '@/context/AuthModalContext';
 
 const tools = [
     {
@@ -76,6 +76,8 @@ const tools = [
 ];
 
 export function ToolComparison() {
+    const { openModal } = useAuthModal();
+
     return (
         <section className="py-24 md:py-32 bg-slate-50 relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
@@ -156,12 +158,10 @@ export function ToolComparison() {
                     transition={{ delay: 0.3 }}
                     className="text-center mt-12"
                 >
-                    <Link href="/auth?mode=signup">
-                        <Button size="xl" className="bg-[#1a1b4b] hover:bg-[#1a1b4b]/90 text-white px-12 rounded-full font-black text-lg h-16 shadow-2xl transition-all hover:scale-105 active:scale-95 border-none">
-                            Deneme Sürümünü Başlat
-                            <ArrowRight className="ml-2 w-5 h-5" />
-                        </Button>
-                    </Link>
+                    <Button onClick={() => openModal('signup')} size="xl" className="bg-[#1a1b4b] hover:bg-[#1a1b4b]/90 text-white px-12 rounded-full font-black text-lg h-16 shadow-2xl transition-all hover:scale-105 active:scale-95 border-none">
+                        Deneme Sürümünü Başlat
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
                 </motion.div>
             </div>
         </section>

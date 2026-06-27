@@ -7,22 +7,22 @@ import Image from 'next/image';
 
 const testimonials = [
     {
-        name: 'Sarah Johnson',
+        name: 'Selin Yıldız',
         roleKey: 0,
-        followers: '45K',
-        image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
+        followers: '45B',
+        image: 'https://api.dicebear.com/7.x/micah/svg?seed=Selin&backgroundColor=b6e3f4',
     },
     {
-        name: 'Marcus Chen',
+        name: 'Mert Yılmaz',
         roleKey: 1,
-        followers: '120K',
-        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
+        followers: '120B',
+        image: 'https://api.dicebear.com/7.x/micah/svg?seed=Mert&backgroundColor=c0aede',
     },
     {
-        name: 'Claire Vance',
+        name: 'Ayşegül Yılmaz',
         roleKey: 2,
-        followers: '32K',
-        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
+        followers: '32B',
+        image: '/aysegul.png',
     },
 ];
 

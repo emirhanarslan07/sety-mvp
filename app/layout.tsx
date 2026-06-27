@@ -60,6 +60,8 @@ import { ToastProvider } from "@/context/ToastContext";
 import { headers, cookies } from "next/headers";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import { AuthModalProvider } from "@/context/AuthModalContext";
+import { AuthModal } from "@/components/auth/AuthModal";
 
 const inter = Inter({
     subsets: ["latin", "latin-ext"],
@@ -163,17 +165,20 @@ export default function RootLayout({
                 <PHProvider>
                     <I18nProvider>
                         <ToastProvider>
-                            <ThemeProvider
-                                attribute="class"
-                                defaultTheme="light"
-                                forcedTheme="light"
-                                enableSystem={false}
-                                disableTransitionOnChange
-                            >
-                                <DiagnosticLayer />
-                                {children}
-                                <Analytics />
-                            </ThemeProvider>
+                            <AuthModalProvider>
+                                <ThemeProvider
+                                    attribute="class"
+                                    defaultTheme="light"
+                                    forcedTheme="light"
+                                    enableSystem={false}
+                                    disableTransitionOnChange
+                                >
+                                    <DiagnosticLayer />
+                                    {children}
+                                    <AuthModal />
+                                    <Analytics />
+                                </ThemeProvider>
+                            </AuthModalProvider>
                         </ToastProvider>
                     </I18nProvider>
                 </PHProvider>

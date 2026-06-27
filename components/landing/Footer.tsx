@@ -24,7 +24,6 @@ export function Footer() {
 
     const footerLinks = [
         { name: t('landing.nav.login'), href: '/auth?mode=login' },
-        { name: 'Pricing', href: '/pricing' },
         { name: t('landing.footer.help'), href: '#faq' },
         { name: t('landing.footer.privacy'), href: '/privacy' },
         { name: t('landing.footer.terms'), href: '/terms' },

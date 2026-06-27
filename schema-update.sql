@@ -122,3 +122,10 @@ DO $$ BEGIN
 END $$;
 
 -- Tamamlandı! ✅
+
+-- 6. user_profiles tablosuna onboarding_completed kolonu
+DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'user_profiles' AND column_name = 'onboarding_completed') THEN
+        ALTER TABLE public.user_profiles ADD COLUMN onboarding_completed BOOLEAN DEFAULT false;
+    END IF;
+END $$;

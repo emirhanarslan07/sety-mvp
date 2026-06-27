@@ -34,6 +34,33 @@ const CURRENCIES = [
     { value: 'GBP', label: '£ GBP — İngiliz Sterlini' },
 ];
 
+const DEFAULT_COVERS: Record<string, string[]> = {
+    digital_product: [
+        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2574&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1557683311-eac922347aa1?q=80&w=2629&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=2670&auto=format&fit=crop',
+    ],
+    coaching_call: [
+        'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2669&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=2574&auto=format&fit=crop',
+    ],
+    external_link: [
+        'https://images.unsplash.com/photo-1512758684065-94ed158f5612?q=80&w=2574&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1614850715649-1d0106293bd1?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2670&auto=format&fit=crop',
+        'https://images.unsplash.com/photo-1520869562399-e772f042f422?q=80&w=2673&auto=format&fit=crop',
+    ]
+};
+
 export default function ProductEditorModal({
     isOpen,
     onClose,
@@ -59,7 +86,6 @@ export default function ProductEditorModal({
     const [checkoutUrl, setCheckoutUrl] = useState(editingProduct?.external_checkout_url || '');
     const [imageUrl, setImageUrl] = useState(editingProduct?.image_url || '');
 
-    // Resolve product type when editing
     useEffect(() => {
         if (editingProduct && !selectedType) {
             const types = getProductTypes((k) => k);
@@ -67,6 +93,14 @@ export default function ProductEditorModal({
             setSelectedType(found || types[0]);
         }
     }, [editingProduct]);
+
+    // Set default cover image when opening new product step 2
+    useEffect(() => {
+        if (step === 2 && !editingProduct && selectedType && !imageUrl) {
+            const defaults = DEFAULT_COVERS[selectedType.id] || DEFAULT_COVERS['digital_product'];
+            setImageUrl(defaults[0]);
+        }
+    }, [step, selectedType, editingProduct]);
 
     // Reset when closed
     useEffect(() => {
@@ -275,24 +309,49 @@ export default function ProductEditorModal({
                     {step === 2 && (
                         <div className="px-8 pb-8 space-y-6">
 
-                            {/* Image Upload */}
+                            {/* Image Upload & Gallery */}
                             <div className="space-y-3">
                                 <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
-                                    Görsel <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>
+                                    Kapak Görseli <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>
                                 </label>
-                                <div className="flex items-center gap-5">
-                                    <div className="w-20 h-20 rounded-[20px] bg-slate-100 border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center shrink-0 relative">
-                                        {imageUrl ? (
-                                            <Image src={imageUrl} alt="" fill className="object-cover" sizes="80px" />
-                                        ) : (
-                                            <ImageLucide className="w-8 h-8 text-slate-300" />
-                                        )}
+                                <div className="flex flex-col gap-4">
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-20 h-20 rounded-[20px] bg-slate-100 border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center shrink-0 relative">
+                                            {imageUrl ? (
+                                                <Image src={imageUrl} alt="" fill className="object-cover" sizes="80px" />
+                                            ) : (
+                                                <ImageLucide className="w-8 h-8 text-slate-300" />
+                                            )}
+                                        </div>
+                                        <label className="cursor-pointer h-12 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[13px] flex items-center gap-2 transition-all active:scale-95">
+                                            <Upload className="w-4 h-4" />
+                                            {imageUploading ? 'Yükleniyor...' : imageUrl ? 'Özel Görsel Yükle' : 'Görsel Seç'}
+                                            <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={imageUploading} />
+                                        </label>
                                     </div>
-                                    <label className="cursor-pointer h-12 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[13px] flex items-center gap-2 transition-all active:scale-95">
-                                        <Upload className="w-4 h-4" />
-                                        {imageUploading ? 'Yükleniyor...' : imageUrl ? 'Değiştir' : 'Görsel Seç'}
-                                        <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={imageUploading} />
-                                    </label>
+                                    
+                                    {/* Default covers gallery */}
+                                    {selectedType && (
+                                        <div className="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar">
+                                            {(DEFAULT_COVERS[selectedType.id] || DEFAULT_COVERS['digital_product']).map((cover, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => setImageUrl(cover)}
+                                                    className={cn(
+                                                        "relative w-16 h-16 rounded-[14px] overflow-hidden shrink-0 transition-all border-2",
+                                                        imageUrl === cover ? "border-[#5500ff] shadow-md shadow-indigo-500/20" : "border-transparent opacity-60 hover:opacity-100 hover:border-slate-300"
+                                                    )}
+                                                >
+                                                    <Image src={cover} alt="" fill className="object-cover" sizes="64px" />
+                                                    {imageUrl === cover && (
+                                                        <div className="absolute top-1 right-1 w-4 h-4 bg-[#5500ff] rounded-full flex items-center justify-center z-10 shadow-sm">
+                                                            <Check className="w-2.5 h-2.5 text-white stroke-[3px]" />
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
@@ -373,9 +432,15 @@ export default function ProductEditorModal({
                                     />
                                 </div>
                                 {!isLinkType && (
-                                    <p className="text-[12px] text-slate-400 font-bold px-1">
-                                        Müşteriler bu linke yönlendirilir — Iyzico, Shopier, Stripe, Calendly veya WhatsApp linki olabilir.
-                                    </p>
+                                    <div className="mt-3 flex items-start gap-3 p-4 rounded-xl bg-slate-100/50 border border-slate-200/50">
+                                        <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0">
+                                            <Link2 className="w-4 h-4 text-[#5500ff]" />
+                                        </div>
+                                        <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
+                                            Müşterileriniz satın al dediklerinde bu linke yönlendirilecek.
+                                            <strong className="text-slate-700 block mt-1">Iyzico, Shopier, Stripe, Calendly veya WhatsApp linki ekleyebilirsiniz.</strong>
+                                        </p>
+                                    </div>
                                 )}
                             </div>
                         </div>

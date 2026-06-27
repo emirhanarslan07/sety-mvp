@@ -65,7 +65,7 @@ export function Features() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-6xl font-extrabold tracking-tighter text-foreground mb-8 leading-tight md:leading-[1.15]"
+                        className="text-4xl md:text-6xl font-bold tracking-tighter text-foreground mb-8 leading-tight md:leading-[1.15]"
                     >
                         {t('landing.features.title')} <br />
                         <span className="text-[#5500ff]">{t('landing.features.title_accent')}</span>

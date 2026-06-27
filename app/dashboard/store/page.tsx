@@ -30,6 +30,7 @@ import Image from 'next/image';
 import StoreHeader from '@/components/dashboard/store/StoreHeader';
 import ThemeCarousel, { THEME_TEMPLATES } from '@/components/dashboard/store/ThemeCarousel';
 import ProductListSection from '@/components/dashboard/store/ProductListSection';
+import StorePreview from '@/components/dashboard/store/StorePreview';
 
 // Modals
 import ProductEditorModal from '@/components/modals/ProductEditorModal';
@@ -171,17 +172,16 @@ function StorePageContent() {
         if (!user || !store) return;
         setIsSavingDesign(true);
         try {
-            const activeThemeData = THEME_TEMPLATES.find(t => t.id === selectedTheme);
             const isEvent = dataOverride && (dataOverride.target || dataOverride.nativeEvent);
             const updateData = (dataOverride && !isEvent) ? dataOverride : {
                 display_name: displayName,
                 bio: bio,
                 store_logo_url: storeLogo,
                 cover_image_url: coverImage,
-                theme_id: selectedTheme,
-                brand_color: activeThemeData?.color || '#5500ff',
-                font_family: activeThemeData?.font || 'Inter',
-                button_style: activeThemeData?.buttonStyle || 'rounded',
+                theme_id: 'dreamy-mesh',
+                brand_color: '#5500ff',
+                font_family: 'Inter',
+                button_style: 'rounded',
                 announcement_text: announcement,
                 show_affiliate_badge: showAffiliateBadge,
                 social_links: socialLinks,
@@ -279,8 +279,7 @@ function StorePageContent() {
 
             <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
                 <div className="max-w-[1400px] mx-auto pb-24">
-
-                    <div className="max-w-[900px] space-y-12">
+                    <div className="w-full space-y-12">
 
                         {/* Tab Navigation */}
                         <div className="sticky top-0 z-40 md:static flex justify-center w-full mb-8 pt-4">
@@ -336,37 +335,47 @@ function StorePageContent() {
                                 )}
 
                                 {activeTab === 'design' && (
-                                    <>
-                                        {/* ── TEMA SEÇİMİ ────────────────────── */}
-                                        <section className="space-y-6">
-                                            <div className="px-1">
-                                                <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Tema Seçimi</h3>
-                                                <p className="text-[14px] font-bold text-slate-400 mt-1">Mağazanızın görünümünü belirleyen tema. Seçtiğinizde otomatik kaydedilir.</p>
+                                    <div className="max-w-[600px] mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                        <div className="space-y-2">
+                                            <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Mağaza Tasarımı</h3>
+                                            <p className="text-[14px] font-bold text-slate-400">Mağazanızda görünecek temel metinleri düzenleyin.</p>
+                                        </div>
+
+                                        <div className="space-y-6 bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
+                                            <div className="space-y-2">
+                                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Marka Adı (Görüntülenen Ad)</label>
+                                                <input
+                                                    type="text"
+                                                    value={displayName}
+                                                    onChange={(e) => setDisplayName(e.target.value)}
+                                                    placeholder="Marka adınız"
+                                                    className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
+                                                />
                                             </div>
-                                            <ThemeCarousel
-                                                selectedTheme={selectedTheme}
-                                                onSelectTheme={(theme) => {
-                                                    setSelectedTheme(theme.id);
-                                                    handleSaveDesign({
-                                                        display_name: displayName,
-                                                        bio: bio,
-                                                        store_logo_url: storeLogo,
-                                                        cover_image_url: coverImage,
-                                                        theme_id: theme.id,
-                                                        brand_color: theme.color,
-                                                        font_family: theme.font || 'Inter',
-                                                        button_style: theme.buttonStyle || 'rounded',
-                                                        announcement_text: announcement,
-                                                        show_affiliate_badge: showAffiliateBadge,
-                                                        social_links: socialLinks,
-                                                        updated_at: new Date().toISOString()
-                                                    });
-                                                }}
-                                            />
-                                        </section>
 
+                                            <div className="space-y-2">
+                                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Biyografi</label>
+                                                <textarea
+                                                    value={bio}
+                                                    onChange={(e) => setBio(e.target.value)}
+                                                    placeholder="Kısa biyografi"
+                                                    rows={3}
+                                                    className="w-full px-5 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[14px] text-slate-900 transition-all resize-none"
+                                                />
+                                            </div>
 
-                                    </>
+                                            <div className="space-y-2">
+                                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Duyuru Çubuğu Metni</label>
+                                                <input
+                                                    type="text"
+                                                    value={announcement}
+                                                    onChange={(e) => setAnnouncement(e.target.value)}
+                                                    placeholder="Mağazanın üstünde gösterilecek duyuru"
+                                                    className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
                                 )}
                             </motion.div>
                         </AnimatePresence>

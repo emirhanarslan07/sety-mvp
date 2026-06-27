@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n/context';
+import { useAuthModal } from '@/context/AuthModalContext';
 
 export function StickyCTA() {
     const { t } = useTranslation();
+    const { openModal } = useAuthModal();
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -39,15 +41,15 @@ export function StickyCTA() {
                                 <p className="text-[9px] md:text-[10px] font-black text-[#5500ff] uppercase tracking-widest leading-none mb-1">{t('landing.sticky_cta.label')}</p>
                                 <p className="text-xs md:text-sm font-bold text-gray-900 leading-none">{t('landing.sticky_cta.subtitle')}</p>
                             </div>
-                            <Link href="/auth?mode=signup" className="flex-none">
-                                <Button className="w-auto px-4 md:px-6 rounded-2xl h-10 md:h-12 bg-[#5500ff] hover:bg-[#4400cc] text-white font-black text-xs md:text-sm shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">
+                            <div className="flex-none">
+                                <Button onClick={() => openModal('signup')} className="w-auto px-4 md:px-6 rounded-full h-10 md:h-12 bg-[#5500ff] hover:bg-[#4400cc] text-white font-black text-xs md:text-sm shadow-xl shadow-indigo-500/20 active:scale-95 transition-all">
                                     {t('landing.sticky_cta.button')} <motion.span
                                         animate={{ x: [0, 5, 0] }}
                                         transition={{ repeat: Infinity, duration: 1.5 }}
                                         className="inline-block ml-1"
                                     >→</motion.span>
                                 </Button>
-                            </Link>
+                            </div>
                         </div>
                     </div>
                 </motion.div>

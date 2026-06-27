@@ -58,7 +58,7 @@ function SettingsContent() {
     const [isVerified, setIsVerified] = useState(false);
     const [imageUploading, setImageUploading] = useState(false);
     const [coverUploading, setCoverUploading] = useState(false);
-    const [paymentConfig, setPaymentConfig] = useState<any>(null);
+    const [paymentUrl, setPaymentUrl] = useState('');
 
     // Social links
     const [socialLinks, setSocialLinks] = useState({
@@ -97,7 +97,7 @@ function SettingsContent() {
             if (profileData) {
                 setFullName(profileData.full_name || '');
                 setProfileImage(profileData.profile_image_url || '');
-                setPaymentConfig(profileData.payment_config || {});
+                setPaymentUrl(profileData.payment_url || '');
             }
 
             const { data: storeData } = await supabase
@@ -274,19 +274,22 @@ function SettingsContent() {
         }
     };
 
-    const handleUpdatePayment = async (config: any) => {
+    const handleUpdatePayment = async (newUrl: string) => {
+        setSaving('payments');
         try {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) return;
             const { error } = await supabase
                 .from('user_profiles')
-                .update({ payment_config: config })
+                .update({ payment_url: newUrl })
                 .eq('user_id', user.id);
             if (error) throw error;
-            setPaymentConfig(config);
-            showToast('Ödeme ayarlarınız kaydedildi. ✅', 'success');
+            setPaymentUrl(newUrl);
+            showToast('Ödeme bağlantınız kaydedildi. ✅', 'success');
         } catch (err: any) {
             showToast(err.message, 'error');
+        } finally {
+            setSaving(null);
         }
     };
 
@@ -306,7 +309,6 @@ function SettingsContent() {
     const tabs: { id: TabType; label: string; icon: any }[] = [
         { id: 'profile', label: 'Profil', icon: User },
         { id: 'payments', label: 'Ödeme Yöntemleri', icon: Wallet },
-        { id: 'billing', label: 'Abonelik', icon: CreditCard },
         { id: 'security', label: 'Güvenlik', icon: Shield },
     ];
 
@@ -388,29 +390,6 @@ function SettingsContent() {
                         <SectionCard>
                             <h2 className="text-[20px] font-black text-slate-900 tracking-tight mb-6">Profil Görselleri</h2>
                             <div className="space-y-6">
-                                {/* Cover image */}
-                                <div className="relative h-32 rounded-[20px] bg-slate-100 overflow-hidden">
-                                    {coverImage ? (
-                                        <Image src={coverImage} alt="Kapak" fill className="object-cover" sizes="100vw" />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <ImageIcon className="w-8 h-8 text-slate-300" />
-                                        </div>
-                                    )}
-                                    {coverUploading && (
-                                        <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-                                            <Loader2 className="w-6 h-6 animate-spin text-[#5500ff]" />
-                                        </div>
-                                    )}
-                                    <label className="absolute inset-0 flex items-end justify-end p-3 cursor-pointer">
-                                        <span className="h-9 px-4 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 text-slate-700 font-black text-[12px] flex items-center gap-1.5 hover:bg-white transition-all">
-                                            <Camera className="w-3.5 h-3.5" />
-                                            {coverUploading ? 'Yükleniyor...' : 'Kapak Değiştir'}
-                                        </span>
-                                        <input type="file" accept="image/*" className="hidden" onChange={handleCoverImageUpload} disabled={coverUploading} />
-                                    </label>
-                                </div>
-
                                 {/* Profile photo */}
                                 <div className="flex items-center gap-5">
                                     <div className="relative w-20 h-20 rounded-full bg-slate-100 border-4 border-white shadow-lg overflow-hidden flex-shrink-0">
@@ -509,23 +488,6 @@ function SettingsContent() {
                                         />
                                     </div>
                                 </div>
-
-                                {/* Verified badge toggle */}
-                                <div
-                                    onClick={() => setIsVerified(!isVerified)}
-                                    className={cn(
-                                        'flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all w-fit',
-                                        isVerified ? 'border-yellow-200 bg-yellow-50' : 'border-slate-100 bg-slate-50 hover:border-slate-200'
-                                    )}
-                                >
-                                    <Zap className={cn('w-5 h-5', isVerified ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300')} />
-                                    <div>
-                                        <p className={cn('text-[14px] font-black', isVerified ? 'text-yellow-700' : 'text-slate-500')}>
-                                            {isVerified ? 'Doğrulanmış Rozet Aktif' : 'Doğrulanmış Rozet'}
-                                        </p>
-                                        <p className="text-[12px] font-bold text-slate-400">Mağazanızda ⚡ rozeti gösterilir</p>
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="mt-8">
@@ -567,12 +529,13 @@ function SettingsContent() {
                     </div>
                 )}
 
-                {/* PAYMENTS TAB */}
                 {activeTab === 'payments' && (
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <PaymentSettings
-                            initialConfig={paymentConfig}
-                            onSave={handleUpdatePayment}
+                            paymentUrl={paymentUrl}
+                            setPaymentUrl={setPaymentUrl}
+                            onSave={() => handleUpdatePayment(paymentUrl)}
+                            saving={saving === 'payments'}
                         />
                     </div>
                 )}
@@ -644,7 +607,7 @@ function SettingsContent() {
                                         <p className="text-slate-400 font-bold text-[14px]">Hesabınıza ekstra güvenlik katmanı ekleyin.</p>
                                     </div>
                                 </div>
-                                <button className="h-11 px-6 rounded-full bg-slate-900 text-white font-black text-[14px] hover:bg-[#5500ff] transition-all active:scale-95">
+                                <button className="h-12 px-8 rounded-2xl bg-slate-900 text-white font-black text-[14px] hover:bg-[#5500ff] transition-all active:scale-95">
                                     Etkinleştir
                                 </button>
                             </div>
@@ -659,7 +622,7 @@ function SettingsContent() {
                                     <p className="font-black text-rose-600">Hesabı Sil</p>
                                     <p className="text-rose-400 font-bold text-[13px]">Tüm verileriniz kalıcı olarak silinir.</p>
                                 </div>
-                                <button className="h-11 px-6 rounded-full bg-rose-600 text-white font-black text-[14px] hover:bg-rose-700 transition-all active:scale-95 flex items-center gap-2">
+                                <button className="h-12 px-8 rounded-2xl bg-rose-600 text-white font-black text-[14px] hover:bg-rose-700 transition-all active:scale-95 flex items-center gap-2">
                                     <Trash2 className="w-4 h-4" />
                                     Sil
                                 </button>

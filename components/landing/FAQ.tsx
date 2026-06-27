@@ -23,7 +23,7 @@ export function FAQ() {
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="text-4xl md:text-5xl font-black tracking-tighter text-foreground mb-8"
+                            className="text-4xl md:text-5xl font-extrabold tracking-tighter text-foreground mb-8"
                             dangerouslySetInnerHTML={{ __html: t('landing.faq.title').replace(' ', '<br />') }}
                         />
                         <p className="text-muted-foreground text-lg leading-relaxed font-bold max-w-sm">

@@ -115,14 +115,6 @@ export default function AnalyticsPage() {
             bg: 'bg-emerald-50',
         },
         { 
-            label: 'Toplam Abone', 
-            value: stats.totalSubscribers.toLocaleString(), 
-            subValue: 'E-posta Listesi',
-            icon: Users, 
-            color: 'text-pink-600', 
-            bg: 'bg-pink-50',
-        },
-        { 
             label: 'Performans', 
             value: 'Aktif', 
             subValue: 'Mağaza Durumu',
@@ -222,26 +214,26 @@ export default function AnalyticsPage() {
                                         <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.02}/>
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#94a3b8" strokeOpacity={0.1} />
                                 <XAxis 
                                     dataKey="date" 
                                     axisLine={false} 
                                     tickLine={false} 
-                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                                     dy={10}
                                 />
                                 <YAxis 
                                     yAxisId="left"
                                     axisLine={false} 
                                     tickLine={false} 
-                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                                 />
                                 <YAxis 
                                     yAxisId="right"
                                     orientation="right"
                                     axisLine={false} 
                                     tickLine={false} 
-                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 700 }}
+                                    tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 500 }}
                                 />
                                 <Tooltip 
                                     contentStyle={{ 
@@ -267,6 +259,7 @@ export default function AnalyticsPage() {
                                     fill="url(#colorViews)"
                                     dot={{ r: 3, fill: '#5500ff', stroke: '#fff', strokeWidth: 2 }}
                                     activeDot={{ r: 6, fill: '#5500ff', stroke: '#c4b5fd', strokeWidth: 3 }}
+                                    isAnimationActive={true}
                                 />
                                 <Area 
                                     yAxisId="right"
@@ -279,6 +272,7 @@ export default function AnalyticsPage() {
                                     fill="url(#colorClicks)"
                                     dot={{ r: 3, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }}
                                     activeDot={{ r: 6, fill: '#3b82f6', stroke: '#bfdbfe', strokeWidth: 3 }}
+                                    isAnimationActive={true}
                                 />
                             </AreaChart>
                         </ResponsiveContainer>

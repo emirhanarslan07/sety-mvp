@@ -1,5 +1,5 @@
 import { Navbar } from '@/components/landing/Navbar';
-import { FloatingIconsHero } from '@/components/ui/floating-icons-hero-section';
+import TurkishCreatorHero from '@/components/landing/TurkishCreatorHero';
 import { ProductShowcase } from '@/components/landing/ProductShowcase';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import { CommissionBand } from '@/components/landing/CommissionBand';
@@ -11,13 +11,12 @@ import { StickyCTA } from '@/components/landing/StickyCTA';
 import { Comparison } from '@/components/landing/Comparison';
 import { LeadMagnet } from '@/components/landing/LeadMagnet';
 
-
 export default function Home() {
     return (
         <main className="min-h-screen relative bg-background transition-colors duration-500">
             <Navbar />
 
-            <FloatingIconsHero />
+            <TurkishCreatorHero />
 
             <ProductShowcase />
 
@@ -43,7 +42,7 @@ export default function Home() {
                 <FAQ />
             </div>
 
-            <LeadMagnet />
+            {/* <LeadMagnet /> */}
 
 
 
