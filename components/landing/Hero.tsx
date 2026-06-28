@@ -1,7 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useAuthModal } from '@/context/AuthModalContext';
 
 export function Hero() {
+    const { openModal } = useAuthModal();
     return (
         <section className="relative overflow-hidden bg-gradient-to-br from-white via-gray-50 to-indigo-50 py-20 sm:py-32">
             <div className="container mx-auto px-4">
@@ -29,11 +33,9 @@ export function Hero() {
 
                         {/* CTAs */}
                         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
-                            <Link href="/auth">
-                                <Button size="lg" className="w-full sm:w-auto">
-                                    Get My Projection →
-                                </Button>
-                            </Link>
+                            <Button size="lg" className="w-full sm:w-auto" onClick={() => openModal('signup')}>
+                                Get My Projection →
+                            </Button>
                             <Button variant="outline" size="lg" className="w-full sm:w-auto">
                                 See Example
                             </Button>

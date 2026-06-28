@@ -5,9 +5,12 @@ import { SetyLogo } from '@/components/ui/SetyLogo';
 import { Twitter, Instagram, Linkedin } from 'lucide-react';
 
 import { useTranslation } from '@/lib/i18n/context';
+import { useAuthModal } from '@/context/AuthModalContext';
 
 export function Footer() {
     const { t } = useTranslation();
+
+    const { openModal } = useAuthModal();
 
     const socialLinks = [
         {
@@ -23,7 +26,7 @@ export function Footer() {
     ];
 
     const footerLinks = [
-        { name: t('landing.nav.login'), href: '/auth?mode=login' },
+        { name: t('landing.nav.login'), action: () => openModal('login') },
         { name: t('landing.footer.help'), href: '#faq' },
         { name: t('landing.footer.privacy'), href: '/privacy' },
         { name: t('landing.footer.terms'), href: '/terms' },
@@ -66,12 +69,21 @@ export function Footer() {
                         <ul className="flex flex-col gap-4">
                             {footerLinks.map((link, i) => (
                                 <li key={i}>
-                                    <Link
-                                        href={link.href}
-                                        className="text-[15px] font-bold text-muted-foreground hover:text-primary transition-colors font-jakarta"
-                                    >
-                                        {link.name}
-                                    </Link>
+                                    {link.action ? (
+                                        <button
+                                            onClick={link.action}
+                                            className="text-[15px] font-bold text-muted-foreground hover:text-primary transition-colors font-jakarta text-left"
+                                        >
+                                            {link.name}
+                                        </button>
+                                    ) : (
+                                        <Link
+                                            href={link.href!}
+                                            className="text-[15px] font-bold text-muted-foreground hover:text-primary transition-colors font-jakarta"
+                                        >
+                                            {link.name}
+                                        </Link>
+                                    )}
                                 </li>
                             ))}
                         </ul>
