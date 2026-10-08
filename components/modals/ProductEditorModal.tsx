@@ -86,11 +86,27 @@ export default function ProductEditorModal({
     const [checkoutUrl, setCheckoutUrl] = useState(editingProduct?.external_checkout_url || '');
     const [imageUrl, setImageUrl] = useState(editingProduct?.image_url || '');
 
+    // Coaching / Consultation specific state
+    const [coachingOnline, setCoachingOnline] = useState(editingProduct?.coaching_config?.allow_online ?? true);
+    const [coachingInPerson, setCoachingInPerson] = useState(editingProduct?.coaching_config?.allow_in_person ?? false);
+    const [coachingLocation, setCoachingLocation] = useState(editingProduct?.coaching_config?.location_address || '');
+    const [coachingDuration, setCoachingDuration] = useState<number>(editingProduct?.coaching_config?.duration_minutes || 60);
+    const [coachingHidePrice, setCoachingHidePrice] = useState(editingProduct?.coaching_config?.hide_price ?? false);
+    const [coachingPaymentMode, setCoachingPaymentMode] = useState<'request_only' | 'pay_now'>(editingProduct?.coaching_config?.payment_mode || 'request_only');
+
     useEffect(() => {
         if (editingProduct && !selectedType) {
             const types = getProductTypes((k) => k);
             const found = types.find((t) => t.id === editingProduct.type);
             setSelectedType(found || types[0]);
+        }
+        if (editingProduct?.coaching_config) {
+            setCoachingOnline(editingProduct.coaching_config.allow_online ?? true);
+            setCoachingInPerson(editingProduct.coaching_config.allow_in_person ?? false);
+            setCoachingLocation(editingProduct.coaching_config.location_address || '');
+            setCoachingDuration(editingProduct.coaching_config.duration_minutes || 60);
+            setCoachingHidePrice(editingProduct.coaching_config.hide_price ?? false);
+            setCoachingPaymentMode(editingProduct.coaching_config.payment_mode || 'request_only');
         }
     }, [editingProduct]);
 
@@ -115,6 +131,12 @@ export default function ProductEditorModal({
                 setCurrency('TRY');
                 setCheckoutUrl('');
                 setImageUrl('');
+                setCoachingOnline(true);
+                setCoachingInPerson(false);
+                setCoachingLocation('');
+                setCoachingDuration(60);
+                setCoachingHidePrice(false);
+                setCoachingPaymentMode('request_only');
             }
         }
     }, [isOpen]);
@@ -155,14 +177,31 @@ export default function ProductEditorModal({
     };
 
     const handleSubmit = async () => {
+        const isCoachingType = selectedType?.id === 'coaching_call';
+
         if (!title.trim()) {
             showToast('Lütfen bir başlık girin.', 'error');
             return;
         }
-        if (!isLinkType && !checkoutUrl.trim()) {
+
+        if (isCoachingType) {
+            if (!coachingOnline && !coachingInPerson) {
+                showToast('Lütfen en az bir görüşme türü (Online veya Yüz Yüze) seçin.', 'error');
+                return;
+            }
+            if (coachingInPerson && !coachingLocation.trim()) {
+                showToast('Lütfen yüz yüze görüşme için klinik adresini girin.', 'error');
+                return;
+            }
+            if (coachingPaymentMode === 'pay_now' && !checkoutUrl.trim()) {
+                showToast('Lütfen Shopier veya ödeme linkinizi girin.', 'error');
+                return;
+            }
+        } else if (!isLinkType && !checkoutUrl.trim()) {
             showToast('Lütfen ödeme/yönlendirme linkini girin.', 'error');
             return;
         }
+
         if (isLinkType && !checkoutUrl.trim()) {
             showToast('Lütfen bir URL girin.', 'error');
             return;
@@ -181,12 +220,21 @@ export default function ProductEditorModal({
                 .single();
             if (!storeData) throw new Error('Mağaza bulunamadı');
 
-            const payload = {
+            const coachingConfig = isCoachingType ? {
+                allow_online: coachingOnline,
+                allow_in_person: coachingInPerson,
+                location_address: coachingLocation.trim(),
+                duration_minutes: coachingDuration,
+                hide_price: coachingHidePrice,
+                payment_mode: coachingPaymentMode,
+            } : null;
+
+            const payload: any = {
                 user_id: user.id,
                 store_id: storeData.id,
                 title: title.trim(),
                 description: description.trim(),
-                price: parseFloat(price) || 0,
+                price: coachingHidePrice ? 0 : (parseFloat(price) || 0),
                 currency,
                 type: selectedType?.id || 'digital_product',
                 external_checkout_url: checkoutUrl.trim(),
@@ -194,7 +242,8 @@ export default function ProductEditorModal({
                 status: 'active',
                 visibility: isLandingPage ? 'hidden' : 'public',
                 thumbnail_style: 'callout',
-                button_text: 'Hemen Al',
+                button_text: isCoachingType ? 'Randevu Talep Et' : isLinkType ? 'Bağlantıyı Aç' : 'Hemen Al',
+                coaching_config: coachingConfig,
             };
 
             let error;
@@ -383,66 +432,268 @@ export default function ProductEditorModal({
                                 />
                             </div>
 
-                            {/* Price + Currency */}
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                        Fiyat {!isLinkType && <span className="text-[#5500ff]">*</span>}
-                                        {isLinkType && <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>}
-                                    </label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        step="0.01"
-                                        value={price}
-                                        onChange={(e) => setPrice(e.target.value)}
-                                        placeholder="0"
-                                        className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                        Para Birimi
-                                    </label>
-                                    <select
-                                        value={currency}
-                                        onChange={(e) => setCurrency(e.target.value)}
-                                        className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[14px] text-slate-900 transition-all appearance-none cursor-pointer"
-                                    >
-                                        {CURRENCIES.map((c) => (
-                                            <option key={c.value} value={c.value}>{c.label}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            {/* Checkout / Link URL */}
-                            <div className="space-y-2">
-                                <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                    {isLinkType ? 'Yönlendirme URL\'si' : 'Ödeme Linki'} <span className="text-[#5500ff]">*</span>
-                                </label>
-                                <div className="relative">
-                                    <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                                    <input
-                                        type="url"
-                                        value={checkoutUrl}
-                                        onChange={(e) => setCheckoutUrl(e.target.value)}
-                                        placeholder="https://"
-                                        className="w-full h-14 pl-12 pr-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
-                                    />
-                                </div>
-                                {!isLinkType && (
-                                    <div className="mt-3 flex items-start gap-3 p-4 rounded-xl bg-slate-100/50 border border-slate-200/50">
-                                        <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0">
-                                            <Link2 className="w-4 h-4 text-[#5500ff]" />
-                                        </div>
-                                        <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
-                                            Müşterileriniz satın al dediklerinde bu linke yönlendirilecek.
-                                            <strong className="text-slate-700 block mt-1">Iyzico, Shopier, Stripe, Calendly veya WhatsApp linki ekleyebilirsiniz.</strong>
+                            {/* COACHING CALL SPECIFIC FIELDS */}
+                            {selectedType?.id === 'coaching_call' ? (
+                                <div className="space-y-6 pt-2">
+                                    {/* 1. Seans Seçenekleri */}
+                                    <div className="space-y-3 p-5 rounded-2xl bg-indigo-50/50 border border-[#5500ff]/15">
+                                        <label className="block text-[13px] font-bold text-slate-900 uppercase tracking-wider">
+                                            Seans & Görüşme Türü <span className="text-[#5500ff]">*</span>
+                                        </label>
+                                        <p className="text-[12px] text-slate-500 font-medium">
+                                            Danışanlarınızın talep edebileceği görüşme türlerini belirleyin.
                                         </p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                                            <label className={cn(
+                                                "flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all bg-white select-none",
+                                                coachingOnline ? "border-[#5500ff] bg-indigo-50/30 text-[#5500ff]" : "border-slate-200 text-slate-700 hover:border-slate-300"
+                                            )}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={coachingOnline}
+                                                    onChange={(e) => setCoachingOnline(e.target.checked)}
+                                                    className="w-4 h-4 accent-[#5500ff] rounded"
+                                                />
+                                                <div>
+                                                    <span className="text-[14px] font-bold block text-slate-900">🌐 Online Görüşme</span>
+                                                    <span className="text-[11px] text-slate-400 font-medium">Google Meet / Zoom</span>
+                                                </div>
+                                            </label>
+
+                                            <label className={cn(
+                                                "flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all bg-white select-none",
+                                                coachingInPerson ? "border-[#5500ff] bg-indigo-50/30 text-[#5500ff]" : "border-slate-200 text-slate-700 hover:border-slate-300"
+                                            )}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={coachingInPerson}
+                                                    onChange={(e) => setCoachingInPerson(e.target.checked)}
+                                                    className="w-4 h-4 accent-[#5500ff] rounded"
+                                                />
+                                                <div>
+                                                    <span className="text-[14px] font-bold block text-slate-900">📍 Yüz Yüze Görüşme</span>
+                                                    <span className="text-[11px] text-slate-400 font-medium">Klinik / Ofis Ortamı</span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        {coachingInPerson && (
+                                            <div className="mt-3 space-y-1.5 animate-in fade-in">
+                                                <label className="block text-[12px] font-bold text-slate-700">
+                                                    Klinik / Ofis Adresi veya Konum <span className="text-[#5500ff]">*</span>
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={coachingLocation}
+                                                    onChange={(e) => setCoachingLocation(e.target.value)}
+                                                    placeholder="örn: Bağdat Caddesi No: 42, Kadıköy / İstanbul"
+                                                    className="w-full h-12 px-4 bg-white rounded-xl border-2 border-slate-200 focus:border-[#5500ff] outline-none font-bold text-[14px] text-slate-900 transition-all placeholder:text-slate-400"
+                                                />
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
+
+                                    {/* 2. Seans Süresi */}
+                                    <div className="space-y-2">
+                                        <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
+                                            Seans Süresi
+                                        </label>
+                                        <div className="grid grid-cols-4 gap-2.5">
+                                            {[30, 45, 60, 90].map((mins) => (
+                                                <button
+                                                    type="button"
+                                                    key={mins}
+                                                    onClick={() => setCoachingDuration(mins)}
+                                                    className={cn(
+                                                        "h-12 rounded-xl font-bold text-[14px] border-2 transition-all",
+                                                        coachingDuration === mins
+                                                            ? "bg-[#5500ff] text-white border-[#5500ff] shadow-md shadow-indigo-500/20"
+                                                            : "bg-slate-50 text-slate-700 border-transparent hover:border-slate-200"
+                                                    )}
+                                                >
+                                                    {mins} dk
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* 3. Ücret Gösterimi */}
+                                    <div className="space-y-3">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
+                                                    Seans Ücreti
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    step="0.01"
+                                                    disabled={coachingHidePrice}
+                                                    value={coachingHidePrice ? '' : price}
+                                                    onChange={(e) => setPrice(e.target.value)}
+                                                    placeholder={coachingHidePrice ? 'Gizli' : '2000'}
+                                                    className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all disabled:opacity-40"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
+                                                    Para Birimi
+                                                </label>
+                                                <select
+                                                    value={currency}
+                                                    onChange={(e) => setCurrency(e.target.value)}
+                                                    className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[14px] text-slate-900 transition-all appearance-none cursor-pointer"
+                                                >
+                                                    {CURRENCIES.map((c) => (
+                                                        <option key={c.value} value={c.value}>{c.label}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {/* Hide Price Toggle */}
+                                        <label className="flex items-center gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 cursor-pointer select-none">
+                                            <input
+                                                type="checkbox"
+                                                checked={coachingHidePrice}
+                                                onChange={(e) => setCoachingHidePrice(e.target.checked)}
+                                                className="w-4 h-4 accent-[#5500ff] rounded"
+                                            />
+                                            <div className="flex-1">
+                                                <span className="text-[13px] font-bold text-slate-900 block">Fiyat İletişimde Paylaşılacaktır / Ön Görüşme Ücretsiz</span>
+                                                <span className="text-[11px] text-slate-400 font-medium">Vitrinizde fiyat yerine "Ön Görüşme Ücretsiz / İletişimde Belirlenir" gösterilir.</span>
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                    {/* 4. Ödeme Yöntemi */}
+                                    <div className="space-y-3 p-5 rounded-2xl bg-slate-50 border border-slate-200/90">
+                                        <label className="block text-[13px] font-bold text-slate-900 uppercase tracking-wider">
+                                            Ödeme & Talep Yöntemi
+                                        </label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <button
+                                                type="button"
+                                                onClick={() => setCoachingPaymentMode('request_only')}
+                                                className={cn(
+                                                    "p-4 rounded-xl border-2 text-left transition-all",
+                                                    coachingPaymentMode === 'request_only'
+                                                        ? "bg-white border-[#5500ff] shadow-md shadow-indigo-500/10 text-slate-900"
+                                                        : "bg-white/60 border-slate-200 text-slate-600 hover:border-slate-300"
+                                                )}
+                                            >
+                                                <div className="text-[14px] font-black text-slate-900 mb-1 flex items-center gap-2">
+                                                    <span>📋 Sadece Ön Talep Topla</span>
+                                                    {coachingPaymentMode === 'request_only' && <span className="w-2 h-2 rounded-full bg-[#5500ff]" />}
+                                                </div>
+                                                <p className="text-[12px] text-slate-500 leading-snug">
+                                                    Ödeme seansta veya manuel alınır. Danışan formu doldurur, talep panelinize düşer.
+                                                </p>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => setCoachingPaymentMode('pay_now')}
+                                                className={cn(
+                                                    "p-4 rounded-xl border-2 text-left transition-all",
+                                                    coachingPaymentMode === 'pay_now'
+                                                        ? "bg-white border-[#5500ff] shadow-md shadow-indigo-500/10 text-slate-900"
+                                                        : "bg-white/60 border-slate-200 text-slate-600 hover:border-slate-300"
+                                                )}
+                                            >
+                                                <div className="text-[14px] font-black text-slate-900 mb-1 flex items-center gap-2">
+                                                    <span>💳 Ödeme Linki / Shopier</span>
+                                                    {coachingPaymentMode === 'pay_now' && <span className="w-2 h-2 rounded-full bg-[#5500ff]" />}
+                                                </div>
+                                                <p className="text-[12px] text-slate-500 leading-snug">
+                                                    Danışan formu doldurunca doğrudan Shopier / kartla ödeme linkinize yönlendirilir.
+                                                </p>
+                                            </button>
+                                        </div>
+
+                                        {coachingPaymentMode === 'pay_now' && (
+                                            <div className="mt-3 space-y-1.5 animate-in fade-in">
+                                                <label className="block text-[12px] font-bold text-slate-700">
+                                                    Shopier / Ödeme Linki <span className="text-[#5500ff]">*</span>
+                                                </label>
+                                                <div className="relative">
+                                                    <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                                    <input
+                                                        type="url"
+                                                        value={checkoutUrl}
+                                                        onChange={(e) => setCheckoutUrl(e.target.value)}
+                                                        placeholder="https://shopier.com/..."
+                                                        className="w-full h-12 pl-11 pr-4 bg-white rounded-xl border-2 border-slate-200 focus:border-[#5500ff] outline-none font-bold text-[14px] text-slate-900 transition-all placeholder:text-slate-400"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    {/* Standard Price + Currency */}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
+                                                Fiyat {!isLinkType && <span className="text-[#5500ff]">*</span>}
+                                                {isLinkType && <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>}
+                                            </label>
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                step="0.01"
+                                                value={price}
+                                                onChange={(e) => setPrice(e.target.value)}
+                                                placeholder="0"
+                                                className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
+                                                Para Birimi
+                                            </label>
+                                            <select
+                                                value={currency}
+                                                onChange={(e) => setCurrency(e.target.value)}
+                                                className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[14px] text-slate-900 transition-all appearance-none cursor-pointer"
+                                            >
+                                                {CURRENCIES.map((c) => (
+                                                    <option key={c.value} value={c.value}>{c.label}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Checkout / Link URL */}
+                                    <div className="space-y-2">
+                                        <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
+                                            {isLinkType ? 'Yönlendirme URL\'si' : 'Ödeme Linki'} <span className="text-[#5500ff]">*</span>
+                                        </label>
+                                        <div className="relative">
+                                            <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                                            <input
+                                                type="url"
+                                                value={checkoutUrl}
+                                                onChange={(e) => setCheckoutUrl(e.target.value)}
+                                                placeholder="https://"
+                                                className="w-full h-14 pl-12 pr-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
+                                            />
+                                        </div>
+                                        {!isLinkType && (
+                                            <div className="mt-3 flex items-start gap-3 p-4 rounded-xl bg-slate-100/50 border border-slate-200/50">
+                                                <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0">
+                                                    <Link2 className="w-4 h-4 text-[#5500ff]" />
+                                                </div>
+                                                <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
+                                                    Müşterileriniz satın al dediklerinde bu linke yönlendirilecek.
+                                                    <strong className="text-slate-700 block mt-1">Iyzico, Shopier, Stripe, Calendly veya WhatsApp linki ekleyebilirsiniz.</strong>
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            )}
                         </div>
                     )}
                 </div>

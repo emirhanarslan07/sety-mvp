@@ -150,6 +150,7 @@ function DashboardLayoutContent({
                                 pathname.includes('/analytics') ? 'Analitik' :
                                 pathname.includes('/customers') ? 'Müşteriler' :
                                 pathname.includes('/orders') ? 'Siparişler' :
+                                pathname.includes('/appointments') ? 'Randevular' :
                                 pathname.includes('/settings') ? 'Ayarlar' : 'Panel'}
                         </h2>
                     </div>

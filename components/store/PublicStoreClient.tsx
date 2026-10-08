@@ -45,6 +45,7 @@ import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
 import ProductBottomSheet from '@/components/store/ProductBottomSheet';
+import AppointmentBookingModal from '@/components/store/AppointmentBookingModal';
 import StoryCardGenerator from '@/components/store/StoryCardGenerator';
 import { useTranslation } from '@/lib/i18n/context';
 
@@ -122,6 +123,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
     const [error, setError] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
     const [isShareOpen, setIsShareOpen] = useState(false);
     const [showBanner, setShowBanner] = useState(true);
 
@@ -190,7 +192,11 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
     const handleProductClick = (product: any) => {
         setSelectedProduct(product);
-        setIsSheetOpen(true);
+        if (product.type === 'coaching_call' || product.type === 'danışmanlık') {
+            setIsAppointmentOpen(true);
+        } else {
+            setIsSheetOpen(true);
+        }
 
         fetch('/api/analytics/track', {
             method: 'POST',
@@ -495,6 +501,16 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                             }
 
                             // Standard Modern High-Converting Product Card
+                            const isCoaching = product.type === 'coaching_call' || product.type === 'danışmanlık';
+                            const coachingCfg = product.coaching_config;
+                            const durationText = coachingCfg?.duration_minutes ? `${coachingCfg.duration_minutes} Dk` : '60 Dk';
+                            const modeText = coachingCfg?.allow_in_person && coachingCfg?.allow_online
+                                ? 'Yüz Yüze veya Online'
+                                : coachingCfg?.allow_in_person
+                                    ? 'Yüz Yüze'
+                                    : 'Online Görüşme';
+                            const coachingBadge = `${durationText} • ${modeText}`;
+
                             return (
                                 <motion.div
                                     key={product.id}
@@ -514,7 +530,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                         />
                                         <div className="absolute top-2 left-2 sm:hidden">
                                             <span className="rounded-full bg-white/90 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold text-[#5500FF] shadow-sm">
-                                                {formatTypeLabel(product.type)}
+                                                {isCoaching ? 'DANIŞMANLIK' : formatTypeLabel(product.type)}
                                             </span>
                                         </div>
                                     </div>
@@ -523,12 +539,18 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                                         <div className="hidden sm:block mb-1">
                                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5500FF]">
-                                                {formatTypeLabel(product.type)}
+                                                {isCoaching ? 'DANIŞMANLIK & SEANS' : formatTypeLabel(product.type)}
                                             </span>
                                         </div>
                                         <h3 className="font-sans text-[17px] sm:text-[18px] font-bold text-slate-900 leading-snug group-hover:text-[#5500FF] transition-colors line-clamp-1">
                                             {product.title}
                                         </h3>
+                                        {isCoaching && (
+                                            <div className="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-full bg-indigo-50/70 border border-[#5500FF]/15 text-[#5500FF] text-[11px] font-bold w-fit">
+                                                <Clock className="w-3 h-3 text-[#5500FF]" />
+                                                <span>{coachingBadge}</span>
+                                            </div>
+                                        )}
                                         {product.subtitle && (
                                             <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 mt-0.5 leading-relaxed">
                                                 {product.subtitle}
@@ -539,10 +561,17 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                     {/* Price & Action */}
                                     <div className="flex items-center justify-between sm:flex-col sm:items-end sm:justify-center gap-2 pt-2 sm:pt-0 border-t border-slate-100 sm:border-0 shrink-0">
                                         <div className="text-base sm:text-lg font-black text-slate-900 tracking-tight font-sans">
-                                            {product.price === 0 ? 'ÜCRETSİZ' : formatCurrency(product.price, product.currency || 'TRY')}
+                                            {isCoaching && coachingCfg?.hide_price
+                                                ? 'ÖN GÖRÜŞME'
+                                                : product.price === 0
+                                                    ? 'ÜCRETSİZ'
+                                                    : formatCurrency(product.price, product.currency || 'TRY')}
                                         </div>
-                                        <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 group-hover:bg-[#5500FF] text-white px-4 py-2 text-xs font-bold transition-all shadow-sm group-hover:shadow-md">
-                                            <span>Satın Al</span>
+                                        <span className={cn(
+                                            "inline-flex items-center gap-1.5 rounded-full text-white px-4 py-2 text-xs font-bold transition-all shadow-sm group-hover:shadow-md",
+                                            isCoaching ? "bg-[#5500FF] hover:bg-[#4400cc]" : "bg-slate-900 group-hover:bg-[#5500FF]"
+                                        )}>
+                                            <span>{isCoaching ? 'Randevu Talep Et' : (product.button_text || 'Satın Al')}</span>
                                             <ChevronRight className="h-3.5 w-3.5 stroke-[2.5]" />
                                         </span>
                                     </div>
@@ -578,6 +607,14 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                 product={selectedProduct}
                 profile={profile}
                 onPurchase={handlePurchase}
+            />
+
+            {/* Appointment Booking Modal */}
+            <AppointmentBookingModal
+                isOpen={isAppointmentOpen}
+                onClose={() => setIsAppointmentOpen(false)}
+                product={selectedProduct}
+                profile={profile}
             />
 
             {/* Story Card Generator Modal */}

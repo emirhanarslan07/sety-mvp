@@ -52,6 +52,17 @@ export default function ModernSidebar() {
       ),
     },
     {
+      id: 'appointments',
+      label: 'Randevular',
+      href: '/dashboard/appointments',
+      icon: (
+        <svg width="18" height="18" fill="none" viewBox="0 0 16 16">
+          <rect x="2" y="2.5" width="12" height="11" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+          <path d="M5 1.5v2M11 1.5v2M2 6h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      ),
+    },
+    {
       id: 'customers',
       label: 'Müşteriler',
       href: '/dashboard/customers',
