@@ -11,6 +11,8 @@ import { StickyCTA } from '@/components/landing/StickyCTA';
 import { LaunchPricing } from '@/components/landing/LaunchPricing';
 import { LeadMagnet } from '@/components/landing/LeadMagnet';
 
+import { WhoIsItFor } from '@/components/landing/WhoIsItFor';
+
 export default function Home() {
     return (
         <main className="min-h-screen relative bg-background transition-colors duration-500">
@@ -20,15 +22,16 @@ export default function Home() {
 
             <ProductShowcase />
 
+            <div id="use-cases">
+                <WhoIsItFor />
+            </div>
+
             <div id="how-it-works">
                 <HowItWorks />
             </div>
 
             {/* <CommissionBand /> */}
-
-            <div id="features">
-                <Features />
-            </div>
+            {/* <Features /> */}
 
             <LaunchPricing />
 

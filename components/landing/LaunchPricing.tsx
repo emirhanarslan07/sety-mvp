@@ -23,17 +23,6 @@ export function LaunchPricing() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#5500FF]/5 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="relative z-10 max-w-4xl mx-auto px-6 flex flex-col items-center">
-                {/* 1. Rozet/Badge: ⚡ Lansmana Özel */}
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4 }}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5500FF]/10 border border-[#5500FF]/20 text-[#5500FF] text-xs font-bold mb-6 shadow-sm"
-                >
-                    <span>⚡ Lansmana Özel</span>
-                </motion.div>
-
                 {/* 2. Büyük Başlık: "Lansman döneminde tamamen ücretsiz." */}
                 <motion.h2
                     initial={{ opacity: 0, y: 15 }}

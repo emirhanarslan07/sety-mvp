@@ -11,18 +11,9 @@ import { useTranslation } from '@/lib/i18n/context';
 export function HowItWorks() {
     const { t } = useTranslation();
     return (
-        <section className="py-24 md:py-36 bg-slate-50/50 border-t border-slate-100 relative overflow-hidden" id="how-it-works">
+        <section className="py-24 md:py-36 bg-white border-t border-slate-100 relative overflow-hidden" id="how-it-works">
             <div className="container mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 text-balance">
-                    <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4 }}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5500FF]/10 border border-[#5500FF]/20 text-[#5500FF] text-xs font-bold mb-6 shadow-sm"
-                    >
-                        <span>⚡ 3 Basit Adım</span>
-                    </motion.div>
                     <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6 font-sans">
                         {t('landing.how_it_works.title')} <br /><span className="text-[#5500ff]">{t('landing.how_it_works.title_accent')}</span>
                     </h2>

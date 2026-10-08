@@ -59,16 +59,6 @@ export function Features() {
             <div className="container mx-auto px-6 relative z-10">
                 {/* Header */}
                 <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">
-                    <motion.div
-                        initial={{ opacity: 0, y: 15 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4 }}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5500FF]/10 border border-[#5500FF]/20 text-[#5500FF] text-xs font-bold mb-6 shadow-sm"
-                    >
-                        <span>⚡ Özellikler</span>
-                    </motion.div>
-
                     <motion.h2
                         initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
