@@ -10,28 +10,27 @@ import Image from 'next/image';
 export function ProductShowcase() {
     const { t } = useTranslation();
     return (
-        <section className="relative py-16 md:py-24 bg-[#f8f7ff] overflow-hidden">
+        <section className="relative py-20 md:py-28 bg-white overflow-hidden border-t border-slate-100">
             <div className="container mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-20 md:mb-32">
+                <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
                     <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="text-5xl md:text-7xl font-bold tracking-tighter text-gray-900 mb-8 font-logo leading-[0.9] text-balance"
+                        transition={{ duration: 0.4 }}
+                        className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6 font-sans text-balance"
                     >
                         {t('landing.product_showcase.title')} <br />
                         <span className="text-[#5500ff]">{t('landing.product_showcase.title_accent')}</span>
                     </motion.h2>
                     <motion.p
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-xl md:text-2xl text-gray-500 font-medium tracking-tight font-jakarta leading-relaxed"
+                        transition={{ duration: 0.4, delay: 0.1 }}
+                        className="text-slate-500 text-lg sm:text-xl font-medium leading-relaxed max-w-2xl mx-auto"
                     >
                         {t('landing.product_showcase.subtitle')}
-                        <br />
-                        <span className="inline-block mt-4 text-[#5500ff] font-bold">{t('landing.product_showcase.trial')}</span>
                     </motion.p>
                 </div>
 

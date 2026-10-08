@@ -24,7 +24,7 @@ export default function Home() {
                 <HowItWorks />
             </div>
 
-            <CommissionBand />
+            {/* <CommissionBand /> */}
 
             <div id="features">
                 <Features />

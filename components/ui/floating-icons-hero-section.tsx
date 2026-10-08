@@ -166,50 +166,44 @@ const FloatingIconsHero = React.forwardRef<
 
                     {props.eyebrow && (
                         <motion.div
-                            initial={{ opacity: 0, y: -20 }}
+                            initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="mb-8 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#5500ff]/10 border-2 border-[#5500ff]/30 text-[#5500ff] font-bold text-base uppercase tracking-widest shadow-md backdrop-blur-sm"
+                            transition={{ duration: 0.4 }}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5500FF]/10 border border-[#5500FF]/20 text-[#5500FF] text-xs font-bold mb-6 shadow-sm"
                         >
                             {props.eyebrow}
                         </motion.div>
                     )}
-                    <h1 className="text-[2.5rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground font-logo">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6 max-w-4xl font-sans">
                         {heading}
                     </h1>
-                    <p className="mt-6 md:mt-8 max-w-2xl mx-auto text-[15px] sm:text-base md:text-xl text-muted-foreground leading-relaxed font-medium">
+                    <p className="text-slate-500 text-lg sm:text-xl font-medium leading-relaxed max-w-2xl mb-10">
                         {subtitle}
                     </p>
 
-                    <div className="mt-14 flex flex-col items-center gap-4">
+                    <div className="flex flex-col items-center gap-4 w-full sm:w-auto">
                         {props.onCtaClick ? (
-                            <Button onClick={props.onCtaClick} size="xl" className="px-16 h-16 rounded-full font-bold text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none text-white">
-                                {ctaText} <motion.span
-                                    animate={{ x: [0, 5, 0] }}
-                                    transition={{ repeat: Infinity, duration: 1.5 }}
-                                    className="inline-block ml-2"
-                                >→</motion.span>
-                            </Button>
+                            <button
+                                onClick={props.onCtaClick}
+                                className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 rounded-2xl sm:rounded-full bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold text-base sm:text-lg shadow-xl shadow-[#5500FF]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] inline-flex items-center justify-center cursor-pointer"
+                            >
+                                {ctaText} — Kredi kartı gerekmez
+                            </button>
                         ) : (
-                            <Link href={ctaHref}>
-                                <Button size="xl" className="px-16 h-16 rounded-full font-bold text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none text-white">
-                                    {ctaText} <motion.span
-                                        animate={{ x: [0, 5, 0] }}
-                                        transition={{ repeat: Infinity, duration: 1.5 }}
-                                        className="inline-block ml-2"
-                                    >→</motion.span>
-                                </Button>
+                            <Link href={ctaHref} className="w-full sm:w-auto">
+                                <button className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 rounded-2xl sm:rounded-full bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold text-base sm:text-lg shadow-xl shadow-[#5500FF]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] inline-flex items-center justify-center cursor-pointer">
+                                    {ctaText} — Kredi kartı gerekmez
+                                </button>
                             </Link>
                         )}
-                        {subCtaText && (
-                            <motion.p
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.8 }}
-                                className="text-sm font-bold text-[#5500ff] bg-[#5500ff]/5 px-4 py-1.5 rounded-full tracking-wide"
-                            >
-                                {subCtaText}
-                            </motion.p>
-                        )}
+                        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-slate-400 text-xs sm:text-sm font-semibold mt-2">
+                            <span>⚡ 2 dakikada kurulum</span>
+                            <span>•</span>
+                            <span>Sınırsız ürün</span>
+                            <span>•</span>
+                            <span>%0 komisyon</span>
+                        </div>
+                    </div>
                         {props.ctaFooter && (
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
@@ -222,7 +216,6 @@ const FloatingIconsHero = React.forwardRef<
                         )}
                     </div>
                 </div>
-            </div>
         </section>
 
     );

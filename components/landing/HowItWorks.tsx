@@ -11,10 +11,19 @@ import { useTranslation } from '@/lib/i18n/context';
 export function HowItWorks() {
     const { t } = useTranslation();
     return (
-        <section className="py-32 md:py-48 bg-background relative overflow-hidden" id="how-it-works">
+        <section className="py-24 md:py-36 bg-slate-50/50 border-t border-slate-100 relative overflow-hidden" id="how-it-works">
             <div className="container mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-20 text-balance">
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-foreground mb-8 leading-tight">
+                <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 text-balance">
+                    <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4 }}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5500FF]/10 border border-[#5500FF]/20 text-[#5500FF] text-xs font-bold mb-6 shadow-sm"
+                    >
+                        <span>⚡ 3 Basit Adım</span>
+                    </motion.div>
+                    <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6 font-sans">
                         {t('landing.how_it_works.title')} <br /><span className="text-[#5500ff]">{t('landing.how_it_works.title_accent')}</span>
                     </h2>
                 </div>
@@ -130,17 +139,21 @@ export function HowItWorks() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="bg-primary rounded-[40px] p-10 flex flex-col justify-between group relative overflow-hidden shadow-glow-primary"
+                        className="bg-white rounded-[40px] p-10 flex flex-col justify-between group relative overflow-hidden border border-slate-100 hover:border-[#5500ff]/20 transition-all duration-500 shadow-sm hover:shadow-xl"
                     >
-                        <div className="relative z-10 text-primary-foreground">
-                            <h3 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight text-white">{t('landing.how_it_works.step3.title')}</h3>
-                            <p className="text-primary-foreground/70 font-medium text-sm leading-relaxed mb-10">
+                        <div className="relative z-10">
+                            <h3 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight text-slate-900">{t('landing.how_it_works.step3.title')}</h3>
+                            <p className="text-slate-500 font-medium text-sm leading-relaxed mb-10">
                                 {t('landing.how_it_works.step3.desc')}
                             </p>
-
                         </div>
-                        <div className="absolute top-0 right-0 p-8 opacity-20 pointer-events-none">
-                            <DollarSign className="w-16 h-16 text-white" />
+                        <div className="p-5 bg-emerald-50 border border-emerald-100/60 rounded-3xl flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs">
+                                    ✓
+                                </div>
+                                <span className="text-xs font-bold text-slate-900 tracking-tight">%0 Komisyon · Anında Hesabına</span>
+                            </div>
                         </div>
                     </motion.div>
 

@@ -14,7 +14,7 @@
   }
 
   [dir="ltr"] {
-    font-family: var(--font-inter, "Inter"), var(--font-plus-jakarta, "Plus Jakarta Sans"), sans-serif !important;
+    font-family: var(--font-plus-jakarta, "Plus Jakarta Sans"), var(--font-inter, "Inter"), -apple-system, sans-serif !important;
   }
 }
 
@@ -68,7 +68,7 @@
 
   body {
     @apply bg-background text-foreground transition-all duration-500;
-    font-family: var(--font-inter, "Inter"), sans-serif;
+    font-family: var(--font-plus-jakarta, "Plus Jakarta Sans"), var(--font-inter, "Inter"), sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
   }
@@ -80,8 +80,8 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-plus-jakarta, "Plus Jakarta Sans"), var(--font-inter, "Inter"), sans-serif;
-    @apply font-semibold tracking-tight text-foreground;
+    font-family: var(--font-plus-jakarta, "Plus Jakarta Sans"), sans-serif;
+    @apply font-bold tracking-tight text-slate-900;
   }
 
   h1 {
@@ -144,8 +144,8 @@
   }
 
   .font-logo {
-    font-family: var(--font-inter, "Inter"), sans-serif;
-    letter-spacing: -0.025em;
+    font-family: var(--font-plus-jakarta, "Plus Jakarta Sans"), sans-serif;
+    letter-spacing: -0.03em;
   }
 }
 

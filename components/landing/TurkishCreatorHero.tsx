@@ -115,6 +115,7 @@ export default function TurkishCreatorHero() {
 
     return (
         <FloatingIconsHero
+            eyebrow={<span>⚡ Lansmana Özel: %0 Komisyon</span>}
             heading={<>Takipçilerini müşteriye dönüştürmenin <br /><span className="text-[#5500ff]">en kolay yolu</span></>}
             subtitle={
                 <>
