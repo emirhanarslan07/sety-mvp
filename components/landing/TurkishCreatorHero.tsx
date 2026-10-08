@@ -115,11 +115,26 @@ export default function TurkishCreatorHero() {
 
     return (
         <FloatingIconsHero
-            eyebrow={<span>⚡ Lansmana Özel: %0 Komisyon</span>}
+            eyebrow={
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-violet-50/90 border border-violet-200/60 text-[#5500FF] text-xs font-bold shadow-sm">
+                        💬 Danışmanlıklar
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-slate-700 text-xs font-bold shadow-sm">
+                        📦 Dijital Ürünler
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-slate-700 text-xs font-bold shadow-sm">
+                        🗓️ 1-on-1 Seanslar
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-slate-700 text-xs font-bold shadow-sm">
+                        📚 E-Kitap & Şablonlar
+                    </span>
+                </div>
+            }
             heading={<>Takipçilerini müşteriye dönüştürmenin <br /><span className="text-[#5500ff]">en kolay yolu</span></>}
             subtitle={
                 <>
-                    Biyografine tek bir link koy, gerisini Sety halleder. E-kitaptan koçluk seansına, kurslardan birebir danışmanlığa kadar her şeyi dakikalar içinde sat. <span className="font-semibold text-[#5500ff]">Tek link. Sınırsız ürün. Sıfır komisyon.</span> Mağazanı 2 dakikada kur, hemen satmaya başla.
+                    Biyografine tek bir link koy, gerisini Sety halleder. Danışmanlık seansları, dijital ürünler, e-kitaplar ve şablonlarını dakikalar içinde doğrudan satmaya başla. <span className="font-semibold text-[#5500ff]">Tek link. Sınırsız ürün. Anında tahsilat.</span>
                 </>
             }
             ctaText="Hemen Mağazanı Aç"

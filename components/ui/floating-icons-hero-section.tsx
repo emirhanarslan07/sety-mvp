@@ -169,7 +169,7 @@ const FloatingIconsHero = React.forwardRef<
                             initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4 }}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5500FF]/10 border border-[#5500FF]/20 text-[#5500FF] text-xs font-bold mb-6 shadow-sm"
+                            className="mb-8 flex items-center justify-center"
                         >
                             {props.eyebrow}
                         </motion.div>
@@ -199,9 +199,9 @@ const FloatingIconsHero = React.forwardRef<
                         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-slate-400 text-xs sm:text-sm font-semibold mt-2">
                             <span>⚡ 2 dakikada kurulum</span>
                             <span>•</span>
-                            <span>Sınırsız ürün</span>
+                            <span>Kredi kartı gerekmez</span>
                             <span>•</span>
-                            <span>%0 komisyon</span>
+                            <span>Anında satışa başla</span>
                         </div>
                     </div>
                         {props.ctaFooter && (
