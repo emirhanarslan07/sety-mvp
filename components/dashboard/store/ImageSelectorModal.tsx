@@ -145,7 +145,7 @@ export default function ImageSelectorModal({ isOpen, onClose, onSelect }: ImageS
             >
                 {/* Header */}
                 <div className="p-8 border-b border-slate-50 flex items-center justify-between shrink-0">
-                    <h2 className="text-[24px] font-black text-slate-800 tracking-tight mx-auto">Görselinizi Seçin</h2>
+                    <h2 className="text-[24px] font-bold text-slate-800 tracking-tight mx-auto">Görselinizi Seçin</h2>
                     <button onClick={onClose} className="absolute right-8 p-3 hover:bg-slate-50 rounded-full text-slate-400 transition-colors">
                         <X className="w-6 h-6" />
                     </button>
@@ -181,7 +181,7 @@ export default function ImageSelectorModal({ isOpen, onClose, onSelect }: ImageS
                                         <Upload className="w-6 h-6" />
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-[14px] font-black text-slate-800">Görsel Yükle</p>
+                                        <p className="text-[14px] font-bold text-slate-800">Görsel Yükle</p>
                                         <p className="text-[12px] text-slate-400 font-bold uppercase tracking-widest mt-1">Bilgisayarınızdan Seçin</p>
                                     </div>
                                 </>
@@ -211,7 +211,7 @@ export default function ImageSelectorModal({ isOpen, onClose, onSelect }: ImageS
                             >
                                 <Image src={img.url} alt={img.name} className="w-full h-full object-cover"  width={800} height={800}  />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
-                                    <p className="text-white text-[13px] font-black tracking-tight">{img.name}</p>
+                                    <p className="text-white text-[13px] font-bold tracking-tight">{img.name}</p>
                                 </div>
                                 {selectedId === img.id && (
                                     <div className="absolute inset-0 bg-[#5500ff]/20 flex items-center justify-center">
@@ -227,8 +227,8 @@ export default function ImageSelectorModal({ isOpen, onClose, onSelect }: ImageS
 
                 {/* Footer */}
                 <div className="p-8 bg-slate-50/50 border-t border-slate-50 flex items-center justify-end gap-3 shrink-0">
-                    <button onClick={onClose} className="h-14 px-8 rounded-2xl font-black text-slate-400 hover:text-slate-900 transition-colors">Vazgeç</button>
-                    <button onClick={onClose} className="h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-black hover:bg-[#4400cc] transition-all shadow-xl shadow-blue-500/10">Tamam</button>
+                    <button onClick={onClose} className="h-14 px-8 rounded-2xl font-bold text-slate-400 hover:text-slate-900 transition-colors">Vazgeç</button>
+                    <button onClick={onClose} className="h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-bold hover:bg-[#4400cc] transition-all shadow-xl shadow-blue-500/10">Tamam</button>
                 </div>
             </motion.div>
         </div>

@@ -8,7 +8,7 @@ import { SocialProof } from '@/components/landing/SocialProof';
 import { FAQ } from '@/components/landing/FAQ';
 import { Footer } from '@/components/landing/Footer';
 import { StickyCTA } from '@/components/landing/StickyCTA';
-import { Comparison } from '@/components/landing/Comparison';
+import { LaunchPricing } from '@/components/landing/LaunchPricing';
 import { LeadMagnet } from '@/components/landing/LeadMagnet';
 
 export default function Home() {
@@ -30,7 +30,7 @@ export default function Home() {
                 <Features />
             </div>
 
-            <Comparison />
+            <LaunchPricing />
 
             {/* 
             <div id="testimonials">

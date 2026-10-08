@@ -84,7 +84,7 @@ export function AuthModal() {
                         <SetyLogo size="lg" />
                     </div>
                     
-                    <h2 className="text-2xl font-black text-slate-900 mb-2 text-center tracking-tight">
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2 text-center tracking-tight">
                         {isLogin ? 'Mağazana Giriş Yap' : 'Hemen Başla'}
                     </h2>
                     <p className="text-slate-500 font-medium text-sm text-center mb-8">

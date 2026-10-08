@@ -43,7 +43,7 @@ export function ConfirmModal({ isOpen, onClose, order, onConfirm, isConfirming }
                         <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center mb-5">
                             <CheckCircle2 className="w-6 h-6" />
                         </div>
-                        <h2 className="text-2xl font-black text-slate-900 tracking-tight">Siparişi Onayla</h2>
+                        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Siparişi Onayla</h2>
                         <p className="text-sm font-bold text-slate-400 mt-2">Bu siparişi onayladığınızda müşteriye teslimat otomatik olarak yapılacaktır.</p>
                     </div>
 
@@ -52,11 +52,11 @@ export function ConfirmModal({ isOpen, onClose, order, onConfirm, isConfirming }
                             <div className="flex justify-between items-start mb-4">
                                 <div>
                                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Sipariş No</p>
-                                    <p className="font-black text-slate-800">{order.order_number}</p>
+                                    <p className="font-bold text-slate-800">{order.order_number}</p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Tutar</p>
-                                    <p className="font-black text-slate-800">{order.product?.price} {order.product?.currency}</p>
+                                    <p className="font-bold text-slate-800">{order.product?.price} {order.product?.currency}</p>
                                 </div>
                             </div>
                             
@@ -73,7 +73,7 @@ export function ConfirmModal({ isOpen, onClose, order, onConfirm, isConfirming }
                         </div>
 
                         <div className="space-y-3">
-                            <p className="text-sm font-black text-slate-900">Teslimat Özeti:</p>
+                            <p className="text-sm font-bold text-slate-900">Teslimat Özeti:</p>
                             <div className="flex items-center gap-3 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
                                 <Mail className="w-4 h-4 text-[#5500ff]" />
                                 E-posta ile {order.product?.type === 'digital_product' ? 'indirme linki' : 'bilgilendirme'} gönderilecek
@@ -95,7 +95,7 @@ export function ConfirmModal({ isOpen, onClose, order, onConfirm, isConfirming }
                             <button
                                 onClick={() => onConfirm(order.id)}
                                 disabled={isConfirming}
-                                className="flex-[2] h-12 rounded-xl bg-emerald-500 text-white font-black shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                className="flex-[2] h-12 rounded-xl bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 active:scale-95 transition-all flex items-center justify-center gap-2"
                             >
                                 {isConfirming ? (
                                     <><Loader2 className="w-5 h-5 animate-spin" /> Onaylanıyor...</>

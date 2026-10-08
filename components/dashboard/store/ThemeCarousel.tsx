@@ -147,7 +147,7 @@ function ThemeCardPreview({ theme }: { theme: typeof THEME_TEMPLATES[0] }) {
                     <div className={cn('h-1.5 w-10 rounded-full', isDark ? 'bg-white/10' : 'bg-slate-200/40')} />
                 </div>
                 <div
-                    className={cn('h-6 w-12 rounded-md flex-shrink-0 text-[7px] font-black flex items-center justify-center',
+                    className={cn('h-6 w-12 rounded-md flex-shrink-0 text-[7px] font-bold flex items-center justify-center',
                         theme.id === 'neo-brutalist' ? 'rounded-none border-2 border-black shadow-[1px_1px_0_black]' :
                         theme.buttonStyle === 'sharp' ? 'rounded-sm' : theme.buttonStyle === 'semi' ? 'rounded-lg' : 'rounded-full'
                     )}
@@ -171,7 +171,7 @@ function ThemeCardPreview({ theme }: { theme: typeof THEME_TEMPLATES[0] }) {
                     <div className={cn('h-1.5 w-8 rounded-full', isDark ? 'bg-white/10' : 'bg-slate-200/40')} />
                 </div>
                 <div
-                    className={cn('h-6 w-12 rounded-md flex-shrink-0 text-[7px] font-black flex items-center justify-center',
+                    className={cn('h-6 w-12 rounded-md flex-shrink-0 text-[7px] font-bold flex items-center justify-center',
                         theme.id === 'neo-brutalist' ? 'rounded-none border-2 border-black shadow-[1px_1px_0_black]' :
                         theme.buttonStyle === 'sharp' ? 'rounded-sm' : theme.buttonStyle === 'semi' ? 'rounded-lg' : 'rounded-full'
                     )}
@@ -229,7 +229,7 @@ export default function ThemeCarousel({ selectedTheme, onSelectTheme }: ThemeCar
                             isSelected ? 'bg-indigo-50/50 border-[#5500ff]/10' : 'bg-white border-slate-100 group-hover:bg-slate-50/50'
                         )}>
                             <h4 className={cn(
-                                'text-[13px] font-black tracking-tight truncate transition-colors',
+                                'text-[13px] font-bold tracking-tight truncate transition-colors',
                                 isSelected ? 'text-[#5500ff]' : 'text-slate-900'
                             )}>
                                 {theme.name}

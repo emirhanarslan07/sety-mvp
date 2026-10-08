@@ -38,7 +38,7 @@ import Image from 'next/image';
 function EditorSection({ title, children }: { title: string, children: React.ReactNode }) {
     return (
         <div className="space-y-6">
-            <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-[0.2em]">{title}</h3>
+            <h3 className="text-[14px] font-bold text-slate-400 uppercase tracking-[0.2em]">{title}</h3>
             <div className="space-y-6">{children}</div>
         </div>
     );
@@ -48,7 +48,7 @@ function PremiumInput({ label, value, onChange, placeholder, maxLength, hint }: 
     return (
         <div className="space-y-2">
             <div className="flex justify-between items-end px-1">
-                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{label}</p>
+                <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">{label}</p>
                 {maxLength && (
                     <span className="text-[10px] font-bold text-slate-300">
                         {value?.length || 0}/{maxLength}
@@ -228,7 +228,7 @@ export default function VideoResponseEditor({
                                                 )}>
                                                     {style.icon}
                                                 </div>
-                                                <p className="font-black text-[15px] text-slate-900">{style.label}</p>
+                                                <p className="font-bold text-[15px] text-slate-900">{style.label}</p>
                                                 <p className="text-[12px] text-slate-400 font-bold mt-1">{style.desc}</p>
                                             </button>
                                         ))}
@@ -252,7 +252,7 @@ export default function VideoResponseEditor({
                                                 <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-slate-300 mb-3 group-hover:scale-110 transition-transform">
                                                     <Upload className="w-6 h-6" />
                                                 </div>
-                                                <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.image_upload'}</p>
+                                                <p className="text-[13px] font-bold text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.image_upload'}</p>
                                             </>
                                         )}
                                     </div>
@@ -268,7 +268,7 @@ export default function VideoResponseEditor({
                                         />
                                         <div className="space-y-2">
                                             <div className="flex justify-between items-end px-1">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.subtitle'}</p>
+                                                <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.subtitle'}</p>
                                                 <span className="text-[10px] font-bold text-slate-300">{formData.thumbnail.subtitle.length}/100</span>
                                             </div>
                                             <textarea
@@ -294,7 +294,7 @@ export default function VideoResponseEditor({
                                 <EditorSection title={'dashboard.store.editors.general.edit_appearance'}>
                                     <div className="space-y-8">
                                         <div className="space-y-4">
-                                            <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1 text-center">{'dashboard.store.editors.general.header_image'}</p>
+                                            <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest ml-1 text-center">{'dashboard.store.editors.general.header_image'}</p>
                                             <div
                                                 onClick={() => openImageSelector('checkout')}
                                                 className="relative h-48 rounded-3xl border-2 border-dashed border-slate-100 bg-slate-50/50 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-50 transition-all group overflow-hidden"
@@ -304,7 +304,7 @@ export default function VideoResponseEditor({
                                                 ) : (
                                                     <div className="flex flex-col items-center">
                                                         <ImageIcon className="w-8 h-8 text-slate-200 mb-2" />
-                                                        <p className="text-[11px] font-black text-slate-300 uppercase tracking-widest">{'dashboard.store.editors.general.image_selection'}</p>
+                                                        <p className="text-[11px] font-bold text-slate-300 uppercase tracking-widest">{'dashboard.store.editors.general.image_selection'}</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -318,8 +318,8 @@ export default function VideoResponseEditor({
 
                                         <div className="space-y-2">
                                             <div className="flex justify-between items-center px-1">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.description_text'} *</p>
-                                                <button className="flex items-center gap-1.5 text-[#5500ff] font-black text-[11px] hover:underline">
+                                                <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">{'dashboard.store.editors.general.description_text'} *</p>
+                                                <button className="flex items-center gap-1.5 text-[#5500ff] font-bold text-[11px] hover:underline">
                                                     <Sparkles className="w-3 h-3" /> {'dashboard.store.editors.general.ai_generate'}
                                                 </button>
                                             </div>
@@ -350,7 +350,7 @@ export default function VideoResponseEditor({
                                     <div className="space-y-8">
                                         <div className="grid grid-cols-2 gap-6">
                                             <div className="space-y-2">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'dashboard.store.editors.general.price'} *</p>
+                                                <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest ml-1">{'dashboard.store.editors.general.price'} *</p>
                                                 <div className="relative">
                                                     <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 font-bold">$</div>
                                                     <input
@@ -363,7 +363,7 @@ export default function VideoResponseEditor({
                                                 <p className="text-[10px] text-slate-400 font-bold px-1 italic">{'dashboard.store.editors.general.price_hint'}</p>
                                             </div>
                                             <div className="space-y-2">
-                                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'dashboard.store.editors.general.discount_price'}</p>
+                                                <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest ml-1">{'dashboard.store.editors.general.discount_price'}</p>
                                                 <div className="relative">
                                                     <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 font-bold">$</div>
                                                     <input
@@ -377,13 +377,13 @@ export default function VideoResponseEditor({
                                         </div>
 
                                         <div className="grid grid-cols-3 gap-3">
-                                            <button className="h-12 rounded-xl bg-slate-50 text-slate-600 font-black text-[12px] border border-slate-100 hover:border-slate-200 transition-all flex items-center justify-center gap-2">
+                                            <button className="h-12 rounded-xl bg-slate-50 text-slate-600 font-bold text-[12px] border border-slate-100 hover:border-slate-200 transition-all flex items-center justify-center gap-2">
                                                 <CreditCard className="w-3.5 h-3.5" /> {'dashboard.store.editors.general.add_payment_plan'}
                                             </button>
-                                            <button className="h-12 rounded-xl bg-slate-50 text-slate-600 font-black text-[12px] border border-slate-100 hover:border-slate-200 transition-all flex items-center justify-center gap-2">
+                                            <button className="h-12 rounded-xl bg-slate-50 text-slate-600 font-bold text-[12px] border border-slate-100 hover:border-slate-200 transition-all flex items-center justify-center gap-2">
                                                 <Clock className="w-3.5 h-3.5" /> {'dashboard.store.editors.general.limit_amount'}
                                             </button>
-                                            <button className="h-12 rounded-xl bg-indigo-50 text-[#5500ff] font-black text-[12px] border border-indigo-100/50 hover:bg-indigo-100/50 transition-all flex items-center justify-center gap-2">
+                                            <button className="h-12 rounded-xl bg-indigo-50 text-[#5500ff] font-bold text-[12px] border border-indigo-100/50 hover:bg-indigo-100/50 transition-all flex items-center justify-center gap-2">
                                                 <Sparkles className="w-3.5 h-3.5" /> {'dashboard.store.editors.general.discount_code'}
                                             </button>
                                         </div>
@@ -396,19 +396,19 @@ export default function VideoResponseEditor({
                                             <div className="flex items-center justify-between px-4 py-3 bg-white border border-slate-50 rounded-2xl opacity-60">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center"><Type className="w-4 h-4 text-slate-300" /></div>
-                                                    <span className="text-[13px] font-black text-slate-700">Name</span>
+                                                    <span className="text-[13px] font-bold text-slate-700">Name</span>
                                                 </div>
                                                 <Info className="w-4 h-4 text-slate-200" />
                                             </div>
                                             <div className="flex items-center justify-between px-4 py-3 bg-white border border-slate-50 rounded-2xl opacity-60">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center"><Mail className="w-4 h-4 text-slate-300" /></div>
-                                                    <span className="text-[13px] font-black text-slate-700">Email</span>
+                                                    <span className="text-[13px] font-bold text-slate-700">Email</span>
                                                 </div>
                                                 <Info className="w-4 h-4 text-slate-200" />
                                             </div>
                                         </div>
-                                        <button className="w-full h-14 rounded-2xl border-2 border-dashed border-slate-100 text-slate-400 font-black text-[14px] hover:border-[#5500ff]/20 hover:text-[#5500ff] transition-all flex items-center justify-center gap-2">
+                                        <button className="w-full h-14 rounded-2xl border-2 border-dashed border-slate-100 text-slate-400 font-bold text-[14px] hover:border-[#5500ff]/20 hover:text-[#5500ff] transition-all flex items-center justify-center gap-2">
                                             <Plus className="w-5 h-5" /> {'dashboard.store.editors.general.add_field'}
                                         </button>
                                     </div>
@@ -428,11 +428,11 @@ export default function VideoResponseEditor({
                         <div className="pt-20 border-t border-slate-100 mt-10">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <p className="text-[12px] text-slate-300 font-black italic">{'dashboard.store.editors.general.improve_page'}</p>
+                                    <p className="text-[12px] text-slate-300 font-bold italic">{'dashboard.store.editors.general.improve_page'}</p>
                                 </div>
 
                                 <div className="flex items-center gap-4">
-                                    <button className="h-14 px-8 rounded-2xl font-black text-[14px] border border-indigo-100 text-[#5500ff] bg-indigo-50/20 hover:bg-slate-50 transition-colors">
+                                    <button className="h-14 px-8 rounded-2xl font-bold text-[14px] border border-indigo-100 text-[#5500ff] bg-indigo-50/20 hover:bg-slate-50 transition-colors">
                                         {'dashboard.store.editors.general.save_draft'}
                                     </button>
                                     <button
@@ -443,7 +443,7 @@ export default function VideoResponseEditor({
                                         }}
                                         disabled={isSavingProp || isSuccessProp}
                                         className={cn(
-                                            "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-black text-[15px] shadow-xl shadow-[#5500ff]/20 flex items-center gap-3 transition-all",
+                                            "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-bold text-[15px] shadow-xl shadow-[#5500ff]/20 flex items-center gap-3 transition-all",
                                             (isSavingProp || isSuccessProp) && "opacity-70 cursor-not-allowed"
                                         )}
                                     >
@@ -516,10 +516,10 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
                         </div>
                     )}
                     <div className="px-3 pb-3 space-y-2">
-                        <h3 className="text-[17px] font-black text-slate-900 leading-tight">{data.thumbnail.title}</h3>
+                        <h3 className="text-[17px] font-bold text-slate-900 leading-tight">{data.thumbnail.title}</h3>
                         <p className="text-[13px] text-slate-500 font-bold leading-relaxed">{data.thumbnail.subtitle}</p>
                         <div className="pt-4">
-                            <div className="w-full h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-[13px]">
+                            <div className="w-full h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold text-[13px]">
                                 {data.thumbnail.button_text}
                             </div>
                         </div>
@@ -541,9 +541,9 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
 
             <div className="flex-1 px-8 py-10 space-y-8">
                 <div className="space-y-4">
-                    <h2 className="text-[26px] font-black text-slate-900 leading-[1.1] tracking-tight">{data.checkout.title}</h2>
+                    <h2 className="text-[26px] font-bold text-slate-900 leading-[1.1] tracking-tight">{data.checkout.title}</h2>
                     <div className="inline-flex items-center">
-                        <span className="text-[26px] font-black text-pink-500">
+                        <span className="text-[26px] font-bold text-pink-500">
                             {data.checkout.price?.toString().replace('.', ',')} {'dashboard.store.editors.general.currency_name'}
                         </span>
                     </div>
@@ -557,7 +557,7 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
 
                 <div className="pt-10 space-y-6">
                     <div className="space-y-4">
-                        <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest">{data.checkout.subhead}</p>
+                        <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest">{data.checkout.subhead}</p>
                         <div className="space-y-3">
                             <div className="h-14 px-6 rounded-2xl bg-white border-2 border-slate-100 flex items-center text-[14px] text-slate-300 font-bold italic">
                                 Name
@@ -568,7 +568,7 @@ function VideoResponsePreview({ data, activeTab }: { data: any, activeTab: strin
                         </div>
                     </div>
 
-                    <button className="w-full h-16 rounded-[2rem] bg-slate-900 text-white font-black text-[15px] shadow-2xl shadow-slate-400/20 active:scale-[0.98] transition-all">
+                    <button className="w-full h-16 rounded-[2rem] bg-slate-900 text-white font-bold text-[15px] shadow-2xl shadow-slate-400/20 active:scale-[0.98] transition-all">
                         {data.checkout.cta_button}
                     </button>
 
@@ -588,7 +588,7 @@ function TabButton({ active, onClick, icon, label }: any) {
         <button
             onClick={onClick}
             className={cn(
-                "h-12 px-6 rounded-full flex items-center gap-3 font-black text-[14px] transition-all border-2",
+                "h-12 px-6 rounded-full flex items-center gap-3 font-bold text-[14px] transition-all border-2",
                 active
                     ? "bg-[#5500ff]/5 border-[#5500ff] text-[#5500ff] shadow-sm"
                     : "bg-white border-slate-100 text-slate-400 hover:border-slate-300 shadow-sm"

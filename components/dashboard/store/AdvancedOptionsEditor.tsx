@@ -75,7 +75,7 @@ export default function AdvancedOptionsEditor({
                                             {rev.avatar && <Image src={rev.avatar} className="w-full h-full object-cover" alt=""  width={800} height={800}  />}
                                         </div>
                                         <div>
-                                            <p className="text-[14px] font-black text-slate-900">{rev.name}</p>
+                                            <p className="text-[14px] font-bold text-slate-900">{rev.name}</p>
                                             <p className="text-[12px] text-slate-400 font-bold truncate max-w-[300px]">{rev.text}</p>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@ export default function AdvancedOptionsEditor({
                                     onChange={(e: any) => setNewReview({ ...newReview, name: e.target.value })}
                                 />
                                 <div className="space-y-2">
-                                    <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'Yorum'}</p>
+                                    <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest ml-1">{'Yorum'}</p>
                                     <textarea
                                         value={newReview.text}
                                         onChange={(e) => setNewReview({ ...newReview, text: e.target.value })}
@@ -120,13 +120,13 @@ export default function AdvancedOptionsEditor({
                                     <button
                                         onClick={handleAddReview}
                                         disabled={!newReview.name || !newReview.text}
-                                        className="flex-1 h-12 rounded-xl bg-[#5500ff] text-white font-black text-[13px] hover:opacity-90 transition-all disabled:opacity-50"
+                                        className="flex-1 h-12 rounded-xl bg-[#5500ff] text-white font-bold text-[13px] hover:opacity-90 transition-all disabled:opacity-50"
                                     >
                                         {'Kaydet'}
                                     </button>
                                     <button
                                         onClick={() => setShowAddReview(false)}
-                                        className="h-12 px-6 rounded-xl border border-slate-200 text-slate-500 font-black text-[13px] hover:bg-white transition-all"
+                                        className="h-12 px-6 rounded-xl border border-slate-200 text-slate-500 font-bold text-[13px] hover:bg-white transition-all"
                                     >
                                         {'İptal'}
                                     </button>
@@ -135,7 +135,7 @@ export default function AdvancedOptionsEditor({
                         ) : (
                             <button
                                 onClick={() => setShowAddReview(true)}
-                                className="h-12 px-6 rounded-xl border-2 border-[#5500ff]/10 text-[#5500ff] font-black text-[13px] hover:bg-[#5500ff]/5 transition-all flex items-center gap-2"
+                                className="h-12 px-6 rounded-xl border-2 border-[#5500ff]/10 text-[#5500ff] font-bold text-[13px] hover:bg-[#5500ff]/5 transition-all flex items-center gap-2"
                             >
                                 <Plus className="w-4 h-4" /> {'Yeni Yorum Ekle'}
                             </button>
@@ -155,7 +155,7 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{'E-posta Akışını Etkinleştir'}</h4>
+                            <h4 className="text-[15px] font-bold text-slate-900">{'E-posta Akışını Etkinleştir'}</h4>
                             <p className="text-[13px] text-slate-400 font-bold italic">{'Müşterilere otomatik e-posta gönderin.'}</p>
                         </div>
                         <button
@@ -172,7 +172,7 @@ export default function AdvancedOptionsEditor({
                     {options.email_flow_enabled && (
                         <div className="p-8 bg-slate-50/50 rounded-[32px] border border-slate-100 space-y-6 animate-in fade-in slide-in-from-top-2">
                             <div className="space-y-4">
-                                <p className="text-[14px] font-black text-slate-700">{'Bir akış seçin:'}</p>
+                                <p className="text-[14px] font-bold text-slate-700">{'Bir akış seçin:'}</p>
                                 <div className="grid grid-cols-1 gap-3">
                                     {(['Hoşgeldin Akışı', 'Satın Alma Sonrası Akış']).map(flow => (
                                         <button
@@ -205,7 +205,7 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{'Hatırlatıcıları Etkinleştir'}</h4>
+                            <h4 className="text-[15px] font-bold text-slate-900">{'Hatırlatıcıları Etkinleştir'}</h4>
                             <p className="text-[13px] text-slate-400 font-bold italic">{'Terk edilmiş sepet hatırlatıcıları gönderin.'}</p>
                         </div>
                         <button
@@ -229,7 +229,7 @@ export default function AdvancedOptionsEditor({
                                                 <Bell className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <p className="text-[14px] font-black text-slate-800">{rem.time} {rem.unit === 'hour' ? 'saat' : 'gün'} {'önce'}</p>
+                                                <p className="text-[14px] font-bold text-slate-800">{rem.time} {rem.unit === 'hour' ? 'saat' : 'gün'} {'önce'}</p>
                                                 <p className="text-[12px] text-slate-400 font-bold">{'Otomatik'}</p>
                                             </div>
                                         </div>
@@ -282,7 +282,7 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{'Sipariş Artırıcıyı Etkinleştir'}</h4>
+                            <h4 className="text-[15px] font-bold text-slate-900">{'Sipariş Artırıcıyı Etkinleştir'}</h4>
                             <p className="text-[13px] text-slate-400 font-bold italic">{'Ödeme sayfasında ekstra ürün sunun.'}</p>
                         </div>
                         <button
@@ -312,7 +312,7 @@ export default function AdvancedOptionsEditor({
                                     placeholder="4.99"
                                 />
                                 <div className="space-y-2">
-                                    <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'Görsel Seç'}</p>
+                                    <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest ml-1">{'Görsel Seç'}</p>
                                     <button
                                         className="w-full h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-300 hover:text-[#5500ff] transition-colors"
                                         onClick={onOpenImageSelector}
@@ -322,7 +322,7 @@ export default function AdvancedOptionsEditor({
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <p className="text-[12px] font-black text-slate-400 uppercase tracking-widest ml-1">{'Açıklama'}</p>
+                                <p className="text-[12px] font-bold text-slate-400 uppercase tracking-widest ml-1">{'Açıklama'}</p>
                                 <textarea
                                     className="w-full h-24 p-4 bg-white border border-slate-100 rounded-2xl text-[14px] font-medium outline-none resize-none"
                                     value={options.order_bump?.description || ''}
@@ -346,7 +346,7 @@ export default function AdvancedOptionsEditor({
                 <div className="p-8 space-y-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h4 className="text-[15px] font-black text-slate-900">{'Satış Ortaklığını Etkinleştir'}</h4>
+                            <h4 className="text-[15px] font-bold text-slate-900">{'Satış Ortaklığını Etkinleştir'}</h4>
                             <p className="text-[13px] text-slate-400 font-bold italic">{'Başkalarının ürünlerinizi satmasına izin verin.'}</p>
                         </div>
                         <button
@@ -363,15 +363,15 @@ export default function AdvancedOptionsEditor({
                     {options.affiliates_enabled && (
                         <div className="p-8 bg-slate-50/50 rounded-[32px] border border-slate-100 animate-in fade-in slide-in-from-top-2">
                             <div className="flex items-center justify-between max-w-xs">
-                                <p className="text-[14px] font-black text-slate-700">{'Komisyon Oranı (%)'}</p>
+                                <p className="text-[14px] font-bold text-slate-700">{'Komisyon Oranı (%)'}</p>
                                 <div className="flex items-center gap-3">
                                     <input
                                         type="number"
                                         value={options.affiliates_commission || '20'}
                                         onChange={e => updateField('affiliates_commission', e.target.value)}
-                                        className="w-16 h-10 bg-white border border-slate-100 rounded-xl text-center font-black text-[14px] text-[#5500ff] outline-none"
+                                        className="w-16 h-10 bg-white border border-slate-100 rounded-xl text-center font-bold text-[14px] text-[#5500ff] outline-none"
                                     />
-                                    <span className="font-black text-slate-400">%</span>
+                                    <span className="font-bold text-slate-400">%</span>
                                 </div>
                             </div>
                             <p className="text-[12px] text-slate-400 font-bold mt-4 italic">{'Satış ortaklarınıza vereceğiniz komisyon oranını belirleyin.'}</p>
@@ -394,7 +394,7 @@ function AccordionItem({ id, title, icon, children, isOpen, onToggle }: any) {
                     <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-[#5500ff] transition-colors">
                         {icon}
                     </div>
-                    <span className="text-[15px] font-black text-slate-800">{title}</span>
+                    <span className="text-[15px] font-bold text-slate-800">{title}</span>
                 </div>
                 {isOpen ? <ChevronUp className="w-5 h-5 text-slate-300" /> : <ChevronDown className="w-5 h-5 text-slate-300" />}
             </button>

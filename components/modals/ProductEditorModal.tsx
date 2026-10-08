@@ -237,7 +237,7 @@ export default function ProductEditorModal({
                             </button>
                         )}
                         <div>
-                            <h2 className="text-[22px] font-black text-slate-900 tracking-tight">
+                            <h2 className="text-[22px] font-bold text-slate-900 tracking-tight">
                                 {step === 1
                                     ? 'Ürün Tipi Seç'
                                     : editingProduct
@@ -294,7 +294,7 @@ export default function ProductEditorModal({
                                         <type.icon className="w-8 h-8" strokeWidth={2} />
                                     </div>
                                     <div className="flex-1">
-                                        <h4 className="text-[17px] font-black text-slate-900 mb-1">{type.title}</h4>
+                                        <h4 className="text-[17px] font-bold text-slate-900 mb-1">{type.title}</h4>
                                         <p className="text-[13px] font-bold text-slate-400 leading-snug">{type.description}</p>
                                     </div>
                                     <div className="w-8 h-8 rounded-full bg-white border border-slate-200 group-hover:border-[#5500ff] group-hover:bg-[#5500ff] flex items-center justify-center transition-all shrink-0">
@@ -311,7 +311,7 @@ export default function ProductEditorModal({
 
                             {/* Image Upload & Gallery */}
                             <div className="space-y-3">
-                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                                <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
                                     Kapak Görseli <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>
                                 </label>
                                 <div className="flex flex-col gap-4">
@@ -323,7 +323,7 @@ export default function ProductEditorModal({
                                                 <ImageLucide className="w-8 h-8 text-slate-300" />
                                             )}
                                         </div>
-                                        <label className="cursor-pointer h-12 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-[13px] flex items-center gap-2 transition-all active:scale-95">
+                                        <label className="cursor-pointer h-12 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[13px] flex items-center gap-2 transition-all active:scale-95">
                                             <Upload className="w-4 h-4" />
                                             {imageUploading ? 'Yükleniyor...' : imageUrl ? 'Özel Görsel Yükle' : 'Görsel Seç'}
                                             <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={imageUploading} />
@@ -357,7 +357,7 @@ export default function ProductEditorModal({
 
                             {/* Title */}
                             <div className="space-y-2">
-                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                                <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
                                     {isLinkType ? 'Bağlantı Başlığı' : 'Ürün Adı'} <span className="text-[#5500ff]">*</span>
                                 </label>
                                 <input
@@ -371,7 +371,7 @@ export default function ProductEditorModal({
 
                             {/* Description */}
                             <div className="space-y-2">
-                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                                <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
                                     Açıklama <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>
                                 </label>
                                 <textarea
@@ -386,7 +386,7 @@ export default function ProductEditorModal({
                             {/* Price + Currency */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                                    <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
                                         Fiyat {!isLinkType && <span className="text-[#5500ff]">*</span>}
                                         {isLinkType && <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>}
                                     </label>
@@ -401,7 +401,7 @@ export default function ProductEditorModal({
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                                    <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
                                         Para Birimi
                                     </label>
                                     <select
@@ -418,7 +418,7 @@ export default function ProductEditorModal({
 
                             {/* Checkout / Link URL */}
                             <div className="space-y-2">
-                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                                <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
                                     {isLinkType ? 'Yönlendirme URL\'si' : 'Ödeme Linki'} <span className="text-[#5500ff]">*</span>
                                 </label>
                                 <div className="relative">
@@ -452,14 +452,14 @@ export default function ProductEditorModal({
                     <div className="px-8 py-6 border-t border-slate-100 bg-white shrink-0 flex items-center justify-between gap-4">
                         <button
                             onClick={onClose}
-                            className="h-13 px-8 rounded-2xl text-[15px] font-black text-slate-400 hover:bg-slate-50 transition-all"
+                            className="h-13 px-8 rounded-2xl text-[15px] font-bold text-slate-400 hover:bg-slate-50 transition-all"
                         >
                             İptal
                         </button>
                         <button
                             onClick={handleSubmit}
                             disabled={loading || isSuccess || imageUploading}
-                            className="flex-1 h-14 max-w-[280px] rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white font-black text-[16px] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-60 flex items-center justify-center gap-3"
+                            className="flex-1 h-14 max-w-[280px] rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[16px] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-60 flex items-center justify-center gap-3"
                         >
                             {isSuccess ? (
                                 <><Check className="w-5 h-5 text-[#C4FF00]" /> {editingProduct ? 'Güncellendi!' : 'Yayında! 🎉'}</>

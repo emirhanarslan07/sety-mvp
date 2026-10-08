@@ -19,7 +19,7 @@ export default function LanguageSwitcher() {
                     key={l.id}
                     onClick={() => setLang(l.id as any)}
                     className={cn(
-                        "px-4 py-1.5 rounded-xl text-[11px] font-black transition-all",
+                        "px-4 py-1.5 rounded-xl text-[11px] font-bold transition-all",
                         lang === l.id ? "bg-white text-[#5500ff] shadow-sm" : "text-slate-400 hover:text-slate-600"
                     )}
                 >

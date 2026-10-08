@@ -5,21 +5,20 @@ import { useRouter } from 'next/navigation';
 import {
     Users,
     Search,
-    Zap,
-    Check,
-    Plus
+    ShoppingBag,
+    Mail,
+    Calendar,
+    ArrowUpRight
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils/format';
-import { enUS } from 'date-fns/locale';
-import { useTranslation } from '@/lib/i18n/context';
+import { tr } from 'date-fns/locale';
 import { useDashboard } from '@/context/DashboardContext';
 
 export default function CustomersPage() {
-    const { t } = useTranslation();
     const router = useRouter();
     const { store, loading: contextLoading } = useDashboard();
     const [customers, setCustomers] = useState<any[]>([]);
@@ -39,7 +38,7 @@ export default function CustomersPage() {
         try {
             setLoading(true);
 
-            // Fetch customers with their items
+            // Fetch customers with their orders
             const { data, error } = await supabase
                 .from('customers')
                 .select(`
@@ -70,27 +69,16 @@ export default function CustomersPage() {
         customer.email?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const filterPills = [
-        { label: 'Name', icon: '+' },
-        { label: 'Email', icon: '+' },
-        { label: 'Since', icon: '+' },
-        { label: 'Purchases', icon: '+' },
-        { label: 'Spent', icon: '+' },
-        { label: 'Product', icon: '+' },
-        { label: 'Active Subscription', icon: '+' },
-        { label: 'Tag', icon: '+' },
-    ];
-
     if (loading) {
         return (
-            <div className="p-8 space-y-6 max-w-[1400px] mx-auto w-full">
-                <div className="flex justify-between items-center mb-10">
-                    <Skeleton className="h-10 w-48 rounded-2xl" />
-                    <Skeleton className="h-12 w-40 rounded-2xl" />
+            <div className="p-4 md:p-8 space-y-6 max-w-[1300px] mx-auto w-full">
+                <div className="flex justify-between items-center mb-6">
+                    <Skeleton className="h-8 w-44 rounded-xl" />
+                    <Skeleton className="h-10 w-64 rounded-xl" />
                 </div>
-                <div className="space-y-4">
-                    {[1, 2, 3].map((i) => (
-                        <Skeleton key={i} className="h-24 w-full rounded-[32px]" />
+                <div className="bg-white rounded-2xl border border-[#E8ECF4] p-6 space-y-4">
+                    {[1, 2, 3, 4].map((i) => (
+                        <Skeleton key={i} className="h-12 w-full rounded-xl" />
                     ))}
                 </div>
             </div>
@@ -98,129 +86,122 @@ export default function CustomersPage() {
     }
 
     return (
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12 pb-32 space-y-10 text-slate-900">
-            {/* Premium Header & ActionsSection */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
-                        Müşteriler 👥
+        <div className="max-w-[1300px] mx-auto p-4 md:p-8 space-y-6">
+            {/* Header & Search */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">
+                        Müşteri Listesi
                     </h1>
-                    <p className="text-slate-500 mt-2 font-bold">
-                        Mağazanızdan alışveriş yapan müşterileri görüntüleyin.
+                    <p className="text-[12px] font-medium text-slate-400 mt-0.5">
+                        Mağazanızdan sipariş veren ve içeriklerinize kayıt olan alıcılar.
                     </p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                    <div className="flex items-center gap-2 p-1 bg-slate-100/80 rounded-[28px] border border-slate-200/50 w-full sm:w-auto overflow-hidden">
-                        <div className="relative flex-1 sm:w-80">
-                            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                            <input
-                                type="text"
-                                placeholder={'Müşteri ara...'}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-14 pr-6 py-4 bg-transparent text-[15px] font-bold focus:outline-none placeholder:text-slate-400"
-                            />
-                        </div>
+                <div className="flex items-center gap-3">
+                    {/* Search Input */}
+                    <div className="relative w-full sm:w-64">
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Müşteri veya e-posta ara..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-9 pr-4 py-2 bg-white rounded-xl border border-[#E8ECF4] text-[13px] font-semibold text-slate-900 focus:outline-none focus:border-[#5500FF] transition-colors"
+                        />
                     </div>
 
-                    <button className="w-full sm:w-auto h-16 px-10 bg-slate-900 text-white rounded-[28px] font-black text-[15px] flex items-center justify-center gap-3 shadow-[0_20px_40px_rgba(15,23,42,0.15)] hover:bg-[#5500ff] transition-all hover:scale-[1.02] active:scale-95 group">
-                        <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                        {'Kişi Ekle'}
-                    </button>
+                    <div className="hidden md:flex items-center gap-1.5 px-3 py-2 bg-[#F1F3F9] text-[#0F172A] rounded-xl text-[12px] font-bold shrink-0">
+                        <Users className="w-3.5 h-3.5 text-[#5500FF]" />
+                        <span>{customers.length} Müşteri</span>
+                    </div>
                 </div>
             </div>
 
-            {/* Premium Filter Pills */}
-            <div className="flex flex-wrap gap-2.5">
-                {[
-                    { key: 'name', label: 'İsim' },
-                    { key: 'email', label: 'E-posta' },
-                    { key: 'joined', label: 'Katılma Tarihi' },
-                    { key: 'orders', label: 'Siparişler' },
-                    { key: 'spent', label: 'Harcama' },
-                ].map((filter, index) => (
-                    <button
-                        key={index}
-                        className="h-11 px-6 bg-white border border-slate-100/80 text-slate-500 text-[14px] font-black rounded-full transition-all flex items-center gap-2.5 hover:border-slate-300 hover:text-slate-900 shadow-sm active:scale-95">
-                        <Plus className="w-4 h-4 text-slate-300" />
-                        {filter.label}
-                    </button>
-                ))}
-            </div>
-
-            {/* Main Content Area */}
-            <div className="bg-white rounded-[32px] md:rounded-[44px] border border-slate-100/60 shadow-[0_20px_50px_rgba(0,0,0,0.04)] overflow-hidden min-h-[600px] flex flex-col relative">
+            {/* Customers Table / Card Container */}
+            <div className="bg-white rounded-2xl border border-[#E8ECF4] shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
                 {filteredCustomers.length === 0 ? (
-                    <div className="flex-1 flex flex-col items-center justify-center p-6 text-center w-full">
-                        <div className="py-24 flex flex-col items-center justify-center text-center px-4 border-2 border-dashed border-slate-200 rounded-[40px] bg-slate-50/50 w-full max-w-2xl mx-auto">
-                            <div className="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
-                                <Users className="w-10 h-10 text-slate-300" />
-                            </div>
-
-                            <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">
-                                Henüz müşteri yok
-                            </h3>
-                            <p className="text-slate-500 font-medium max-w-[320px] mb-10">
-                                Müşterileriniz sipariş verdiğinde burada görünecek
-                            </p>
-                            
-                            <button
-                                onClick={() => router.push('/dashboard/store?tab=store&action=add')}
-                                className="bg-[#5500ff] text-white font-black px-10 py-6 rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20 hover:scale-[1.02] active:scale-95 transition-all text-base"
-                            >
-                                Ürün Ekle
-                            </button>
+                    <div className="p-12 md:p-16 flex flex-col items-center justify-center text-center space-y-3">
+                        <div className="w-14 h-14 bg-indigo-50 text-[#5500FF] rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                            <Users className="w-7 h-7" />
                         </div>
+                        <h3 className="text-[16px] font-extrabold text-[#0F172A] tracking-tight">
+                            Henüz kayıtlı müşteri yok
+                        </h3>
+                        <p className="text-[13px] text-slate-400 font-medium max-w-sm mx-auto">
+                            {searchQuery ? 'Arama kriterlerinize uygun müşteri bulunamadı.' : 'Mağazanız üzerinden ilk satışınızı gerçekleştirdiğinizde müşterileriniz burada otomatik listelenecektir.'}
+                        </p>
+                        {!searchQuery && (
+                            <button
+                                onClick={() => router.push('/dashboard/store')}
+                                className="inline-flex items-center gap-2 bg-gradient-to-r from-[#5500FF] to-[#7B2FFF] text-white px-5 py-2.5 rounded-xl font-bold text-[13px] shadow-lg shadow-[#5500FF]/25 hover:opacity-95 transition-all mt-2"
+                            >
+                                <ShoppingBag className="w-4 h-4" />
+                                <span>Ürünleri Görüntüle</span>
+                            </button>
+                        )}
                     </div>
                 ) : (
-                    <div className="overflow-x-auto w-full scrollbar-hide">
-                        <table className="w-full">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="border-b border-slate-50">
-                                    <th className="text-left py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">İsim</th>
-                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">E-posta</th>
-                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Katılma Tarihi</th>
-                                    <th className="text-center py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Siparişler</th>
-                                    <th className="text-right py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Harcama</th>
+                                <tr className="border-b border-[#F1F5F9] bg-[#FAFBFF]">
+                                    <th className="py-3 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
+                                        Müşteri
+                                    </th>
+                                    <th className="py-3 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
+                                        E-posta
+                                    </th>
+                                    <th className="py-3 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
+                                        Kayıt Tarihi
+                                    </th>
+                                    <th className="py-3 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono text-center">
+                                        Sipariş Sayısı
+                                    </th>
+                                    <th className="py-3 px-6 text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono text-right">
+                                        Toplam Harcama
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-50">
-                                {filteredCustomers.map((customer) => (
-                                    <tr key={customer.id} className="group hover:bg-slate-50 transition-all cursor-pointer border-b border-slate-50 last:border-0">
-                                        <td className="py-8 px-12 whitespace-nowrap">
-                                            <div className="flex items-center gap-5">
-                                                <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center font-black text-[16px] text-[#5500ff] group-hover:scale-105 transition-transform duration-500">
-                                                    {customer.name?.[0]?.toUpperCase() || 'C'}
+                            <tbody className="divide-y divide-slate-100">
+                                {filteredCustomers.map((customer) => {
+                                    const initial = (customer.name?.[0] || customer.email?.[0] || 'M').toUpperCase();
+                                    const formattedDate = customer.created_at
+                                        ? new Date(customer.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' })
+                                        : '—';
+
+                                    return (
+                                        <tr
+                                            key={customer.id}
+                                            className="hover:bg-[#FAFBFF] transition-colors group cursor-default"
+                                        >
+                                            <td className="py-3.5 px-6 whitespace-nowrap">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-9 h-9 rounded-xl bg-[#5500FF]/10 text-[#5500FF] font-bold text-[13px] flex items-center justify-center shrink-0">
+                                                        {initial}
+                                                    </div>
+                                                    <span className="font-bold text-[13px] text-[#0F172A]">
+                                                        {customer.name || 'İsimsiz Müşteri'}
+                                                    </span>
                                                 </div>
-                                                <span className="text-[17px] font-black text-slate-900 tracking-tight">{customer.name}</span>
-                                            </div>
-                                        </td>
-                                        <td className="py-8 px-6 whitespace-nowrap">
-                                            <span className="text-[15px] font-bold text-slate-400">{customer.email}</span>
-                                        </td>
-                                        <td className="py-8 px-6 whitespace-nowrap">
-                                            <span className="text-[15px] font-bold text-slate-400">
-                                                {(() => {
-                                                    try {
-                                                        if (!customer.created_at) return 'N/A';
-                                                        const dateObj = new Date(customer.created_at);
-                                                        if (isNaN(dateObj.getTime())) return 'N/A';
-                                                        return format(dateObj, 'MMM dd, yyyy', { locale: enUS });
-                                                    } catch (e) {
-                                                        return 'N/A';
-                                                    }
-                                                })()}
-                                            </span>
-                                        </td>
-                                        <td className="py-8 px-6 text-center whitespace-nowrap">
-                                            <span className="text-[16px] font-black text-slate-900">{customer.orderCount}</span>
-                                        </td>
-                                        <td className="py-8 px-12 text-right whitespace-nowrap font-black text-slate-900 text-[19px] tracking-tight">
-                                            {formatCurrency(customer.totalSpent)}
-                                        </td>
-                                    </tr>
-                                ))}
+                                            </td>
+                                            <td className="py-3.5 px-6 whitespace-nowrap text-[13px] font-medium text-slate-500">
+                                                {customer.email || '—'}
+                                            </td>
+                                            <td className="py-3.5 px-6 whitespace-nowrap text-[12px] font-medium text-slate-400">
+                                                {formattedDate}
+                                            </td>
+                                            <td className="py-3.5 px-6 whitespace-nowrap text-center">
+                                                <span className="inline-block px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold text-[11px] font-mono">
+                                                    {customer.orderCount}
+                                                </span>
+                                            </td>
+                                            <td className="py-3.5 px-6 whitespace-nowrap text-right font-extrabold text-[14px] text-[#0F172A] font-mono">
+                                                ₺{Number(customer.totalSpent || 0).toLocaleString('tr-TR')}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

@@ -136,14 +136,14 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                 className="space-y-8"
                             >
                                 <div className="space-y-4">
-                                    <div className="flex items-center gap-3 text-[#5500ff] font-black text-xs uppercase tracking-widest">
+                                    <div className="flex items-center gap-3 text-[#5500ff] font-bold text-xs uppercase tracking-widest">
                                         <Globe className="w-4 h-4" /> Güvenli Ödeme
                                     </div>
-                                    <h2 className="text-[28px] font-black text-slate-900 tracking-tight leading-tight">
+                                    <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-tight">
                                         {product.title}
                                     </h2>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[24px] font-black text-slate-900">
+                                        <span className="text-[24px] font-bold text-slate-900">
                                             {product.price === 0 ? 'ÜCRETSİZ' : formatCurrency(product.price)}
                                         </span>
                                         <span className="text-slate-400 font-bold ml-1">KDV Dahil</span>
@@ -152,7 +152,7 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
 
                                 <form onSubmit={handleNext} className="space-y-4">
                                     <div className="space-y-1.5">
-                                        <label className="text-[13px] font-black text-slate-500 uppercase tracking-wider ml-1">Ad Soyad</label>
+                                        <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider ml-1">Ad Soyad</label>
                                         <Input
                                             required
                                             value={name}
@@ -162,7 +162,7 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                         />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <label className="text-[13px] font-black text-slate-500 uppercase tracking-wider ml-1">E-Posta</label>
+                                        <label className="text-[13px] font-bold text-slate-500 uppercase tracking-wider ml-1">E-Posta</label>
                                         <Input
                                             required
                                             type="email"
@@ -173,7 +173,7 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                         />
                                     </div>
 
-                                    <Button type="submit" className="w-full h-16 rounded-[24px] bg-[#5500ff] hover:bg-[#4400cc] text-white font-black text-[18px] mt-6 shadow-xl shadow-indigo-100 border-none transition-all active:scale-95 flex items-center justify-center gap-2">
+                                    <Button type="submit" className="w-full h-16 rounded-[24px] bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[18px] mt-6 shadow-xl shadow-indigo-100 border-none transition-all active:scale-95 flex items-center justify-center gap-2">
                                         Ödemeye Geç <ChevronRight className="w-5 h-5" />
                                     </Button>
                                 </form>
@@ -195,13 +195,13 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                 className="space-y-8"
                             >
                                 <div className="text-center space-y-2">
-                                    <h2 className="text-[24px] font-black text-slate-900 tracking-tight">Ödeme Simülasyonu</h2>
+                                    <h2 className="text-[24px] font-bold text-slate-900 tracking-tight">Ödeme Simülasyonu</h2>
                                     <p className="text-slate-500 font-bold text-[20px]">{product.price === 0 ? '0.00' : formatCurrency(product.price)}</p>
                                 </div>
 
                                 <div className="bg-slate-50 p-8 rounded-[32px] border border-slate-100 space-y-6">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+                                        <span className="text-[12px] font-bold text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
                                             <ShieldCheck className="w-4 h-4" /> Güvenli İşlem
                                         </span>
                                         <Lock className="w-4 h-4 text-slate-300" />
@@ -210,7 +210,7 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-4 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm overflow-hidden relative">
                                             <CreditCard className="text-[#5500ff] w-6 h-6" />
-                                            <span className="font-black text-slate-900 tracking-[0.3em] text-[15px]">•••• •••• •••• 4242</span>
+                                            <span className="font-bold text-slate-900 tracking-[0.3em] text-[15px]">•••• •••• •••• 4242</span>
                                             <div className="absolute top-0 right-0 h-full w-1.5 bg-[#5500ff]" />
                                         </div>
 
@@ -229,7 +229,7 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                     <Button
                                         onClick={handlePurchase}
                                         disabled={loading}
-                                        className="w-full h-16 rounded-[24px] bg-[#5500ff] hover:bg-[#4400cc] text-white font-black text-[18px] shadow-xl shadow-indigo-100 border-none transition-all active:scale-95 flex items-center justify-center gap-2"
+                                        className="w-full h-16 rounded-[24px] bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[18px] shadow-xl shadow-indigo-100 border-none transition-all active:scale-95 flex items-center justify-center gap-2"
                                     >
                                         {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Siparişi Tamamla'}
                                     </Button>
@@ -255,7 +255,7 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                     <CheckCircle2 className="w-12 h-12 transition-transform duration-700 group-hover:rotate-[360deg]" strokeWidth={3} />
                                 </div>
                                 <div className="space-y-3">
-                                    <h2 className="text-[32px] font-black text-slate-900 tracking-tight">Harika! 🎉</h2>
+                                    <h2 className="text-[32px] font-bold text-slate-900 tracking-tight">Harika! 🎉</h2>
                                     <p className="text-slate-500 font-medium px-4 text-[16px] leading-relaxed">
                                         Ödeme başarıyla alındı. {product.external_link ? 'Şimdi içeriğe erişebilirsiniz.' : 'İçerik bilgileri e-posta adresinize gönderilecektir.'}
                                     </p>
@@ -265,7 +265,7 @@ export default function CheckoutModal({ isOpen, onClose, product, sellerId, stor
                                     {product.external_link && (
                                         <Button
                                             onClick={() => window.location.href = product.external_link}
-                                            className="w-full h-16 rounded-[24px] bg-slate-900 hover:bg-slate-800 text-white font-black text-[18px] shadow-lg"
+                                            className="w-full h-16 rounded-[24px] bg-slate-900 hover:bg-slate-800 text-white font-bold text-[18px] shadow-lg"
                                         >
                                             İçeriği Gör
                                         </Button>

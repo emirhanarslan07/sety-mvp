@@ -94,7 +94,7 @@ export default function PaymentSettingsPage() {
     return (
         <div className="max-w-4xl mx-auto p-8 space-y-12">
             <div>
-                <h1 className="text-3xl font-black text-slate-900 tracking-tight">Ödeme Ayarları</h1>
+                <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Ödeme Ayarları</h1>
                 <p className="text-slate-500 mt-2 font-medium">Müşterilerinizin ödemelerini nasıl alacağınızı ayarlayın</p>
             </div>
 
@@ -226,7 +226,7 @@ export default function PaymentSettingsPage() {
                 <button
                     onClick={handleSave}
                     disabled={isSaving}
-                    className="h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-black shadow-xl shadow-[#5500ff]/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                    className="h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-bold shadow-xl shadow-[#5500ff]/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
                 >
                     {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
                 </button>

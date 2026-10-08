@@ -24,7 +24,7 @@ export default function SettingsSection({
         <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
             {/* Announcement Banner */}
             <div className="space-y-4">
-                <label className="text-[14px] font-black text-slate-900 uppercase tracking-widest px-1">
+                <label className="text-[14px] font-bold text-slate-900 uppercase tracking-widest px-1">
                     {'dashboard.store.sections.announcement_banner'}
                 </label>
                 <div className="relative">
@@ -45,7 +45,7 @@ export default function SettingsSection({
 
             {/* Affiliate Badge Toggle */}
             <div className="space-y-4">
-                <label className="text-[14px] font-black text-slate-900 uppercase tracking-widest px-1">
+                <label className="text-[14px] font-bold text-slate-900 uppercase tracking-widest px-1">
                     {'dashboard.store.sections.sety_badge'}
                 </label>
                 <div
@@ -65,7 +65,7 @@ export default function SettingsSection({
                             <SetyLogo size="sm" />
                         </div>
                         <div>
-                            <h4 className={cn("text-[16px] font-black tracking-tight", showAffiliateBadge ? "text-slate-900" : "text-slate-400")}>
+                            <h4 className={cn("text-[16px] font-bold tracking-tight", showAffiliateBadge ? "text-slate-900" : "text-slate-400")}>
                                 {'dashboard.store.sections.show_sety_badge'}
                             </h4>
                             <p className="text-[13px] font-bold opacity-60">

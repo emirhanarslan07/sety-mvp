@@ -137,7 +137,7 @@ export default function AdminDashboard() {
                     <div className="w-10 h-10 rounded-[14px] bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-100 group-hover:rotate-6 transition-all duration-300">
                         <Zap className="w-5.5 h-5.5 text-[#C4FF00]" fill="#C4FF00" strokeWidth={2.5} />
                     </div>
-                    <span className="text-[20px] font-black tracking-tight text-slate-900 font-logo group-hover:translate-x-0.5 transition-transform">Sety Admin</span>
+                    <span className="text-[20px] font-bold tracking-tight text-slate-900 font-logo group-hover:translate-x-0.5 transition-transform">Sety Admin</span>
                 </div>
 
                 <nav className="flex-1 space-y-1.5">
@@ -170,18 +170,18 @@ export default function AdminDashboard() {
 
                 <div className="mt-auto pt-8 border-t border-slate-100/50 space-y-6">
                     <div className="flex items-center gap-4 px-3 group cursor-pointer active:scale-95 transition-all">
-                        <div className="w-11 h-11 rounded-2xl bg-white border border-slate-200 flex items-center justify-center font-black text-[#5500ff] shadow-sm transform group-hover:-rotate-3 transition-transform">
+                        <div className="w-11 h-11 rounded-2xl bg-white border border-slate-200 flex items-center justify-center font-bold text-[#5500ff] shadow-sm transform group-hover:-rotate-3 transition-transform">
                             A
                         </div>
                         <div className="min-w-0">
-                            <p className="text-[15px] font-black text-slate-900 leading-tight truncate">Admin</p>
+                            <p className="text-[15px] font-bold text-slate-900 leading-tight truncate">Admin</p>
                             <p className="text-[11px] font-bold text-slate-400 mt-1 truncate">hello@sety.store</p>
                         </div>
                     </div>
 
                     <button
                         onClick={() => router.push('/dashboard')}
-                        className="w-full h-14 bg-white hover:bg-slate-900 hover:text-white rounded-2xl font-black text-[14px] text-slate-950 shadow-sm border border-slate-200/50 transition-all flex items-center justify-center gap-2 group"
+                        className="w-full h-14 bg-white hover:bg-slate-900 hover:text-white rounded-2xl font-bold text-[14px] text-slate-950 shadow-sm border border-slate-200/50 transition-all flex items-center justify-center gap-2 group"
                     >
                         <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
                         Panele Dön

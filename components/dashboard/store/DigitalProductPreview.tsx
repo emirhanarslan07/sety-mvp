@@ -36,7 +36,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                 <div className="absolute top-4 left-4 z-20">
                     <div className="px-3 py-1 bg-white/90 backdrop-blur-md border border-slate-100 rounded-full shadow-sm flex items-center gap-1.5 animate-in fade-in slide-in-from-left-2 duration-500">
                         <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
-                        <span className="text-[10px] font-black text-slate-900 tracking-tight uppercase">{'dashboard.store.preview.limited_stock'}: {data.quantity_limit} {'dashboard.store.preview.units'}</span>
+                        <span className="text-[10px] font-bold text-slate-900 tracking-tight uppercase">{'dashboard.store.preview.limited_stock'}: {data.quantity_limit} {'dashboard.store.preview.units'}</span>
                     </div>
                 </div>
             )}
@@ -52,7 +52,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">{'dashboard.store.preview.no_image_selected'}</p>
+                        <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-400">{'dashboard.store.preview.no_image_selected'}</p>
                     </div>
                 )}
                 {/* Stan-style overlay fade */}
@@ -91,7 +91,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
 
                         {hasDiscount && (
                             <div className="flex pt-1">
-                                <span className="text-[8px] font-black text-white px-2 py-0.5 rounded-full bg-[#FF3B30] uppercase tracking-[0.1em] shadow-lg shadow-rose-500/10">
+                                <span className="text-[8px] font-bold text-white px-2 py-0.5 rounded-full bg-[#FF3B30] uppercase tracking-[0.1em] shadow-lg shadow-rose-500/10">
                                     SAVE %{Math.round((1 - data.discount_price! / data.price) * 100)}
                                 </span>
                             </div>
@@ -141,7 +141,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                                 ) : field.type === 'checkbox' ? (
                                     <div className="bg-[#F8FAFC] rounded-[14px] p-4 border-2 border-slate-100 mt-1 flex items-start gap-3.5 transition-all">
                                         <div className="w-5 h-5 rounded-md border-[2.5px] border-slate-200 bg-white shrink-0 mt-0.5" />
-                                        <p className="text-[12px] font-black text-slate-500 leading-[1.3]">{field.label || 'I agree to the terms and conditions'}</p>
+                                        <p className="text-[12px] font-bold text-slate-500 leading-[1.3]">{field.label || 'I agree to the terms and conditions'}</p>
                                     </div>
                                 ) : (
                                     <div className="w-full h-12 px-4 bg-[#F8FAFC] border-2 border-slate-100 rounded-[14px] flex items-center text-slate-300 font-[900]">
@@ -158,7 +158,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                             {!showCouponInput ? (
                                 <button
                                     onClick={() => setShowCouponInput(true)}
-                                    className="text-[11px] font-black text-[#5500ff] uppercase tracking-widest hover:opacity-80 transition-opacity flex items-center gap-2"
+                                    className="text-[11px] font-bold text-[#5500ff] uppercase tracking-widest hover:opacity-80 transition-opacity flex items-center gap-2"
                                 >
                                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -170,9 +170,9 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                                     <input
                                         type="text"
                                         placeholder={'dashboard.store.preview.coupon_placeholder'}
-                                        className="flex-1 h-11 px-4 bg-[#F8FAFC] border-2 border-[#5500ff]/20 rounded-xl text-[12px] font-black focus:border-[#5500ff] outline-none tracking-widest uppercase"
+                                        className="flex-1 h-11 px-4 bg-[#F8FAFC] border-2 border-[#5500ff]/20 rounded-xl text-[12px] font-bold focus:border-[#5500ff] outline-none tracking-widest uppercase"
                                     />
-                                    <button className="h-11 px-5 bg-slate-900 text-white rounded-xl text-[11px] font-black uppercase tracking-widest active:scale-95 transition-all">
+                                    <button className="h-11 px-5 bg-slate-900 text-white rounded-xl text-[11px] font-bold uppercase tracking-widest active:scale-95 transition-all">
                                         {'dashboard.store.preview.apply'}
                                     </button>
                                 </div>
@@ -223,7 +223,7 @@ export default function DigitalProductPreview({ data, brandColor = '#5500ff' }: 
                             <svg className="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                             </svg>
-                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">{'dashboard.store.preview.secure_checkout'}</span>
+                            <span className="text-[8px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-0.5">{'dashboard.store.preview.secure_checkout'}</span>
                         </div>
                     </div>
                 </div>

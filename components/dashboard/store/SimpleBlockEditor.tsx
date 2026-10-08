@@ -50,7 +50,7 @@ export default function SimpleBlockEditor({
                         )}>
                             <productType.icon className="w-8 h-8" />
                         </div>
-                        <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+                        <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
                             {isText ? 'Metin Bloğu Düzenle' : isLeadMagnet ? 'E-posta Toplama Düzenle' : 'Sosyal Medya Bloğu Düzenle'}
                         </h2>
                         <p className="text-slate-400 font-bold">
@@ -98,7 +98,7 @@ export default function SimpleBlockEditor({
                             onClick={handleSave}
                             disabled={isSaving || isSuccess}
                             className={cn(
-                                "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-black hover:bg-[#4400cc] shadow-xl shadow-indigo-100 transition-all",
+                                "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-bold hover:bg-[#4400cc] shadow-xl shadow-indigo-100 transition-all",
                                 (isSaving || isSuccess) && "opacity-70 cursor-not-allowed"
                             )}
                         >

@@ -38,11 +38,11 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
             <div className="grid grid-cols-2 gap-6">
                 {/* Price */}
                 <div className="space-y-2">
-                    <label className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1 flex items-center gap-1.5">
+                    <label className="text-[13px] font-bold text-slate-700 uppercase tracking-widest ml-1 flex items-center gap-1.5">
                         {'dashboard.store.editors.pricing.price_label'}
                     </label>
                     <div className="relative">
-                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[15px] font-black text-slate-400">$</div>
+                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[15px] font-bold text-slate-400">$</div>
                         <input
                             type="number"
                             value={data.price}
@@ -50,7 +50,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             placeholder="9.99"
                             min="0"
                             step="0.01"
-                            className={`w-full h-14 pl-10 pr-5 bg-slate-50 border rounded-2xl text-[16px] font-black text-slate-800 focus:ring-4 focus:ring-[#5500ff]/5 focus:border-[#5500ff] outline-none transition-all placeholder:text-slate-300 ${parseFloat(data.price) > 0 && parseFloat(data.price) < 0.5
+                            className={`w-full h-14 pl-10 pr-5 bg-slate-50 border rounded-2xl text-[16px] font-bold text-slate-800 focus:ring-4 focus:ring-[#5500ff]/5 focus:border-[#5500ff] outline-none transition-all placeholder:text-slate-300 ${parseFloat(data.price) > 0 && parseFloat(data.price) < 0.5
                                     ? 'border-rose-300 bg-rose-50/30'
                                     : 'border-slate-100'
                                 }`}
@@ -68,11 +68,11 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
 
                 {/* Discount Price */}
                 <div className="space-y-2">
-                    <label className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1">
+                    <label className="text-[13px] font-bold text-slate-700 uppercase tracking-widest ml-1">
                         {'dashboard.store.editors.pricing.discount_price_label'}
                     </label>
                     <div className="relative">
-                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[15px] font-black text-slate-300">$</div>
+                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-[15px] font-bold text-slate-300">$</div>
                         <input
                             type="number"
                             value={data.discount_price}
@@ -80,7 +80,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             placeholder="5.00"
                             min="0"
                             step="0.01"
-                            className={`w-full h-14 pl-10 pr-5 bg-slate-50 border rounded-2xl text-[16px] font-black text-slate-800 focus:ring-4 focus:ring-[#5500ff]/5 focus:border-[#5500ff] outline-none transition-all placeholder:text-slate-300 ${parseFloat(data.discount_price) > 0 && parseFloat(data.discount_price) >= parseFloat(data.price)
+                            className={`w-full h-14 pl-10 pr-5 bg-slate-50 border rounded-2xl text-[16px] font-bold text-slate-800 focus:ring-4 focus:ring-[#5500ff]/5 focus:border-[#5500ff] outline-none transition-all placeholder:text-slate-300 ${parseFloat(data.discount_price) > 0 && parseFloat(data.discount_price) >= parseFloat(data.price)
                                     ? 'border-rose-300 bg-rose-50/30'
                                     : 'border-slate-100'
                                 }`}
@@ -108,7 +108,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             <Calendar className="w-4 h-4 text-violet-500" />
                         </div>
                         <div>
-                            <p className="text-[14px] font-black text-slate-800">{'dashboard.store.editors.pricing.payment_plan_title'}</p>
+                            <p className="text-[14px] font-bold text-slate-800">{'dashboard.store.editors.pricing.payment_plan_title'}</p>
                             <p className="text-[12px] text-slate-400 font-medium">{'dashboard.store.editors.pricing.payment_plan_desc'}</p>
                         </div>
                     </div>
@@ -140,7 +140,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             <Tag className="w-4 h-4 text-amber-500" />
                         </div>
                         <div>
-                            <p className="text-[14px] font-black text-slate-800">{'dashboard.store.editors.pricing.discount_code_title'}</p>
+                            <p className="text-[14px] font-bold text-slate-800">{'dashboard.store.editors.pricing.discount_code_title'}</p>
                             <p className="text-[12px] text-slate-400 font-medium">{'dashboard.store.editors.pricing.discount_code_desc'}</p>
                         </div>
                     </div>
@@ -179,7 +179,7 @@ export function PricingSection({ data, onChange }: PricingSectionProps) {
                             <Package className="w-4 h-4 text-rose-500" />
                         </div>
                         <div>
-                            <p className="text-[14px] font-black text-slate-800">{'dashboard.store.editors.pricing.quantity_limit_title'}</p>
+                            <p className="text-[14px] font-bold text-slate-800">{'dashboard.store.editors.pricing.quantity_limit_title'}</p>
                             <p className="text-[12px] text-slate-400 font-medium">{'dashboard.store.editors.pricing.quantity_limit_desc'}</p>
                         </div>
                     </div>

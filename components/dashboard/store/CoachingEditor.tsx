@@ -190,10 +190,10 @@ export default function CoachingEditor({
                                         </div>
                                         <div className="flex-1 space-y-6">
                                             <div className="space-y-2">
-                                                <h4 className="text-[17px] font-black text-slate-900 tracking-tight leading-none">Görselinizi Buraya Sürükleyin</h4>
+                                                <h4 className="text-[17px] font-bold text-slate-900 tracking-tight leading-none">Görselinizi Buraya Sürükleyin</h4>
                                                 <p className="text-[13px] text-slate-400 font-bold uppercase tracking-wider">Önerilen: 1920 x 1080</p>
                                             </div>
-                                            <button onClick={() => setIsImageModalOpen(true)} className="h-14 px-8 rounded-2xl border-2 border-[#5500ff]/10 text-[#5500ff] font-black text-[14px] hover:bg-[#5500ff] hover:text-white transition-all shadow-sm">
+                                            <button onClick={() => setIsImageModalOpen(true)} className="h-14 px-8 rounded-2xl border-2 border-[#5500ff]/10 text-[#5500ff] font-bold text-[14px] hover:bg-[#5500ff] hover:text-white transition-all shadow-sm">
                                                 Görsel Seç
                                             </button>
                                         </div>
@@ -245,17 +245,17 @@ export default function CoachingEditor({
                         {activeTab === 'availability' && (
                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-16">
                                 {/* Calendly Integration */}
-                                <EditorSection number={1} title="Takvim Bağlantısı (Calendly / Cal.com)">
+                                <EditorSection number={1} title="Takvim Bağlantısı (Cal.com / Calendly)">
                                     <div className="bg-white p-10 rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/10 space-y-6 transition-all hover:shadow-2xl hover:shadow-slate-200/20">
                                         <p className="text-[14px] text-slate-500 font-medium">
-                                            Müşterileriniz ödemeyi tamamladıktan sonra otomatik olarak bu takvim bağlantısına yönlendirilecek veya ekranda göreceklerdir. Ücretsiz Calendly veya Cal.com bağlantınızı buraya yapıştırabilirsiniz.
+                                            Müşterileriniz ödemeyi tamamladıktan sonra, Sety mağazanızdan ayrılmadan doğrudan başarı ekranında takviminizi görebilecekler (Cal.com için). Ücretsiz Cal.com (önerilen) veya Calendly bağlantınızı buraya yapıştırabilirsiniz.
                                         </p>
                                         <div className="space-y-4">
-                                            <p className="text-[13px] font-black text-slate-700 uppercase tracking-widest ml-1">Takvim Linki *</p>
+                                            <p className="text-[13px] font-bold text-slate-700 uppercase tracking-widest ml-1">Takvim Linki *</p>
                                             <PremiumInput
                                                 value={formData.calendly_url}
                                                 onChange={(e) => updateData('calendly_url', e.target.value)}
-                                                placeholder="Örn: https://calendly.com/kullaniciadi/30dk"
+                                                placeholder="Örn: https://cal.com/kullaniciadi/30dk veya https://calendly.com/..."
                                             />
                                         </div>
                                     </div>
@@ -275,15 +275,15 @@ export default function CoachingEditor({
                         <div className="pt-20 border-t border-slate-100 mt-10">
                             <div className="flex items-center justify-between">
                                 {activeTab === 'options' ? (
-                                    <button className="flex items-center gap-2 text-rose-500 font-extrabold text-[13px] px-6 h-14 rounded-2xl hover:bg-rose-50 transition-all">
+                                    <button className="flex items-center gap-2 text-rose-500 font-bold text-[13px] px-6 h-14 rounded-2xl hover:bg-rose-50 transition-all">
                                         <Trash2 className="w-5 h-5" /> Sil
                                     </button>
                                 ) : (
-                                    <p className="text-[12px] text-slate-300 font-black italic">Bu sayfayı iyileştirin</p>
+                                    <p className="text-[12px] text-slate-300 font-bold italic">Bu sayfayı iyileştirin</p>
                                 )}
 
                                 <div className="flex items-center gap-4">
-                                    <button className="h-14 px-8 rounded-2xl font-black text-[14px] text-slate-400 hover:text-slate-900 transition-colors">
+                                    <button className="h-14 px-8 rounded-2xl font-bold text-[14px] text-slate-400 hover:text-slate-900 transition-colors">
                                         Taslak Olarak Kaydet
                                     </button>
                                     <button
@@ -294,7 +294,7 @@ export default function CoachingEditor({
                                         }}
                                         disabled={isSaving || isSuccess}
                                         className={cn(
-                                            "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-black text-[15px] shadow-xl shadow-[#5500ff]/20 flex items-center gap-3 transition-all",
+                                            "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-bold text-[15px] shadow-xl shadow-[#5500ff]/20 flex items-center gap-3 transition-all",
                                             (isSaving || isSuccess) && "opacity-70 cursor-not-allowed"
                                         )}
                                     >
@@ -424,7 +424,7 @@ function LocationSelect({ value, onChange }: { value: string, onChange: (id: str
                             <Calendar className="w-5 h-5" />
                         </div>
                     )}
-                    <span className="text-[15px] font-black text-slate-800">{current.id === 'varsayilan' ? 'Default' : current.label}</span>
+                    <span className="text-[15px] font-bold text-slate-800">{current.id === 'varsayilan' ? 'Default' : current.label}</span>
                 </div>
                 <ChevronDown className={cn("w-5 h-5 text-slate-300 transition-transform", isOpen && "rotate-180")} />
             </button>
@@ -457,7 +457,7 @@ function LocationSelect({ value, onChange }: { value: string, onChange: (id: str
                                             <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center text-[#5500ff]"><Calendar className="w-4 h-4" /></div>
                                         )}
                                 </div>
-                                <span className="text-[15px] font-black text-slate-800">{loc.label}</span>
+                                <span className="text-[15px] font-bold text-slate-800">{loc.label}</span>
                             </button>
                         ))}
                     </motion.div>
@@ -540,7 +540,7 @@ function TimePicker({ value, onChange }: { value: string, onChange: (val: string
                     isOpen && "border-[#5500ff] ring-4 ring-[#5500ff]/5"
                 )}
             >
-                <span className="text-[14px] font-black text-slate-800">{currentDisplay}</span>
+                <span className="text-[14px] font-bold text-slate-800">{currentDisplay}</span>
                 <ChevronDown className={cn("w-4 h-4 text-slate-300 transition-transform", isOpen && "rotate-180")} />
             </button>
 
@@ -566,7 +566,7 @@ function TimePicker({ value, onChange }: { value: string, onChange: (val: string
                                         setIsOpen(false);
                                     }}
                                     className={cn(
-                                        "w-full h-11 px-4 flex items-center text-[14px] font-black rounded-lg transition-colors text-left",
+                                        "w-full h-11 px-4 flex items-center text-[14px] font-bold rounded-lg transition-colors text-left",
                                         t.raw === value ? "bg-[#5500ff]/5 text-[#5500ff]" : "text-slate-600 hover:bg-slate-50"
                                     )}
                                 >
@@ -592,7 +592,7 @@ function AccordionItem({ id, title, icon, children, isOpen, onToggle }: any) {
                     <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-[#5500ff] transition-colors">
                         {icon}
                     </div>
-                    <span className="text-[15px] font-black text-slate-800">{title}</span>
+                    <span className="text-[15px] font-bold text-slate-800">{title}</span>
                 </div>
                 {isOpen ? <ChevronUp className="w-5 h-5 text-slate-300" /> : <ChevronDown className="w-5 h-5 text-slate-300" />}
             </button>
@@ -617,7 +617,7 @@ function TabButton({ active, onClick, icon, label }: { active: boolean, onClick:
         <button
             onClick={onClick}
             className={cn(
-                "h-12 px-6 rounded-full flex items-center gap-3 font-black text-[14px] transition-all border-2",
+                "h-12 px-6 rounded-full flex items-center gap-3 font-bold text-[14px] transition-all border-2",
                 active
                     ? "bg-[#5500ff]/5 border-[#5500ff] text-[#5500ff] shadow-sm"
                     : "bg-white border-slate-100 text-slate-400 hover:border-slate-300 shadow-sm"

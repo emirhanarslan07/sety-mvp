@@ -116,13 +116,13 @@ export function ToolComparison() {
                                             {tool.icon}
                                         </div>
                                         <div>
-                                            <h4 className="text-sm md:text-base font-black text-slate-800 leading-tight">{tool.name}</h4>
+                                            <h4 className="text-sm md:text-base font-bold text-slate-800 leading-tight">{tool.name}</h4>
                                             <p className="text-[10px] md:text-xs font-bold text-slate-400">
                                                 Bunların yerini alır: <span className="line-through opacity-60">{tool.replaces}</span>
                                             </p>
                                         </div>
                                     </div>
-                                    <span className="text-sm md:text-base font-black text-slate-600 tracking-tight">{tool.price}</span>
+                                    <span className="text-sm md:text-base font-bold text-slate-600 tracking-tight">{tool.price}</span>
                                 </div>
                             ))}
                         </div>
@@ -133,9 +133,9 @@ export function ToolComparison() {
                                     <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center">
                                         <X className="w-4 h-4 text-rose-500" strokeWidth={4} />
                                     </div>
-                                    <span className="text-sm md:text-base font-black text-rose-400">Ayrı Ayrı Ödeseydiniz</span>
+                                    <span className="text-sm md:text-base font-bold text-rose-400">Ayrı Ayrı Ödeseydiniz</span>
                                 </div>
-                                <span className="text-xl font-black text-rose-500 tracking-tight">$423/ay</span>
+                                <span className="text-xl font-bold text-rose-500 tracking-tight">$423/ay</span>
                             </div>
 
                             <div className="flex items-center justify-between bg-[#5500ff]/5 p-4 rounded-2xl border border-[#5500ff]/10">
@@ -143,7 +143,7 @@ export function ToolComparison() {
                                     <div className="w-8 h-8 rounded-full bg-[#5500ff] flex items-center justify-center">
                                         <Check className="w-4 h-4 text-white" strokeWidth={4} />
                                     </div>
-                                    <span className="text-sm md:text-lg font-black text-slate-900">Sety ile Tek Fiyat ✨</span>
+                                    <span className="text-sm md:text-lg font-bold text-slate-900">Sety ile Tek Fiyat ✨</span>
                                 </div>
                                 <span className="text-xl md:text-2xl font-[1000] text-[#5500ff] tracking-tighter">$19/ay</span>
                             </div>
@@ -158,7 +158,7 @@ export function ToolComparison() {
                     transition={{ delay: 0.3 }}
                     className="text-center mt-12"
                 >
-                    <Button onClick={() => openModal('signup')} size="xl" className="bg-[#1a1b4b] hover:bg-[#1a1b4b]/90 text-white px-12 rounded-full font-black text-lg h-16 shadow-2xl transition-all hover:scale-105 active:scale-95 border-none">
+                    <Button onClick={() => openModal('signup')} size="xl" className="bg-[#1a1b4b] hover:bg-[#1a1b4b]/90 text-white px-12 rounded-full font-bold text-lg h-16 shadow-2xl transition-all hover:scale-105 active:scale-95 border-none">
                         Deneme Sürümünü Başlat
                         <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>

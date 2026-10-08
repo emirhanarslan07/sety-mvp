@@ -64,7 +64,7 @@ export default function SettingsSection() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl">
             {/* Header */}
             <div className="mb-12">
-                <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Yönetim Ayarları</h1>
+                <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">Yönetim Ayarları</h1>
                 <p className="text-slate-400 font-medium">Platform ayarlarını, bildirimleri ve veri yönetimi işlemlerini buradan yapabilirsin.</p>
             </div>
 
@@ -75,12 +75,12 @@ export default function SettingsSection() {
                         <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
                             <Settings className="w-6 h-6" />
                         </div>
-                        <h3 className="text-xl font-black text-slate-900">Genel Platform Ayarları</h3>
+                        <h3 className="text-xl font-bold text-slate-900">Genel Platform Ayarları</h3>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-3">
-                            <label className="text-[13px] font-black text-slate-400 uppercase tracking-widest ml-1">Platform Başlığı</label>
+                            <label className="text-[13px] font-bold text-slate-400 uppercase tracking-widest ml-1">Platform Başlığı</label>
                             <input
                                 type="text"
                                 defaultValue="Sety"
@@ -88,7 +88,7 @@ export default function SettingsSection() {
                             />
                         </div>
                         <div className="space-y-3">
-                            <label className="text-[13px] font-black text-slate-400 uppercase tracking-widest ml-1">İletişim E-postası</label>
+                            <label className="text-[13px] font-bold text-slate-400 uppercase tracking-widest ml-1">İletişim E-postası</label>
                             <input
                                 type="email"
                                 defaultValue="hello@sety.store"
@@ -111,7 +111,7 @@ export default function SettingsSection() {
                         <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-400">
                             <Bell className="w-6 h-6" />
                         </div>
-                        <h3 className="text-xl font-black text-slate-900">Admin Bildirimleri</h3>
+                        <h3 className="text-xl font-bold text-slate-900">Admin Bildirimleri</h3>
                     </div>
 
                     <div className="space-y-6">
@@ -140,7 +140,7 @@ export default function SettingsSection() {
                             <Trash2 className="w-6 h-6" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-black text-rose-900">Tehlikeli Bölge</h3>
+                            <h3 className="text-xl font-bold text-rose-900">Tehlikeli Bölge</h3>
                             <p className="text-xs font-bold text-rose-500/70 uppercase tracking-widest mt-0.5">Yalnızca Geliştirme Amaçlı</p>
                         </div>
                     </div>
@@ -152,7 +152,7 @@ export default function SettingsSection() {
                         <Button
                             variant="destructive"
                             onClick={() => setShowResetConfirm(true)}
-                            className="h-14 rounded-2xl bg-rose-500 hover:bg-rose-600 px-8 font-black text-white shadow-xl shadow-rose-200 transition-all flex items-center gap-3 border-none ring-offset-emerald-50 active:scale-95"
+                            className="h-14 rounded-2xl bg-rose-500 hover:bg-rose-600 px-8 font-bold text-white shadow-xl shadow-rose-200 transition-all flex items-center gap-3 border-none ring-offset-emerald-50 active:scale-95"
                         >
                             <AlertTriangle className="w-5 h-5 text-white/50 group-hover:text-white transition-colors" />
                             Platformdaki Tüm Verileri Sıfırla
@@ -182,16 +182,16 @@ export default function SettingsSection() {
                         </div>
 
                         <div className="text-center space-y-4 mb-10">
-                            <h4 className="text-2xl font-black text-slate-900 tracking-tight">Emin misiniz?</h4>
+                            <h4 className="text-2xl font-bold text-slate-900 tracking-tight">Emin misiniz?</h4>
                             <p className="text-slate-400 font-semibold leading-relaxed">
-                                Bu işlem tüm kullanıcıları, mağazaları ve ürünleri silecek. Devam etmek için aşağıdaki kutucuğa <span className="text-rose-500 font-black">SIFIRLA</span> yazın.
+                                Bu işlem tüm kullanıcıları, mağazaları ve ürünleri silecek. Devam etmek için aşağıdaki kutucuğa <span className="text-rose-500 font-bold">SIFIRLA</span> yazın.
                             </p>
                         </div>
                         <div className="space-y-6">
                             <input
                                 type="text"
                                 placeholder="SIFIRLA yazın..."
-                                className="w-full h-16 bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 font-black text-center text-rose-500 text-lg focus:outline-none focus:border-rose-200 transition-all font-mono"
+                                className="w-full h-16 bg-slate-50 border-2 border-slate-100 rounded-[2rem] px-8 font-bold text-center text-rose-500 text-lg focus:outline-none focus:border-rose-200 transition-all font-mono"
                                 value={confirmText}
                                 onChange={(e) => setConfirmText(e.target.value.toUpperCase())}
                             />
@@ -201,7 +201,7 @@ export default function SettingsSection() {
                                     type="button"
                                     onClick={() => setShowResetConfirm(false)}
                                     variant="outline"
-                                    className="flex-1 h-16 rounded-[2rem] font-black border-slate-100 text-slate-500 hover:bg-slate-50"
+                                    className="flex-1 h-16 rounded-[2rem] font-bold border-slate-100 text-slate-500 hover:bg-slate-50"
                                 >
                                     İptal Et
                                 </Button>
@@ -211,7 +211,7 @@ export default function SettingsSection() {
                                         handleResetEverything();
                                     }}
                                     disabled={loading || (confirmText.trim().toUpperCase() !== 'SIFIRLA' && confirmText.trim().toUpperCase() !== 'SİFİRLA')}
-                                    className="flex-1 h-16 rounded-[2rem] font-black bg-rose-500 hover:bg-rose-600 text-white shadow-xl shadow-rose-200 transition-all flex items-center justify-center gap-3 disabled:opacity-50 border-none group"
+                                    className="flex-1 h-16 rounded-[2rem] font-bold bg-rose-500 hover:bg-rose-600 text-white shadow-xl shadow-rose-200 transition-all flex items-center justify-center gap-3 disabled:opacity-50 border-none group"
                                 >
                                     {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
                                         <>

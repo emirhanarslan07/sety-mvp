@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.font-serif-display {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
 
 @layer base {
   [dir="rtl"] {
@@ -8,7 +14,7 @@
   }
 
   [dir="ltr"] {
-    font-family: var(--font-inter), var(--font-plus-jakarta), sans-serif !important;
+    font-family: var(--font-inter, "Inter"), var(--font-plus-jakarta, "Plus Jakarta Sans"), sans-serif !important;
   }
 }
 
@@ -62,7 +68,7 @@
 
   body {
     @apply bg-background text-foreground transition-all duration-500;
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-inter, "Inter"), sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
   }
@@ -74,12 +80,12 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-plus-jakarta), var(--font-inter), sans-serif;
-    @apply font-bold tracking-tight text-foreground;
+    font-family: var(--font-plus-jakarta, "Plus Jakarta Sans"), var(--font-inter, "Inter"), sans-serif;
+    @apply font-semibold tracking-tight text-foreground;
   }
 
   h1 {
-    @apply text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-[-0.03em] leading-[1.1];
+    @apply text-4xl sm:text-6xl lg:text-7xl font-bold tracking-[-0.03em] leading-[1.1];
   }
 
   h2 {
@@ -138,7 +144,7 @@
   }
 
   .font-logo {
-    font-family: var(--font-inter), sans-serif;
+    font-family: var(--font-inter, "Inter"), sans-serif;
     letter-spacing: -0.025em;
   }
 }

@@ -14,7 +14,7 @@ export function HowItWorks() {
         <section className="py-32 md:py-48 bg-background relative overflow-hidden" id="how-it-works">
             <div className="container mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-20 text-balance">
-                    <h2 className="text-4xl md:text-6xl font-extrabold tracking-tighter text-foreground mb-8 leading-tight">
+                    <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-foreground mb-8 leading-tight">
                         {t('landing.how_it_works.title')} <br /><span className="text-[#5500ff]">{t('landing.how_it_works.title_accent')}</span>
                     </h2>
                 </div>
@@ -43,7 +43,7 @@ export function HowItWorks() {
                                 <div className="flex items-center gap-4">
                                     <SetyLogo size="sm" className="w-10 h-10" />
                                     <div className="space-y-0.5">
-                                        <div className="text-[12px] font-black text-[#5500ff] leading-none">{t('landing.how_it_works.step1.badge')}</div>
+                                        <div className="text-[12px] font-bold text-[#5500ff] leading-none">{t('landing.how_it_works.step1.badge')}</div>
                                     </div>
                                 </div>
                                 <div className="p-2 bg-slate-50 rounded-lg">
@@ -54,8 +54,8 @@ export function HowItWorks() {
                             {/* Real Metrics - Made Smaller */}
                             <div className="grid grid-cols-2 gap-4 mb-6">
                                 <div className="p-4 rounded-2xl bg-slate-50/50 border border-slate-100/50">
-                                    <div className="text-[8.5px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('landing.how_it_works.step1.metrics.earnings')}</div>
-                                    <div className="text-2xl font-black text-slate-900 tracking-tighter">₺4.850,00</div>
+                                    <div className="text-[8.5px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">{t('landing.how_it_works.step1.metrics.earnings')}</div>
+                                    <div className="text-2xl font-bold text-slate-900 tracking-tighter">₺4.850,00</div>
                                     <div className="flex items-center gap-1.5 mt-1.5">
                                         <span className="text-[9px] font-bold text-emerald-500">↑ %14</span>
                                         <div className="w-12 h-0.5 bg-emerald-100 rounded-full overflow-hidden">
@@ -64,8 +64,8 @@ export function HowItWorks() {
                                     </div>
                                 </div>
                                 <div className="p-4 rounded-2xl bg-indigo-50/30 border border-indigo-100/50">
-                                    <div className="text-[8.5px] font-black text-slate-400 uppercase tracking-widest mb-1.5">{t('landing.how_it_works.step1.metrics.customers')}</div>
-                                    <div className="text-2xl font-black text-slate-900 tracking-tighter">1,240</div>
+                                    <div className="text-[8.5px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">{t('landing.how_it_works.step1.metrics.customers')}</div>
+                                    <div className="text-2xl font-bold text-slate-900 tracking-tighter">1,240</div>
                                     <div className="flex items-center gap-1.5 mt-1.5">
                                         <span className="text-[9px] font-bold text-indigo-500">↑ %22</span>
                                         <div className="w-12 h-0.5 bg-indigo-100 rounded-full overflow-hidden">
@@ -77,7 +77,7 @@ export function HowItWorks() {
 
                             {/* Detailed Sales List */}
                             <div className="space-y-3">
-                                <div className="text-[10px] font-black text-slate-400 tracking-widest uppercase mb-4 px-1">{t('landing.how_it_works.step1.metrics.activity')}</div>
+                                <div className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-4 px-1">{t('landing.how_it_works.step1.metrics.activity')}</div>
                                 {[
                                     { name: 'E-Ticaret Kursu', type: 'VİDEO', price: '₺490', time: 'Az önce', bg: 'bg-blue-50 text-blue-600' },
                                     { name: 'Fitness Rehberi', type: 'PDF', price: '₺190', time: '12 dk önce', bg: 'bg-orange-50 text-orange-600' },
@@ -85,15 +85,15 @@ export function HowItWorks() {
                                 ].map((sale, i) => (
                                     <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-white border border-slate-100 group/item hover:bg-slate-50 transition-colors">
                                         <div className="flex items-center gap-4">
-                                            <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center font-black text-[9px] shadow-sm", sale.bg)}>
+                                            <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center font-bold text-[9px] shadow-sm", sale.bg)}>
                                                 {sale.type}
                                             </div>
                                             <div>
-                                                <div className="text-[11px] font-black text-slate-900">{sale.name}</div>
+                                                <div className="text-[11px] font-bold text-slate-900">{sale.name}</div>
                                                 <div className="text-[9px] font-bold text-slate-400">{sale.time}</div>
                                             </div>
                                         </div>
-                                        <div className="text-[12px] font-black text-slate-900">{sale.price}</div>
+                                        <div className="text-[12px] font-bold text-slate-900">{sale.price}</div>
                                     </div>
                                 ))}
                             </div>
@@ -116,7 +116,7 @@ export function HowItWorks() {
                             <div className="p-5 bg-white border border-slate-100 rounded-3xl flex items-center justify-between shadow-xl group-hover:scale-[1.03] transition-all duration-500">
                                 <div className="flex items-center gap-3">
                                     <SetyLogo size="sm" className="w-8 h-8" />
-                                    <span className="text-xs font-black text-slate-900 tracking-tight">sety.store/aysegul</span>
+                                    <span className="text-xs font-bold text-slate-900 tracking-tight">sety.store/aysegul</span>
                                 </div>
                                 <ArrowUpRight className="w-4 h-4 text-primary" />
                             </div>

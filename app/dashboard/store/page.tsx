@@ -268,8 +268,15 @@ function StorePageContent() {
 
     return (
         <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden">
-            {/* Header */}
+            {/* Unified Modern Tab & Action Bar */}
             <StoreHeader
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                onAddProduct={() => {
+                    setEditingProduct(null);
+                    setIsModalOpen(true);
+                }}
+                productsCount={products.length}
                 username={store?.username || 'user'}
                 copied={copied}
                 copyToClipboard={copyToClipboard}
@@ -278,46 +285,17 @@ function StorePageContent() {
             />
 
             <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
-                <div className="max-w-[1400px] mx-auto pb-24">
-                    <div className="w-full space-y-12">
-
-                        {/* Tab Navigation */}
-                        <div className="sticky top-0 z-40 md:static flex justify-center w-full mb-8 pt-4">
-                            <div className="flex items-center gap-2 p-2 bg-white/60 backdrop-blur-xl rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white mx-auto">
-                                {[
-                                    { id: 'store', label: t('dashboard.store.tabs.products'), icon: ShoppingBag },
-                                    { id: 'design', label: t('dashboard.store.tabs.design'), icon: Palette },
-                                ].map((tab) => {
-                                    const isActive = activeTab === tab.id;
-                                    const Icon = tab.icon;
-                                    return (
-                                        <button
-                                            key={tab.id}
-                                            onClick={() => setActiveTab(tab.id as any)}
-                                            className={cn(
-                                                "flex items-center gap-2 px-6 py-3 rounded-full text-[15px] font-black transition-all active:scale-95",
-                                                isActive
-                                                    ? "bg-gradient-to-r from-[#5500ff] to-[#6C47FF] text-white shadow-lg shadow-indigo-500/30"
-                                                    : "text-slate-500 hover:text-slate-900 hover:bg-white/80"
-                                            )}
-                                        >
-                                            <Icon className={cn("w-5 h-5", isActive ? "text-white" : "text-slate-400")} />
-                                            <span>{tab.label}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
+                <div className="max-w-[1300px] mx-auto pb-24">
+                    <div className="w-full space-y-8">
                         {/* Tab Content */}
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeTab}
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 12 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
-                                className="space-y-16 min-h-[500px] pb-20"
+                                exit={{ opacity: 0, y: -12 }}
+                                transition={{ duration: 0.2 }}
+                                className="space-y-8 min-h-[500px]"
                             >
                                 {activeTab === 'store' && (
                                     <ProductListSection
@@ -335,44 +313,65 @@ function StorePageContent() {
                                 )}
 
                                 {activeTab === 'design' && (
-                                    <div className="max-w-[600px] mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                                        <div className="space-y-2">
-                                            <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Mağaza Tasarımı</h3>
-                                            <p className="text-[14px] font-bold text-slate-400">Mağazanızda görünecek temel metinleri düzenleyin.</p>
-                                        </div>
+                                    <div className="max-w-[700px] mx-auto space-y-6">
+                                        <div className="bg-white p-6 md:p-8 rounded-2xl border border-[#E8ECF4] shadow-[0_2px_12px_rgba(0,0,0,0.02)] space-y-6">
+                                            <div className="border-b border-[#F1F5F9] pb-4">
+                                                <h3 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">
+                                                    Mağaza Kimliği & Tasarım
+                                                </h3>
+                                                <p className="text-[12px] font-medium text-slate-400 mt-1">
+                                                    Mağaza profilinizde ziyaretçilerinize görünecek metin ve ayarları belirleyin.
+                                                </p>
+                                            </div>
 
-                                        <div className="space-y-6 bg-white p-8 rounded-[32px] border border-slate-100 shadow-sm">
-                                            <div className="space-y-2">
-                                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Marka Adı (Görüntülenen Ad)</label>
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[12px] font-bold text-slate-700 uppercase tracking-wider">
+                                                    Marka / Görünür Ad
+                                                </label>
                                                 <input
                                                     type="text"
                                                     value={displayName}
                                                     onChange={(e) => setDisplayName(e.target.value)}
-                                                    placeholder="Marka adınız"
-                                                    className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
+                                                    placeholder="Örn: Emirhan Arslan"
+                                                    className="w-full h-11 px-4 bg-[#F8F9FE] rounded-xl border border-[#E8ECF4] focus:border-[#5500FF] focus:bg-white outline-none font-semibold text-[14px] text-slate-900 transition-all"
                                                 />
                                             </div>
 
-                                            <div className="space-y-2">
-                                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Biyografi</label>
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[12px] font-bold text-slate-700 uppercase tracking-wider">
+                                                    Biyografi & Açıklama
+                                                </label>
                                                 <textarea
                                                     value={bio}
                                                     onChange={(e) => setBio(e.target.value)}
-                                                    placeholder="Kısa biyografi"
+                                                    placeholder="Takipçilerinize mağazanız hakkında bilgi verin..."
                                                     rows={3}
-                                                    className="w-full px-5 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[14px] text-slate-900 transition-all resize-none"
+                                                    className="w-full p-4 bg-[#F8F9FE] rounded-xl border border-[#E8ECF4] focus:border-[#5500FF] focus:bg-white outline-none font-semibold text-[13px] text-slate-900 transition-all resize-none"
                                                 />
                                             </div>
 
-                                            <div className="space-y-2">
-                                                <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">Duyuru Çubuğu Metni</label>
+                                            <div className="space-y-1.5">
+                                                <label className="block text-[12px] font-bold text-slate-700 uppercase tracking-wider">
+                                                    Duyuru Çubuğu Metni (İsteğe Bağlı)
+                                                </label>
                                                 <input
                                                     type="text"
                                                     value={announcement}
                                                     onChange={(e) => setAnnouncement(e.target.value)}
-                                                    placeholder="Mağazanın üstünde gösterilecek duyuru"
-                                                    className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
+                                                    placeholder="Örn: %20 Tanışma indirimi için son 3 gün! 🔥"
+                                                    className="w-full h-11 px-4 bg-[#F8F9FE] rounded-xl border border-[#E8ECF4] focus:border-[#5500FF] focus:bg-white outline-none font-semibold text-[14px] text-slate-900 transition-all"
                                                 />
+                                            </div>
+
+                                            <div className="pt-2 flex justify-end">
+                                                <button
+                                                    onClick={() => handleSaveDesign()}
+                                                    disabled={isSavingDesign}
+                                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#5500FF] to-[#7B2FFF] text-white px-6 py-2.5 rounded-xl font-bold text-[13px] shadow-md shadow-[#5500FF]/25 hover:opacity-95 active:scale-95 transition-all disabled:opacity-50"
+                                                >
+                                                    {isSavingDesign ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                                                    <span>Değişiklikleri Kaydet</span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -396,7 +395,7 @@ function StorePageContent() {
                             <button
                                 onClick={handleSaveDesign}
                                 disabled={isSavingDesign}
-                                className="flex-1 h-14 rounded-[24px] bg-[#5500ff] text-white font-black flex items-center justify-center gap-3 shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50"
+                                className="flex-1 h-14 rounded-[24px] bg-[#5500ff] text-white font-bold flex items-center justify-center gap-3 shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50"
                             >
                                 {isSavingDesign ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
                                 {t('dashboard.store.header.save_changes')}

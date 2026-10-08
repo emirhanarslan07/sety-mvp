@@ -72,7 +72,7 @@ export function ProductShowcase() {
                                     <BarChart3 className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <div className="text-[9px] font-black text-gray-400 uppercase tracking-wider leading-none">{t('landing.product_showcase.cards.revenue.title')}</div>
+                                    <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider leading-none">{t('landing.product_showcase.cards.revenue.title')}</div>
                                     <div className="text-[20px] font-[1000] text-gray-900 leading-tight">₺42.850</div>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@ export function ProductShowcase() {
                             </div>
                             <div className="flex justify-between mt-2">
                                 <span className="text-[9px] text-gray-400 font-semibold">{t('landing.product_showcase.cards.revenue.goal')}</span>
-                                <span className="text-[9px] text-[#5500ff] font-black">78%</span>
+                                <span className="text-[9px] text-[#5500ff] font-bold">78%</span>
                             </div>
                         </motion.div>
 
@@ -99,7 +99,7 @@ export function ProductShowcase() {
                                     <span className="absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-60 animate-ping" />
                                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
                                 </div>
-                                <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider">{t('landing.product_showcase.cards.live_sale.title')}</span>
+                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{t('landing.product_showcase.cards.live_sale.title')}</span>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Image
@@ -126,7 +126,7 @@ export function ProductShowcase() {
                             className="absolute bottom-[10%] -left-4 md:-left-28 z-30 bg-white/95 backdrop-blur-2xl p-6 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 hidden sm:block min-w-[200px]"
                             style={{ animation: 'floatA 6s ease-in-out infinite 1s', rotate: '2deg' }}
                         >
-                            <div className="text-[9px] font-black text-gray-400 uppercase tracking-wider mb-3.5">{t('landing.product_showcase.cards.customers.title')}</div>
+                            <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-3.5">{t('landing.product_showcase.cards.customers.title')}</div>
                             <div className="flex -space-x-3 mb-3.5">
                                 {[
                                     'https://api.dicebear.com/7.x/micah/svg?seed=Felix&backgroundColor=b6e3f4',
@@ -154,7 +154,7 @@ export function ProductShowcase() {
                                     </motion.div>
                                 ))}
                                 <div className="w-10 h-10 rounded-full border-2 border-white bg-[#5500ff] flex items-center justify-center shadow-sm">
-                                    <span className="text-[9px] font-black text-white">2k+</span>
+                                    <span className="text-[9px] font-bold text-white">2k+</span>
                                 </div>
                             </div>
                             <div className="text-[16px] font-[900] text-gray-900 leading-none">{t('landing.product_showcase.cards.customers.count')}</div>
@@ -171,8 +171,8 @@ export function ProductShowcase() {
                             style={{ animation: 'floatB 4.5s ease-in-out infinite 0.5s', rotate: '-1.5deg' }}
                         >
                             <div className="flex items-center justify-between mb-3">
-                                <div className="text-[9px] font-black text-gray-400 uppercase tracking-wider">{t('landing.product_showcase.cards.chart.title')}</div>
-                                <div className="text-[12px] font-black text-green-600">↑ %34</div>
+                                <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">{t('landing.product_showcase.cards.chart.title')}</div>
+                                <div className="text-[12px] font-bold text-green-600">↑ %34</div>
                             </div>
                             <svg width="100%" height="56" viewBox="0 0 120 44" fill="none" preserveAspectRatio="none">
                                 <defs>
@@ -188,7 +188,7 @@ export function ProductShowcase() {
                                 <span className="text-[9px] text-gray-400 font-semibold">{t('landing.product_showcase.cards.chart.days', { returnObjects: true })[0]}</span>
                                 <span className="text-[9px] text-gray-400 font-semibold">{t('landing.product_showcase.cards.chart.days', { returnObjects: true })[1]}</span>
                                 <span className="text-[9px] text-gray-400 font-semibold">{t('landing.product_showcase.cards.chart.days', { returnObjects: true })[2]}</span>
-                                <span className="text-[9px] text-gray-900 font-black">{t('landing.product_showcase.cards.chart.days', { returnObjects: true })[3]}</span>
+                                <span className="text-[9px] text-gray-900 font-bold">{t('landing.product_showcase.cards.chart.days', { returnObjects: true })[3]}</span>
                             </div>
                         </motion.div>
 
@@ -207,7 +207,7 @@ export function ProductShowcase() {
                                 </svg>
                             </div>
                             <div className="min-w-0">
-                                <div className="text-[9px] font-black text-gray-400 uppercase tracking-wider mb-1">{t('landing.product_showcase.cards.link_in_bio.title')}</div>
+                                <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t('landing.product_showcase.cards.link_in_bio.title')}</div>
                                 <div className="text-[14px] font-bold text-gray-900 truncate tracking-tight">sety.store/aysegul_dijital</div>
                             </div>
                             <div className="ml-auto shrink-0">
@@ -232,7 +232,7 @@ export function ProductShowcase() {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                     </svg>
                                 </div>
-                                <span className="text-[10px] font-black text-green-600 uppercase tracking-wider">{t('landing.product_showcase.cards.payment.title')}</span>
+                                <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider">{t('landing.product_showcase.cards.payment.title')}</span>
                             </div>
                             <div className="text-[24px] font-[1000] text-gray-900 leading-none mb-2">₺990</div>
                             <span className="text-[10px] text-slate-400 font-bold tracking-tight">{t('landing.product_showcase.cards.payment.stripe')}</span>
@@ -300,10 +300,10 @@ export function ProductShowcase() {
                                                         return (
                                                             <div key={`${listIdx}-${i}`} className="bg-white px-4 py-3 rounded-[1.2rem] shadow-[0_2px_10px_-4px_rgba(0,0,0,0.07)] border border-gray-100/80 flex items-center justify-between gap-2">
                                                                 <div className="flex flex-col gap-0.5 min-w-0">
-                                                                    <span className="text-[6.5px] font-black text-[#5500ff] tracking-wider uppercase leading-none">{labels[i]}</span>
+                                                                    <span className="text-[6.5px] font-bold text-[#5500ff] tracking-wider uppercase leading-none">{labels[i]}</span>
                                                                     <span className="text-[11px] font-[900] text-gray-900 tracking-tight leading-snug truncate">{p.title}</span>
                                                                 </div>
-                                                                <span className="text-[11.5px] font-black text-[#5500ff] shrink-0">{p.price}</span>
+                                                                <span className="text-[11.5px] font-bold text-[#5500ff] shrink-0">{p.price}</span>
                                                             </div>
                                                         );
                                                     })}
@@ -316,7 +316,7 @@ export function ProductShowcase() {
                                     <div className="absolute bottom-0 inset-x-0 z-30 bg-gradient-to-t from-white via-white/95 to-transparent pt-12 pb-5 px-6 flex flex-col items-center">
                                         <div className="flex items-center gap-2 bg-gray-950 text-white px-4 py-2 rounded-[0.9rem] shadow-lg">
                                             <SetyLogo size="sm" />
-                                            <span className="text-[10px] font-black tracking-[0.16em] uppercase">{t('landing.product_showcase.mockup.badge')}</span>
+                                            <span className="text-[10px] font-bold tracking-[0.16em] uppercase">{t('landing.product_showcase.mockup.badge')}</span>
                                         </div>
                                     </div>
                                 </div>

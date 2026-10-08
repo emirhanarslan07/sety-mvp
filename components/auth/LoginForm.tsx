@@ -72,7 +72,7 @@ export function LoginForm({
                 <Button
                     onClick={handleAuth}
                     disabled={loading}
-                    className="relative w-full h-[54px] rounded-full bg-gradient-to-r from-[#5500ff] to-[#6C47FF] hover:from-[#4400cc] hover:to-[#5500ff] text-white font-black text-[17px] shadow-[0_10px_30px_-10px_rgba(85,0,255,0.5)] transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] border-none overflow-hidden group"
+                    className="relative w-full h-[54px] rounded-full bg-gradient-to-r from-[#5500ff] to-[#6C47FF] hover:from-[#4400cc] hover:to-[#5500ff] text-white font-bold text-[17px] shadow-[0_10px_30px_-10px_rgba(85,0,255,0.5)] transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] border-none overflow-hidden group"
                 >
                     <span className="relative z-10 flex items-center gap-2">
                         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}

@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PackageX, Filter, Loader2 } from 'lucide-react';
+import { PackageX, Filter, Loader2, ShoppingBag } from 'lucide-react';
 import { OrderCard } from './OrderCard';
 import { ConfirmModal } from './ConfirmModal';
 import { useToast } from '@/context/ToastContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 export default function OrdersPage() {
     const { showToast } = useToast();
@@ -91,29 +92,30 @@ export default function OrdersPage() {
     ];
 
     return (
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8 md:py-12 pb-32 space-y-10">
-            {/* Header section */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
-                        Siparişler 📦
+        <div className="max-w-[1300px] mx-auto p-4 md:p-8 space-y-6">
+            {/* Action & Filter Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">
+                        Sipariş Yönetimi
                     </h1>
-                    <p className="text-slate-500 mt-2 font-bold">
-                        Müşteri siparişlerinizi yönetin ve onaylayın.
+                    <p className="text-[12px] font-medium text-slate-400 mt-0.5">
+                        Mağazanızdan gelen siparişleri inceleyin ve müşterilerinize teslim edin.
                     </p>
                 </div>
 
-                {/* Tabs */}
-                <div className="flex items-center gap-2 p-1.5 bg-slate-100/80 backdrop-blur-sm rounded-2xl w-full md:w-auto border border-slate-200/50">
+                {/* Filter Tabs */}
+                <div className="flex items-center gap-1.5 p-1 bg-[#F1F3F9] rounded-xl self-start sm:self-auto">
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
-                                activeTab === tab.id 
-                                ? 'bg-white text-slate-900 shadow-sm border border-slate-200/50' 
-                                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
-                            }`}
+                            className={cn(
+                                "px-4 py-1.5 rounded-lg text-[13px] font-bold transition-all",
+                                activeTab === tab.id
+                                    ? "bg-white text-[#0F172A] shadow-sm"
+                                    : "text-slate-500 hover:text-slate-900"
+                            )}
                         >
                             {tab.label}
                         </button>
@@ -121,31 +123,33 @@ export default function OrdersPage() {
                 </div>
             </div>
 
-            {/* Content */}
-            <div className="min-h-[400px]">
+            {/* Orders Content */}
+            <div className="min-h-[350px]">
                 {isLoading ? (
-                    <div className="flex flex-col items-center justify-center h-64 text-slate-400 gap-4">
-                        <Loader2 className="w-8 h-8 animate-spin text-[#5500ff]" />
-                        <span className="font-bold">Yükleniyor...</span>
+                    <div className="flex flex-col items-center justify-center h-64 text-slate-400 gap-3">
+                        <Loader2 className="w-7 h-7 animate-spin text-[#5500FF]" />
+                        <span className="text-[13px] font-medium">Siparişler yükleniyor...</span>
                     </div>
                 ) : orders.length === 0 ? (
                     <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="flex flex-col items-center justify-center py-24 text-center border-2 border-dashed border-slate-200 rounded-[40px] bg-slate-50/50"
+                        className="bg-white rounded-2xl border border-[#E8ECF4] shadow-[0_2px_12px_rgba(0,0,0,0.02)] p-12 md:p-16 flex flex-col items-center justify-center text-center space-y-3"
                     >
-                        <div className="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
-                            <PackageX className="w-10 h-10 text-slate-300" />
+                        <div className="w-14 h-14 bg-indigo-50 text-[#5500FF] rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                            <PackageX className="w-7 h-7" />
                         </div>
-                        <h3 className="text-xl font-black text-slate-800 tracking-tight">Henüz sipariş yok</h3>
-                        <p className="text-slate-500 mt-2 font-medium max-w-sm mx-auto">
+                        <h3 className="text-[16px] font-extrabold text-[#0F172A] tracking-tight">
+                            {activeTab === 'pending' ? 'Bekleyen sipariş bulunmuyor' : 'Kayıtlı sipariş bulunamadı'}
+                        </h3>
+                        <p className="text-[13px] text-slate-400 max-w-sm mx-auto font-medium">
                             {activeTab === 'pending' 
-                                ? 'Şu anda onayınızı bekleyen yeni bir sipariş bulunmuyor.' 
-                                : 'Bu filtreye uygun sipariş kaydı bulunamadı.'}
+                                ? 'Müşterileriniz mağazanızdan ürün satın aldığında siparişler burada listelenecektir.' 
+                                : 'Bu filtre kriterine uygun herhangi bir sipariş geçmişi kaydedilmemiş.'}
                         </p>
                     </motion.div>
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                         <AnimatePresence>
                             {orders.map(order => (
                                 <OrderCard 
@@ -161,6 +165,7 @@ export default function OrdersPage() {
                 )}
             </div>
 
+            {/* Confirmation Modal */}
             <ConfirmModal 
                 isOpen={isModalOpen}
                 onClose={() => { setIsModalOpen(false); setSelectedOrder(null); }}

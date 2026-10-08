@@ -29,7 +29,7 @@ export default function LiveCheckoutPreview({ data, brandColor = '#5500ff' }: Li
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">Görsel Seçilmedi</p>
+                        <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-400">Görsel Seçilmedi</p>
                     </div>
                 )}
                 {/* Stan-style overlay fade */}
@@ -87,7 +87,7 @@ export default function LiveCheckoutPreview({ data, brandColor = '#5500ff' }: Li
                                 ) : field.type === 'checkbox' ? (
                                     <div className="bg-[#F8FAFC] rounded-[14px] p-4 border-2 border-slate-100 mt-1 flex items-start gap-3.5 transition-all hover:bg-[#F1F5F9]">
                                         <div className="w-5 h-5 rounded-md border-[2.5px] border-slate-200 bg-white shrink-0 mt-0.5" />
-                                        <p className="text-[12px] font-black text-slate-500 leading-[1.3]">{field.label || 'I agree to the terms and conditions'}</p>
+                                        <p className="text-[12px] font-bold text-slate-500 leading-[1.3]">{field.label || 'I agree to the terms and conditions'}</p>
                                     </div>
                                 ) : (
                                     <div className="w-full h-11 px-4 bg-[#F8FAFC] border-2 border-slate-100 rounded-[14px] flex items-center focus-within:border-[#5500ff]/20 focus-within:bg-white text-slate-300 font-[900]">
@@ -141,7 +141,7 @@ export default function LiveCheckoutPreview({ data, brandColor = '#5500ff' }: Li
                             <svg className="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                             </svg>
-                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5">Secure Checkout</span>
+                            <span className="text-[8px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-0.5">Secure Checkout</span>
                         </div>
                     </div>
                 </div>

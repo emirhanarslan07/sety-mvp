@@ -35,8 +35,8 @@ export default function OverviewSection({ metrics, recentUsers, stores }: Overvi
                 )}
             </div>
             <div>
-                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">{title}</p>
-                <h3 className="text-3xl font-black text-slate-900 tracking-tighter">{value}</h3>
+                <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1">{title}</p>
+                <h3 className="text-3xl font-bold text-slate-900 tracking-tighter">{value}</h3>
             </div>
         </div>
     );
@@ -46,7 +46,7 @@ export default function OverviewSection({ metrics, recentUsers, stores }: Overvi
             {/* Header */}
             <div className="flex justify-between items-center mb-12">
                 <div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Platform Özeti</h1>
+                    <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">Platform Özeti</h1>
                     <p className="text-slate-400 font-medium">Sety platformunun genel performansını buradan takip edebilirsin.</p>
                 </div>
                 <div className="flex gap-4">
@@ -92,16 +92,16 @@ export default function OverviewSection({ metrics, recentUsers, stores }: Overvi
                 {/* Top Stores Table */}
                 <div className="lg:col-span-2 bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
                     <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/20">
-                        <h3 className="text-xl font-black text-slate-900">Aktif Mağazalar</h3>
-                        <Button variant="ghost" className="text-primary text-sm font-black hover:bg-primary/5 rounded-xl px-4">Tümünü Gör</Button>
+                        <h3 className="text-xl font-bold text-slate-900">Aktif Mağazalar</h3>
+                        <Button variant="ghost" className="text-primary text-sm font-bold hover:bg-primary/5 rounded-xl px-4">Tümünü Gör</Button>
                     </div>
                     <div className="flex-1 overflow-x-auto">
                         <table className="w-full text-left">
                             <thead className="bg-slate-50/50">
                                 <tr>
-                                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Mağaza</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Sahibi</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Durum</th>
+                                    <th className="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mağaza</th>
+                                    <th className="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sahibi</th>
+                                    <th className="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Durum</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50">
@@ -109,7 +109,7 @@ export default function OverviewSection({ metrics, recentUsers, stores }: Overvi
                                     <tr key={store.id} className="hover:bg-slate-50/50 transition-colors group">
                                         <td className="px-8 py-6">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-black text-slate-400 group-hover:bg-white transition-colors">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-slate-400 group-hover:bg-white transition-colors">
                                                     {store.username?.[0]?.toUpperCase()}
                                                 </div>
                                                 <div>
@@ -122,7 +122,7 @@ export default function OverviewSection({ metrics, recentUsers, stores }: Overvi
                                             <p className="font-semibold text-slate-600">{store.user_profiles?.full_name || 'İsimsiz'}</p>
                                         </td>
                                         <td className="px-8 py-6 text-right">
-                                            <span className="px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-black uppercase">Aktif</span>
+                                            <span className="px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-bold uppercase">Aktif</span>
                                         </td>
                                     </tr>
                                 ))}
@@ -133,7 +133,7 @@ export default function OverviewSection({ metrics, recentUsers, stores }: Overvi
 
                 {/* Recent Users List */}
                 <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm p-8 flex flex-col">
-                    <h3 className="text-xl font-black text-slate-900 mb-8">Yeni Üyeler</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-8">Yeni Üyeler</h3>
                     <div className="flex-1 space-y-6">
                         {recentUsers.map((user) => (
                             <div key={user.id} className="flex items-center justify-between group">

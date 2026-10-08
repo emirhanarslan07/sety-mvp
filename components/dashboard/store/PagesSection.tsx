@@ -32,7 +32,7 @@ export default function PagesSection({
                 </div>
 
                 <div className="space-y-4 max-w-2xl mx-auto">
-                    <h2 className="text-[36px] font-black text-slate-900 tracking-tight leading-tight">
+                    <h2 className="text-[36px] font-bold text-slate-900 tracking-tight leading-tight">
                         Henüz Sayfa Yok
                     </h2>
                     <p className="text-slate-400 font-bold text-lg leading-relaxed">
@@ -44,7 +44,7 @@ export default function PagesSection({
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={onAddPage}
-                    className="h-16 px-12 rounded-2xl bg-[#5500ff] text-white text-[17px] font-black flex items-center gap-4 shadow-xl shadow-[#5500ff]/20 hover:bg-[#4400cc] transition-all group mt-8"
+                    className="h-16 px-12 rounded-2xl bg-[#5500ff] text-white text-[17px] font-bold flex items-center gap-4 shadow-xl shadow-[#5500ff]/20 hover:bg-[#4400cc] transition-all group mt-8"
                 >
                     Yeni Sayfa Oluştur
                     <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
@@ -57,7 +57,7 @@ export default function PagesSection({
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="flex items-center justify-between px-2">
                 <div className="space-y-1">
-                    <h3 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">
+                    <h3 className="text-[28px] md:text-[32px] font-bold text-slate-900 tracking-tight leading-none">
                         Satış Sayfaları
                     </h3>
                 </div>
@@ -89,11 +89,11 @@ export default function PagesSection({
                             {/* Details */}
                             <div className="flex-1 min-w-0 space-y-1">
                                 <div className="flex items-center gap-3">
-                                    <h4 className="text-[17px] md:text-[19px] font-black text-slate-900 truncate tracking-tight leading-tight">
+                                    <h4 className="text-[17px] md:text-[19px] font-bold text-slate-900 truncate tracking-tight leading-tight">
                                         {isMain ? 'Ana Sayfa' : page.title}
                                     </h4>
                                     {page.isDefault && (
-                                        <span className="px-3 py-1 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[11px] font-black tracking-tight">
+                                        <span className="px-3 py-1 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[11px] font-bold tracking-tight">
                                             VARSAYILAN
                                         </span>
                                     )}

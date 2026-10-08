@@ -49,7 +49,7 @@ export default function StoresSection() {
             {/* Header */}
             <div className="flex justify-between items-center mb-12">
                 <div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Mağazalar</h1>
+                    <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">Mağazalar</h1>
                     <p className="text-slate-400 font-medium">Platformdaki tüm aktif mağazaları buradan yönetebilirsin.</p>
                 </div>
                 <div className="flex gap-4">
@@ -76,11 +76,11 @@ export default function StoresSection() {
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-slate-50/50">
                             <tr>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest">Mağaza Bilgisi</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest">Sahibi</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Ürünler</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Oluşturma</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">İşlemler</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Mağaza Bilgisi</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Sahibi</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center">Ürünler</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center">Oluşturma</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-right">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -108,11 +108,11 @@ export default function StoresSection() {
                                     <tr key={store.id} className="hover:bg-slate-50/50 transition-all group">
                                         <td className="px-10 py-7">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-black text-indigo-400 group-hover:bg-white transition-all text-lg group-hover:scale-110">
+                                                <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-indigo-400 group-hover:bg-white transition-all text-lg group-hover:scale-110">
                                                     {store.username?.[0]?.toUpperCase()}
                                                 </div>
                                                 <div>
-                                                    <p className="font-logo text-lg font-black text-slate-900 leading-tight">@{store.username}</p>
+                                                    <p className="font-logo text-lg font-bold text-slate-900 leading-tight">@{store.username}</p>
                                                     <a
                                                         href={`https://sety.store/${store.username}`}
                                                         target="_blank"
@@ -130,7 +130,7 @@ export default function StoresSection() {
                                                     {store.user_profiles?.profile_image_url ? (
                                                         <Image src={store.user_profiles.profile_image_url} className="w-full h-full object-cover" alt="" width={800} height={800} />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-slate-400">
+                                                        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-slate-400">
                                                             {store.user_profiles?.full_name?.[0]?.toUpperCase() || 'U'}
                                                         </div>
                                                     )}
@@ -142,7 +142,7 @@ export default function StoresSection() {
                                             </div>
                                         </td>
                                         <td className="px-10 py-7 text-center">
-                                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-orange-50 text-orange-600 font-black text-[11px]">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-orange-50 text-orange-600 font-bold text-[11px]">
                                                 <ShoppingBag className="w-3 h-3" />
                                                 -
                                             </div>

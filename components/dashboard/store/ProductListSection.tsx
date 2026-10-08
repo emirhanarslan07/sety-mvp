@@ -10,15 +10,13 @@ import {
     Eye,
     EyeOff,
     Trash2,
-    ShoppingBag,
     Package,
     Target,
     Link2,
+    ExternalLink,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
-import Image from 'next/image';
 
 interface ProductListSectionProps {
     products: any[];
@@ -30,21 +28,16 @@ interface ProductListSectionProps {
     handleDeleteProduct: (id: string) => void;
 }
 
-function getProductIcon(type: string) {
+function getProductTypeBadge(type: string) {
     switch (type) {
-        case 'digital_product': return Package;
-        case 'coaching_call': return Target;
-        case 'external_link': return Link2;
-        default: return Package;
-    }
-}
-
-function getProductColor(type: string) {
-    switch (type) {
-        case 'digital_product': return 'bg-blue-50 text-blue-600';
-        case 'coaching_call': return 'bg-emerald-50 text-emerald-600';
-        case 'external_link': return 'bg-violet-50 text-[#5500ff]';
-        default: return 'bg-slate-50 text-slate-500';
+        case 'digital_product':
+            return { label: 'Dijital Ürün', color: '#5500FF', bg: 'rgba(85,0,255,0.08)' };
+        case 'coaching_call':
+            return { label: 'Danışmanlık', color: '#10B981', bg: 'rgba(16,185,129,0.08)' };
+        case 'external_link':
+            return { label: 'Bağlantı', color: '#F59E0B', bg: 'rgba(245,158,11,0.08)' };
+        default:
+            return { label: 'Dijital', color: '#64748B', bg: 'rgba(100,116,139,0.08)' };
     }
 }
 
@@ -57,161 +50,185 @@ export default function ProductListSection({
     handleToggleStatus,
     handleDeleteProduct,
 }: ProductListSectionProps) {
+    const activeCount = products.filter(p => p.status === 'active').length;
+
     return (
-        <div className="space-y-10">
-            <div className="flex items-center justify-between px-2">
-                <h3 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">
-                    Ürünlerim
-                </h3>
-                <Button
+        <div className="bg-white rounded-2xl border border-[#E8ECF4] shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
+            {/* Card Header */}
+            <div className="p-5 md:px-6 border-b border-[#F1F5F9] flex items-center justify-between">
+                <div>
+                    <h2 className="text-[16px] font-extrabold text-[#0F172A] tracking-tight">
+                        Ürün Listesi
+                    </h2>
+                    <p className="text-[12px] text-slate-400 font-medium mt-0.5">
+                        {activeCount} / {products.length} ürün vitrinde aktif görünür
+                    </p>
+                </div>
+
+                <button
                     onClick={onAddProduct}
-                    className="h-12 w-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white transition-all shadow-lg shadow-indigo-100 flex items-center justify-center p-0"
+                    className="inline-flex items-center gap-1.5 bg-[#F8F9FE] hover:bg-[#F0F2FA] text-slate-700 border border-[#E8ECF4] px-3.5 py-1.5 rounded-xl text-[12px] font-bold transition-colors"
                 >
-                    <Plus className="w-6 h-6 stroke-[3px]" />
-                </Button>
+                    <Plus className="w-3.5 h-3.5 text-[#5500FF]" />
+                    <span>Ürün Ekle</span>
+                </button>
             </div>
 
-            <div className="space-y-4">
-                <AnimatePresence mode="popLayout">
-                    {products.map((item) => {
-                        const IconComponent = getProductIcon(item.type);
-                        const colorClass = getProductColor(item.type);
-                        const isActive = item.status === 'active';
+            {/* List */}
+            {products.length === 0 ? (
+                <div className="p-12 md:p-16 text-center space-y-4">
+                    <div className="w-14 h-14 bg-indigo-50 text-[#5500FF] rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                        <Package className="w-7 h-7" />
+                    </div>
+                    <div>
+                        <h3 className="font-extrabold text-[#0F172A] text-[16px] tracking-tight">
+                            Henüz ürün eklemediniz
+                        </h3>
+                        <p className="text-slate-400 text-[13px] max-w-sm mx-auto mt-1 font-medium">
+                            E-kitap, koçluk seansı veya dijital şablonunuzu ekleyerek mağazanızı aktifleştirin.
+                        </p>
+                    </div>
+                    <button
+                        onClick={onAddProduct}
+                        className="inline-flex items-center gap-2 bg-gradient-to-r from-[#5500FF] to-[#7B2FFF] text-white px-5 py-2.5 rounded-xl font-bold text-[13px] shadow-lg shadow-[#5500FF]/25 hover:opacity-95 transition-all"
+                    >
+                        <Plus className="w-4 h-4" />
+                        <span>İlk Ürününü Ekle</span>
+                    </button>
+                </div>
+            ) : (
+                <div className="divide-y divide-slate-100">
+                    <AnimatePresence>
+                        {products.map((item) => {
+                            const badge = getProductTypeBadge(item.type);
+                            const isActive = item.status === 'active';
 
-                        return (
-                            <motion.div
-                                key={item.id}
-                                layout
-                                initial={{ opacity: 0, scale: 0.98 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.98 }}
-                                className={cn(
-                                    "p-6 rounded-[32px] bg-white border border-slate-100/60 flex items-center gap-6 group hover:shadow-[0_20px_50px_rgba(0,0,0,0.04)] transition-all duration-500",
-                                    !isActive && "opacity-70"
-                                )}
-                            >
-                                {/* Drag Handle */}
-                                <div className="text-slate-200 group-hover:text-slate-400 transition-colors cursor-grab active:cursor-grabbing">
-                                    <GripVertical className="w-6 h-6" />
-                                </div>
-
-                                {/* Icon / Image */}
-                                <div className="w-16 h-16 rounded-[20px] flex-shrink-0 overflow-hidden relative border border-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                                    {item.image_url ? (
-                                        <Image src={item.image_url} alt="" fill className="object-cover" sizes="64px" />
-                                    ) : (
-                                        <div className={cn("w-full h-full flex items-center justify-center", colorClass)}>
-                                            <IconComponent className="w-7 h-7" strokeWidth={1.8} />
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Details */}
-                                <div className="flex-1 min-w-0 space-y-1">
-                                    <h4 className="text-[17px] md:text-[19px] font-black text-slate-900 truncate tracking-tight leading-tight">{item.title}</h4>
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-[14px] font-black text-[#5500ff]">
-                                            {item.price === 0 ? 'ÜCRETSİZ' : formatCurrency(item.price, item.currency)}
-                                        </span>
+                            return (
+                                <motion.div
+                                    key={item.id}
+                                    layout
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="p-4 md:px-6 flex items-center gap-3.5 hover:bg-[#FAFBFF] transition-colors group relative"
+                                >
+                                    {/* Drag Grip Icon */}
+                                    <div className="text-slate-300 group-hover:text-slate-400 cursor-grab active:cursor-grabbing shrink-0 hidden sm:block">
+                                        <GripVertical className="w-4 h-4" />
                                     </div>
-                                </div>
 
-                                {/* Status Badge */}
-                                <div className="hidden md:flex items-center gap-3">
-                                    {isActive ? (
-                                        <span className="px-5 py-2.5 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[13px] font-black tracking-tight">
-                                            Aktif
-                                        </span>
-                                    ) : (
-                                        <span className="px-5 py-2.5 rounded-full bg-slate-100 text-slate-400 text-[13px] font-black tracking-tight">
-                                            Taslak
-                                        </span>
-                                    )}
-                                </div>
+                                    {/* Product Thumbnail */}
+                                    <div className="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                                        {item.image_url ? (
+                                            <img src={item.image_url} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <Package className="w-5 h-5 text-slate-400" />
+                                        )}
+                                    </div>
 
-                                {/* Action Menu */}
-                                <div className="relative">
+                                    {/* Title and Badge */}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <h3 className="font-bold text-[14px] text-[#0F172A] truncate">
+                                                {item.title}
+                                            </h3>
+                                            <span
+                                                className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 uppercase tracking-wider"
+                                                style={{ color: badge.color, backgroundColor: badge.bg }}
+                                            >
+                                                {badge.label}
+                                            </span>
+                                        </div>
+                                        <p className="text-[12px] text-slate-400 truncate mt-0.5 font-medium">
+                                            {item.subtitle || item.description || 'Açıklama belirtilmemiş'}
+                                        </p>
+                                    </div>
+
+                                    {/* Price Pill */}
+                                    <span className="text-[13px] font-extrabold text-[#5500FF] bg-[#5500FF]/10 px-3 py-1 rounded-full shrink-0 font-mono">
+                                        {item.price === 0 || !item.price ? 'Ücretsiz' : formatCurrency(item.price, item.currency || 'TRY')}
+                                    </span>
+
+                                    {/* iOS Style Toggle Switch for Visibility */}
                                     <button
-                                        onClick={() => setActiveActionMenu(activeActionMenu === item.id ? null : item.id)}
-                                        className="w-12 h-12 rounded-full hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-all border border-transparent active:scale-90"
+                                        type="button"
+                                        onClick={() => handleToggleStatus(item)}
+                                        title={isActive ? 'Vitrinde aktif (Tıkla ve gizle)' : 'Gizli (Tıkla ve yayınla)'}
+                                        className={cn(
+                                            "w-9 h-5 rounded-full p-0.5 transition-colors duration-200 ease-in-out shrink-0 relative focus:outline-none",
+                                            isActive ? "bg-[#5500FF]" : "bg-slate-200"
+                                        )}
                                     >
-                                        <MoreHorizontal className="w-6 h-6" />
+                                        <div
+                                            className={cn(
+                                                "w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform duration-200 ease-in-out",
+                                                isActive ? "translate-x-4" : "translate-x-0"
+                                            )}
+                                        />
                                     </button>
 
-                                    {activeActionMenu === item.id && (
-                                        <>
-                                            <div
-                                                className="fixed inset-0 z-40"
-                                                onClick={() => setActiveActionMenu(null)}
-                                            />
-                                            <div className="absolute right-0 top-14 w-52 bg-white rounded-[28px] shadow-[0_20px_60px_rgba(85,0,255,0.12)] border border-[#5500ff]/5 py-3 z-50 animate-in fade-in zoom-in-95 duration-200">
-                                                <button
-                                                    onClick={() => onEditProduct(item)}
-                                                    className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors"
-                                                >
-                                                    <PenLine className="w-5 h-5 text-slate-400" /> Düzenle
-                                                </button>
-                                                <button
-                                                    onClick={() => {
-                                                        handleToggleStatus(item);
-                                                        setActiveActionMenu(null);
-                                                    }}
-                                                    className="w-full px-5 py-3.5 text-[15px] font-black text-indigo-950 hover:bg-slate-50 flex items-center gap-4 transition-colors"
-                                                >
-                                                    {isActive ? (
-                                                        <><EyeOff className="w-5 h-5 text-slate-400" /> Arşivle</>
-                                                    ) : (
-                                                        <><Eye className="w-5 h-5 text-slate-400" /> Yayınla</>
-                                                    )}
-                                                </button>
-                                                <div className="h-px bg-slate-50 my-2 mx-4" />
-                                                <button
-                                                    onClick={() => {
-                                                        handleDeleteProduct(item.id);
-                                                        setActiveActionMenu(null);
-                                                    }}
-                                                    className="w-full px-5 py-3.5 text-[15px] font-black text-rose-500 hover:bg-rose-50 flex items-center gap-4 transition-colors"
-                                                >
-                                                    <Trash2 className="w-5 h-5" /> Sil
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            </motion.div>
-                        );
-                    })}
-                </AnimatePresence>
+                                    {/* 3-Dot Action Menu */}
+                                    <div className="relative shrink-0">
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setActiveActionMenu(activeActionMenu === item.id ? null : item.id);
+                                            }}
+                                            className="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors"
+                                        >
+                                            <MoreHorizontal className="w-4 h-4" />
+                                        </button>
 
-                {/* Empty State */}
-                {products.length === 0 && (
-                    <div className="py-24 flex flex-col items-center justify-center text-center px-6 bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden relative group">
-                        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-
-                        <div className="relative w-48 h-48 mb-10">
-                            <div className="absolute inset-0 bg-[#5500ff]/5 rounded-full blur-3xl animate-pulse" />
-                            <div className="relative w-full h-full flex items-center justify-center">
-                                <ShoppingBag className="w-24 h-24 text-slate-100 stroke-[1.5px] group-hover:scale-110 group-hover:text-indigo-100 transition-all duration-700" />
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-2xl shadow-xl flex items-center justify-center border border-slate-50">
-                                    <Plus className="w-8 h-8 text-[#5500ff] stroke-[3px]" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <h4 className="text-[28px] font-black text-slate-900 mb-4 tracking-tight leading-none">Henüz ürün yok</h4>
-                        <p className="text-slate-400 text-[17px] font-bold leading-relaxed max-w-[320px] mb-12">
-                            İlk ürününüzü oluşturarak satış yapmaya başlayın.
-                        </p>
-
-                        <Button
-                            onClick={onAddProduct}
-                            className="relative z-10 h-16 px-12 rounded-full bg-[#5500ff] hover:bg-[#4400cc] text-white text-[17px] font-black shadow-xl shadow-indigo-100 active:scale-95 transition-all"
-                        >
-                            İlk Ürününü Ekle
-                        </Button>
-                    </div>
-                )}
-            </div>
+                                        {activeActionMenu === item.id && (
+                                            <>
+                                                <div
+                                                    className="fixed inset-0 z-40"
+                                                    onClick={() => setActiveActionMenu(null)}
+                                                />
+                                                <div className="absolute right-0 top-9 w-44 bg-white rounded-xl shadow-xl border border-[#E8ECF4] py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                                                    <button
+                                                        onClick={() => {
+                                                            onEditProduct(item);
+                                                            setActiveActionMenu(null);
+                                                        }}
+                                                        className="w-full px-3.5 py-2 text-[13px] font-semibold text-slate-700 hover:bg-[#F8F9FE] hover:text-[#5500FF] flex items-center gap-2.5 transition-colors"
+                                                    >
+                                                        <PenLine className="w-3.5 h-3.5" /> Düzenle
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            handleToggleStatus(item);
+                                                            setActiveActionMenu(null);
+                                                        }}
+                                                        className="w-full px-3.5 py-2 text-[13px] font-semibold text-slate-700 hover:bg-[#F8F9FE] flex items-center gap-2.5 transition-colors"
+                                                    >
+                                                        {isActive ? (
+                                                            <><EyeOff className="w-3.5 h-3.5" /> Gizle</>
+                                                        ) : (
+                                                            <><Eye className="w-3.5 h-3.5 text-emerald-600" /> Vitrinde Göster</>
+                                                        )}
+                                                    </button>
+                                                    <div className="h-px bg-slate-100 my-1" />
+                                                    <button
+                                                        onClick={() => {
+                                                            handleDeleteProduct(item.id);
+                                                            setActiveActionMenu(null);
+                                                        }}
+                                                        className="w-full px-3.5 py-2 text-[13px] font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" /> Sil
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                </div>
+            )}
         </div>
     );
 }

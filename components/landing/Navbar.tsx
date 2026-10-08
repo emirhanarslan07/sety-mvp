@@ -134,7 +134,7 @@ export function Navbar() {
                                 <Button onClick={() => openModal('login')} variant="ghost" className="font-bold text-[15px] px-6 h-12 hover:bg-slate-100/80 transition-all bg-white rounded-full">
                                     {t('landing.nav.login')}
                                 </Button>
-                                <Button onClick={() => openModal('signup')} className="h-12 text-[15px] font-black px-8 bg-[#5500ff] hover:bg-[#4400cc] text-white rounded-full shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                                <Button onClick={() => openModal('signup')} className="h-12 text-[15px] font-bold px-8 bg-[#5500ff] hover:bg-[#4400cc] text-white rounded-full shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
                                     {t('landing.nav.signup')}
                                 </Button>
                             </>
@@ -181,7 +181,7 @@ export function Navbar() {
                                         <Button onClick={() => { setIsMobileMenuOpen(false); openModal('login'); }} variant="ghost" className="w-full justify-center h-16 text-xl font-bold rounded-2xl">
                                             {t('landing.nav.login')}
                                         </Button>
-                                        <Button onClick={() => { setIsMobileMenuOpen(false); openModal('signup'); }} className="w-full justify-center h-16 text-xl font-black bg-[#5500ff] hover:bg-[#4400cc] text-white rounded-2xl">
+                                        <Button onClick={() => { setIsMobileMenuOpen(false); openModal('signup'); }} className="w-full justify-center h-16 text-xl font-bold bg-[#5500ff] hover:bg-[#4400cc] text-white rounded-2xl">
                                             {t('landing.nav.signup')}
                                         </Button>
                                     </>

@@ -34,7 +34,7 @@ export default function GlobalError({
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.1 }}
-                    className="text-4xl font-black text-gray-900 mb-4 tracking-tight leading-none"
+                    className="text-4xl font-bold text-gray-900 mb-4 tracking-tight leading-none"
                 >
                     Oops! Bir şeyler ters gitti.
                 </motion.h1>

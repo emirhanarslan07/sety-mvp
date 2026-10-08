@@ -168,12 +168,12 @@ const FloatingIconsHero = React.forwardRef<
                         <motion.div
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="mb-8 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#5500ff]/10 border-2 border-[#5500ff]/30 text-[#5500ff] font-extrabold text-base uppercase tracking-widest shadow-md backdrop-blur-sm"
+                            className="mb-8 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#5500ff]/10 border-2 border-[#5500ff]/30 text-[#5500ff] font-bold text-base uppercase tracking-widest shadow-md backdrop-blur-sm"
                         >
                             {props.eyebrow}
                         </motion.div>
                     )}
-                    <h1 className="text-[2.5rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-foreground font-logo">
+                    <h1 className="text-[2.5rem] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-foreground font-logo">
                         {heading}
                     </h1>
                     <p className="mt-6 md:mt-8 max-w-2xl mx-auto text-[15px] sm:text-base md:text-xl text-muted-foreground leading-relaxed font-medium">
@@ -182,7 +182,7 @@ const FloatingIconsHero = React.forwardRef<
 
                     <div className="mt-14 flex flex-col items-center gap-4">
                         {props.onCtaClick ? (
-                            <Button onClick={props.onCtaClick} size="xl" className="px-16 h-16 rounded-full font-black text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none text-white">
+                            <Button onClick={props.onCtaClick} size="xl" className="px-16 h-16 rounded-full font-bold text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none text-white">
                                 {ctaText} <motion.span
                                     animate={{ x: [0, 5, 0] }}
                                     transition={{ repeat: Infinity, duration: 1.5 }}
@@ -191,7 +191,7 @@ const FloatingIconsHero = React.forwardRef<
                             </Button>
                         ) : (
                             <Link href={ctaHref}>
-                                <Button size="xl" className="px-16 h-16 rounded-full font-black text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none text-white">
+                                <Button size="xl" className="px-16 h-16 rounded-full font-bold text-lg bg-[#5500ff] hover:bg-[#4400cc] shadow-2xl shadow-indigo-500/20 hover:scale-105 transition-all active:scale-95 border-none text-white">
                                     {ctaText} <motion.span
                                         animate={{ x: [0, 5, 0] }}
                                         transition={{ repeat: Infinity, duration: 1.5 }}

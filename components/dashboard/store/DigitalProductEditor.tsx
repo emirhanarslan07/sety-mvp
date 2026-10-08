@@ -223,12 +223,12 @@ export default function DigitalProductEditor({
                                         </div>
                                         <div className="flex-1 space-y-6">
                                             <div className="space-y-2">
-                                                <h4 className="text-[17px] font-black text-slate-900 tracking-tight leading-none">{'dashboard.store.editors.image_selection'}</h4>
+                                                <h4 className="text-[17px] font-bold text-slate-900 tracking-tight leading-none">{'dashboard.store.editors.image_selection'}</h4>
                                                 <p className="text-[13px] text-slate-400 font-bold uppercase tracking-wider">{'dashboard.store.editors.image_hint'}</p>
                                             </div>
                                             <button
                                                 onClick={() => setIsImageModalOpen(true)}
-                                                className="h-14 px-8 rounded-2xl border-2 border-[#5500ff]/10 text-[#5500ff] font-black text-[14px] hover:bg-[#5500ff] hover:text-white transition-all shadow-sm active:scale-95"
+                                                className="h-14 px-8 rounded-2xl border-2 border-[#5500ff]/10 text-[#5500ff] font-bold text-[14px] hover:bg-[#5500ff] hover:text-white transition-all shadow-sm active:scale-95"
                                             >
                                                 {'dashboard.store.editors.select_button'}
                                             </button>
@@ -306,11 +306,11 @@ export default function DigitalProductEditor({
                                 {/* Unified Action Bar */}
                                 <div className="pt-20 border-t border-slate-100 mt-10">
                                     <div className="flex items-center justify-between">
-                                        <p className="text-[12px] text-slate-300 font-black italic">{'Sayfanızı iyileştirmek için ayarları kullanın'}</p>
+                                        <p className="text-[12px] text-slate-300 font-bold italic">{'Sayfanızı iyileştirmek için ayarları kullanın'}</p>
                                         <div className="flex items-center gap-4">
                                             <button
                                                 onClick={() => showToast('Taslak olarak kaydedildi', 'success')}
-                                                className="h-14 px-8 rounded-2xl font-black text-[14px] text-slate-400 hover:text-slate-900 transition-colors"
+                                                className="h-14 px-8 rounded-2xl font-bold text-[14px] text-slate-400 hover:text-slate-900 transition-colors"
                                             >
                                                 {'Taslağı Kaydet'}
                                             </button>
@@ -318,7 +318,7 @@ export default function DigitalProductEditor({
                                                 onClick={handleSave}
                                                 disabled={isSaving || isSuccess}
                                                 className={cn(
-                                                    "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-black text-[15px] shadow-xl shadow-[#5500ff]/20 flex items-center gap-3 transition-all",
+                                                    "h-14 px-10 rounded-2xl bg-[#5500ff] text-white font-bold text-[15px] shadow-xl shadow-[#5500ff]/20 flex items-center gap-3 transition-all",
                                                     (isSaving || isSuccess) && "opacity-70 cursor-not-allowed"
                                                 )}
                                             >
@@ -395,7 +395,7 @@ function TabButton({ active, onClick, icon, label }: { active: boolean, onClick:
         <button
             onClick={onClick}
             className={cn(
-                "h-12 px-6 rounded-full flex items-center gap-3 font-black text-[14px] transition-all border-2",
+                "h-12 px-6 rounded-full flex items-center gap-3 font-bold text-[14px] transition-all border-2",
                 active
                     ? "bg-[#5500ff]/5 border-[#5500ff] text-[#5500ff] shadow-sm"
                     : "bg-white border-slate-100 text-slate-400 hover:border-slate-300 shadow-sm"

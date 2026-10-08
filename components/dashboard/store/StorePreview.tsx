@@ -239,7 +239,7 @@ export default function StorePreview({
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-center gap-2">
                                         <h2 className={cn(
-                                            "text-2xl font-black tracking-tight transition-all",
+                                            "font-serif-display text-3xl tracking-tight transition-all",
                                             isDarkTheme ? "text-white" : "text-slate-900"
                                         )}>
                                             {displayName || t('dashboard.store.preview.brand_name_placeholder')}
@@ -376,7 +376,7 @@ export default function StorePreview({
 
                                             <div
                                                 className={cn(
-                                                    "h-9 px-4 flex items-center justify-center font-black text-[11px] transition-all",
+                                                    "h-9 px-4 flex items-center justify-center font-bold text-[11px] transition-all",
                                                     buttonRadius,
                                                     theme === 'neo-brutalist' ? "border-2 border-black" : ""
                                                 )}
@@ -414,7 +414,7 @@ export default function StorePreview({
                                         </div>
                                         <div className="flex-1">
                                             <h4 className={cn(
-                                                "text-[13px] font-black tracking-tight leading-tight transition-all",
+                                                "text-[13px] font-bold tracking-tight leading-tight transition-all",
                                                 isDarkTheme ? "text-white" : "text-slate-900"
                                             )}>{t('dashboard.store.preview.affiliate_badge_text')}</h4>
                                         </div>

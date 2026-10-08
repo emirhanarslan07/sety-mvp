@@ -44,7 +44,7 @@ export default function UnifiedProductEditor({
                 <div className="max-w-[800px] mx-auto space-y-12 pb-24 animate-in fade-in duration-500">
                     
                     <div className="space-y-4">
-                        <h2 className="text-[32px] font-black text-slate-900 tracking-tight">
+                        <h2 className="text-[32px] font-bold text-slate-900 tracking-tight">
                             {productType.title} Detayları
                         </h2>
                         <p className="text-[16px] font-bold text-slate-500">
@@ -79,12 +79,12 @@ export default function UnifiedProductEditor({
                             </div>
                             <div className="flex-1 space-y-4 text-center sm:text-left">
                                 <div className="space-y-1">
-                                    <h4 className="text-[16px] font-black text-slate-900 tracking-tight">Görsel Yükle</h4>
+                                    <h4 className="text-[16px] font-bold text-slate-900 tracking-tight">Görsel Yükle</h4>
                                     <p className="text-[13px] text-slate-400 font-bold">Ürününüzü öne çıkaracak bir görsel seçin.</p>
                                 </div>
                                 <button
                                     onClick={() => setIsImageModalOpen(true)}
-                                    className="h-12 px-6 rounded-xl border-2 border-[#5500ff]/10 text-[#5500ff] font-black text-[13px] hover:bg-[#5500ff] hover:text-white transition-all active:scale-95"
+                                    className="h-12 px-6 rounded-xl border-2 border-[#5500ff]/10 text-[#5500ff] font-bold text-[13px] hover:bg-[#5500ff] hover:text-white transition-all active:scale-95"
                                 >
                                     Görsel Seç
                                 </button>
@@ -102,7 +102,7 @@ export default function UnifiedProductEditor({
                             />
 
                             <div className="space-y-3">
-                                <label className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
+                                <label className="text-[14px] font-bold text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
                                     Açıklama (Opsiyonel)
                                 </label>
                                 <DescriptionEditor
@@ -121,7 +121,7 @@ export default function UnifiedProductEditor({
                                 />
                                 
                                 <div className="space-y-3">
-                                    <label className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
+                                    <label className="text-[14px] font-bold text-slate-900 uppercase tracking-[0.2em] px-1 opacity-60">
                                         Para Birimi
                                     </label>
                                     <select
@@ -163,13 +163,13 @@ export default function UnifiedProductEditor({
                 <div className="max-w-[800px] mx-auto flex items-center justify-between">
                     <button 
                         onClick={onClose} 
-                        className="h-14 px-8 rounded-2xl text-[15px] font-black text-slate-400 hover:bg-slate-50 transition-all"
+                        className="h-14 px-8 rounded-2xl text-[15px] font-bold text-slate-400 hover:bg-slate-50 transition-all"
                     >
                         İptal
                     </button>
                     <button 
                         onClick={() => onSave(formData)} 
-                        className="h-14 px-10 rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white text-[15px] font-black shadow-xl shadow-indigo-500/20 transition-all active:scale-95"
+                        className="h-14 px-10 rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white text-[15px] font-bold shadow-xl shadow-indigo-500/20 transition-all active:scale-95"
                     >
                         Devam Et
                     </button>

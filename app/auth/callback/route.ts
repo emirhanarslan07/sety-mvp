@@ -44,7 +44,7 @@ export async function GET(request: Request) {
             subscription_status: 'trialing',
             trial_ends_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
             is_active: true,
-            onboarding_completed: true,
+            onboarding_completed: false,
           })
           
           if (profileInsertError) {
@@ -53,19 +53,8 @@ export async function GET(request: Request) {
             console.log('User profile created successfully.')
           }
           
-          // Create store with auto-generated username
-          const username = (data.user.email?.split('@')[0] || 'user' + Math.floor(Math.random() * 10000))
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, '')
-          
-          // Check if username exists, append random numbers if so
-          const { data: existingStore } = await supabase
-            .from('stores')
-            .select('username')
-            .eq('username', username)
-            .maybeSingle()
-          
-          const finalUsername = existingStore ? username + Math.floor(Math.random() * 1000) : username
+          // Create store with temporary unique username
+          const finalUsername = 'user_' + data.user.id.replace(/-/g, '').substring(0, 12);
           
           console.log('Creating new store with username:', finalUsername)
           const { error: storeInsertError } = await supabase.from('stores').insert({

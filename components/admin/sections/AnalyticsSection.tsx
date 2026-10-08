@@ -84,8 +84,8 @@ export default function AnalyticsSection() {
                         <Icon className="w-6 h-6" />
                     </div>
                     <div>
-                        <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">{title}</p>
-                        <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">{title}</p>
+                        <h3 className="text-4xl font-bold text-slate-900 tracking-tighter">
                             {stats.loading ? <Loader2 className="w-8 h-8 animate-spin text-slate-200" /> : value}
                         </h3>
                         {subValue && <p className="text-xs text-slate-400 font-bold mt-1">{subValue}</p>}
@@ -93,7 +93,7 @@ export default function AnalyticsSection() {
                 </div>
                 {trend && (
                     <div className={cn(
-                        "flex items-center gap-1.5 font-black text-xs px-3 py-1.5 rounded-xl border transition-all",
+                        "flex items-center gap-1.5 font-bold text-xs px-3 py-1.5 rounded-xl border transition-all",
                         isPositive
                             ? "text-emerald-500 bg-emerald-50 border-emerald-100"
                             : "text-rose-500 bg-rose-50 border-rose-100"
@@ -115,7 +115,7 @@ export default function AnalyticsSection() {
             {/* Header */}
             <div className="flex justify-between items-center mb-12">
                 <div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Platform Analizleri</h1>
+                    <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">Platform Analizleri</h1>
                     <p className="text-slate-400 font-medium">Platformun büyüme, etkileşim ve gelir performansını buradan analiz edebilirsin.</p>
                 </div>
                 <div className="flex gap-4">
@@ -163,7 +163,7 @@ export default function AnalyticsSection() {
                     <div className="w-20 h-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center mb-6">
                         <BarChart3 className="w-10 h-10 text-indigo-200" />
                     </div>
-                    <h4 className="text-xl font-black text-slate-900 mb-2">Büyüme Grafiği</h4>
+                    <h4 className="text-xl font-bold text-slate-900 mb-2">Büyüme Grafiği</h4>
                     <p className="text-slate-400 font-semibold max-w-xs mx-auto">Sistem verileri veritabanı analiz motoru üzerinden hesaplanıyor...</p>
                     <div className="mt-8 flex items-end gap-2 h-32">
                         {Array.from({ length: 12 }).map((_, i) => (
@@ -176,7 +176,7 @@ export default function AnalyticsSection() {
                     <div className="w-20 h-20 rounded-[2rem] bg-emerald-50 flex items-center justify-center mb-6">
                         <Activity className="w-10 h-10 text-emerald-200" />
                     </div>
-                    <h4 className="text-xl font-black text-slate-900 mb-2">Etkileşim Analizi</h4>
+                    <h4 className="text-xl font-bold text-slate-900 mb-2">Etkileşim Analizi</h4>
                     <p className="text-slate-400 font-semibold max-w-xs mx-auto">Kullanıcıların site üzerindeki davranışları canlı olarak işlenmektedir.</p>
                     <div className="mt-8 w-full max-w-[280px] h-4 bg-slate-50 rounded-full overflow-hidden">
                         <div

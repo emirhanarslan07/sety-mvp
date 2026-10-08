@@ -48,7 +48,7 @@ export function Comparison() {
                             <div className="pt-10 border-t border-slate-200 mt-auto text-center">
                                 <div className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">{t('landing.comparison.sety.cost_label')}</div>
                                 <div className="flex justify-center items-baseline gap-2">
-                                    <span className="text-4xl md:text-5xl font-extrabold text-[#5500ff] tracking-tight leading-none">{t('landing.comparison.sety.price')}</span>
+                                    <span className="text-4xl md:text-5xl font-bold text-[#5500ff] tracking-tight leading-none">{t('landing.comparison.sety.price')}</span>
                                     {t('landing.comparison.sety.period') && (
                                         <span className="text-xl text-slate-400 font-bold uppercase tracking-tight"><span className="italic mr-0.5">/</span>{t('landing.comparison.sety.period').replace('/', '')}</span>
                                     )}
@@ -73,7 +73,7 @@ export function Comparison() {
                                 {t('landing.comparison.banner.description')}<span className="text-white underline decoration-[#5500ff] underline-offset-8">{t('landing.comparison.banner.description_accent')}</span>{t('landing.comparison.banner.description_end')}
                             </p>
                             <div className="flex justify-center">
-                                <Button onClick={() => openModal('signup')} size="xl" className="bg-[#5500ff] hover:bg-[#4a00e6] text-white rounded-full px-8 md:px-16 font-black h-16 md:h-20 text-lg md:text-xl transition-all hover:scale-105 shadow-[0_15px_30px_rgba(85,0,255,0.3)] border-none w-full md:w-auto">
+                                <Button onClick={() => openModal('signup')} size="xl" className="bg-[#5500ff] hover:bg-[#4a00e6] text-white rounded-full px-8 md:px-16 font-bold h-16 md:h-20 text-lg md:text-xl transition-all hover:scale-105 shadow-[0_15px_30px_rgba(85,0,255,0.3)] border-none w-full md:w-auto">
                                     <span className="hidden md:inline text-xl">{t('landing.comparison.banner.button')}</span>
                                     <span className="md:hidden text-lg">{t('landing.comparison.banner.button_mobile')}</span>
                                     <ArrowRight className="ml-3 w-6 h-6" />

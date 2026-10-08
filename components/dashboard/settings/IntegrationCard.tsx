@@ -55,7 +55,7 @@ export function IntegrationCard({
                                     />
                                 </div>
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-indigo-50 text-[#5500ff] font-black text-[10px]">
+                                <div className="w-full h-full flex items-center justify-center bg-indigo-50 text-[#5500ff] font-bold text-[10px]">
                                     {name.substring(0, 2).toUpperCase()}
                                 </div>
                             )
@@ -64,11 +64,11 @@ export function IntegrationCard({
                         )}
                     </div>
                     <div className="flex-1 flex items-center justify-between">
-                        <h3 className="text-[20px] font-black text-slate-900 tracking-tight leading-none group-hover:text-[#5500ff] transition-colors">
+                        <h3 className="text-[20px] font-bold text-slate-900 tracking-tight leading-none group-hover:text-[#5500ff] transition-colors">
                             {name}
                         </h3>
                         {isComingSoon && (
-                            <div className="px-2.5 py-1 rounded-full bg-indigo-50 text-[#5500ff] text-[9px] font-black uppercase tracking-widest border border-indigo-100">
+                            <div className="px-2.5 py-1 rounded-full bg-indigo-50 text-[#5500ff] text-[9px] font-bold uppercase tracking-widest border border-indigo-100">
                                 Soon
                             </div>
                         )}
@@ -78,7 +78,7 @@ export function IntegrationCard({
                 {/* Content: Subtitle and Description */}
                 <div className="space-y-2">
                     {subtitle && (
-                        <p className="text-[15px] font-black text-slate-900 leading-tight">
+                        <p className="text-[15px] font-bold text-slate-900 leading-tight">
                             {subtitle}
                         </p>
                     )}
@@ -92,7 +92,7 @@ export function IntegrationCard({
                     href={learnMoreUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-[#5500ff] font-black text-[13px] hover:underline underline-offset-4 decoration-2"
+                    className="inline-flex items-center gap-2 text-[#5500ff] font-bold text-[13px] hover:underline underline-offset-4 decoration-2"
                 >
                     Learn More
                     <ExternalLink className="w-3 h-3" />
@@ -105,7 +105,7 @@ export function IntegrationCard({
                     onClick={() => onConnect?.(id)}
                     disabled={isConnected}
                     className={cn(
-                        "w-full h-14 rounded-2xl font-black text-[15px] transition-all flex items-center justify-center gap-3 active:scale-95",
+                        "w-full h-14 rounded-2xl font-bold text-[15px] transition-all flex items-center justify-center gap-3 active:scale-95",
                         isConnected
                             ? "bg-emerald-50 text-emerald-600 cursor-default"
                             : "bg-[#5500ff] text-white hover:bg-slate-900 shadow-lg shadow-indigo-100"
@@ -135,10 +135,10 @@ export function IntegrationRequestCard() {
                 <Plus className="w-10 h-10" strokeWidth={3} />
             </div>
             <div className="space-y-2">
-                <h3 className="text-[20px] font-black text-slate-900 tracking-tight">Don&apos;t see an integration?</h3>
+                <h3 className="text-[20px] font-bold text-slate-900 tracking-tight">Don&apos;t see an integration?</h3>
                 <p className="text-slate-400 font-bold text-[14px]">Let us know what you need.</p>
             </div>
-            <button className="h-14 px-10 rounded-2xl bg-slate-900 text-white font-black text-[15px] hover:bg-[#5500ff] transition-all active:scale-95 shadow-xl">
+            <button className="h-14 px-10 rounded-2xl bg-slate-900 text-white font-bold text-[15px] hover:bg-[#5500ff] transition-all active:scale-95 shadow-xl">
                 Request New Integration
             </button>
         </div>

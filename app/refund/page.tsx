@@ -19,7 +19,7 @@ export default function RefundPolicy() {
                 </Link>
 
                 <div className="bg-card border border-border/40 rounded-3xl p-8 md:p-12 shadow-sm">
-                    <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground mb-4">
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
                         REFUND POLICY
                     </h1>
                     <p className="text-slate-400 text-sm mb-10">

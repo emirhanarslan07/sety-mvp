@@ -28,7 +28,7 @@ const PremiumInput = React.forwardRef<HTMLInputElement, PremiumInputProps>(
         return (
             <div className="w-full space-y-2 group">
                 {label && (
-                    <label className="text-[14px] font-black text-slate-800 ml-1 uppercase tracking-widest opacity-80 group-focus-within:opacity-100 transition-opacity">
+                    <label className="text-[14px] font-bold text-slate-800 ml-1 uppercase tracking-widest opacity-80 group-focus-within:opacity-100 transition-opacity">
                         {label}
                     </label>
                 )}

@@ -37,7 +37,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation } from '@/lib/i18n/context';
 import { SetyLogo } from '@/components/ui/SetyLogo';
 import { DashboardProvider, useDashboard } from '@/context/DashboardContext';
-import { OnboardingScreen } from '@/components/dashboard/OnboardingScreen';
+import ModernSidebar from '@/components/dashboard/ModernSidebar';
 import Image from 'next/image';
 import { useToast } from '@/context/ToastContext';
 
@@ -65,21 +65,22 @@ function DashboardLayoutContent({
         { label: t('dashboard.menu.home'), icon: Home, href: '/dashboard' },
         { label: t('dashboard.menu.performance'), icon: Wallet, href: '/dashboard/performance' },
         { label: t('dashboard.menu.my_store'), icon: Layers, href: '/dashboard/store' },
+        { label: 'Planlayıcı', icon: Send, href: '/dashboard/scheduler' },
         { label: t('dashboard.menu.analytics'), icon: BarChart3, href: '/dashboard/analytics' },
         { label: t('dashboard.menu.customers'), icon: Users, href: '/dashboard/customers' },
     ];
 
     const mobileMenuItems = [
-        { label: t('dashboard.menu.home'), icon: Home, href: '/dashboard' },
-        { label: t('dashboard.menu.performance'), icon: Wallet, href: '/dashboard/performance' },
-        { label: t('dashboard.menu.my_store'), icon: Layers, href: '/dashboard/store' },
-        { label: t('dashboard.menu.analytics'), icon: BarChart3, href: '/dashboard/analytics' },
-        { label: t('dashboard.menu.more'), icon: Plus, onClick: () => setShowMobileMenu(true) },
+        { label: 'Panel', icon: Home, href: '/dashboard' },
+        { label: 'Mağazam', icon: Layers, href: '/dashboard/store' },
+        { label: 'Siparişler', icon: ShoppingBag, href: '/dashboard/orders' },
+        { label: 'Analitik', icon: BarChart3, href: '/dashboard/analytics' },
+        { label: 'Daha Fazla', icon: Plus, onClick: () => setShowMobileMenu(true) },
     ];
 
     useEffect(() => {
         if (!contextLoading && !user) {
-            router.push('/auth');
+            router.push('/');
             return;
         }
     }, [contextLoading, user, store, router]);
@@ -134,242 +135,63 @@ function DashboardLayoutContent({
     }
 
     return (
-        <div className="flex min-h-screen bg-[#F8F9FF]">
-            {/* Sidebar (Premium Glassmorphic Style) */}
-            <aside className="fixed inset-y-4 left-4 w-[260px] bg-white/70 backdrop-blur-3xl hidden lg:flex flex-col z-50 rounded-[32px] border border-white shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] overflow-hidden">
-                {/* Logo & Notifications Section */}
-                <div className="p-6 pt-8 flex items-center justify-between">
-                    <Link href="/dashboard" className="flex items-center gap-2 group">
-                        <div className="w-8 h-8 rounded-lg bg-[#5500ff] flex items-center justify-center shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform">
-                            <Zap className="w-5 h-5 text-[#C4FF00]" fill="#C4FF00" strokeWidth={2.5} />
-                        </div>
-                        <span className="text-[22px] font-black tracking-tight text-slate-900 font-logo">Sety</span>
-                    </Link>
-
-                    {/* Notifications Button in Sidebar */}
-                    <button className="w-9 h-9 rounded-xl bg-white flex items-center justify-center border border-indigo-100 hover:bg-slate-50 transition-all text-slate-400 relative">
-                        <Bell className="w-4.5 h-4.5" />
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-[#5500ff] rounded-full border-2 border-white" />
-                    </button>
-                </div>
-
-                {/* Navigation Menu */}
-                <nav className="flex-1 px-3 space-y-1 mt-4">
-                    {menuItems.map((item) => {
-                        const isActive = pathname === item.href;
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={cn(
-                                    "flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-[14px] transition-all group relative group",
-                                    isActive
-                                        ? "bg-white text-[#1a202c] font-semibold shadow-[0_4px_12px_rgba(85,0,255,0.06)]"
-                                        : "text-slate-500 font-semibold hover:text-[#1a202c] hover:bg-white/60"
-                                )}>
-                                <item.icon className={cn(
-                                    "w-5 h-5 transition-all shrink-0",
-                                    isActive ? "text-[#5500ff]" : "text-slate-400 group-hover:text-slate-600"
-                                )} />
-                                {item.label}
-                            </Link>
-                        );
-                    })}
-                </nav>
-
-                {/* Bottom Section */}
-                <div className="p-3 space-y-1 mt-auto pb-8">
-
-
-                    <Link
-                        href="/dashboard/settings"
-                        className={cn(
-                            "flex items-center gap-3 px-4 py-3 rounded-2xl text-[14px] font-bold transition-all",
-                            pathname === '/dashboard/settings'
-                                ? "bg-white text-slate-900 shadow-sm"
-                                : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
-                        )}
-                    >
-                        <Settings className="w-5 h-5" />
-                        {t('dashboard.menu.settings')}
-                    </Link>
-
-
-                    {/* Profile Section with Popover */}
-                    <div className="pt-2 px-1 relative">
-                        <AnimatePresence>
-                            {showUserMenu && (
-                                <>
-                                    <div
-                                        className="fixed inset-0 z-40"
-                                        onClick={() => setShowUserMenu(false)}
-                                    />
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.95, y: 10, x: -10 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                                        exit={{ opacity: 0, scale: 0.95, y: 10, x: -10 }}
-                                        className="absolute bottom-full left-0 mb-4 w-[280px] bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-100 z-50 overflow-hidden p-6"
-                                    >
-                                        <div className="flex items-center gap-4 mb-8">
-                                            <div className="relative w-14 h-14 rounded-2xl bg-slate-50 border-2 border-white flex items-center justify-center overflow-hidden shadow-sm shrink-0">
-                                                {profile?.profile_image_url ? (
-                                                    <Image src={profile.profile_image_url} alt="" fill className="object-cover" />
-                                                ) : (
-                                                    <User className="w-8 h-8 text-slate-300" />
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2">
-                                                    <p className="text-[16px] font-black text-slate-900 truncate leading-tight">
-                                                        {store?.username || 'setyuser'}
-                                                    </p>
-                                                    {profile?.plan_type === 'pro' && (
-                                                        <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-amber-200 to-yellow-400 text-yellow-900 text-[10px] font-black uppercase tracking-wider shadow-sm shrink-0">PRO</span>
-                                                    )}
-                                                </div>
-                                                <p className="text-[11px] font-bold text-slate-400 mt-0.5 break-all">
-                                                    {user?.email}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-1">
-                                            {user?.email === 'hello@sety.store' && (
-                                                <button
-                                                    onClick={() => {
-                                                        router.push('/admin');
-                                                        setShowUserMenu(false);
-                                                    }}
-                                                    className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-[15px] font-black text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-all group"
-                                                >
-                                                    <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                        <Shield className="w-4 h-4 text-white" />
-                                                    </div>
-                                                    Yönetici Paneli
-                                                </button>
-                                            )}
-                                            <button className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-[15px] font-bold text-slate-600 hover:bg-slate-50 transition-all group">
-                                                <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-white">
-                                                    <Plus className="w-4 h-4 text-slate-500" />
-                                                </div>
-                                                {t('dashboard.sidebar.add_account')}
-                                            </button>
-                                            <button className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl text-[15px] font-bold text-slate-600 hover:bg-slate-50 transition-all group">
-                                                <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-white">
-                                                    <div className="text-[14px]">?</div>
-                                                </div>
-                                                {t('dashboard.sidebar.get_help')}
-                                            </button>
-                                        </div>
-
-                                        <div className="h-px bg-slate-100 my-4" />
-
-                                        <button
-                                            onClick={handleLogout}
-                                            className="w-full flex items-center gap-3.5 px-4 py-4 rounded-2xl text-[15px] font-black text-red-500 hover:bg-red-50 transition-all group"
-                                        >
-                                            <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center group-hover:bg-white">
-                                                <LogOut className="w-4 h-4 text-red-500" />
-                                            </div>
-                                            {t('dashboard.menu.logout')}
-                                        </button>
-                                    </motion.div>
-                                </>
-                            )}
-                        </AnimatePresence>
-
-                        <div
-                            onClick={() => setShowUserMenu(!showUserMenu)}
-                            className={cn(
-                                "flex items-center gap-3 p-2 rounded-2xl group cursor-pointer transition-all hover:bg-white/60",
-                                showUserMenu && "bg-white shadow-sm"
-                            )}
-                        >
-                            <div className="relative w-10 h-10 rounded-full bg-indigo-100 border-2 border-white flex items-center justify-center overflow-hidden shadow-sm">
-                                {profile?.profile_image_url ? (
-                                    <Image src={profile.profile_image_url} alt="" fill className="object-cover" sizes="40px" />
-                                ) : (
-                                    <User className="w-6 h-6 text-indigo-400 opacity-50" />
-                                )}
-                            </div>
-                            <div className="flex-1 min-w-0 flex items-center justify-between">
-                                <p className="text-[13px] font-bold text-slate-900 break-all pr-2">
-                                    {store?.username || user?.username || 'setyuser'}
-                                </p>
-                                {profile?.plan_type === 'pro' && (
-                                    <span className="px-1.5 py-0.5 rounded-md bg-gradient-to-r from-amber-200 to-yellow-400 text-yellow-900 text-[9px] font-black uppercase tracking-wider shadow-sm shrink-0">PRO</span>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </aside>
+        <div className="flex min-h-screen bg-[#F8F9FE]">
+            <ModernSidebar />
 
             {/* Main Content Area */}
-            <main className="flex-1 lg:pl-[280px] flex flex-col min-h-screen font-sans">
-                {/* Fixed Top Header (Premium Style) */}
-                <div className="sticky top-4 z-40 px-4 md:px-10 mb-4 transition-all">
-                    <header className="h-[70px] flex items-center justify-between px-6 md:px-8 bg-white/70 backdrop-blur-xl rounded-[32px] border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                        <div className="flex items-center gap-6">
-                            <h2 className="text-[20px] md:text-[22px] font-black text-slate-900 tracking-tight leading-tight">
-                                {pathname === '/dashboard' ? t('dashboard.menu.home') :
-                                    pathname.includes('/performance') ? t('dashboard.menu.performance') :
-                                        pathname.includes('/store') ? t('dashboard.menu.my_store') :
-                                            pathname.includes('/analytics') ? t('dashboard.menu.analytics') :
-                                                pathname.includes('/customers') ? t('dashboard.menu.customers') :
-                                                    pathname.includes('/settings') ? t('dashboard.menu.settings') :
-                                                        pathname.includes('/billing') ? t('dashboard.settings.tabs.billing') : 'Panel'}
-                            </h2>
+            <main className="flex-1 flex flex-col min-h-screen font-inter min-w-0">
+                {/* Modern Sleek Top Header */}
+                <header className="h-[64px] bg-white border-b border-[#E8ECF4] flex items-center justify-between px-6 lg:px-8 shrink-0 sticky top-0 z-40">
+                    <div className="flex items-center gap-3">
+                        <h2 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">
+                            {pathname === '/dashboard' ? 'Genel Bakış' :
+                                pathname.includes('/performance') ? 'Performans' :
+                                pathname.includes('/store') ? 'Mağazam' :
+                                pathname.includes('/analytics') ? 'Analitik' :
+                                pathname.includes('/customers') ? 'Müşteriler' :
+                                pathname.includes('/orders') ? 'Siparişler' :
+                                pathname.includes('/settings') ? 'Ayarlar' : 'Panel'}
+                        </h2>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        {/* Store Link Chip */}
+                        <div className="flex items-center gap-1.5 bg-[#F8F9FE] border border-[#E8ECF4] rounded-full px-3 py-1.5">
+                            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                            <span className="text-[12px] font-bold text-[#5500FF] font-mono">
+                                sety.store/{store?.username || 'emirhan'}
+                            </span>
+                            <button
+                                onClick={copyStoreLink}
+                                className="text-slate-400 hover:text-[#5500FF] ml-1 p-0.5 transition-colors"
+                                title="Kopyala"
+                            >
+                                {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                            <a
+                                href={`https://sety.store/${store?.username || 'emirhan'}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-slate-400 hover:text-[#5500FF] p-0.5 transition-colors"
+                                title="Mağazayı Aç"
+                            >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                            </a>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            {/* Mobile Actions (Stan Style) */}
-                            <div className="flex items-center gap-1 lg:hidden">
-                                <button
-                                    onClick={() => window.open(`https://${storeUrl}`, '_blank')}
-                                    className="w-10 h-10 rounded-full flex items-center justify-center text-[#5500ff] hover:bg-slate-50 transition-colors"
-                                >
-                                    <Link2 className="w-5 h-5" />
-                                </button>
-                                <button
-                                    onClick={copyStoreLink}
-                                    className="w-10 h-10 rounded-full flex items-center justify-center text-[#5500ff] hover:bg-slate-50 transition-colors"
-                                >
-                                    {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
-                                </button>
-                            </div>
-
-                            {/* Desktop Actions */}
-                            <div className="hidden lg:flex items-center gap-2">
-                                <button
-                                    onClick={copyStoreLink}
-                                    className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-50 border border-slate-100 hover:bg-slate-100 transition-all group"
-                                >
-                                    <span className="text-[15px] font-bold text-[#5500ff]">
-                                        sety.store/{store?.username || user?.username || ''}
-                                    </span>
-                                    {copied ? (
-                                        <Check className="w-3.5 h-3.5 text-emerald-500" />
-                                    ) : (
-                                        <Copy className="w-3.5 h-3.5 text-[#5500ff] transition-colors" />
-                                    )}
-                                </button>
-                                <a
-                                    href={`https://${storeUrl}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-11 h-11 rounded-full flex items-center justify-center bg-slate-50 border border-slate-100 hover:bg-indigo-50 text-[#5500ff] transition-all"
-                                    title="Mağazayı Yeni Sekmede Aç"
-                                >
-                                    <ExternalLink className="w-5 h-5" />
-                                </a>
-                            </div>
-                        </div>
-                    </header>
-                </div>
+                        {/* Add product quick button */}
+                        <Link
+                            href="/dashboard/store?action=add"
+                            className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-[#5500FF] to-[#7B2FFF] text-white px-3.5 py-1.5 rounded-full text-[12px] font-bold shadow-md shadow-[#5500FF]/20 hover:opacity-95 transition-all"
+                        >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Ürün Ekle</span>
+                        </Link>
+                    </div>
+                </header>
 
                 {/* Content Container */}
-                <div className="flex-1 bg-transparent pb-24 lg:pb-0 px-4 md:px-10">
+                <div className="flex-1 bg-[#F8F9FE] pb-24 lg:pb-8">
                     {children}
                 </div>
 
@@ -391,7 +213,7 @@ function DashboardLayoutContent({
                                     )}
                                 >
                                     <Icon className={cn("w-6 h-6", showMobileMenu && "rotate-45")} />
-                                    <span className="text-[9px] font-black uppercase tracking-widest">{item.label}</span>
+                                    <span className="text-[9px] font-bold uppercase tracking-widest">{item.label}</span>
                                 </button>
                             );
                         }
@@ -406,7 +228,7 @@ function DashboardLayoutContent({
                                 )}
                             >
                                 <Icon className={cn("w-6 h-6", isActive && "animate-in zoom-in duration-300")} />
-                                <span className="text-[9px] font-black uppercase tracking-widest leading-none">{item.label}</span>
+                                <span className="text-[9px] font-bold uppercase tracking-widest leading-none">{item.label}</span>
                             </Link>
                         );
                     })}
@@ -424,7 +246,7 @@ function DashboardLayoutContent({
                         >
                             {/* Header */}
                             <div className="p-6 pt-12 flex items-center justify-between">
-                                <h2 className="text-[28px] font-black text-slate-900 tracking-tight leading-none">{t('dashboard.menu.more')}</h2>
+                                <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none">{t('dashboard.menu.more')}</h2>
                                 <button
                                     onClick={() => setShowMobileMenu(false)}
                                     className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-400 shadow-xl shadow-slate-200/50 active:scale-90 transition-transform"
@@ -450,7 +272,7 @@ function DashboardLayoutContent({
                                             <div className="w-20 h-20 rounded-[24px] bg-white shadow-[0_4px_25px_rgba(85,0,255,0.06)] flex items-center justify-center text-indigo-900 border border-slate-50">
                                                 <item.icon className="w-9 h-9" strokeWidth={1.5} />
                                             </div>
-                                            <span className="text-[12px] font-black text-indigo-900 text-center leading-tight tracking-tight">{item.label}</span>
+                                            <span className="text-[12px] font-bold text-indigo-900 text-center leading-tight tracking-tight">{item.label}</span>
                                         </Link>
                                     ))}
                                 </div>
@@ -459,7 +281,7 @@ function DashboardLayoutContent({
                                 <div className="space-y-10">
                                     {/* Accounts Section */}
                                     <div className="space-y-4">
-                                        <h3 className="text-[18px] font-black text-indigo-900 px-2 tracking-tight opacity-40 uppercase text-[12px]">Accounts</h3>
+                                        <h3 className="text-[18px] font-bold text-indigo-900 px-2 tracking-tight opacity-40 uppercase text-[12px]">Accounts</h3>
                                         <div className="space-y-3">
                                             {/* Current User Profile Card */}
                                             <div className="w-full flex items-center gap-4 p-6 rounded-[32px] bg-white shadow-sm border border-transparent">
@@ -473,9 +295,9 @@ function DashboardLayoutContent({
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-center gap-2">
-                                                        <p className="text-[16px] font-black text-indigo-900 truncate leading-tight">{store?.username || 'setyuser'}</p>
+                                                        <p className="text-[16px] font-bold text-indigo-900 truncate leading-tight">{store?.username || 'setyuser'}</p>
                                                         {profile?.plan_type === 'pro' && (
-                                                            <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-amber-200 to-yellow-400 text-yellow-900 text-[10px] font-black uppercase tracking-wider shadow-sm shrink-0">PRO</span>
+                                                            <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-amber-200 to-yellow-400 text-yellow-900 text-[10px] font-bold uppercase tracking-wider shadow-sm shrink-0">PRO</span>
                                                         )}
                                                     </div>
                                                     <p className="text-[12px] font-bold text-slate-400 truncate mt-1">{user?.email}</p>
@@ -486,14 +308,14 @@ function DashboardLayoutContent({
                                                 <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
                                                     <Plus className="w-5 h-5" />
                                                 </div>
-                                                <span className="text-[16px] font-black text-indigo-900">{t('dashboard.sidebar.add_account')}</span>
+                                                <span className="text-[16px] font-bold text-indigo-900">{t('dashboard.sidebar.add_account')}</span>
                                             </button>
 
                                             <button className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-white shadow-sm transition-all active:scale-[0.98]">
                                                 <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
                                                     <HelpCircle className="w-5 h-5" />
                                                 </div>
-                                                <span className="text-[16px] font-black text-indigo-900">{t('dashboard.sidebar.get_help')}</span>
+                                                <span className="text-[16px] font-bold text-indigo-900">{t('dashboard.sidebar.get_help')}</span>
                                             </button>
 
                                             <button
@@ -503,7 +325,7 @@ function DashboardLayoutContent({
                                                 <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
                                                     <LogOut className="w-5 h-5" />
                                                 </div>
-                                                <span className="text-[17px] font-black tracking-tight">{t('dashboard.menu.logout')}</span>
+                                                <span className="text-[17px] font-bold tracking-tight">{t('dashboard.menu.logout')}</span>
                                             </button>
                                         </div>
                                     </div>

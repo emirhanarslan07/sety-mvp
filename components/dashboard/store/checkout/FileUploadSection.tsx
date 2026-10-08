@@ -75,7 +75,7 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, paymentLinkOve
     return (
         <div className="bg-white p-10 rounded-[40px] border border-slate-100/60 shadow-xl shadow-slate-200/20 space-y-8 transition-all hover:shadow-2xl hover:shadow-slate-200/30">
             <div className="space-y-2">
-                <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest">
+                <p className="text-[13px] font-bold text-slate-400 uppercase tracking-widest">
                     {'dashboard.store.editors.upload.delivery_hint'}
                 </p>
             </div>
@@ -84,13 +84,13 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, paymentLinkOve
             <div className="flex gap-3">
                 <button
                     onClick={() => setUseRedirect(false)}
-                    className={`flex-1 h-11 rounded-2xl text-[13px] font-black transition-all border ${!useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
+                    className={`flex-1 h-11 rounded-2xl text-[13px] font-bold transition-all border ${!useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
                 >
                     {'dashboard.store.editors.upload.file_tab'}
                 </button>
                 <button
                     onClick={() => setUseRedirect(true)}
-                    className={`flex-1 h-11 rounded-2xl text-[13px] font-black transition-all border ${useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
+                    className={`flex-1 h-11 rounded-2xl text-[13px] font-bold transition-all border ${useRedirect ? 'bg-[#5500ff] text-white border-[#5500ff] shadow-lg shadow-[#5500ff]/20' : 'bg-slate-50 text-slate-400 border-slate-100 hover:border-slate-200'}`}
                 >
                     {'dashboard.store.editors.upload.url_tab'}
                 </button>
@@ -104,7 +104,7 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, paymentLinkOve
                             <FileText className="w-5 h-5 text-emerald-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[14px] font-black text-emerald-800 truncate">{uploadedFileName || 'dashboard.store.editors.upload.file_uploaded'}</p>
+                            <p className="text-[14px] font-bold text-emerald-800 truncate">{uploadedFileName || 'dashboard.store.editors.upload.file_uploaded'}</p>
                             <p className="text-[12px] text-emerald-600 font-medium">{'dashboard.store.editors.upload.auto_delivery_msg'}</p>
                         </div>
                         <button
@@ -130,7 +130,7 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, paymentLinkOve
                             )}
                         </div>
                         <div className="text-center">
-                            <p className="text-[15px] font-black text-slate-700">
+                            <p className="text-[15px] font-bold text-slate-700">
                                 {isUploading ? 'dashboard.store.editors.publishing' : 'dashboard.store.editors.upload.drag_drop_title'}
                             </p>
                             <p className="text-[13px] text-slate-400 font-medium mt-1">
@@ -174,7 +174,7 @@ export function FileUploadSection({ uploadedFileUrl, redirectUrl, paymentLinkOve
             {onPaymentLinkOverrideChange && (
                 <div className="pt-8 border-t border-slate-100 space-y-5">
                     <div className="space-y-1">
-                        <h4 className="text-[15px] font-black text-slate-800">Ödeme Linki (İsteğe Bağlı)</h4>
+                        <h4 className="text-[15px] font-bold text-slate-800">Ödeme Linki (İsteğe Bağlı)</h4>
                         <p className="text-[13px] font-medium text-slate-500">Bu ürün için farklı bir ödeme linki kullanmak isterseniz belirtebilirsiniz.</p>
                     </div>
 

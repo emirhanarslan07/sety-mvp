@@ -11,7 +11,7 @@ export default function BillingPage() {
             <div className="max-w-[1240px] mx-auto px-6 pt-12">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                     <div>
-                        <h1 className="text-[32px] font-black text-slate-900 tracking-tight leading-none">
+                        <h1 className="text-[32px] font-bold text-slate-900 tracking-tight leading-none">
                             Billing & Subscription
                         </h1>
                         <p className="text-slate-400 font-bold text-[15px] mt-2">

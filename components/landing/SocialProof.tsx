@@ -37,7 +37,7 @@ export function SocialProof() {
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="text-4xl md:text-6xl font-black tracking-tighter text-foreground"
+                            className="text-4xl md:text-6xl font-bold tracking-tighter text-foreground"
                         >
                             {t('landing.social_proof.title')} <br />
                             <span className="text-[#5500ff]">{t('landing.social_proof.title_accent')}</span>

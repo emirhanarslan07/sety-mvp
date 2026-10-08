@@ -76,7 +76,7 @@ export function DescriptionEditor({ value, onChange }: DescriptionEditorProps) {
                 <div class="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-xl shadow-red-600/20">
                     <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                 </div>
-                <p class="text-[12px] font-black uppercase tracking-widest text-slate-400">Video: ${modalData.videoUrl.slice(0, 30)}...</p>
+                <p class="text-[12px] font-bold uppercase tracking-widest text-slate-400">Video: ${modalData.videoUrl.slice(0, 30)}...</p>
             </div>
         `;
         descriptionRef.current?.focus();
@@ -88,7 +88,7 @@ export function DescriptionEditor({ value, onChange }: DescriptionEditorProps) {
 
     const insertLink = () => {
         if (!modalData.linkName || !modalData.linkUrl) return;
-        const linkHtml = `<a href="${modalData.linkUrl}" class="text-[#5500ff] font-black underline underline-offset-4 decoration-2" target="_blank">${modalData.linkName}</a>`;
+        const linkHtml = `<a href="${modalData.linkUrl}" class="text-[#5500ff] font-bold underline underline-offset-4 decoration-2" target="_blank">${modalData.linkName}</a>`;
         descriptionRef.current?.focus();
         document.execCommand('insertHTML', false, linkHtml);
         updateContent();
@@ -98,7 +98,7 @@ export function DescriptionEditor({ value, onChange }: DescriptionEditorProps) {
 
     return (
         <div className="space-y-4">
-            <label className="text-[14px] font-black text-slate-800 ml-1 uppercase tracking-widest opacity-80">
+            <label className="text-[14px] font-bold text-slate-800 ml-1 uppercase tracking-widest opacity-80">
                 {''}
             </label>
 
@@ -175,7 +175,7 @@ export function DescriptionEditor({ value, onChange }: DescriptionEditorProps) {
                             className="bg-white rounded-[40px] shadow-2xl w-full max-w-[480px] p-10 relative z-10 space-y-8"
                         >
                             <button onClick={() => setModals(m => ({ ...m, video: false }))} className="absolute top-8 right-8 text-slate-300 hover:text-slate-900 transition-colors"><X className="w-6 h-6" /></button>
-                            <h2 className="text-[22px] font-black text-slate-900 text-center">{''}</h2>
+                            <h2 className="text-[22px] font-bold text-slate-900 text-center">{''}</h2>
                             <div className="space-y-4">
                                 <div className="relative group">
                                     <LinkIcon className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#5500ff] transition-colors" />
@@ -189,11 +189,11 @@ export function DescriptionEditor({ value, onChange }: DescriptionEditorProps) {
                                 </div>
                                 <Button
                                     onClick={insertVideo}
-                                    className="w-full h-14 bg-[#5500ff] text-white font-black rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20"
+                                    className="w-full h-14 bg-[#5500ff] text-white font-bold rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20"
                                 >
                                     {''}
                                 </Button>
-                                <button className="w-full h-14 bg-white border-2 border-[#5500ff]/10 text-[#5500ff] font-black rounded-2xl hover:bg-[#5500ff]/5 transition-all flex items-center justify-center gap-2">
+                                <button className="w-full h-14 bg-white border-2 border-[#5500ff]/10 text-[#5500ff] font-bold rounded-2xl hover:bg-[#5500ff]/5 transition-all flex items-center justify-center gap-2">
                                     <Upload className="w-5 h-5" />
                                     {''}
                                 </button>
@@ -217,7 +217,7 @@ export function DescriptionEditor({ value, onChange }: DescriptionEditorProps) {
                             className="bg-white rounded-[40px] shadow-2xl w-full max-w-[480px] p-10 relative z-10 space-y-8"
                         >
                             <button onClick={() => setModals(m => ({ ...m, link: false }))} className="absolute top-8 right-8 text-slate-300 hover:text-slate-900 transition-colors"><X className="w-6 h-6" /></button>
-                            <h2 className="text-[22px] font-black text-slate-900 text-center">{''}</h2>
+                            <h2 className="text-[22px] font-bold text-slate-900 text-center">{''}</h2>
                             <div className="space-y-4">
                                 <div className="relative group">
                                     <Pencil className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 group-focus-within:text-[#5500ff] transition-colors" />
@@ -242,13 +242,13 @@ export function DescriptionEditor({ value, onChange }: DescriptionEditorProps) {
                                 <div className="flex items-center gap-4 pt-4">
                                     <button
                                         onClick={() => setModals(m => ({ ...m, link: false }))}
-                                        className="flex-1 h-14 border-2 border-[#5500ff]/10 text-[#5500ff] font-black rounded-2xl hover:bg-[#5500ff]/5 transition-all text-[13px]"
+                                        className="flex-1 h-14 border-2 border-[#5500ff]/10 text-[#5500ff] font-bold rounded-2xl hover:bg-[#5500ff]/5 transition-all text-[13px]"
                                     >
                                         {''}
                                     </button>
                                     <Button
                                         onClick={insertLink}
-                                        className="flex-1 h-14 bg-[#5500ff] text-white font-black rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20 text-[13px]"
+                                        className="flex-1 h-14 bg-[#5500ff] text-white font-bold rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20 text-[13px]"
                                     >
                                         {''}
                                     </Button>

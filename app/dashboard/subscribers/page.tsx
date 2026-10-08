@@ -73,7 +73,7 @@ export default function SubscribersPage() {
             {/* Header section */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight leading-tight">
                         Aboneler 💌
                     </h1>
                     <p className="text-slate-500 mt-2 font-bold">
@@ -102,7 +102,7 @@ export default function SubscribersPage() {
                         <div className="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6 transform -rotate-6 transition-transform hover:rotate-0">
                             <Mail className="w-10 h-10 text-slate-300" />
                         </div>
-                        <h3 className="text-xl font-black text-slate-800 tracking-tight mb-3">
+                        <h3 className="text-xl font-bold text-slate-800 tracking-tight mb-3">
                             Aboneniz bulunmuyor
                         </h3>
                         <p className="text-slate-500 font-medium max-w-sm mb-10">
@@ -110,7 +110,7 @@ export default function SubscribersPage() {
                         </p>
                         <button
                             onClick={() => router.push('/dashboard/store?action=add_block')}
-                            className="bg-[#5500ff] text-white font-black px-10 py-5 rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20 hover:scale-[1.02] active:scale-95 transition-all"
+                            className="bg-[#5500ff] text-white font-bold px-10 py-5 rounded-2xl hover:bg-[#4400cc] shadow-xl shadow-[#5500ff]/20 hover:scale-[1.02] active:scale-95 transition-all"
                         >
                             E-posta Bloku Ekle
                         </button>
@@ -120,10 +120,10 @@ export default function SubscribersPage() {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-slate-50">
-                                    <th className="text-left py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Abone</th>
-                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Kaynak (Ürün)</th>
-                                    <th className="text-left py-10 px-6 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Tarih</th>
-                                    <th className="text-right py-10 px-12 text-[12px] font-black text-slate-400 uppercase tracking-widest leading-none">Durum</th>
+                                    <th className="text-left py-10 px-12 text-[12px] font-bold text-slate-400 uppercase tracking-widest leading-none">Abone</th>
+                                    <th className="text-left py-10 px-6 text-[12px] font-bold text-slate-400 uppercase tracking-widest leading-none">Kaynak (Ürün)</th>
+                                    <th className="text-left py-10 px-6 text-[12px] font-bold text-slate-400 uppercase tracking-widest leading-none">Tarih</th>
+                                    <th className="text-right py-10 px-12 text-[12px] font-bold text-slate-400 uppercase tracking-widest leading-none">Durum</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50">
@@ -131,11 +131,11 @@ export default function SubscribersPage() {
                                     <tr key={sub.id} className="group hover:bg-slate-50 transition-all border-b border-slate-50 last:border-0">
                                         <td className="py-8 px-12 whitespace-nowrap">
                                             <div className="flex items-center gap-5">
-                                                <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-black text-[16px] text-[#5500ff] group-hover:scale-105 transition-transform duration-500">
+                                                <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-bold text-[16px] text-[#5500ff] group-hover:scale-105 transition-transform duration-500">
                                                     {sub.name?.[0]?.toUpperCase() || sub.email?.[0]?.toUpperCase()}
                                                 </div>
                                                 <div className="flex flex-col">
-                                                    <span className="text-[17px] font-black text-slate-900 tracking-tight">{sub.name || 'İsimsiz'}</span>
+                                                    <span className="text-[17px] font-bold text-slate-900 tracking-tight">{sub.name || 'İsimsiz'}</span>
                                                     <span className="text-[13px] font-bold text-slate-400">{sub.email}</span>
                                                 </div>
                                             </div>
@@ -165,7 +165,7 @@ export default function SubscribersPage() {
                                             </div>
                                         </td>
                                         <td className="py-8 px-12 text-right whitespace-nowrap">
-                                            <span className="px-4 py-1.5 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[12px] font-black uppercase tracking-widest">
+                                            <span className="px-4 py-1.5 rounded-full bg-[#E0FFEC] text-[#00A84D] text-[12px] font-bold uppercase tracking-widest">
                                                 Aktif
                                             </span>
                                         </td>

@@ -101,14 +101,14 @@ export function FieldManager({
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h5 className="text-[16px] font-black text-slate-900 tracking-tight">{'dashboard.store.editors.fields_manager.title'}</h5>
+                    <h5 className="text-[16px] font-bold text-slate-900 tracking-tight">{'dashboard.store.editors.fields_manager.title'}</h5>
                     <p className="text-[12px] text-slate-400 font-semibold mt-0.5">{'dashboard.store.editors.fields_manager.subtitle'}</p>
                 </div>
             </div>
 
             {/* Locked/Base Fields */}
             <div className="space-y-2">
-                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-1">{'dashboard.store.editors.fields_manager.required_section'}</p>
+                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest px-1">{'dashboard.store.editors.fields_manager.required_section'}</p>
                 {fields.slice(0, 2).map((field, idx) => {
                     const cfg = TYPE_CONFIG[field.type] || TYPE_CONFIG['text'];
                     const Icon = BASE_FIELD_ICONS[idx] || cfg.icon;
@@ -118,7 +118,7 @@ export function FieldManager({
                                 <Icon className="w-3.5 h-3.5" />
                             </div>
                             <span className="text-[14px] font-bold text-slate-700 flex-1">{field.label}</span>
-                            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">{'dashboard.store.editors.fields_manager.required_badge'}</span>
+                            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">{'dashboard.store.editors.fields_manager.required_badge'}</span>
                         </div>
                     );
                 })}
@@ -127,7 +127,7 @@ export function FieldManager({
             {/* Custom Fields */}
             {fields.length > 2 && (
                 <div className="space-y-2">
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-1">{'dashboard.store.editors.fields_manager.extra_section'}</p>
+                    <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest px-1">{'dashboard.store.editors.fields_manager.extra_section'}</p>
                     {fields.slice(2).map((field, relIdx) => {
                         const idx = relIdx + 2;
                         const cfg = TYPE_CONFIG[field.type] || TYPE_CONFIG['text'];
@@ -152,7 +152,7 @@ export function FieldManager({
                                     />
 
                                     {/* Type pill */}
-                                    <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${cfg.bg} ${cfg.color} shrink-0`}>
+                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${cfg.bg} ${cfg.color} shrink-0`}>
                                         {cfg.label}
                                     </span>
 
@@ -168,7 +168,7 @@ export function FieldManager({
                                 {/* Options for multiple & dropdown */}
                                 {(field.type === 'multiple' || field.type === 'dropdown') && (
                                     <div className="mx-2 mb-2 mt-0 bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-2 animate-in slide-in-from-top-1 duration-200">
-                                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3">
+                                        <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-3">
                                             {field.type === 'multiple' ? 'dashboard.store.editors.fields_manager.options_title' : 'dashboard.store.editors.fields_manager.menu_items_title'}
                                         </p>
                                         {field.options && field.options.length > 0 ? (
@@ -206,7 +206,7 @@ export function FieldManager({
                                 {/* Checkbox preview */}
                                 {field.type === 'checkbox' && (
                                     <div className="mx-2 mb-2 mt-0 bg-emerald-50/60 border border-emerald-100 rounded-2xl p-4">
-                                        <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-3">{'dashboard.store.editors.fields_manager.preview_title'}</p>
+                                        <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-3">{'dashboard.store.editors.fields_manager.preview_title'}</p>
                                         <div className="flex items-start gap-3 px-1">
                                             <div className="w-5 h-5 rounded-md border-2 border-slate-200 bg-white mt-0.5 shrink-0 flex items-center justify-center shadow-sm">
                                             </div>
@@ -249,7 +249,7 @@ export function FieldManager({
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                 className="absolute bottom-full left-0 right-0 mb-3 bg-white rounded-[28px] shadow-2xl border border-slate-100/80 overflow-hidden z-50 p-3 space-y-1"
                             >
-                                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest px-3 py-1">{'dashboard.store.editors.fields_manager.select_type_title'}</p>
+                                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest px-3 py-1">{'dashboard.store.editors.fields_manager.select_type_title'}</p>
                                 {ADD_FIELD_OPTIONS.map((opt) => (
                                     <button
                                         key={opt.id}

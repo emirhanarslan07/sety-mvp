@@ -11,7 +11,7 @@ export default async function TelegramSettingsPage() {
                     <div className="w-12 h-12 rounded-2xl bg-[#5500ff] flex items-center justify-center shadow-lg shadow-indigo-100">
                         <Bot className="w-7 h-7 text-white" />
                     </div>
-                    <h1 className="text-[32px] md:text-[40px] font-black text-slate-900 tracking-tight leading-none italic uppercase">
+                    <h1 className="text-[32px] md:text-[40px] font-bold text-slate-900 tracking-tight leading-none italic uppercase">
                         Telegram Bot
                     </h1>
                 </div>

@@ -72,17 +72,18 @@ module.exports = {
                 sm: "calc(var(--radius) - 4px)",
             },
             fontFamily: {
-                sans: ['var(--font-plus-jakarta)', 'Inter', 'sans-serif'],
-                inter: ['var(--font-inter)', 'sans-serif'],
-                plus_jakarta: ['var(--font-plus-jakarta)', 'Inter', 'sans-serif'],
-                montserrat: ['var(--font-montserrat)', 'sans-serif'],
-                syne: ['var(--font-syne)', 'sans-serif'],
-                space_mono: ['var(--font-space-mono)', 'monospace'],
-                playfair: ['var(--font-playfair)', 'serif'],
-                outfit: ['var(--font-outfit)', 'sans-serif'],
-                bebas: ['var(--font-bebas)', 'cursive'],
-                poppins: ['var(--font-poppins)', 'sans-serif'],
-                lexend: ['var(--font-lexend)', 'sans-serif'],
+                sans: ['var(--font-plus-jakarta, "Plus Jakarta Sans")', 'Inter', 'sans-serif'],
+                inter: ['var(--font-inter, "Inter")', 'sans-serif'],
+                plus_jakarta: ['var(--font-plus-jakarta, "Plus Jakarta Sans")', 'Inter', 'sans-serif'],
+                montserrat: ['var(--font-montserrat, "Montserrat")', 'sans-serif'],
+                syne: ['var(--font-syne, "Syne")', 'sans-serif'],
+                space_mono: ['var(--font-space-mono, "Space Mono")', 'monospace'],
+                playfair: ['var(--font-playfair, "Playfair Display")', 'serif'],
+                outfit: ['var(--font-outfit, "Outfit")', 'sans-serif'],
+                bebas: ['var(--font-bebas, "Bebas Neue")', 'cursive'],
+                poppins: ['var(--font-poppins, "Poppins")', 'sans-serif'],
+                lexend: ['var(--font-lexend, "Lexend")', 'sans-serif'],
+                serif_display: ['"Instrument Serif"', 'var(--font-playfair, "Playfair Display")', 'serif'],
             },
             keyframes: {
                 "accordion-down": {
@@ -93,10 +94,15 @@ module.exports = {
                     from: { height: "var(--radix-accordion-content-height)" },
                     to: { height: 0 },
                 },
+                "shimmer": {
+                    from: { transform: "translateX(-100%)" },
+                    to: { transform: "translateX(100%)" }
+                }
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
+                "shimmer": "shimmer 2s infinite",
             },
         },
     },

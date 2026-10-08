@@ -58,7 +58,7 @@ export function Footer() {
                         {/* Brand Logo */}
                         <Link href="/" className="flex items-center gap-3 group pt-10 md:pt-0">
                             <SetyLogo size="md" className="group-hover:scale-110 transition-transform" />
-                            <span translate="no" className="notranslate text-2xl font-black tracking-tighter text-foreground">
+                            <span translate="no" className="notranslate text-2xl font-bold tracking-tighter text-foreground">
                                 Sety
                             </span>
                         </Link>

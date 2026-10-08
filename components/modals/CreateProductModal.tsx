@@ -121,7 +121,7 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                             <productType.icon className="w-7 h-7 text-white" />
                         </div>
                         <div>
-                            <h3 className="text-[20px] font-black text-slate-900 tracking-tight leading-none uppercase">
+                            <h3 className="text-[20px] font-bold text-slate-900 tracking-tight leading-none uppercase">
                                 {t(`dashboard.store.product_types.${productType.id}.title`) || productType.title}
                             </h3>
                             <p className="text-[13px] text-slate-400 font-bold mt-2 uppercase tracking-widest opacity-70">
@@ -140,8 +140,8 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                         {/* Section 1: Temel Bilgiler */}
                         <div className="space-y-8">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-slate-900 text-white text-[14px] font-black flex items-center justify-center">1</div>
-                                <h4 className="text-[16px] font-black text-slate-900 uppercase tracking-widest">{t('dashboard.store.sections.basic_info') || 'Temel Bilgiler'}</h4>
+                                <div className="w-10 h-10 rounded-full bg-slate-900 text-white text-[14px] font-bold flex items-center justify-center">1</div>
+                                <h4 className="text-[16px] font-bold text-slate-900 uppercase tracking-widest">{t('dashboard.store.sections.basic_info') || 'Temel Bilgiler'}</h4>
                             </div>
 
                             <div className="space-y-8">
@@ -155,7 +155,7 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                                 />
 
                                 <div className="space-y-3">
-                                    <label className="text-[14px] font-black text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.description') || "Açıklama"}</label>
+                                    <label className="text-[14px] font-bold text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.description') || "Açıklama"}</label>
                                     <div className="relative group">
                                         <div className="absolute left-6 top-5 text-slate-400 group-focus-within:text-[#5500ff] transition-colors">
                                             <AlignLeft className="w-5 h-5" />
@@ -174,13 +174,13 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                         {/* Section 2: Fiyat & Ödeme */}
                         <div className="space-y-8">
                             <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-slate-900 text-white text-[14px] font-black flex items-center justify-center">2</div>
-                                <h4 className="text-[16px] font-black text-slate-900 uppercase tracking-widest">{t('dashboard.store.sections.price_payment') || 'Fiyat & Ödeme'}</h4>
+                                <div className="w-10 h-10 rounded-full bg-slate-900 text-white text-[14px] font-bold flex items-center justify-center">2</div>
+                                <h4 className="text-[16px] font-bold text-slate-900 uppercase tracking-widest">{t('dashboard.store.sections.price_payment') || 'Fiyat & Ödeme'}</h4>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-3">
-                                    <label className="text-[14px] font-black text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.price') || "Fiyat"}</label>
+                                    <label className="text-[14px] font-bold text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.price') || "Fiyat"}</label>
                                     <div className="flex gap-3">
                                         <div className="relative flex-1 group">
                                             <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#5500ff] transition-colors">
@@ -192,13 +192,13 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                                                 value={price}
                                                 onChange={(e) => setPrice(e.target.value)}
                                                 placeholder="0.00"
-                                                className="h-16 pl-16 pr-6 rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] transition-all font-black text-slate-900 placeholder:text-slate-300 shadow-none outline-none ring-0"
+                                                className="h-16 pl-16 pr-6 rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] transition-all font-bold text-slate-900 placeholder:text-slate-300 shadow-none outline-none ring-0"
                                             />
                                         </div>
                                         <select
                                             value={currency}
                                             onChange={(e) => setCurrency(e.target.value)}
-                                            className="h-16 w-28 rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] focus:outline-none px-4 font-black text-slate-900 transition-all cursor-pointer"
+                                            className="h-16 w-28 rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] focus:outline-none px-4 font-bold text-slate-900 transition-all cursor-pointer"
                                         >
                                             <option value="TRY">TRY</option>
                                             <option value="USD">USD</option>
@@ -208,11 +208,11 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="text-[14px] font-black text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.checkout_provider') || "Ödeme Sağlayıcı"}</label>
+                                    <label className="text-[14px] font-bold text-slate-900/40 uppercase tracking-[0.1em] ml-1">{t('dashboard.store.sections.checkout_provider') || "Ödeme Sağlayıcı"}</label>
                                     <select
                                         value={checkoutProvider}
                                         onChange={(e) => setCheckoutProvider(e.target.value)}
-                                        className="h-16 w-full rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] focus:outline-none px-6 font-black text-slate-900 transition-all cursor-pointer"
+                                        className="h-16 w-full rounded-[24px] border-2 border-slate-100 bg-slate-50/50 focus:bg-white focus:border-[#5500ff] focus:outline-none px-6 font-bold text-slate-900 transition-all cursor-pointer"
                                     >
                                         <option value="manual">Sety Manual (%0 Fee)</option>
                                         <option value="shopier">Shopier</option>
@@ -245,14 +245,14 @@ export default function CreateProductModal({ isOpen, onClose, productType, onSuc
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="w-full sm:flex-1 h-18 py-5 rounded-[28px] text-slate-400 font-black text-lg hover:bg-slate-50 transition-all active:scale-95"
+                                className="w-full sm:flex-1 h-18 py-5 rounded-[28px] text-slate-400 font-bold text-lg hover:bg-slate-50 transition-all active:scale-95"
                             >
                                 {t('common.cancel')}
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full sm:flex-[2] h-20 rounded-[32px] bg-slate-900 hover:bg-[#5500ff] text-white font-black text-xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
+                                className="w-full sm:flex-[2] h-20 rounded-[32px] bg-slate-900 hover:bg-[#5500ff] text-white font-bold text-xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3"
                             >
                                 {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
                                     <>

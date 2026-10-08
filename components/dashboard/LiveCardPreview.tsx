@@ -102,7 +102,7 @@ export default function LiveCardPreview({ data, icon: OverrideIcon }: LiveCardPr
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-center">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <h4 className="text-[16px] font-black text-slate-900 tracking-tight leading-tight">
+                                <h4 className="text-[16px] font-bold text-slate-900 tracking-tight leading-tight">
                                     {data.title || 'Ürün Başlığı'}
                                 </h4>
                                 <span className="text-[16px] font-bold text-[#5500ff]">
@@ -168,7 +168,7 @@ export default function LiveCardPreview({ data, icon: OverrideIcon }: LiveCardPr
                                 {data.subtitle || 'Ürününüzün detaylı açıklaması.'}
                             </p>
                             <div className="mt-4 flex items-center justify-between">
-                                <span className="text-[16px] font-black text-slate-900">
+                                <span className="text-[16px] font-bold text-slate-900">
                                     {data.price === 0 ? 'ÜCRETSİZ' : formatCurrency(data.price, data.currency)}
                                 </span>
                             </div>
@@ -179,7 +179,7 @@ export default function LiveCardPreview({ data, icon: OverrideIcon }: LiveCardPr
                 {/* Action Button (Stripe/Stan Style) */}
                 {(isCallout || isPreview) && (
                     <div className="px-5 pb-5 pt-0">
-                        <button className="w-full h-14 rounded-[18px] bg-[#00CE69] hover:bg-[#00B85E] text-white font-black text-[16px] transition-all active:scale-[0.98] shadow-[0_8px_20px_-4px_rgba(0,206,105,0.4)] border-none">
+                        <button className="w-full h-14 rounded-[18px] bg-[#00CE69] hover:bg-[#00B85E] text-white font-bold text-[16px] transition-all active:scale-[0.98] shadow-[0_8px_20px_-4px_rgba(0,206,105,0.4)] border-none">
                             {displayButtonText}
                         </button>
                     </div>

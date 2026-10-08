@@ -19,7 +19,7 @@ export default function PricingPage() {
                 </Link>
 
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
                         Simple, Transparent Pricing
                     </h1>
                     <p className="text-xl text-muted-foreground">
@@ -33,7 +33,7 @@ export default function PricingPage() {
                     <div className="text-center mb-8">
                         <h2 className="text-2xl font-bold text-foreground mb-2">Sety Pro</h2>
                         <div className="flex justify-center items-baseline gap-1">
-                            <span className="text-5xl font-black tracking-tight">$19</span>
+                            <span className="text-5xl font-bold tracking-tight">$19</span>
                             <span className="text-muted-foreground font-medium">/month</span>
                         </div>
                         <p className="text-muted-foreground mt-4 text-sm">

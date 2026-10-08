@@ -13,7 +13,7 @@ export default function PaymentSettings({ paymentUrl, setPaymentUrl, onSave, sav
                     <div className="w-16 h-16 rounded-[24px] bg-[#5500ff]/5 flex items-center justify-center">
                         <CreditCard className="w-8 h-8 text-[#5500ff]" />
                     </div>
-                    <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-none">
+                    <h2 className="text-[32px] font-bold text-slate-900 tracking-tight leading-none">
                         Ödeme Bağlantın
                     </h2>
                 </div>
@@ -25,7 +25,7 @@ export default function PaymentSettings({ paymentUrl, setPaymentUrl, onSave, sav
             <div className="p-8 md:p-10 rounded-[32px] bg-white border border-slate-100 shadow-sm overflow-hidden space-y-8">
                 
                 <div className="space-y-3">
-                    <label className="block text-[13px] font-black text-slate-500 uppercase tracking-widest">
+                    <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
                         Ödeme Linki
                     </label>
                     <div className="relative">
@@ -47,13 +47,13 @@ export default function PaymentSettings({ paymentUrl, setPaymentUrl, onSave, sav
                     </p>
                     <div className="flex flex-wrap items-center gap-3">
                         <div className="px-4 py-2 rounded-xl bg-[#00B4D8]/10 border border-[#00B4D8]/20 flex items-center justify-center">
-                            <span className="font-black text-[#00B4D8] text-[14px]">Shopier</span>
+                            <span className="font-bold text-[#00B4D8] text-[14px]">Shopier</span>
                         </div>
                         <div className="px-4 py-2 rounded-xl bg-[#0051C4]/10 border border-[#0051C4]/20 flex items-center justify-center">
-                            <span className="font-black text-[#0051C4] text-[14px]">iyzico</span>
+                            <span className="font-bold text-[#0051C4] text-[14px]">iyzico</span>
                         </div>
                         <div className="px-4 py-2 rounded-xl bg-[#00D06C]/10 border border-[#00D06C]/20 flex items-center justify-center">
-                            <span className="font-black text-[#00D06C] text-[14px]">PayTR</span>
+                            <span className="font-bold text-[#00D06C] text-[14px]">PayTR</span>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ export default function PaymentSettings({ paymentUrl, setPaymentUrl, onSave, sav
                         onClick={onSave}
                         disabled={saving}
                         className={cn(
-                            "h-12 px-8 rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white font-black text-[14px] flex items-center justify-center transition-all active:scale-95 disabled:opacity-50",
+                            "h-12 px-8 rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[14px] flex items-center justify-center transition-all active:scale-95 disabled:opacity-50",
                             saving ? "w-[140px]" : "w-auto"
                         )}
                     >

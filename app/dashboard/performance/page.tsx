@@ -92,7 +92,7 @@ export default function PerformancePage() {
             {/* Header Area */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                    <h1 className="text-3xl font-bold text-slate-900 tracking-tight leading-tight">
                         Performans Raporu 🚀
                     </h1>
                     <p className="text-slate-500 mt-2 font-bold">
@@ -106,9 +106,9 @@ export default function PerformancePage() {
                 <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-2">
                     <div className="flex items-center gap-2 text-slate-400 mb-4">
                         <Eye className="w-5 h-5 text-[#5500ff]" />
-                        <span className="text-[13px] font-black uppercase tracking-widest">Toplam Ziyaretçi</span>
+                        <span className="text-[13px] font-bold uppercase tracking-widest">Toplam Ziyaretçi</span>
                     </div>
-                    <h2 className="text-[40px] font-black text-slate-900 leading-none">
+                    <h2 className="text-[40px] font-bold text-slate-900 leading-none">
                         {stats.totalViews}
                     </h2>
                 </div>
@@ -116,9 +116,9 @@ export default function PerformancePage() {
                 <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-2">
                     <div className="flex items-center gap-2 text-slate-400 mb-4">
                         <Eye className="w-5 h-5 text-amber-500" />
-                        <span className="text-[13px] font-black uppercase tracking-widest">Bugün Ziyaretçi</span>
+                        <span className="text-[13px] font-bold uppercase tracking-widest">Bugün Ziyaretçi</span>
                     </div>
-                    <h2 className="text-[40px] font-black text-slate-900 leading-none">
+                    <h2 className="text-[40px] font-bold text-slate-900 leading-none">
                         {stats.todayViews}
                     </h2>
                 </div>
@@ -126,9 +126,9 @@ export default function PerformancePage() {
                 <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-2">
                     <div className="flex items-center gap-2 text-slate-400 mb-4">
                         <MousePointerClick className="w-5 h-5 text-emerald-500" />
-                        <span className="text-[13px] font-black uppercase tracking-widest">Toplam Ürün Tıklanması</span>
+                        <span className="text-[13px] font-bold uppercase tracking-widest">Toplam Ürün Tıklanması</span>
                     </div>
-                    <h2 className="text-[40px] font-black text-slate-900 leading-none">
+                    <h2 className="text-[40px] font-bold text-slate-900 leading-none">
                         {stats.totalClicks}
                     </h2>
                 </div>
@@ -137,7 +137,7 @@ export default function PerformancePage() {
             {/* Chart Area */}
             <div className="bg-white p-6 md:p-8 rounded-[32px] border border-slate-100 shadow-sm space-y-6">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-black text-slate-900">Ziyaretçi Trendi (14 Gün)</h3>
+                    <h3 className="text-xl font-bold text-slate-900">Ziyaretçi Trendi (14 Gün)</h3>
                 </div>
                 <div className="h-[250px] w-full">
                     {loading ? (
@@ -178,17 +178,17 @@ export default function PerformancePage() {
             {/* Latest Interactions */}
             <div className="space-y-10 pt-4">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-[28px] md:text-[32px] font-black text-slate-900 tracking-tight leading-none">Son Etkileşimler</h2>
-                    <Button variant="outline" className="h-10 px-5 rounded-2xl border-slate-200 text-slate-500 font-black text-[13px] gap-2 hover:bg-slate-50 shadow-sm">
+                    <h2 className="text-[28px] md:text-[32px] font-bold text-slate-900 tracking-tight leading-none">Son Etkileşimler</h2>
+                    <Button variant="outline" className="h-10 px-5 rounded-2xl border-slate-200 text-slate-500 font-bold text-[13px] gap-2 hover:bg-slate-50 shadow-sm">
                         <Download className="w-4 h-4" /> CSV İndir
                     </Button>
                 </div>
 
                 {/* Table Header Labels */}
                 <div className="grid grid-cols-3 gap-4 px-4 py-2 opacity-60">
-                    <span className="text-[14px] font-black text-slate-900">Zaman</span>
-                    <span className="text-[14px] font-black text-slate-900">Etkileşim</span>
-                    <span className="text-[14px] font-black text-slate-900 text-right">Detay</span>
+                    <span className="text-[14px] font-bold text-slate-900">Zaman</span>
+                    <span className="text-[14px] font-bold text-slate-900">Etkileşim</span>
+                    <span className="text-[14px] font-bold text-slate-900 text-right">Detay</span>
                 </div>
 
                 {/* Empty State */}
@@ -197,7 +197,7 @@ export default function PerformancePage() {
                         <div className="w-24 h-24 bg-white rounded-full shadow-sm flex items-center justify-center mb-6">
                             <Activity className="w-10 h-10 text-slate-300" />
                         </div>
-                        <h3 className="text-2xl font-black text-slate-800 tracking-tight mb-3">Veri Yok</h3>
+                        <h3 className="text-2xl font-bold text-slate-800 tracking-tight mb-3">Veri Yok</h3>
                         <p className="text-slate-500 font-medium max-w-[320px]">
                             Henüz mağazanız ziyaret edilmedi.
                         </p>
@@ -209,7 +209,7 @@ export default function PerformancePage() {
                         {!loading && events.map((event) => (
                             <div key={event.id} className="grid grid-cols-3 gap-4 p-6 bg-white rounded-[32px] border border-slate-100 shadow-sm hover:shadow-md transition-all items-center group">
                                 <div className="flex flex-col">
-                                    <span className="text-[15px] font-black text-slate-900">
+                                    <span className="text-[15px] font-bold text-slate-900">
                                         {format(new Date(event.created_at), 'MMM dd, HH:mm')}
                                     </span>
                                 </div>
@@ -222,7 +222,7 @@ export default function PerformancePage() {
                                     )}>
                                         {event.event_type === 'store_view' ? <Eye className="w-5 h-5" /> : <Package className="w-5 h-5" />}
                                     </div>
-                                    <span className="text-[15px] font-black text-slate-900 truncate">
+                                    <span className="text-[15px] font-bold text-slate-900 truncate">
                                         {event.event_type === 'store_view' ? 'Mağaza Ziyareti' : 'Ürün Tıklaması'}
                                     </span>
                                 </div>

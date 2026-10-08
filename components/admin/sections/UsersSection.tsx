@@ -50,7 +50,7 @@ export default function UsersSection() {
             {/* Header */}
             <div className="flex justify-between items-center mb-12">
                 <div>
-                    <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-2">Platform Üyeleri</h1>
+                    <h1 className="text-4xl font-bold text-slate-900 tracking-tight mb-2">Platform Üyeleri</h1>
                     <p className="text-slate-400 font-medium">Sety kütüphanesine katılan tüm üyeler ve mağaza sahiplerini buradan yönetebilirsin.</p>
                 </div>
                 <div className="flex gap-4">
@@ -73,11 +73,11 @@ export default function UsersSection() {
                     <table className="w-full text-left border-collapse">
                         <thead className="bg-slate-50/50">
                             <tr>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest">Kullanıcı Bilgisi</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Rol</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Mağaza</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest text-center">Katılım Tarihi</th>
-                                <th className="px-10 py-6 text-[11px] font-black text-slate-400 uppercase tracking-widest text-right">İşlemler</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Kullanıcı Bilgisi</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center">Rol</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center">Mağaza</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center">Katılım Tarihi</th>
+                                <th className="px-10 py-6 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-right">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
@@ -123,7 +123,7 @@ export default function UsersSection() {
                                         </td>
                                         <td className="px-10 py-7 text-center">
                                             <div className={cn(
-                                                "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl font-black text-[10px] uppercase tracking-widest",
+                                                "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl font-bold text-[10px] uppercase tracking-widest",
                                                 user.role === 'admin'
                                                     ? "bg-indigo-50 text-indigo-600 border border-indigo-100"
                                                     : "bg-emerald-50 text-emerald-600 border border-emerald-100"

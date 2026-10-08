@@ -32,7 +32,7 @@ export default function LiveCoachingPreview({ data, brandColor = '#5500ff' }: Li
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">Görsel Seçilmedi</p>
+                        <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-slate-400">Görsel Seçilmedi</p>
                     </div>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-white via-white/40 to-transparent" />
@@ -124,7 +124,7 @@ export default function LiveCoachingPreview({ data, brandColor = '#5500ff' }: Li
                         {/* Secured Payment Indicator */}
                         <div className="flex items-center gap-2 opacity-30 grayscale pointer-events-none">
                             <ShieldCheck className="w-3.5 h-3.5 text-slate-500" />
-                            <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em] mt-0.5 whitespace-nowrap">Secure Checkout</span>
+                            <span className="text-[8px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-0.5 whitespace-nowrap">Secure Checkout</span>
                         </div>
                     </div>
                 </div>

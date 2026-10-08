@@ -80,7 +80,7 @@ export default function AddLandingPageSection({
             </div>
 
             <div className="space-y-2 text-center max-w-2xl mx-auto">
-                <h2 className="text-[32px] font-black text-slate-900 tracking-tight leading-tight">
+                <h2 className="text-[32px] font-bold text-slate-900 tracking-tight leading-tight">
                     {t('dashboard.store.pages.empty_title')}
                 </h2>
                 <p className="text-slate-400 font-bold text-lg leading-relaxed">
@@ -123,7 +123,7 @@ export default function AddLandingPageSection({
                             )}
                         </div>
                         <div className="flex-1 relative z-10">
-                            <h4 className="text-[17px] font-extrabold text-slate-800 tracking-tight group-hover:text-slate-900 transition-colors mb-1.5">
+                            <h4 className="text-[17px] font-bold text-slate-800 tracking-tight group-hover:text-slate-900 transition-colors mb-1.5">
                                 {type.title}
                             </h4>
                             <p className="text-[14px] font-bold text-slate-400 leading-snug group-hover:text-slate-500 transition-colors">

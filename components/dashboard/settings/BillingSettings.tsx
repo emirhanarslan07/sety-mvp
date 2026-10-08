@@ -21,14 +21,14 @@ export default function BillingSettings() {
                                     <Zap className="w-10 h-10 text-white" fill="currentColor" />
                                 </div>
                                 <div>
-                                    <p className="text-[13px] font-black text-slate-400 uppercase tracking-widest mb-2">Current Plan</p>
-                                    <h2 className="text-[44px] font-black text-white tracking-tighter leading-none italic">Sety Pro (Early Adopter)</h2>
+                                    <p className="text-[13px] font-bold text-slate-400 uppercase tracking-widest mb-2">Current Plan</p>
+                                    <h2 className="text-[44px] font-bold text-white tracking-tighter leading-none italic">Sety Pro (Early Adopter)</h2>
                                 </div>
                             </div>
                             <div className="flex flex-wrap items-center gap-6">
                                 <div className="flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10">
                                     <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="text-[15px] font-black">100% Free Forever</span>
+                                    <span className="text-[15px] font-bold">100% Free Forever</span>
                                 </div>
                                 <p className="text-slate-400 font-bold text-lg">
                                     Joined: {profile?.created_at ? format(new Date(profile.created_at), 'MMMM dd, yyyy') : 'Today'}
@@ -36,8 +36,8 @@ export default function BillingSettings() {
                             </div>
                         </div>
                         <div className="bg-white/5 backdrop-blur-md rounded-[40px] p-10 border border-white/10 text-right min-w-[280px]">
-                            <div className="text-6xl font-black text-white tracking-tighter leading-none italic">$0<span className="text-2xl text-slate-400 ml-1">/mo</span></div>
-                            <p className="text-slate-400 font-black uppercase tracking-widest text-[11px] opacity-80 mt-2 flex items-center justify-end gap-2">
+                            <div className="text-6xl font-bold text-white tracking-tighter leading-none italic">$0<span className="text-2xl text-slate-400 ml-1">/mo</span></div>
+                            <p className="text-slate-400 font-bold uppercase tracking-widest text-[11px] opacity-80 mt-2 flex items-center justify-end gap-2">
                                 <Heart className="w-3 h-3 text-pink-500" /> All Features Unlocked
                             </p>
                         </div>

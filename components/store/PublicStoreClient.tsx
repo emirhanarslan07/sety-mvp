@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import {
     Mail,
@@ -34,10 +34,13 @@ import {
     DollarSign,
     Zap,
     Check,
-    Loader2
+    Loader2,
+    X,
+    Lock,
+    ExternalLink,
+    ArrowRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { SetyLogo } from '@/components/ui/SetyLogo';
 import { supabase } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/utils/format';
@@ -68,25 +71,13 @@ const DEFAULT_COVERS: Record<string, string[]> = {
         'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=2670&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1542435503-956c469947f6?q=80&w=2574&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1557683311-eac922347aa1?q=80&w=2629&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=2670&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=2670&auto=format&fit=crop',
     ],
     coaching_call: [
         'https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2669&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2670&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2670&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2670&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=2574&auto=format&fit=crop',
     ],
     external_link: [
         'https://images.unsplash.com/photo-1512758684065-94ed158f5612?q=80&w=2574&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2672&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1614850715649-1d0106293bd1?q=80&w=2670&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2670&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2670&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1520869562399-e772f042f422?q=80&w=2673&auto=format&fit=crop',
     ]
 };
 
@@ -103,120 +94,16 @@ const getFallbackIcon = (type: string) => {
     }
 };
 
-const LeadMagnetBlock = ({ product, theme_id, brand_color, buttonRadius, cardRadius, profile }: any) => {
-    const [email, setEmail] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const isDarkTheme = ['premium', 'midnight-neon', 'luxury-gold', 'cyber-future'].includes(theme_id);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!email) return;
-        setLoading(true);
-        try {
-            const res = await fetch('/api/lead-capture', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    store_id: profile.id,
-                    block_id: product.id,
-                    email,
-                    name: email.split('@')[0]
-                })
-            });
-            if (res.ok) {
-                setSuccess(true);
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const IconComponent = iconMap[product.icon_id as string] || getFallbackIcon(product.type);
-
-    return (
-        <motion.div
-            variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
-            className={cn(
-                "p-8 border shadow-sm flex flex-col gap-6 transition-all",
-                theme_id === 'neo-brutalist' ? "rounded-xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] bg-white text-slate-900" : cardRadius,
-                isDarkTheme
-                    ? "bg-white/5 border-white/10 text-white" 
-                : theme_id === 'arctic-glass'
-                    ? "bg-white/40 border-white/40 backdrop-blur-lg text-slate-900"
-                : theme_id === 'dreamy-mesh'
-                    ? "bg-white/50 border-white/40 backdrop-blur-md text-slate-900"
-                : theme_id === 'soft-clay'
-                    ? "bg-[#F0F2F5] border-transparent shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] text-slate-900"
-                : "bg-white border-white/60 text-slate-900"
-            )}
-        >
-            <div className="flex items-start gap-5">
-                <div className="w-20 h-20 rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0 flex items-center justify-center relative">
-                    {product.image_url ? (
-                        <Image src={product.image_url} fill className="object-cover" alt="" />
-                    ) : (
-                        <IconComponent className="w-8 h-8" style={{ color: brand_color }} />
-                    )}
-                </div>
-                <div className="flex-1">
-                    <h3 className={cn(
-                        "text-[18px] font-black leading-tight mb-2",
-                        isDarkTheme ? "text-white" : "text-slate-900"
-                    )}>{product.title}</h3>
-                    {product.subtitle && (
-                        <p className={cn(
-                            "text-[14px] font-medium leading-relaxed",
-                            isDarkTheme ? "text-white/60" : "text-slate-400"
-                        )}>{product.subtitle}</p>
-                    )}
-                </div>
-            </div>
-
-            {success ? (
-                <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 p-4 rounded-xl font-bold">
-                    <Check className="w-5 h-5" />
-                    <span className="text-[13px]">E-postanıza gönderildi! Lütfen gelen kutunuzu kontrol edin.</span>
-                </div>
-            ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-                    <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="E-posta adresiniz"
-                        className={cn(
-                            "w-full h-14 px-6 outline-none border transition-all font-bold text-sm",
-                            theme_id === 'neo-brutalist' ? "rounded-lg border-2 border-black text-black placeholder:text-slate-400 bg-white" : buttonRadius,
-                            isDarkTheme
-                                ? "bg-white/5 border-white/10 text-white placeholder:text-slate-650 focus:bg-white/10 focus:border-white/20"
-                                : "bg-slate-50 border-slate-100 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-primary/20"
-                        )}
-                    />
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={cn(
-                            "w-full h-14 text-white font-black text-sm tracking-wider uppercase transition-all shadow-md active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2",
-                            theme_id === 'neo-brutalist' ? "rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-black" : buttonRadius
-                        )}
-                        style={{ 
-                            backgroundColor: brand_color, 
-                            boxShadow: theme_id !== 'neo-brutalist' ? `0 10px 30px -5px ${brand_color}33` : undefined,
-                            color: ['midnight-neon', 'luxury-gold', 'cyber-future', 'neo-brutalist'].includes(theme_id) && 
-                                   (['#c4ff00', '#ffffff', '#facb15', '#fbbf24', '#06b6d4'].includes(brand_color.toLowerCase())) 
-                                   ? '#000' : '#fff'
-                        }}
-                    >
-                        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (product.button_text || 'İNDİR')}
-                    </button>
-                </form>
-            )}
-        </motion.div>
-    );
+const formatTypeLabel = (type: string) => {
+    switch (type) {
+        case 'digital_product': return 'DİJİTAL İNDİRME';
+        case 'coaching_call': return 'BİREBİR KOÇLUK';
+        case 'video_response': return 'VİDEO YANIT';
+        case 'lead_magnet': return 'ÜCRETSİZ REHBER';
+        case 'collect_emails': return 'E-BÜLTEN';
+        case 'external_link': return 'BAĞLANTI';
+        default: return type.replace('_', ' ').toUpperCase();
+    }
 };
 
 interface PublicStoreClientProps {
@@ -236,9 +123,14 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
     const [selectedProduct, setSelectedProduct] = useState<any>(null);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [isShareOpen, setIsShareOpen] = useState(false);
+    const [showBanner, setShowBanner] = useState(true);
+
+    // Lead capture states for inline blocks
+    const [leadEmails, setLeadEmails] = useState<Record<string, string>>({});
+    const [leadLoading, setLeadLoading] = useState<Record<string, boolean>>({});
+    const [leadSuccess, setLeadSuccess] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
-        // If we don't have initial data, fetch it (fallback)
         if (!initialProfile) {
             const fetchStore = async () => {
                 const username = params.username as string;
@@ -256,7 +148,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
                 const { data: profileData } = await supabase
                     .from('user_profiles')
-                    .select('full_name, profile_image_url, is_verified')
+                    .select('full_name, profile_image_url, is_verified, payment_url')
                     .eq('user_id', storeData.user_id)
                     .single();
 
@@ -265,6 +157,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                     full_name: profileData?.full_name,
                     profile_image_url: profileData?.profile_image_url || storeData.store_logo_url,
                     is_verified: profileData?.is_verified,
+                    payment_url: profileData?.payment_url || storeData.payment_url,
                 });
 
                 const { data: productsData } = await supabase
@@ -282,7 +175,6 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
         }
     }, [params.username, initialProfile]);
 
-    // Track initial page view on client-side
     useEffect(() => {
         if (profile) {
             fetch('/api/analytics/track', {
@@ -293,14 +185,13 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                     event_type: 'store_view'
                 })
             }).catch(console.error);
-
         }
     }, [profile?.id, profile?.username]);
 
     const handleProductClick = (product: any) => {
         setSelectedProduct(product);
         setIsSheetOpen(true);
-        
+
         fetch('/api/analytics/track', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -316,12 +207,11 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
             store_id: profile?.id,
             event_name: 'product_view',
             product_id: product.id,
-            metadata: { visitor_id: localStorage.getItem('s_vid') }
+            metadata: { visitor_id: typeof window !== 'undefined' ? localStorage.getItem('s_vid') : null }
         }]);
     };
 
     const handlePurchase = async (product: any, email?: string) => {
-        // Also count as click just in case
         fetch('/api/analytics/track', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -337,9 +227,9 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
             store_id: profile?.id,
             event_name: 'purchase_captured',
             product_id: product.id,
-            metadata: { 
+            metadata: {
                 email,
-                visitor_id: localStorage.getItem('s_vid') 
+                visitor_id: typeof window !== 'undefined' ? localStorage.getItem('s_vid') : null
             }
         }]);
 
@@ -361,7 +251,6 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
             return;
         }
 
-        // If it's manual, we don't open a link, the details are shown in the bottom sheet success state
         const checkoutUrl = product.external_checkout_url || profile?.payment_url;
         if (checkoutUrl && product.checkout_provider !== 'manual') {
             let url = checkoutUrl;
@@ -372,16 +261,42 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
         }
     };
 
+    const handleInlineLeadSubmit = async (e: React.FormEvent, product: any) => {
+        e.preventDefault();
+        const email = leadEmails[product.id];
+        if (!email) return;
+
+        setLeadLoading(prev => ({ ...prev, [product.id]: true }));
+        try {
+            const res = await fetch('/api/lead-capture', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    store_id: profile.id,
+                    block_id: product.id,
+                    email,
+                    name: email.split('@')[0]
+                })
+            });
+            if (res.ok) {
+                setLeadSuccess(prev => ({ ...prev, [product.id]: true }));
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLeadLoading(prev => ({ ...prev, [product.id]: false }));
+        }
+    };
+
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#f5f5f5] flex">
-                <div className="w-full md:w-2/5 flex flex-col items-center justify-center py-20 gap-6">
-                    <div className="w-48 h-48 rounded-full bg-slate-200 animate-pulse" />
-                    <div className="h-7 w-40 rounded-xl bg-slate-200 animate-pulse" />
-                </div>
-                <div className="flex-1 py-16 px-10 grid grid-cols-2 gap-4 items-start">
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="h-20 rounded-2xl bg-slate-200 animate-pulse" />
+            <div className="min-h-screen bg-white flex flex-col items-center justify-center py-20 px-4">
+                <div className="w-24 h-24 rounded-full bg-slate-100 animate-pulse mb-6" />
+                <div className="h-8 w-48 rounded-xl bg-slate-100 animate-pulse mb-3" />
+                <div className="h-4 w-64 rounded-xl bg-slate-100 animate-pulse mb-8" />
+                <div className="w-full max-w-xl space-y-4">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="h-28 rounded-2xl bg-slate-100 animate-pulse" />
                     ))}
                 </div>
             </div>
@@ -390,363 +305,273 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#f5f5f5] flex flex-col items-center justify-center p-6 text-center">
-                <h1 className="text-3xl font-black text-slate-900 mb-3">Mağaza Bulunamadı</h1>
-                <p className="text-slate-500 mb-8">Aradığınız kullanıcıya ait bir mağaza bulunamadı.</p>
-                <Button onClick={() => router.push('/')} className="bg-[#5500ff] rounded-2xl h-12 px-8 font-black text-white">
+            <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
+                <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-slate-400">
+                    <Box className="w-8 h-8" />
+                </div>
+                <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Mağaza Bulunamadı</h1>
+                <p className="text-slate-500 mb-6 text-sm">Aradığınız kullanıcıya ait bir mağaza bulunamadı veya kapatılmış olabilir.</p>
+                <Button onClick={() => router.push('/')} className="bg-[#5500FF] rounded-xl h-11 px-6 font-bold text-white hover:bg-[#4400cc]">
                     Ana Sayfaya Dön
                 </Button>
             </div>
         );
     }
 
-    const {
-        brand_color = '#5500ff',
-        font_family = 'Inter',
-        button_style = 'rounded',
-        announcement_text,
-        show_affiliate_badge = true,
-        cover_image_url,
-    } = profile || {};
+    const displayName = profile?.display_name || profile?.full_name || `@${profile?.username}`;
+    const announcementText = profile?.announcement_text || 'Bu hafta tüm e-kitap ve rehberlerde özel fırsat';
+    const socialPlatforms = [
+        { key: 'twitter', icon: Twitter, href: profile?.twitter || profile?.social_links?.twitter || profile?.social_links?.x, label: 'Twitter' },
+        { key: 'instagram', icon: Instagram, href: profile?.instagram || profile?.social_links?.instagram, label: 'Instagram' },
+        { key: 'youtube', icon: Youtube, href: profile?.youtube || profile?.social_links?.youtube, label: 'YouTube' },
+        { key: 'globe', icon: Globe, href: profile?.globe || profile?.website || profile?.social_links?.globe || profile?.social_links?.website, label: 'Website' },
+    ];
 
-    const theme_id = 'arctic-glass' as string;
+    const socialItems = socialPlatforms.filter(
+        s => typeof s.href === 'string' && s.href.trim().length > 0
+    );
 
-    const fontStyles = ({
-        'Inter': 'font-inter',
-        'Plus Jakarta': 'font-plus_jakarta',
-        'Outfit': 'font-outfit',
-        'Space Mono': 'font-space_mono',
-        'Playfair': 'font-playfair',
-        'Montserrat': 'font-montserrat',
-        'Poppins': 'font-poppins',
-        'Lexend': 'font-lexend',
-    } as Record<string, string>)[font_family] || 'font-sans';
-
-    const buttonRadius = ({
-        'rounded': 'rounded-full',
-        'semi': 'rounded-xl',
-        'sharp': 'rounded-none'
-    } as Record<string, string>)[button_style] || 'rounded-full';
-
-    const cardRadius = ({
-        'rounded': 'rounded-[24px]',
-        'semi': 'rounded-2xl',
-        'sharp': 'rounded-none'
-    } as Record<string, string>)[button_style] || 'rounded-[24px]';
-
-    const isDarkTheme = ['premium', 'midnight-neon', 'luxury-gold', 'cyber-future'].includes(theme_id);
-
-    const getSocialIcon = (platform: string) => {
-        const p = platform.toLowerCase();
-        if (p.includes('instagram')) return Instagram;
-        if (p.includes('youtube')) return Youtube;
-        if (p.includes('twitter') || p.includes('x')) {
-            const TwitterIcon = (props: any) => (
-                <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-                    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-                </svg>
-            );
-            return TwitterIcon;
-        }
-        if (p.includes('facebook')) return Facebook;
-        if (p.includes('linkedin')) return Linkedin;
-        if (p.includes('github')) return Github;
-        if (p.includes('tiktok')) return Music2;
-        if (p.includes('whatsapp')) return MessageCircle;
-        if (p.includes('telegram')) return Send;
-        return Globe;
-    };
+    // If no social links configured, show Instagram/YouTube placeholders or leave empty
+    const visibleProducts = products.filter(p => p.status === 'active');
+    const featuredProduct = visibleProducts.length > 0 ? visibleProducts[0] : null;
+    const remainingProducts = visibleProducts.length > 1 ? visibleProducts.slice(1) : [];
 
     return (
-        <div className={cn(
-            "min-h-screen text-slate-900 relative overflow-hidden",
-            fontStyles,
-            theme_id === 'luxury-gold' && 'font-playfair',
-            isDarkTheme ? "bg-[#0A0B10] text-white" :
-            theme_id === 'arctic-glass' ? "bg-[#F4F7FF]" :
-            theme_id === 'sunset-pastel' ? "bg-gradient-to-br from-[#FF3B8E] via-[#FF5DA2] to-[#FF9DC2]" :
-            theme_id === 'dreamy-mesh' ? "bg-[#f8f7ff]" :
-            theme_id === 'soft-clay' ? "bg-[#F0F2F5]" :
-            theme_id === 'neo-brutalist' ? "bg-[#FACC15]" :
-            theme_id === 'modern' ? "bg-indigo-50/30" :
-            theme_id === 'vibrant' ? "bg-slate-50" : "bg-white"
-        )}>
-            {/* Announcement Bar */}
-            {announcement_text && (
-                <div
-                    className="w-full py-2.5 px-4 text-[12px] font-black text-center sticky top-0 z-50 shadow-sm"
-                    style={{ backgroundColor: brand_color, color: '#fff' }}
-                >
-                    {announcement_text}
-                </div>
-            )}
-
-            {/* Banner */}
-            {cover_image_url && (
-                <div className="w-full h-48 md:h-64 overflow-hidden relative">
-                    <Image
-                        src={cover_image_url}
-                        alt="Cover"
-                        fill
-                        className="object-cover"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
-                </div>
-            )}
-
-            {/* Theme Background Effects */}
-            {theme_id === 'arctic-glass' && (
-                <>
-                    <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-blue-300/20 blur-[120px] pointer-events-none" />
-                    <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-purple-300/20 blur-[100px] pointer-events-none" />
-                </>
-            )}
-            {theme_id === 'midnight-neon' && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-[#C4FF00]/5 blur-[150px] pointer-events-none" />
-            )}
-            {theme_id === 'dreamy-mesh' && (
-                <>
-                    <div className="absolute top-[10%] left-[10%] w-[350px] h-[350px] rounded-full bg-purple-300/20 blur-[100px] pointer-events-none" />
-                    <div className="absolute top-[40%] right-[5%] w-[300px] h-[300px] rounded-full bg-blue-300/15 blur-[100px] pointer-events-none" />
-                    <div className="absolute bottom-[10%] left-[30%] w-[250px] h-[250px] rounded-full bg-pink-300/15 blur-[80px] pointer-events-none" />
-                </>
-            )}
-            {theme_id === 'cyber-future' && (
-                <div
-                    className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                    style={{
-                        backgroundImage: 'linear-gradient(rgba(6,182,212,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.3) 1px, transparent 1px)',
-                        backgroundSize: '40px 40px'
-                    }}
-                />
-            )}
-
-            <div className={cn(
-                "flex flex-col md:flex-row min-h-screen pb-16 relative",
-                cover_image_url ? "-mt-16 md:-mt-24" : ""
-            )}>
-
-                {/* ═══ LEFT PANEL ═══ */}
-                <div className="w-full md:w-[38%] lg:w-[35%] md:h-screen md:sticky md:top-0 flex flex-col items-center justify-center py-16 px-6 shrink-0 relative">
-                    <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="flex flex-col items-center gap-5 text-center"
+        <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-[#5500FF]/10 selection:text-[#5500FF] relative">
+            {/* Announcement Banner */}
+            {showBanner && profile?.announcement_text && (
+                <div className="relative z-50 flex items-center justify-center bg-[#5500FF] text-white px-6 py-2.5 text-center text-[12px] font-bold uppercase tracking-[0.1em] shadow-sm">
+                    <span>{profile.announcement_text}</span>
+                    <button
+                        onClick={() => setShowBanner(false)}
+                        aria-label="Kapat"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100 transition-opacity p-1"
                     >
-                        {/* Avatar */}
-                        <div className={cn(
-                            "w-44 h-44 overflow-hidden shadow-2xl border-4 bg-white shrink-0 relative z-10",
-                            theme_id === 'neo-brutalist' ? "rounded-2xl border-black border-[3px] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" : "rounded-full",
-                            isDarkTheme ? "border-white/10" :
-                            theme_id === 'arctic-glass' ? "border-white/60" :
-                            theme_id === 'sunset-pastel' ? "border-white/80" :
-                            theme_id === 'soft-clay' ? "border-[#F0F2F5] shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff]" :
-                            "border-white"
-                        )}>
-                            {profile.profile_image_url ? (
+                        <X className="h-4 w-4" />
+                    </button>
+                </div>
+            )}
+
+            {/* Ambient subtle glow */}
+            <div className="pointer-events-none absolute left-1/2 top-0 h-[450px] w-[450px] -translate-x-1/2 rounded-full bg-[#5500FF]/5 blur-[120px]" />
+
+            <main className="relative mx-auto flex w-full max-w-xl flex-col items-center px-4 sm:px-6 pt-12 pb-24">
+                {/* ═══ PROFILE HEADER ═══ */}
+                <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="flex flex-col items-center text-center w-full mb-8"
+                >
+                    {/* Avatar with Glow */}
+                    <div className="group relative mb-5">
+                        <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-[#5500FF] to-[#C4FF00] opacity-30 blur-md transition duration-500 group-hover:opacity-60" />
+                        <div className="relative h-24 w-24 sm:h-28 sm:w-28 rounded-full border-2 border-white shadow-xl overflow-hidden bg-white">
+                            {profile?.profile_image_url ? (
                                 <Image
                                     src={profile.profile_image_url}
-                                    alt={profile.display_name || profile.full_name}
+                                    alt={displayName}
                                     fill
                                     className="object-cover"
+                                    priority
                                 />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-slate-100 text-slate-300 text-6xl font-black uppercase">
-                                    {(profile.display_name || profile.username)?.[0]}
+                                <div className="w-full h-full flex items-center justify-center bg-slate-100 text-slate-400 font-black text-3xl">
+                                    {displayName[0]?.toUpperCase() || 'S'}
                                 </div>
                             )}
-                        </div>
-
-                        {/* Name */}
-                        <div className="flex items-center justify-center gap-2">
-                            <h1 className={cn(
-                                "text-[32px] font-black tracking-tight leading-tight",
-                                isDarkTheme ? "text-white" :
-                                theme_id === 'sunset-pastel' ? "text-white" :
-                                theme_id === 'luxury-gold' ? "font-serif" :
-                                "text-slate-900"
-                            )}>
-                                {profile.display_name || profile.full_name || `@${profile.username}`}
-                            </h1>
-                            {profile.is_verified && (
-                                <div className="flex items-center justify-center p-1 bg-[#5500ff] rounded-full shadow-lg">
-                                    <Zap className="w-3 h-3 text-[#C4FF00] fill-[#C4FF00]" />
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Bio */}
-                        {profile.bio && (
-                            <p className={cn(
-                                "text-[16px] font-medium leading-relaxed max-w-[280px]",
-                                isDarkTheme ? "text-slate-400" :
-                                theme_id === 'sunset-pastel' ? "text-white/80" :
-                                "text-slate-500"
-                            )}>
-                                {profile.bio}
-                            </p>
-                        )}
-
-                        {/* Social icons */}
-                        <div className="flex items-center gap-6 pt-2">
-                            {Object.entries(profile.social_links || {}).map(([platform, link]: any) => {
-                                if (!link) return null;
-                                const Icon = getSocialIcon(platform);
-                                return (
-                                    <a
-                                        key={platform}
-                                        href={link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={cn(
-                                            "transition-all hover:scale-110",
-                                            isDarkTheme ? "text-slate-500 hover:text-white" :
-                                            theme_id === 'sunset-pastel' ? "text-white/70 hover:text-white" :
-                                            "text-slate-400 hover:text-slate-900"
-                                        )}
-                                    >
-                                        <Icon className="w-[24px] h-[24px]" strokeWidth={2} />
-                                    </a>
-                                );
-                            })}
-                        </div>
-                    </motion.div>
-                </div>
-
-                {/* ═══ RIGHT PANEL ═══ */}
-                <div className="flex-1 md:h-screen overflow-y-auto py-10 md:py-24 px-4 md:px-10 lg:px-20 scrollbar-hide">
-                    <div className="max-w-[800px] mx-auto">
-                        {products.length === 0 ? (
-                            <div className="py-24 text-center text-slate-400 font-bold opacity-30">
-                                <Box className="w-12 h-12 mx-auto mb-4" />
-                                <p>Henüz ürün eklenmemiş.</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 gap-4">
-                                <motion.div
-                                    initial="hidden"
-                                    animate="visible"
-                                    variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
-                                    className="flex flex-col gap-4"
-                                >
-                                    {products.map((product) => {
-                                        const IconComponent = iconMap[product.icon_id as string] || Box;
-                                        const isEmail = product.type === 'collect_emails' || product.type === 'lead_magnet';
-
-                                        if (isEmail) {
-                                            return (
-                                                <LeadMagnetBlock 
-                                                    key={product.id}
-                                                    product={product}
-                                                    theme_id={theme_id}
-                                                    brand_color={brand_color}
-                                                    buttonRadius={buttonRadius}
-                                                    cardRadius={cardRadius}
-                                                    profile={profile}
-                                                />
-                                            );
-                                        }
-
-                                        return (
-                                            <motion.div
-                                                key={product.id}
-                                                variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-                                                onClick={() => handleProductClick(product)}
-                                                className={cn(
-                                                    "group p-4 border cursor-pointer flex items-center gap-4 transition-all duration-300 active:scale-[0.99] hover:-translate-y-0.5 shadow-sm",
-                                                    theme_id === 'neo-brutalist' ? "rounded-xl" : cardRadius,
-                                                    isDarkTheme
-                                                        ? "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
-                                                    : theme_id === 'arctic-glass'
-                                                        ? "bg-white/40 border-white/40 backdrop-blur-lg hover:bg-white/60"
-                                                    : theme_id === 'sunset-pastel'
-                                                        ? "bg-white border-transparent shadow-md hover:shadow-lg"
-                                                    : theme_id === 'dreamy-mesh'
-                                                        ? "bg-white/50 border-white/40 backdrop-blur-md hover:bg-white/70"
-                                                    : theme_id === 'soft-clay'
-                                                        ? "bg-[#F0F2F5] border-transparent shadow-[4px_4px_8px_#d1d9e6,-4px_-4px_8px_#ffffff] hover:shadow-[6px_6px_12px_#d1d9e6,-6px_-6px_12px_#ffffff]"
-                                                    : theme_id === 'neo-brutalist'
-                                                        ? "bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1"
-                                                    : "bg-white border-white/60 hover:shadow-xl hover:shadow-slate-200/50"
-                                                )}
-                                            >
-                                                <div className={cn(
-                                                    "w-16 h-16 bg-slate-50 flex-shrink-0 overflow-hidden flex items-center justify-center relative",
-                                                    theme_id === 'neo-brutalist' ? "rounded-lg border-2 border-black" : "rounded-2xl border border-slate-100"
-                                                )}>
-                                                    <Image
-                                                        src={product.image_url || DEFAULT_COVERS[product.type]?.[0] || DEFAULT_COVERS['digital_product'][0]}
-                                                        fill
-                                                        className="object-cover"
-                                                        alt=""
-                                                    />
-                                                </div>
-
-                                                <div className="flex-1 flex items-center justify-between gap-4">
-                                                    <div className="min-w-0">
-                                                        <h3 className={cn(
-                                                            "text-[16px] font-black tracking-tight leading-tight mb-1 truncate",
-                                                            isDarkTheme ? "text-white" : "text-slate-900"
-                                                        )}>
-                                                            {product.title}
-                                                        </h3>
-                                                        {product.subtitle && (
-                                                            <p className={cn(
-                                                                "text-[12px] font-medium truncate max-w-[140px] md:max-w-xs",
-                                                                isDarkTheme ? "text-white/40" : "text-slate-400"
-                                                            )}>{product.subtitle}</p>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex items-center gap-3 shrink-0">
-                                                        <div
-                                                            className={cn(
-                                                                "h-10 px-5 flex items-center justify-center font-black text-xs transition-all shadow-sm group-hover:scale-[1.02]",
-                                                                theme_id === 'neo-brutalist' ? "rounded-lg border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] text-black" : buttonRadius
-                                                            )}
-                                                            style={{
-                                                                backgroundColor: brand_color,
-                                                                color: ['midnight-neon', 'luxury-gold', 'cyber-future', 'neo-brutalist'].includes(theme_id) && 
-                                                                       (['#c4ff00', '#ffffff', '#facb15', '#fbbf24', '#06b6d4', '#000000', '#000'].includes(brand_color.toLowerCase())) 
-                                                                       ? '#000' : '#fff'
-                                                            }}
-                                                        >
-                                                            {product.price === 0 ? (t('public.free') || 'FREE') : formatCurrency(product.price, product.currency || 'USD')}
-                                                        </div>
-                                                        <ChevronRight className={cn(
-                                                            "w-4 h-4 transition-all opacity-20 group-hover:opacity-60",
-                                                            isDarkTheme ? "text-white" : "text-slate-900"
-                                                        )} />
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        );
-                                    })}
-                                </motion.div>
-                            </div>
-                        )}
-
-                        <div className="mt-20 flex justify-center pb-32">
-                            <Link
-                                href="/privacy"
-                                className={cn(
-                                    "px-6 py-2.5 rounded-full text-[12px] font-bold transition-all",
-                                    isDarkTheme ? "bg-white/5 text-white/30 hover:text-white/60" :
-                                    theme_id === 'sunset-pastel' ? "bg-white/20 text-white/60 hover:text-white/80" :
-                                    theme_id === 'neo-brutalist' ? "bg-black text-white hover:bg-gray-800" :
-                                    "bg-slate-100 text-slate-400 hover:bg-slate-200"
-                                )}
-                            >
-                                Privacy Policy
-                            </Link>
                         </div>
                     </div>
+
+                    {/* Creator Display Name (Instrument Serif editorial style) */}
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                        <h1 className="font-serif-display text-4xl sm:text-5xl md:text-6xl tracking-tight text-slate-900 leading-[1.05]">
+                            {displayName}
+                        </h1>
+                        {profile?.is_verified && (
+                            <span className="inline-flex items-center justify-center p-1 bg-[#5500FF] text-[#C4FF00] rounded-full shadow-sm" title="Doğrulanmış İçerik Üretici">
+                                <Zap className="w-3.5 h-3.5 fill-[#C4FF00]" />
+                            </span>
+                        )}
+                    </div>
+
+                    {/* Bio */}
+                    {profile?.bio && (
+                        <p className="max-w-md text-center text-[15px] sm:text-[16px] leading-relaxed text-slate-500 font-normal mb-6">
+                            {profile.bio}
+                        </p>
+                    )}
+
+                    {/* Social Media Pills */}
+                    {socialItems.length > 0 && (
+                        <div className="flex items-center justify-center flex-wrap gap-2.5 mb-2">
+                            {socialItems.map(({ icon: Icon, href, label }) => (
+                                <a
+                                    key={label}
+                                    href={href.startsWith('http://') || href.startsWith('https://') ? href : `https://${href}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/90 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-200 hover:border-[#5500FF]/40 hover:bg-[#5500FF]/5 hover:text-[#5500FF] hover:scale-105"
+                                    aria-label={label}
+                                >
+                                    <Icon className="h-4 w-4" />
+                                </a>
+                            ))}
+                        </div>
+                    )}
+                </motion.div>
+
+                {/* ═══ PRODUCT CARDS FEED ═══ */}
+                <div className="w-full space-y-4">
+                    {visibleProducts.length === 0 ? (
+                        <div className="rounded-3xl border border-dashed border-slate-200 p-12 text-center text-slate-400">
+                            <Box className="w-10 h-10 mx-auto mb-3 opacity-40" />
+                            <p className="text-sm font-semibold">Bu mağazada henüz ürün bulunmuyor.</p>
+                        </div>
+                    ) : (
+                        visibleProducts.map((product, idx) => {
+                            const isEmailBlock = product.type === 'collect_emails' || product.type === 'lead_magnet';
+                            const IconComponent = iconMap[product.icon_id as string] || getFallbackIcon(product.type);
+                            const fallbackCover = DEFAULT_COVERS[product.type]?.[0] || DEFAULT_COVERS.digital_product[0];
+                            const coverSrc = product.image_url || fallbackCover;
+                            const isLeadDone = leadSuccess[product.id];
+                            const isLeadSubmitting = leadLoading[product.id];
+
+                            // Inline Lead Magnet Card
+                            if (isEmailBlock) {
+                                return (
+                                    <motion.div
+                                        key={product.id}
+                                        initial={{ opacity: 0, y: 15 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.35, delay: idx * 0.05 }}
+                                        className="relative overflow-hidden rounded-[24px] border border-slate-200/90 bg-white p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-[#5500FF]/30 hover:shadow-lg"
+                                    >
+                                        <div className="flex items-start gap-4 mb-4">
+                                            <div className="w-14 h-14 rounded-2xl bg-[#5500FF]/10 text-[#5500FF] flex items-center justify-center shrink-0 border border-[#5500FF]/15">
+                                                <IconComponent className="w-6 h-6" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-[#5500FF] mb-1">
+                                                    {formatTypeLabel(product.type)}
+                                                </span>
+                                                <h3 className="text-lg font-bold text-slate-900 leading-snug">
+                                                    {product.title}
+                                                </h3>
+                                                {product.subtitle && (
+                                                    <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
+                                                        {product.subtitle}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {isLeadDone ? (
+                                            <div className="flex items-center gap-2.5 rounded-xl bg-emerald-50 border border-emerald-200/70 p-3.5 text-emerald-700 text-xs font-bold">
+                                                <Check className="w-4 h-4 shrink-0" />
+                                                <span>Harika! İndirme bağlantısı e-posta adresine gönderildi.</span>
+                                            </div>
+                                        ) : (
+                                            <form onSubmit={(e) => handleInlineLeadSubmit(e, product)} className="flex flex-col sm:flex-row gap-2.5 mt-2">
+                                                <input
+                                                    type="email"
+                                                    required
+                                                    value={leadEmails[product.id] || ''}
+                                                    onChange={(e) => setLeadEmails(prev => ({ ...prev, [product.id]: e.target.value }))}
+                                                    placeholder="E-posta adresini gir..."
+                                                    className="flex-1 h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-[#5500FF] focus:bg-white focus:ring-2 focus:ring-[#5500FF]/10 transition-all font-medium"
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    disabled={isLeadSubmitting}
+                                                    className="h-11 px-5 rounded-xl bg-[#5500FF] hover:bg-[#4400cc] active:scale-[0.98] text-white text-xs font-bold tracking-wide uppercase shadow-md shadow-[#5500FF]/20 transition-all flex items-center justify-center gap-2 shrink-0 disabled:opacity-60"
+                                                >
+                                                    {isLeadSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : (product.button_text || 'Hemen İndir')}
+                                                </button>
+                                            </form>
+                                        )}
+                                    </motion.div>
+                                );
+                            }
+
+                            // Standard Modern High-Converting Product Card
+                            return (
+                                <motion.div
+                                    key={product.id}
+                                    initial={{ opacity: 0, y: 15 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.35, delay: idx * 0.05 }}
+                                    onClick={() => handleProductClick(product)}
+                                    className="group relative cursor-pointer overflow-hidden rounded-[24px] border border-slate-200/90 bg-white p-4 sm:p-5 shadow-[0_2px_12px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-[#5500FF]/40 hover:shadow-[0_12px_32px_rgba(85,0,255,0.08)] hover:-translate-y-0.5 active:scale-[0.99] flex flex-col sm:flex-row sm:items-center gap-4"
+                                >
+                                    {/* Thumbnail Image */}
+                                    <div className="relative w-full sm:w-24 h-44 sm:h-24 rounded-2xl overflow-hidden bg-slate-100 border border-slate-100/80 shrink-0">
+                                        <Image
+                                            src={coverSrc}
+                                            alt={product.title}
+                                            fill
+                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                        <div className="absolute top-2 left-2 sm:hidden">
+                                            <span className="rounded-full bg-white/90 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold text-[#5500FF] shadow-sm">
+                                                {formatTypeLabel(product.type)}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                                        <div className="hidden sm:block mb-1">
+                                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5500FF]">
+                                                {formatTypeLabel(product.type)}
+                                            </span>
+                                        </div>
+                                        <h3 className="font-sans text-[17px] sm:text-[18px] font-bold text-slate-900 leading-snug group-hover:text-[#5500FF] transition-colors line-clamp-1">
+                                            {product.title}
+                                        </h3>
+                                        {product.subtitle && (
+                                            <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 mt-0.5 leading-relaxed">
+                                                {product.subtitle}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Price & Action */}
+                                    <div className="flex items-center justify-between sm:flex-col sm:items-end sm:justify-center gap-2 pt-2 sm:pt-0 border-t border-slate-100 sm:border-0 shrink-0">
+                                        <div className="text-base sm:text-lg font-black text-slate-900 tracking-tight font-sans">
+                                            {product.price === 0 ? 'ÜCRETSİZ' : formatCurrency(product.price, product.currency || 'TRY')}
+                                        </div>
+                                        <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-900 group-hover:bg-[#5500FF] text-white px-4 py-2 text-xs font-bold transition-all shadow-sm group-hover:shadow-md">
+                                            <span>Satın Al</span>
+                                            <ChevronRight className="h-3.5 w-3.5 stroke-[2.5]" />
+                                        </span>
+                                    </div>
+                                </motion.div>
+                            );
+                        })
+                    )}
                 </div>
-            </div>
 
+                {/* ═══ FOOTER BADGE ═══ */}
+                <div className="mt-16 flex flex-col items-center gap-3 text-center">
+                    <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
+                        <Lock className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Güvenli Ödeme · Shopier & Kart Korumalı</span>
+                    </div>
 
+                    <a
+                        href="https://sety.store"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white px-3.5 py-1.5 shadow-sm transition-all hover:border-[#5500FF]/40 hover:bg-slate-50"
+                    >
+                        <span className="text-[11px] font-semibold text-slate-400">Powered by</span>
+                        <span className="font-sans text-[12px] font-black tracking-tight text-[#5500FF]">SETY</span>
+                    </a>
+                </div>
+            </main>
 
+            {/* Bottom Sheet for Product Purchase / Lead Capture */}
             <ProductBottomSheet
                 isOpen={isSheetOpen}
                 onClose={() => setIsSheetOpen(false)}
@@ -754,6 +579,8 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                 profile={profile}
                 onPurchase={handlePurchase}
             />
+
+            {/* Story Card Generator Modal */}
             <StoryCardGenerator
                 isOpen={isShareOpen}
                 onClose={() => setIsShareOpen(false)}
