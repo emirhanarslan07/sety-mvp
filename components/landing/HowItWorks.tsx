@@ -116,7 +116,7 @@ export function HowItWorks() {
                             <div className="p-5 bg-white border border-slate-100 rounded-3xl flex items-center justify-between shadow-xl group-hover:scale-[1.03] transition-all duration-500">
                                 <div className="flex items-center gap-3">
                                     <SetyLogo size="sm" className="w-8 h-8" />
-                                    <span className="text-xs font-bold text-slate-900 tracking-tight">sety.store/sarah</span>
+                                    <span className="text-xs font-bold text-slate-900 tracking-tight">sety.store/nova</span>
                                 </div>
                                 <ArrowUpRight className="w-4 h-4 text-primary" />
                             </div>
