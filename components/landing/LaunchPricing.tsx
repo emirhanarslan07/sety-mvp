@@ -18,46 +18,45 @@ export function LaunchPricing() {
     };
 
     return (
-        <section id="pricing" className="py-24 sm:py-32 md:py-40 bg-[#0F0F0F] relative overflow-hidden text-center selection:bg-[#7C3AED]/30 selection:text-white">
-            {/* Subtle purple gradient background effect (#1a0533 → #0F0F0F) */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#1a0533] via-[#0F0F0F] to-[#0F0F0F] pointer-events-none" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#7C3AED]/10 blur-[140px] rounded-full pointer-events-none" />
+        <section id="pricing" className="py-24 sm:py-32 md:py-36 bg-white relative overflow-hidden text-center border-t border-slate-100">
+            {/* Subtle soft ambient glow on white canvas */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#5500FF]/5 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="relative z-10 max-w-4xl mx-auto px-6 flex flex-col items-center">
-                {/* 1. Rozet/Badge: ⚡ Lansmana Özel (mor, rounded-full, küçük) */}
+                {/* 1. Rozet/Badge: ⚡ Lansmana Özel */}
                 <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4 }}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#7C3AED]/15 border border-[#7C3AED]/30 text-[#A78BFA] text-xs font-semibold mb-6 shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#5500FF]/10 border border-[#5500FF]/20 text-[#5500FF] text-xs font-bold mb-6 shadow-sm"
                 >
                     <span>⚡ Lansmana Özel</span>
                 </motion.div>
 
-                {/* 2. Büyük Başlık (font-extrabold, beyaz): "Lansman döneminde tamamen ücretsiz." */}
+                {/* 2. Büyük Başlık: "Lansman döneminde tamamen ücretsiz." */}
                 <motion.h2
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.05 }}
-                    className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#F5F5F5] tracking-tight leading-[1.1] mb-6 max-w-3xl font-sans"
+                    className="text-4xl sm:text-5xl md:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] mb-6 max-w-3xl font-sans"
                 >
                     Lansman döneminde tamamen ücretsiz.
                 </motion.h2>
 
-                {/* 3. Alt Başlık (zinc-400 rengi #A1A1AA) */}
+                {/* 3. Alt Başlık */}
                 <motion.p
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.1 }}
-                    className="text-[#A1A1AA] text-lg sm:text-xl font-normal leading-relaxed max-w-xl mb-10"
+                    className="text-slate-500 text-lg sm:text-xl font-medium leading-relaxed max-w-xl mb-10"
                 >
                     Komisyon yok. Aylık ücret yok. Kurulum ücreti yok.<br className="hidden sm:inline" /> Sadece mağazanı kur, sat.
                 </motion.p>
 
-                {/* 4. Tek bir CTA butonu (mor, büyük, tam genişlik veya ortalanmış): "Şimdi Başla — Kredi kartı gerekmez" */}
+                {/* 4. Tek bir CTA butonu */}
                 <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -67,30 +66,36 @@ export function LaunchPricing() {
                 >
                     <button
                         onClick={handleCTA}
-                        className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 rounded-2xl sm:rounded-full bg-[#7C3AED] hover:bg-[#6D28D9] text-[#F5F5F5] font-bold text-base sm:text-lg shadow-xl shadow-[#7C3AED]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] inline-flex items-center justify-center cursor-pointer"
+                        className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 rounded-2xl sm:rounded-full bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold text-base sm:text-lg shadow-xl shadow-[#5500FF]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] inline-flex items-center justify-center cursor-pointer"
                     >
                         Şimdi Başla — Kredi kartı gerekmez
                     </button>
                 </motion.div>
 
-                {/* 5. Altında 3 küçük ikon + metin (yatay sıra, zinc-500 rengi #71717A) */}
+                {/* 5. 3 ikonlu avantaj maddesi */}
                 <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: 0.2 }}
-                    className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-zinc-500 text-sm font-medium"
+                    className="mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-slate-500 text-sm font-semibold"
                 >
                     <div className="inline-flex items-center gap-2">
-                        <Check className="w-4 h-4 text-[#7C3AED]" strokeWidth={2.5} />
+                        <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
                         <span>2 dakikada kurulum</span>
                     </div>
                     <div className="inline-flex items-center gap-2">
-                        <Check className="w-4 h-4 text-[#7C3AED]" strokeWidth={2.5} />
+                        <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
                         <span>Sınırsız ürün</span>
                     </div>
                     <div className="inline-flex items-center gap-2">
-                        <Check className="w-4 h-4 text-[#7C3AED]" strokeWidth={2.5} />
+                        <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        </div>
                         <span>%0 komisyon</span>
                     </div>
                 </motion.div>
