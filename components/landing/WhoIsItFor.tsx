@@ -99,14 +99,15 @@ export function WhoIsItFor() {
                                 className="group relative bg-white rounded-[2.5rem] p-8 sm:p-10 border border-slate-100 hover:border-[#5500ff]/20 hover:shadow-xl transition-all duration-300 flex flex-col justify-between shadow-sm"
                             >
                                 <div>
-                                    {/* Icon & Target */}
-                                    <div className="flex items-start justify-between gap-4 mb-6">
-                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${useCase.iconBg} shadow-sm group-hover:scale-105 transition-transform`}>
+                                    {/* Icon & Target Audience */}
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-6">
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border ${useCase.iconBg} shadow-sm group-hover:scale-110 transition-transform shrink-0`}>
                                             <Icon className="w-7 h-7" />
                                         </div>
-                                        <span className="text-[11px] font-bold text-slate-400 bg-slate-50 border border-slate-100 px-3 py-1 rounded-full text-right">
-                                            {useCase.target}
-                                        </span>
+                                        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white shadow-sm border border-slate-800 self-start sm:self-auto">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kimler İçin:</span>
+                                            <span className="text-xs sm:text-[13px] font-black tracking-tight text-white">{useCase.target}</span>
+                                        </div>
                                     </div>
 
                                     {/* Title & Desc */}
@@ -122,7 +123,7 @@ export function WhoIsItFor() {
                                         {useCase.examples.map((ex, i) => (
                                             <span
                                                 key={i}
-                                                className="text-xs font-semibold text-slate-600 bg-slate-50/80 border border-slate-100 px-3 py-1 rounded-lg"
+                                                className="text-xs font-bold text-slate-700 bg-slate-100/90 border border-slate-200/80 px-3 py-1.5 rounded-lg"
                                             >
                                                 {ex}
                                             </span>
