@@ -19,10 +19,10 @@ const testimonials = [
         image: 'https://api.dicebear.com/7.x/micah/svg?seed=Mert&backgroundColor=c0aede',
     },
     {
-        name: 'Ayşegül Yılmaz',
+        name: 'Sarah Jenkins',
         roleKey: 2,
         followers: '32B',
-        image: '/aysegul.png',
+        image: '/creator.png',
     },
 ];
 

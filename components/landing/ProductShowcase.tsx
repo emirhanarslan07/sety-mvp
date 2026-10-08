@@ -103,14 +103,14 @@ export function ProductShowcase() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <Image
-                                    src="/aysegul.png"
+                                    src="/creator.png"
                                     width={40}
                                     height={40}
                                     alt="User"
                                     className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-md"
                                 />
                                 <div>
-                                    <div className="text-[13px] font-[900] text-gray-900 leading-none">aysegul_fitness</div>
+                                    <div className="text-[13px] font-[900] text-gray-900 leading-none">sarah_digital</div>
                                     <div className="text-[12px] font-[700] text-[#5500ff] mt-1">₺1.500 · Strateji Görüşmesi</div>
                                 </div>
                             </div>
@@ -208,7 +208,7 @@ export function ProductShowcase() {
                             </div>
                             <div className="min-w-0">
                                 <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t('landing.product_showcase.cards.link_in_bio.title')}</div>
-                                <div className="text-[14px] font-bold text-gray-900 truncate tracking-tight">sety.store/aysegul_dijital</div>
+                                <div className="text-[14px] font-bold text-gray-900 truncate tracking-tight">sety.store/sarah_digital</div>
                             </div>
                             <div className="ml-auto shrink-0">
                                 <svg className="w-4.5 h-4.5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -267,14 +267,14 @@ export function ProductShowcase() {
                                     <div className="px-6 pb-3 flex flex-col items-center bg-[#FDFDFF] z-20 relative">
                                         <div className="w-[62px] h-[62px] rounded-full overflow-hidden border-[3px] border-white shadow-lg mb-2.5">
                                             <Image
-                                                src="/aysegul.png"
+                                                src="/creator.png"
                                                 width={62}
                                                 height={62}
                                                 alt="Profile"
                                                 className="w-full h-full object-cover"
                                             />
                                         </div>
-                                        <h4 className="font-bold text-[16px] text-gray-900 tracking-tighter leading-none">aysegul_dijital</h4>
+                                        <h4 className="font-bold text-[16px] text-gray-900 tracking-tighter leading-none">sarah_digital</h4>
                                         <p className="text-[8px] text-gray-400 font-bold tracking-wide mt-1.5 uppercase leading-none">{t('landing.product_showcase.mockup.category')}</p>
                                     </div>
 
