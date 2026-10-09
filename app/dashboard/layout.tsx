@@ -81,12 +81,8 @@ function DashboardLayoutContent({
     });
     const activeLabel = activeItem?.label || 'Panel';
 
-    useEffect(() => {
-        if (!contextLoading && !user) {
-            router.push('/auth');
-            return;
-        }
-    }, [contextLoading, user, router]);
+    // Note: Guest users can preview the dashboard layout without forced redirects.
+
 
     // Fetch orders count
     useEffect(() => {

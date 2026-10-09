@@ -11,7 +11,7 @@ export function SetyLogo({ compact = false }: { compact?: boolean }) {
       </span>
       {!compact && (
         <span>
-          Sety<span className="logo-dot">.</span>
+          Sety
         </span>
       )}
     </Link>

@@ -137,19 +137,22 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   width: calc(100% - 80px);
   max-width: 1140px;
   height: 94px;
-  gap: 25px;
+}
+.site-header .sety-logo {
+  justify-self: start;
 }
 .desktop-nav {
+  justify-self: center;
   display: flex;
   align-items: center;
-  gap: 28px;
-  font-size: 11px;
+  gap: 32px;
+  font-size: 12px;
   font-weight: 650;
   color: var(--muted-foreground);
 }
@@ -157,17 +160,31 @@
   display: inline-flex;
   gap: 5px;
   align-items: center;
+  transition: color 0.15s ease;
 }
 .desktop-nav a:hover {
   color: var(--primary);
 }
 .header-actions {
+  justify-self: end;
   display: flex;
   gap: 12px;
   align-items: center;
 }
 .header-actions > button {
   font-size: 12px;
+}
+.site-header .header-actions .pill {
+  background: var(--lime) !important;
+  color: #0f172a !important;
+  font-weight: 800;
+  border: none !important;
+  box-shadow: 0 3px 12px color-mix(in oklch, var(--lime) 40%, transparent);
+  transition: all 0.2s ease;
+}
+.site-header .header-actions .pill:hover {
+  background: color-mix(in oklch, var(--lime) 88%, white) !important;
+  transform: translateY(-1px);
 }
 .my-store {
   border-radius: 50px;
@@ -394,7 +411,7 @@
 .creator-stage {
   position: relative;
   max-width: 990px;
-  height: 625px;
+  height: 660px;
   margin: 46px auto 0;
 }
 .stage-grid {
@@ -751,12 +768,19 @@
 }
 .preview-caption {
   position: absolute;
-  bottom: 8px;
+  bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 8px;
+  font-size: 11px;
+  font-weight: 700;
   color: var(--muted-foreground);
   white-space: nowrap;
+  background: color-mix(in oklch, var(--background) 92%, white);
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  z-index: 20;
 }
 .creator-bottom {
   display: flex;
@@ -852,16 +876,28 @@
 }
 .bento-tags {
   display: flex;
-  gap: 7px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 20px;
 }
 .bento-tags > span {
-  font-size: 7px;
-  color: var(--muted-foreground);
-  padding: 4px 8px;
-  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--foreground);
+  padding: 6px 12px;
+  border: 1px solid color-mix(in oklch, var(--border) 80%, var(--primary));
   border-radius: 30px;
-  background: color-mix(in oklch, var(--background) 50%, transparent);
+  background: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+.bento-tags > span:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
 }
 .session-visual {
   padding: 17px;
@@ -1173,10 +1209,20 @@
   color: var(--muted-foreground);
 }
 .sell-bottom button {
-  font-size: 11px;
-  padding: 0 19px;
-  height: 39px;
+  background: var(--lime) !important;
+  color: #0f172a !important;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0 24px;
+  height: 42px;
   border-radius: 50px;
+  border: none !important;
+  box-shadow: 0 4px 16px color-mix(in oklch, var(--lime) 35%, transparent);
+  transition: all 0.2s ease;
+}
+.sell-bottom button:hover {
+  background: color-mix(in oklch, var(--lime) 88%, white) !important;
+  transform: translateY(-1px);
 }
 .steps-section {
   max-width: 1064px;
@@ -1270,14 +1316,19 @@
   margin-top: 18px;
 }
 .final-cta .main-cta {
-  background: var(--lime);
-  color: var(--ink);
-  box-shadow: none;
-  height: 48px;
+  background: var(--lime) !important;
+  color: #0f172a !important;
+  box-shadow: 0 6px 24px color-mix(in oklch, var(--lime) 45%, transparent) !important;
+  height: 50px;
   margin-top: 23px;
+  font-weight: 800;
+  border: none !important;
+  transition: all 0.2s ease;
 }
 .final-cta .main-cta:hover {
-  background: color-mix(in oklch, var(--lime) 90%, var(--background));
+  background: color-mix(in oklch, var(--lime) 88%, white) !important;
+  color: #0f172a !important;
+  transform: translateY(-2px);
 }
 .final-cta .hero-checks {
   color: color-mix(in oklch, var(--background) 60%, transparent);
@@ -1341,7 +1392,7 @@
 }
 .footer {
   border-top: 1px solid var(--border);
-  padding: 40px 32px 23px;
+  padding: 40px 32px 110px;
 }
 .footer-top,
 .footer-bottom {
