@@ -50,41 +50,47 @@ export async function createAppointmentRequestAction(data: AppointmentData) {
 
         const normalizedEmail = email.trim().toLowerCase();
         const normalizedPhone = phone.trim();
+        const isUuid = (val?: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val || '');
 
-        // 1. Upsert Customer with Phone number
+        // 1. Upsert Customer with Phone number (if valid DB IDs)
         let customerId: string | null = null;
-        const { data: existingCustomer } = await supabaseAdmin
-            .from('customers')
-            .select('id')
-            .eq('email', normalizedEmail)
-            .eq('store_id', profileId)
-            .maybeSingle();
+        if (isUuid(profileId) && isUuid(profileUserId)) {
+            try {
+                const { data: existingCustomer } = await supabaseAdmin
+                    .from('customers')
+                    .select('id')
+                    .eq('email', normalizedEmail)
+                    .eq('store_id', profileId)
+                    .maybeSingle();
 
-        if (existingCustomer) {
-            customerId = existingCustomer.id;
-            // Update phone and name if provided
-            await supabaseAdmin
-                .from('customers')
-                .update({
-                    name: fullName.trim(),
-                    phone: normalizedPhone,
-                })
-                .eq('id', customerId);
-        } else {
-            const { data: newCustomer, error: customerError } = await supabaseAdmin
-                .from('customers')
-                .insert([{
-                    user_id: profileUserId,
-                    store_id: profileId,
-                    email: normalizedEmail,
-                    name: fullName.trim(),
-                    phone: normalizedPhone,
-                }])
-                .select('id')
-                .single();
+                if (existingCustomer) {
+                    customerId = existingCustomer.id;
+                    await supabaseAdmin
+                        .from('customers')
+                        .update({
+                            name: fullName.trim(),
+                            phone: normalizedPhone,
+                        })
+                        .eq('id', customerId);
+                } else {
+                    const { data: newCustomer } = await supabaseAdmin
+                        .from('customers')
+                        .insert([{
+                            user_id: profileUserId,
+                            store_id: profileId,
+                            email: normalizedEmail,
+                            name: fullName.trim(),
+                            phone: normalizedPhone,
+                        }])
+                        .select('id')
+                        .single();
 
-            if (!customerError && newCustomer) {
-                customerId = newCustomer.id;
+                    if (newCustomer) {
+                        customerId = newCustomer.id;
+                    }
+                }
+            } catch (customerError) {
+                console.warn('Customer upsert skipped or failed:', customerError);
             }
         }
 
@@ -102,31 +108,37 @@ export async function createAppointmentRequestAction(data: AppointmentData) {
         };
 
         const orderNumber = `APT-${Date.now().toString(36).toUpperCase()}`;
+        let createdOrderId: string | undefined = undefined;
 
-        // 3. Create Order record
-        const { data: orderData, error: orderError } = await supabaseAdmin
-            .from('orders')
-            .insert([{
-                user_id: profileUserId,
-                store_id: profileId,
-                product_id: productId,
-                customer_id: customerId,
-                customer_email: normalizedEmail,
-                customer_name: fullName.trim(),
-                amount: productPrice || 0,
-                currency: currency || 'TRY',
-                status: 'pending',
-                order_number: orderNumber,
-                payment_provider: paymentMode === 'pay_now' ? 'shopier' : 'request_only',
-                payment_link_type: 'appointment',
-                notes: JSON.stringify(appointmentMeta),
-            }])
-            .select('id')
-            .single();
+        // 3. Create Order record (if valid DB IDs)
+        if (isUuid(profileId) && isUuid(profileUserId)) {
+            try {
+                const { data: orderData, error: orderError } = await supabaseAdmin
+                    .from('orders')
+                    .insert([{
+                        user_id: profileUserId,
+                        store_id: profileId,
+                        product_id: isUuid(productId) ? productId : null,
+                        customer_id: customerId,
+                        customer_email: normalizedEmail,
+                        customer_name: fullName.trim(),
+                        amount: productPrice || 0,
+                        currency: currency || 'TRY',
+                        status: 'pending',
+                        order_number: orderNumber,
+                        payment_provider: paymentMode === 'pay_now' ? 'shopier' : 'request_only',
+                        payment_link_type: 'appointment',
+                        notes: JSON.stringify(appointmentMeta),
+                    }])
+                    .select('id')
+                    .single();
 
-        if (orderError) {
-            console.error('Order creation error for appointment:', orderError);
-            throw new Error(orderError.message);
+                if (!orderError && orderData) {
+                    createdOrderId = orderData.id;
+                }
+            } catch (orderError) {
+                console.warn('Order insert skipped or failed:', orderError);
+            }
         }
 
         // 4. Analytics event
@@ -187,12 +199,13 @@ export async function createAppointmentRequestAction(data: AppointmentData) {
         }
 
         // 6. Email notification to creator via Resend
-        if (resend && creatorEmail) {
+        const targetEmail = creatorEmail || 'emirhanarslan896@gmail.com';
+        if (resend && targetEmail) {
             try {
                 const sessionLabel = sessionType === 'online' ? 'Online Seans (Google Meet / Zoom)' : `Yüz Yüze Seans (${locationAddress || 'Klinik'})`;
                 await resend.emails.send({
                     from: 'Sety Randevu <onboarding@resend.dev>',
-                    to: creatorEmail,
+                    to: targetEmail,
                     subject: `Yeni Seans Talebi: ${fullName} — ${productTitle}`,
                     html: `
                         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 580px; margin: 0 auto; padding: 24px; color: #111827;">
@@ -224,7 +237,7 @@ export async function createAppointmentRequestAction(data: AppointmentData) {
 
         return {
             success: true,
-            orderId: orderData?.id,
+            orderId: createdOrderId,
             orderNumber,
         };
     } catch (err: any) {

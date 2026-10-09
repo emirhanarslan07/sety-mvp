@@ -38,7 +38,10 @@ import {
     X,
     Lock,
     ExternalLink,
-    ArrowRight
+    ArrowRight,
+    ShieldCheck,
+    Phone,
+    MapPin
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase/client';
@@ -192,6 +195,18 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
     const handleProductClick = (product: any) => {
         setSelectedProduct(product);
+        if (product.type === 'external_link' && product.redirect_url) {
+            let url = product.redirect_url;
+            if (url && !url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('tel:') && !url.startsWith('mailto:')) {
+                url = 'https://' + url;
+            }
+            if (url.startsWith('tel:') || url.startsWith('mailto:')) {
+                window.location.href = url;
+            } else {
+                window.open(url, '_blank');
+            }
+            return;
+        }
         if (product.type === 'coaching_call' || product.type === 'danışmanlık') {
             setIsAppointmentOpen(true);
         } else {
@@ -403,28 +418,121 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
                     {/* Bio */}
                     {profile?.bio && (
-                        <p className="max-w-md text-center text-[15px] sm:text-[16px] leading-relaxed text-slate-500 font-normal mb-6">
+                        <p className="max-w-md text-center text-[15px] sm:text-[16px] leading-relaxed text-slate-600 font-normal mb-6 whitespace-pre-line">
                             {profile.bio}
                         </p>
                     )}
 
-                    {/* Social Media Pills */}
-                    {socialItems.length > 0 && (
-                        <div className="flex items-center justify-center flex-wrap gap-2.5 mb-2">
-                            {socialItems.map(({ icon: Icon, href, label }) => (
-                                <a
-                                    key={label}
-                                    href={href.startsWith('http://') || href.startsWith('https://') ? href : `https://${href}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/90 bg-white text-slate-600 shadow-[0_2px_8px_rgba(0,0,0,0.03)] transition-all duration-200 hover:border-[#5500FF]/40 hover:bg-[#5500FF]/5 hover:text-[#5500FF] hover:scale-105"
-                                    aria-label={label}
-                                >
-                                    <Icon className="h-4 w-4" />
-                                </a>
-                            ))}
-                        </div>
-                    )}
+                    {/* ═══ UNIFIED BRANDED SOCIAL & CONTACT ICONS ═══ */}
+                    {(() => {
+                        const instagramUrl = profile?.instagram || profile?.social_links?.instagram;
+                        const whatsappUrl = profile?.whatsapp || profile?.social_links?.whatsapp;
+                        const rawPhone = profile?.phone || profile?.social_links?.phone;
+                        const phoneUrl = rawPhone
+                            ? (rawPhone.startsWith('tel:') ? rawPhone : `tel:${rawPhone.replace(/\s+/g, '')}`)
+                            : (whatsappUrl ? `tel:0${whatsappUrl.replace(/\D/g, '').replace(/^90/, '')}` : null);
+                        const doktorTakvimiUrl = profile?.social_links?.doktortakvimi || profile?.doktortakvimi || profile?.contact_buttons?.find((b: any) => b.icon === 'doktortakvimi')?.href;
+                        const locationUrl = profile?.location || profile?.social_links?.location || profile?.contact_buttons?.find((b: any) => b.icon === 'location')?.href;
+                        const websiteUrl = profile?.globe || profile?.website || profile?.social_links?.website || profile?.social_links?.globe;
+
+                        return (
+                            <div className="flex items-center justify-center flex-wrap gap-3 mb-8">
+                                {/* Instagram */}
+                                {instagramUrl && (
+                                    <a
+                                        href={instagramUrl.startsWith('http') ? instagramUrl : `https://${instagramUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group relative flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-white shadow-2xs hover:shadow-md hover:border-pink-300 transition-all duration-200 hover:scale-110 active:scale-95"
+                                        title="Instagram Profili"
+                                        aria-label="Instagram"
+                                    >
+                                        <svg className="w-5 h-5 text-[#E1306C] transition-transform duration-200 group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                        </svg>
+                                    </a>
+                                )}
+
+                                {/* WhatsApp */}
+                                {whatsappUrl && (
+                                    <a
+                                        href={whatsappUrl.startsWith('http') ? whatsappUrl : `https://${whatsappUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group relative flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-white shadow-2xs hover:shadow-md hover:border-emerald-300 transition-all duration-200 hover:scale-110 active:scale-95"
+                                        title="WhatsApp ile İletişim"
+                                        aria-label="WhatsApp"
+                                    >
+                                        <svg className="w-5 h-5 text-[#25D366] transition-transform duration-200 group-hover:scale-110" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                                        </svg>
+                                    </a>
+                                )}
+
+                                {/* Telefon */}
+                                {phoneUrl && (
+                                    <a
+                                        href={phoneUrl}
+                                        className="group relative flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-white shadow-2xs hover:shadow-md hover:border-violet-300 transition-all duration-200 hover:scale-110 active:scale-95"
+                                        title="Telefonla Ara"
+                                        aria-label="Telefon"
+                                    >
+                                        <Phone className="w-5 h-5 text-[#5500FF] transition-transform duration-200 group-hover:scale-110" />
+                                    </a>
+                                )}
+
+                                {/* DoktorTakvimi */}
+                                {doktorTakvimiUrl && (
+                                    <a
+                                        href={doktorTakvimiUrl.startsWith('http') ? doktorTakvimiUrl : `https://${doktorTakvimiUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group relative flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-white shadow-2xs hover:shadow-md hover:border-teal-300 transition-all duration-200 hover:scale-110 active:scale-95"
+                                        title="DoktorTakvimi Profili & Danışan Yorumları"
+                                        aria-label="DoktorTakvimi"
+                                    >
+                                        <div className="relative flex items-center justify-center">
+                                            <svg className="w-5 h-5 text-[#00A896] transition-transform duration-200 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                                <line x1="16" y1="2" x2="16" y2="6" />
+                                                <line x1="8" y1="2" x2="8" y2="6" />
+                                                <line x1="3" y1="10" x2="21" y2="10" />
+                                                <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" strokeWidth="2.5" strokeLinecap="round" />
+                                            </svg>
+                                        </div>
+                                    </a>
+                                )}
+
+                                {/* Konum (Harita) */}
+                                {locationUrl && (
+                                    <a
+                                        href={locationUrl.startsWith('http') ? locationUrl : `https://${locationUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group relative flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-white shadow-2xs hover:shadow-md hover:border-amber-300 transition-all duration-200 hover:scale-110 active:scale-95"
+                                        title="Klinik Konumu (Harita)"
+                                        aria-label="Konum"
+                                    >
+                                        <MapPin className="w-5 h-5 text-[#EA4335] transition-transform duration-200 group-hover:scale-110" />
+                                    </a>
+                                )}
+
+                                {/* İnternet Sitesi */}
+                                {websiteUrl && websiteUrl !== doktorTakvimiUrl && (
+                                    <a
+                                        href={websiteUrl.startsWith('http') ? websiteUrl : `https://${websiteUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group relative flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl border border-slate-200/90 bg-white shadow-2xs hover:shadow-md hover:border-slate-400 transition-all duration-200 hover:scale-110 active:scale-95"
+                                        title="Web Sitesi"
+                                        aria-label="Website"
+                                    >
+                                        <Globe className="w-5 h-5 text-slate-700 transition-transform duration-200 group-hover:scale-110" />
+                                    </a>
+                                )}
+                            </div>
+                        );
+                    })()}
                 </motion.div>
 
                 {/* ═══ PRODUCT CARDS FEED ═══ */}
@@ -502,6 +610,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
                             // Standard Modern High-Converting Product Card
                             const isCoaching = product.type === 'coaching_call' || product.type === 'danışmanlık';
+                            const isExternalLink = product.type === 'external_link';
                             const coachingCfg = product.coaching_config;
                             const durationText = coachingCfg?.duration_minutes ? `${coachingCfg.duration_minutes} Dk` : '60 Dk';
                             const modeText = coachingCfg?.allow_in_person && coachingCfg?.allow_online
@@ -530,7 +639,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                         />
                                         <div className="absolute top-2 left-2 sm:hidden">
                                             <span className="rounded-full bg-white/90 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold text-[#5500FF] shadow-sm">
-                                                {isCoaching ? 'DANIŞMANLIK' : formatTypeLabel(product.type)}
+                                                {isCoaching ? 'DANIŞMANLIK' : isExternalLink ? 'İLETİŞİM' : formatTypeLabel(product.type)}
                                             </span>
                                         </div>
                                     </div>
@@ -539,7 +648,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                                         <div className="hidden sm:block mb-1">
                                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5500FF]">
-                                                {isCoaching ? 'DANIŞMANLIK & SEANS' : formatTypeLabel(product.type)}
+                                                {isCoaching ? 'DANIŞMANLIK & SEANS' : isExternalLink ? 'HIZLI İLETİŞİM' : formatTypeLabel(product.type)}
                                             </span>
                                         </div>
                                         <h3 className="font-sans text-[17px] sm:text-[18px] font-bold text-slate-900 leading-snug group-hover:text-[#5500FF] transition-colors line-clamp-1">
@@ -560,18 +669,20 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
                                     {/* Price & Action */}
                                     <div className="flex items-center justify-between sm:flex-col sm:items-end sm:justify-center gap-2 pt-2 sm:pt-0 border-t border-slate-100 sm:border-0 shrink-0">
-                                        <div className="text-base sm:text-lg font-black text-slate-900 tracking-tight font-sans">
-                                            {isCoaching && coachingCfg?.hide_price
-                                                ? 'ÖN GÖRÜŞME'
-                                                : product.price === 0
-                                                    ? 'ÜCRETSİZ'
-                                                    : formatCurrency(product.price, product.currency || 'TRY')}
-                                        </div>
+                                        {!isExternalLink && (
+                                            <div className="text-base sm:text-lg font-black text-slate-900 tracking-tight font-sans">
+                                                {isCoaching && coachingCfg?.hide_price
+                                                    ? 'ÖN GÖRÜŞME'
+                                                    : product.price === 0
+                                                        ? 'ÜCRETSİZ'
+                                                        : formatCurrency(product.price, product.currency || 'TRY')}
+                                            </div>
+                                        )}
                                         <span className={cn(
                                             "inline-flex items-center gap-1.5 rounded-full text-white px-4 py-2 text-xs font-bold transition-all shadow-sm group-hover:shadow-md",
                                             isCoaching ? "bg-[#5500FF] hover:bg-[#4400cc]" : "bg-slate-900 group-hover:bg-[#5500FF]"
                                         )}>
-                                            <span>{isCoaching ? 'Randevu Talep Et' : (product.button_text || 'Satın Al')}</span>
+                                            <span>{isCoaching ? 'Randevu Talep Et' : (product.button_text || 'Görüntüle')}</span>
                                             <ChevronRight className="h-3.5 w-3.5 stroke-[2.5]" />
                                         </span>
                                     </div>
@@ -583,10 +694,17 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
 
                 {/* ═══ FOOTER BADGE ═══ */}
                 <div className="mt-16 flex flex-col items-center gap-3 text-center">
-                    <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
-                        <Lock className="w-3.5 h-3.5 text-slate-400" />
-                        <span>Güvenli Ödeme · Shopier & Kart Korumalı</span>
-                    </div>
+                    {profile?.security_badge_text ? (
+                        <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-600 bg-slate-50 border border-slate-200/90 rounded-full px-3.5 py-1.5 shadow-2xs">
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>{profile.security_badge_text}</span>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
+                            <Lock className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Güvenli Ödeme · Shopier & Kart Korumalı</span>
+                        </div>
+                    )}
 
                     <a
                         href="https://sety.store"

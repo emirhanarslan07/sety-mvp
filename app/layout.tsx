@@ -1,4 +1,10 @@
-import { Inter, Plus_Jakarta_Sans, Cairo, Montserrat, Syne, Space_Mono, Playfair_Display, Outfit, Bebas_Neue, Poppins, Lexend } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans, Cairo, Montserrat, Syne, Space_Mono, Playfair_Display, Outfit, Bebas_Neue, Poppins, Lexend, Manrope } from "next/font/google";
+
+const manrope = Manrope({
+    subsets: ["latin", "latin-ext"],
+    display: "swap",
+    variable: "--font-manrope",
+});
 
 const montserrat = Montserrat({
     subsets: ["latin", "latin-ext"],
@@ -52,6 +58,7 @@ const lexend = Lexend({
     variable: "--font-lexend",
 });
 import "./globals.css";
+import "@/styles/creator-hub.css";
 import { PHProvider } from "@/lib/analytics/posthog-provider";
 import { I18nProvider } from "@/lib/i18n/context";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -139,7 +146,7 @@ export default function RootLayout({
     const lang = cookieStore.get('s_lang')?.value || 'tr';
 
     return (
-        <html lang={lang} className={`${inter.variable} ${plusJakartaSans.variable} ${cairo.variable} ${montserrat.variable} ${syne.variable} ${spaceMono.variable} ${playfair.variable} ${outfit.variable} ${bebasNeue.variable} ${poppins.variable} ${lexend.variable}`} suppressHydrationWarning>
+        <html lang={lang} className={`${manrope.variable} ${inter.variable} ${plusJakartaSans.variable} ${cairo.variable} ${montserrat.variable} ${syne.variable} ${spaceMono.variable} ${playfair.variable} ${outfit.variable} ${bebasNeue.variable} ${poppins.variable} ${lexend.variable}`} suppressHydrationWarning>
             <head>
                 {/* Google Analytics */}
                 <Script

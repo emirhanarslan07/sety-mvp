@@ -169,12 +169,12 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                 }
             } else {
                 showToast(result.error || "İçe aktarılırken bir hata oluştu.", "error");
-                showToast("Profilinizi otomatik çekemedik, lütfen aşağıdaki formdan manuel olarak devam edin.", "default");
+                showToast("Profilinizi otomatik çekemedik, lütfen aşağıdaki formdan manuel olarak devam edin.", "info");
             }
         } catch (error) {
             console.error("Import error:", error);
             showToast("Bağlantı hatası.", "error");
-            showToast("Lütfen mağaza bilgilerinizi manuel olarak girin.", "default");
+            showToast("Lütfen mağaza bilgilerinizi manuel olarak girin.", "info");
         } finally {
             setIsImporting(false);
         }

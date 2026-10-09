@@ -4,6 +4,7 @@ import PublicStoreClient from '@/components/store/PublicStoreClient';
 import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import { isGizemStore, GIZEM_TEPEBAS_STORE } from '@/lib/presets/gizemtepebas';
 
 export const revalidate = 60;
 
@@ -42,6 +43,10 @@ function getSupabaseClient() {
 }
 
 const getStoreData = cache(async (username: string) => {
+    if (isGizemStore(username)) {
+        return GIZEM_TEPEBAS_STORE;
+    }
+
     const supabase = getSupabaseClient();
     const { data: storeData, error: storeError } = await supabase
         .from('stores')
@@ -133,11 +138,17 @@ export async function generateMetadata(
     };
 }
 
+import { CreatorHubStorefront } from '@/components/store/CreatorHubStorefront';
+
 export default async function Page({ params }: Props) {
     const data = await getStoreData(params.username);
 
     if (!data) {
         notFound();
+    }
+
+    if (isGizemStore(params.username)) {
+        return <CreatorHubStorefront store={data.profile} />;
     }
 
     return (
