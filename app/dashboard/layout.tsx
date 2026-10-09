@@ -1,45 +1,53 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Home,
+    Grid2X2,
+    Store,
     ShoppingBag,
-    Wallet,
-    BarChart3,
-    Heart,
-    User,
+    CalendarDays,
+    Users,
+    BarChart2,
     Settings,
-    LogOut,
     Zap,
-    Bell,
     Copy,
-    Check,
+    ArrowUpRight,
+    ChevronsUpDown,
+    ChevronRight,
+    Bell,
     ExternalLink,
     Plus,
-    Shield,
-    Filter,
-    Clock,
-    Smile,
-    Mail,
-    Send,
-    Users,
-    HelpCircle,
-    Sparkles,
-    Link2,
-    Layers,
+    Menu,
+    X,
+    Loader2,
+    Check
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { supabase } from '@/lib/supabase/client';
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { useTranslation } from '@/lib/i18n/context';
-import { SetyLogo } from '@/components/ui/SetyLogo';
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription
+} from '@/components/ui/dialog';
 import { DashboardProvider, useDashboard } from '@/context/DashboardContext';
-import ModernSidebar from '@/components/dashboard/ModernSidebar';
-import Image from 'next/image';
 import { useToast } from '@/context/ToastContext';
+import { supabase } from '@/lib/supabase/client';
+import { SetyLogo } from '@/components/ui/SetyLogo';
+import { OnboardingScreen } from '@/components/dashboard/OnboardingScreen';
+import './dashboard.css';
+
+const navigation = [
+    { to: '/dashboard', label: 'Genel Bakış', icon: Grid2X2 },
+    { to: '/dashboard/store', label: 'Mağazam', icon: Store },
+    { to: '/dashboard/orders', label: 'Siparişler', icon: ShoppingBag },
+    { to: '/dashboard/appointments', label: 'Randevular', icon: CalendarDays },
+    { to: '/dashboard/customers', label: 'Müşteriler', icon: Users },
+    { to: '/dashboard/analytics', label: 'Analitik', icon: BarChart2 },
+    { to: '/dashboard/settings', label: 'Ayarlar', icon: Settings },
+] as const;
 
 function DashboardLayoutContent({
     children,
@@ -48,82 +56,101 @@ function DashboardLayoutContent({
 }) {
     const pathname = usePathname();
     const router = useRouter();
-    const { t } = useTranslation();
     const { user, profile, store, loading: contextLoading, refreshData } = useDashboard();
-    const [showNotifications, setShowNotifications] = useState(false);
-    const [notifications, setNotifications] = useState<any[]>([]);
-    const [showUserMenu, setShowUserMenu] = useState(false);
-    const [showMobileMenu, setShowMobileMenu] = useState(false);
+    const { showToast } = useToast();
 
-    const unreadCount = notifications.filter((n: any) => !n.read).length;
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
+    const [orderCount, setOrderCount] = useState<number>(3);
 
-    const markAllAsRead = () => {
-        setNotifications(notifications.map((n: any) => ({ ...n, read: true })));
-    };
+    // New product modal state
+    const [newTitle, setNewTitle] = useState('');
+    const [newType, setNewType] = useState('digital_product');
+    const [newPrice, setNewPrice] = useState('249');
+    const [newDesc, setNewDesc] = useState('');
+    const [isCreatingProduct, setIsCreatingProduct] = useState(false);
 
-    const menuItems = [
-        { label: t('dashboard.menu.home'), icon: Home, href: '/dashboard' },
-        { label: t('dashboard.menu.performance'), icon: Wallet, href: '/dashboard/performance' },
-        { label: t('dashboard.menu.my_store'), icon: Layers, href: '/dashboard/store' },
-        { label: 'Planlayıcı', icon: Send, href: '/dashboard/scheduler' },
-        { label: t('dashboard.menu.analytics'), icon: BarChart3, href: '/dashboard/analytics' },
-        { label: t('dashboard.menu.customers'), icon: Users, href: '/dashboard/customers' },
-    ];
+    const username = store?.username || user?.user_metadata?.username || 'emirhan';
+    const storeUrl = `sety.store/${username}`;
 
-    const mobileMenuItems = [
-        { label: 'Panel', icon: Home, href: '/dashboard' },
-        { label: 'Mağazam', icon: Layers, href: '/dashboard/store' },
-        { label: 'Siparişler', icon: ShoppingBag, href: '/dashboard/orders' },
-        { label: 'Analitik', icon: BarChart3, href: '/dashboard/analytics' },
-        { label: 'Daha Fazla', icon: Plus, onClick: () => setShowMobileMenu(true) },
-    ];
+    // Get active menu label
+    const activeItem = navigation.find(n => {
+        if (n.to === '/dashboard') return pathname === '/dashboard';
+        return pathname.startsWith(n.to);
+    });
+    const activeLabel = activeItem?.label || 'Panel';
 
     useEffect(() => {
         if (!contextLoading && !user) {
-            router.push('/');
+            router.push('/auth');
             return;
         }
-    }, [contextLoading, user, store, router]);
+    }, [contextLoading, user, router]);
 
+    // Fetch orders count
+    useEffect(() => {
+        if (store?.id) {
+            supabase
+                .from('orders')
+                .select('id', { count: 'exact', head: true })
+                .eq('store_id', store.id)
+                .then(({ count }) => {
+                    if (count && count > 0) setOrderCount(count);
+                })
+                .catch(() => {});
+        }
+    }, [store?.id]);
 
-    const handleLogout = async () => {
-        await fetch('/api/auth/signout', { method: 'POST' });
-        window.location.href = '/';
-    };
-
-    const [copied, setCopied] = useState(false);
-    const { showToast } = useToast();
-    const storeUrl = `sety.store/${store?.username || user?.username || ''}`;
-
-    const copyStoreLink = () => {
+    const copyLink = () => {
         navigator.clipboard.writeText(`https://${storeUrl}`);
         setCopied(true);
-        showToast(t('dashboard.toast.store_link_copied'), 'success');
+        showToast('Mağaza linki kopyalandı! 🚀', 'success');
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    const handleCreateProduct = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newTitle.trim()) return;
+
+        setIsCreatingProduct(true);
+        try {
+            if (store?.id && user?.id) {
+                const { error } = await supabase.from('products').insert([{
+                    store_id: store.id,
+                    user_id: user.id,
+                    title: newTitle.trim(),
+                    type: newType,
+                    price: parseFloat(newPrice) || 0,
+                    currency: 'TRY',
+                    subtitle: newDesc.trim() || undefined,
+                    status: 'active'
+                }]);
+
+                if (error) throw error;
+            }
+
+            showToast('Ürün başarıyla mağazanıza eklendi! 🎉', 'success');
+            setNewTitle('');
+            setNewDesc('');
+            setNewPrice('249');
+            setAddOpen(false);
+            if (refreshData) refreshData();
+        } catch (err: any) {
+            console.error('Error creating product:', err);
+            showToast(err.message || 'Ürün eklenirken bir hata oluştu.', 'error');
+        } finally {
+            setIsCreatingProduct(false);
+        }
     };
 
     if (contextLoading) {
         return (
-            <div className="flex min-h-screen bg-white items-center justify-center">
+            <div className="flex min-h-screen bg-white items-center justify-center font-sans">
                 <div className="flex flex-col items-center gap-6">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <SetyLogo size="lg" className="animate-pulse" />
-                    </motion.div>
+                    <SetyLogo size="lg" className="animate-pulse" />
                     <div className="w-40 h-1 bg-slate-100 rounded-full overflow-hidden relative">
-                        <motion.div
-                            className="absolute inset-y-0 bg-[#5500ff] rounded-full"
-                            initial={{ width: "30%", left: "-30%" }}
-                            animate={{ left: "100%" }}
-                            transition={{
-                                repeat: Infinity,
-                                duration: 1,
-                                ease: "easeInOut"
-                            }}
-                        />
+                        <div className="absolute inset-y-0 bg-[#5500ff] rounded-full animate-pulse w-full" />
                     </div>
                 </div>
             </div>
@@ -134,229 +161,269 @@ function DashboardLayoutContent({
         return <OnboardingScreen profile={profile} refreshData={refreshData} />;
     }
 
+    // User initials & display name
+    const displayName = profile?.full_name || store?.display_name || user?.user_metadata?.full_name || 'Emirhan Arslan';
+    const userEmail = profile?.email || user?.email || 'emirhan@sety.store';
+    const initials = displayName
+        .split(' ')
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((p: string) => p[0].toUpperCase())
+        .join('') || 'EA';
+
     return (
-        <div className="flex min-h-screen bg-[#F8F9FE]">
-            <ModernSidebar />
-
-            {/* Main Content Area */}
-            <main className="flex-1 flex flex-col min-h-screen font-inter min-w-0">
-                {/* Modern Sleek Top Header */}
-                <header className="h-[64px] bg-white border-b border-[#E8ECF4] flex items-center justify-between px-6 lg:px-8 shrink-0 sticky top-0 z-40">
-                    <div className="flex items-center gap-3">
-                        <h2 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">
-                            {pathname === '/dashboard' ? 'Genel Bakış' :
-                                pathname.includes('/performance') ? 'Performans' :
-                                pathname.includes('/store') ? 'Mağazam' :
-                                pathname.includes('/analytics') ? 'Analitik' :
-                                pathname.includes('/customers') ? 'Müşteriler' :
-                                pathname.includes('/orders') ? 'Siparişler' :
-                                pathname.includes('/appointments') ? 'Randevular' :
-                                pathname.includes('/settings') ? 'Ayarlar' : 'Panel'}
-                        </h2>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        {/* Store Link Chip */}
-                        <div className="flex items-center gap-1.5 bg-[#F8F9FE] border border-[#E8ECF4] rounded-full px-3 py-1.5">
-                            <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-                            <span className="text-[12px] font-bold text-[#5500FF] font-mono">
-                                sety.store/{store?.username || 'emirhan'}
-                            </span>
-                            <button
-                                onClick={copyStoreLink}
-                                className="text-slate-400 hover:text-[#5500FF] ml-1 p-0.5 transition-colors"
-                                title="Kopyala"
-                            >
-                                {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                            </button>
-                            <a
-                                href={`https://sety.store/${store?.username || 'emirhan'}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-slate-400 hover:text-[#5500FF] p-0.5 transition-colors"
-                                title="Mağazayı Aç"
-                            >
-                                <ExternalLink className="w-3.5 h-3.5" />
-                            </a>
-                        </div>
-
-                        {/* Add product quick button */}
-                        <Link
-                            href="/dashboard/store?action=add"
-                            className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-[#5500FF] to-[#7B2FFF] text-white px-3.5 py-1.5 rounded-full text-[12px] font-bold shadow-md shadow-[#5500FF]/20 hover:opacity-95 transition-all"
-                        >
-                            <Plus className="w-3.5 h-3.5" />
-                            <span>Ürün Ekle</span>
-                        </Link>
-                    </div>
-                </header>
-
-                {/* Content Container */}
-                <div className="flex-1 bg-[#F8F9FE] pb-24 lg:pb-8">
-                    {children}
+        <div className="sety-shell">
+            {/* ═══ SIDEBAR ═══ */}
+            <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+                {/* Brand */}
+                <div className="brand">
+                    <span className="brand-mark">
+                        <Zap size={23} fill="currentColor" />
+                    </span>
+                    <span>sety</span>
+                    <span className="beta">BETA</span>
                 </div>
 
+                {/* Store Link Chip */}
+                <div className="store-link">
+                    <span className="live-dot" />
+                    <span className="store-link-text">{storeUrl}</span>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-5 w-5 ml-auto text-slate-400 hover:text-slate-900"
+                        title="Mağaza linkini kopyala"
+                        onClick={copyLink}
+                    >
+                        {copied ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
+                    </Button>
+                </div>
 
-                {/* Mobile Bottom Nav (Stan Style Refined) */}
-                <nav className="fixed bottom-0 inset-x-0 h-[85px] bg-white border-t border-slate-100 flex lg:hidden items-center justify-around px-2 z-[70] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
-                    {mobileMenuItems.map((item, idx) => {
-                        const isActive = pathname === item.href && !('onClick' in item);
-                        const Icon = item.icon;
-
-                        if ('onClick' in item) {
-                            return (
-                                <button
-                                    key={idx}
-                                    onClick={item.onClick}
-                                    className={cn(
-                                        "flex flex-col items-center gap-1.5 transition-all px-3 py-2 rounded-2xl",
-                                        showMobileMenu ? "text-[#5500ff] bg-indigo-50" : "text-slate-400 hover:text-slate-600"
-                                    )}
-                                >
-                                    <Icon className={cn("w-6 h-6", showMobileMenu && "rotate-45")} />
-                                    <span className="text-[9px] font-bold uppercase tracking-widest">{item.label}</span>
-                                </button>
-                            );
-                        }
-
+                {/* Navigation */}
+                <nav className="nav">
+                    <div className="nav-label">Çalışma alanı</div>
+                    {navigation.map((n) => {
+                        const isActive = n.to === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(n.to);
                         return (
                             <Link
-                                key={item.href || idx}
-                                href={item.href || '#'}
-                                className={cn(
-                                    "flex flex-col items-center gap-1.5 transition-all px-3 py-2 rounded-2xl",
-                                    isActive ? "text-[#5500ff] bg-indigo-50/50" : "text-slate-400 hover:text-slate-600"
-                                )}
+                                key={n.to}
+                                href={n.to}
+                                onClick={() => setSidebarOpen(false)}
+                                className={`nav-item ${isActive ? 'active' : ''}`}
                             >
-                                <Icon className={cn("w-6 h-6", isActive && "animate-in zoom-in duration-300")} />
-                                <span className="text-[9px] font-bold uppercase tracking-widest leading-none">{item.label}</span>
+                                <n.icon />
+                                <span>{n.label}</span>
+                                {n.label === 'Siparişler' && orderCount > 0 && (
+                                    <span className="nav-count">{orderCount}</span>
+                                )}
                             </Link>
                         );
                     })}
                 </nav>
 
-                {/* Mobile "More" Menu Overlay (Stan-ify Premium) */}
-                <AnimatePresence>
-                    {showMobileMenu && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed inset-0 bg-[#F4F7FF] z-[100] flex flex-col lg:hidden"
+                {/* Sidebar Bottom (Founder Plan + Account) */}
+                <div className="sidebar-bottom">
+                    <div className="plan">
+                        <div className="plan-title">
+                            <span>Founder Planı</span>
+                            <span className="text-[#5500FF]">9 / 14 gün</span>
+                        </div>
+                        <div className="plan-track">
+                            <span style={{ width: '68%' }} />
+                        </div>
+                        <p>
+                            Hayallerin için daha fazla alan.<br />
+                            Satışlarından komisyon alınmaz.
+                        </p>
+                        <Link href="/dashboard/settings">
+                            Planı keşfet <ArrowUpRight size={12} />
+                        </Link>
+                    </div>
+
+                    <Link href="/dashboard/settings" className="account">
+                        <div className="avatar">
+                            {profile?.profile_image_url ? (
+                                <img
+                                    src={profile.profile_image_url}
+                                    alt=""
+                                    className="w-full h-full rounded-full object-cover"
+                                />
+                            ) : (
+                                initials
+                            )}
+                        </div>
+                        <div>
+                            <strong>{displayName}</strong>
+                            <p>{userEmail}</p>
+                        </div>
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="ml-auto h-7 w-7 text-slate-400"
+                            title="Hesap ayarları"
                         >
-                            {/* Header */}
-                            <div className="p-6 pt-12 flex items-center justify-between">
-                                <h2 className="text-[28px] font-bold text-slate-900 tracking-tight leading-none">{t('dashboard.menu.more')}</h2>
-                                <button
-                                    onClick={() => setShowMobileMenu(false)}
-                                    className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-slate-400 shadow-xl shadow-slate-200/50 active:scale-90 transition-transform"
-                                >
-                                    <Plus className="w-7 h-7 rotate-45" />
-                                </button>
-                            </div>
+                            <ChevronsUpDown size={14} />
+                        </Button>
+                    </Link>
+                </div>
+            </aside>
 
-                            {/* Content */}
-                            <div className="flex-1 overflow-y-auto p-6 space-y-12 custom-scrollbar pb-32">
-                                {/* Tools Grid - Stan Style */}
-                                <div className="grid grid-cols-3 gap-y-10 gap-x-4">
-                                    {[
-                                        { label: t('dashboard.menu.customers'), icon: Heart, href: '/dashboard/customers' },
-                                        { label: t('dashboard.menu.settings'), icon: Settings, href: '/dashboard/settings' },
-                                    ].map((item, i) => (
-                                        <Link
-                                            key={i}
-                                            href={item.href}
-                                            onClick={() => setShowMobileMenu(false)}
-                                            className="flex flex-col items-center gap-3 transition-active active:scale-95"
-                                        >
-                                            <div className="w-20 h-20 rounded-[24px] bg-white shadow-[0_4px_25px_rgba(85,0,255,0.06)] flex items-center justify-center text-indigo-900 border border-slate-50">
-                                                <item.icon className="w-9 h-9" strokeWidth={1.5} />
-                                            </div>
-                                            <span className="text-[12px] font-bold text-indigo-900 text-center leading-tight tracking-tight">{item.label}</span>
-                                        </Link>
-                                    ))}
-                                </div>
+            {/* Backdrop for mobile sidebar */}
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs lg:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
 
-                                {/* Accounts Sections */}
-                                <div className="space-y-10">
-                                    {/* Accounts Section */}
-                                    <div className="space-y-4">
-                                        <h3 className="text-[18px] font-bold text-indigo-900 px-2 tracking-tight opacity-40 uppercase text-[12px]">Accounts</h3>
-                                        <div className="space-y-3">
-                                            {/* Current User Profile Card */}
-                                            <div className="w-full flex items-center gap-4 p-6 rounded-[32px] bg-white shadow-sm border border-transparent">
+            {/* ═══ MAIN & TOPBAR ═══ */}
+            <main className="main">
+                <header className="topbar">
+                    <div className="flex items-center gap-3">
+                        <Button
+                            className="menu-mobile"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setSidebarOpen(!sidebarOpen)}
+                            aria-label="Menüyü aç"
+                        >
+                            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+                        </Button>
+                        <div className="breadcrumb">
+                            Panel <ChevronRight size={12} />
+                            <span>{activeLabel}</span>
+                        </div>
+                    </div>
 
-                                                <div className="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center overflow-hidden border-2 border-white shadow-sm relative">
-                                                    {profile?.profile_image_url ? (
-                                                        <Image src={profile.profile_image_url} alt="" fill className="object-cover" />
-                                                    ) : (
-                                                        <User className="w-7 h-7 text-indigo-300" />
-                                                    )}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2">
-                                                        <p className="text-[16px] font-bold text-indigo-900 truncate leading-tight">{store?.username || 'setyuser'}</p>
-                                                        {profile?.plan_type === 'pro' && (
-                                                            <span className="px-2 py-0.5 rounded-md bg-gradient-to-r from-amber-200 to-yellow-400 text-yellow-900 text-[10px] font-bold uppercase tracking-wider shadow-sm shrink-0">PRO</span>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-[12px] font-bold text-slate-400 truncate mt-1">{user?.email}</p>
-                                                </div>
-                                            </div>
+                    <div className="top-actions">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="notification text-slate-500 hover:text-slate-900"
+                            title="Bildirimler"
+                            onClick={() => showToast('Yeni bildiriminiz bulunmuyor.', 'info')}
+                        >
+                            <Bell size={18} />
+                        </Button>
 
-                                            <button className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-white shadow-sm transition-all active:scale-[0.98]">
-                                                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
-                                                    <Plus className="w-5 h-5" />
-                                                </div>
-                                                <span className="text-[16px] font-bold text-indigo-900">{t('dashboard.sidebar.add_account')}</span>
-                                            </button>
+                        <span className="h-5 border-l border-slate-200" />
 
-                                            <button className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-white shadow-sm transition-all active:scale-[0.98]">
-                                                <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
-                                                    <HelpCircle className="w-5 h-5" />
-                                                </div>
-                                                <span className="text-[16px] font-bold text-indigo-900">{t('dashboard.sidebar.get_help')}</span>
-                                            </button>
+                        <Button variant="outline" className="view-store text-xs" asChild>
+                            <a
+                                href={`https://${storeUrl}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <ExternalLink size={13} className="mr-1.5" />
+                                Mağazayı Gör
+                            </a>
+                        </Button>
 
-                                            <button
-                                                onClick={handleLogout}
-                                                className="w-full flex items-center gap-4 p-5 rounded-[28px] bg-red-50/20 text-red-500 mt-6 border border-red-100/50 active:scale-[0.98] transition-all"
-                                            >
-                                                <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
-                                                    <LogOut className="w-5 h-5" />
-                                                </div>
-                                                <span className="text-[17px] font-bold tracking-tight">{t('dashboard.menu.logout')}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                        <Button
+                            onClick={() => setAddOpen(true)}
+                            className="text-xs bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold rounded-xl"
+                        >
+                            <Plus size={14} className="mr-1.5" />
+                            Ürün Ekle
+                        </Button>
+                    </div>
+                </header>
+
+                <div className="content">
+                    {children}
+
+                    <footer className="footer-note">
+                        <span>© 2026 Sety · Üret, paylaş, kazan.</span>
+                        <span className="flex items-center gap-2">
+                            <span className="live-dot" />
+                            Tüm sistemler çalışıyor <span className="ml-2">· Canlı veriler</span>
+                        </span>
+                    </footer>
+                </div>
             </main>
 
-            <style jsx global>{`
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 4px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #E2E8F0;
-                    border-radius: 10px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #CBD5E1;
-                }
-            `}</style>
+            {/* ═══ MODAL: Yeni Ürün Ekle ═══ */}
+            <Dialog open={addOpen} onOpenChange={setAddOpen}>
+                <DialogContent className="sm:max-w-md bg-white rounded-2xl p-6">
+                    <DialogHeader>
+                        <DialogTitle className="text-lg font-bold text-slate-900">
+                            Yeni Ürün Ekle
+                        </DialogTitle>
+                        <DialogDescription className="text-xs text-slate-500">
+                            Mağazana yeni bir dijital ürün veya danışmanlık hizmeti ekle.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <form onSubmit={handleCreateProduct} className="flex flex-col gap-4 mt-2">
+                        <label className="field">
+                            ÜRÜN ADI
+                            <input
+                                placeholder="Örn: 1:1 Strateji Görüşmesi veya E-Kitap"
+                                value={newTitle}
+                                onChange={(e) => setNewTitle(e.target.value)}
+                                required
+                            />
+                        </label>
+
+                        <div className="fields mb-0">
+                            <label className="field">
+                                ÜRÜN TİPİ
+                                <select
+                                    value={newType}
+                                    onChange={(e) => setNewType(e.target.value)}
+                                >
+                                    <option value="digital_product">Dijital İndirme</option>
+                                    <option value="coaching_call">Koçluk & Danışmanlık</option>
+                                    <option value="external_link">Direkt Link</option>
+                                </select>
+                            </label>
+
+                            <label className="field">
+                                FİYAT (₺)
+                                <input
+                                    type="number"
+                                    min="0"
+                                    placeholder="249"
+                                    value={newPrice}
+                                    onChange={(e) => setNewPrice(e.target.value)}
+                                    required
+                                />
+                            </label>
+                        </div>
+
+                        <label className="field">
+                            AÇIKLAMA
+                            <textarea
+                                placeholder="Ürün açıklaması veya seans detayları..."
+                                value={newDesc}
+                                onChange={(e) => setNewDesc(e.target.value)}
+                            />
+                        </label>
+
+                        <Button
+                            type="submit"
+                            disabled={isCreatingProduct}
+                            className="h-11 bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold rounded-xl mt-2 flex items-center justify-center gap-2"
+                        >
+                            {isCreatingProduct ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                                <Plus size={16} />
+                            )}
+                            <span>Ürün Ekle</span>
+                        </Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
         <DashboardProvider>
             <DashboardLayoutContent>{children}</DashboardLayoutContent>

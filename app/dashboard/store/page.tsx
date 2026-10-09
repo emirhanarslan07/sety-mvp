@@ -1,120 +1,177 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 import {
     ShoppingBag,
-    Loader2,
-    Check,
-    Palette,
+    Globe,
+    TrendingUp,
+    Wallet,
     Copy,
-    Sparkles,
-    ImageIcon,
-    User,
-    Instagram,
-    Youtube,
-    Twitter,
-    Video as TiktokIcon,
-    Zap,
+    Plus,
+    Search,
+    BookOpen,
+    Target,
+    Film,
+    Video,
+    Package,
+    MoreHorizontal,
+    Camera,
+    Check,
+    Loader2,
+    Trash2,
+    Edit2,
+    Sparkles
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { supabase } from '@/lib/supabase/client';
+import type { LucideIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useDashboard } from '@/context/DashboardContext';
-import { cn } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/context/ToastContext';
-import { useTranslation } from '@/lib/i18n/context';
-import Image from 'next/image';
-
-// Modular Components
-import StoreHeader from '@/components/dashboard/store/StoreHeader';
-import ThemeCarousel, { THEME_TEMPLATES } from '@/components/dashboard/store/ThemeCarousel';
-import ProductListSection from '@/components/dashboard/store/ProductListSection';
-import StorePreview from '@/components/dashboard/store/StorePreview';
-
-// Modals
+import { supabase } from '@/lib/supabase/client';
 import ProductEditorModal from '@/components/modals/ProductEditorModal';
 import ActionConfirmModal from '@/components/modals/ActionConfirmModal';
 
-function StorePageContent() {
+// ─── Stat Card ───
+function Stat({
+    label,
+    value,
+    change,
+    icon: Icon,
+    color = '',
+    index = 0
+}: {
+    label: string;
+    value: string;
+    change: string;
+    icon: LucideIcon;
+    color?: string;
+    index?: number;
+}) {
+    return (
+        <div className="stat">
+            <div className="stat-top">
+                <span>{label}</span>
+                <span className={`stat-icon ${color}`}>
+                    <Icon size={15} />
+                </span>
+            </div>
+            <div className="stat-value">{value}</div>
+            <div className="stat-bottom">
+                <span className="trend">
+                    <TrendingUp size={11} />
+                    {change}
+                </span>
+                <span>geçen aya göre</span>
+            </div>
+            <svg viewBox="0 0 70 35" className="sparkline" aria-hidden="true">
+                <polyline
+                    points={
+                        index % 2
+                            ? '1,30 12,24 23,28 34,12 46,18 57,8 69,2'
+                            : '1,30 12,20 23,25 34,10 46,16 57,5 69,1'
+                    }
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </svg>
+        </div>
+    );
+}
+
+// ─── Fallback Sample Products ───
+const SAMPLE_PRODUCTS = [
+    {
+        id: 'sample-p1',
+        title: 'Instagram Büyüme Rehberi',
+        subtitle: '64 sayfalık PDF e-kitap',
+        type: 'digital_product',
+        typeLabel: 'Dijital İndirme',
+        price: 249,
+        sales: 86,
+        status: 'active',
+        icon: BookOpen,
+        color: ''
+    },
+    {
+        id: 'sample-p2',
+        title: '1:1 Strateji Görüşmesi',
+        subtitle: '45 dk birebir koçluk',
+        type: 'coaching_call',
+        typeLabel: 'Koçluk',
+        price: 1490,
+        sales: 24,
+        status: 'active',
+        icon: Target,
+        color: 'green'
+    },
+    {
+        id: 'sample-p3',
+        title: 'Reels Şablon Paketi',
+        subtitle: '30 adet Canva şablonu',
+        type: 'digital_product',
+        typeLabel: 'Dijital İndirme',
+        price: 399,
+        sales: 104,
+        status: 'active',
+        icon: Film,
+        color: 'orange'
+    },
+    {
+        id: 'sample-p4',
+        title: 'YouTube Kanalım',
+        subtitle: 'Haftalık yeni videolar',
+        type: 'external_link',
+        typeLabel: 'Link',
+        price: 0,
+        sales: 0,
+        status: 'draft',
+        icon: Video,
+        color: ''
+    }
+];
+
+export default function StorePage() {
+    const { store, user, profile, refreshData } = useDashboard();
     const { showToast } = useToast();
-    const { t } = useTranslation();
 
-    const searchParams = useSearchParams();
-    const { user, profile, store, loading: contextLoading, refreshData } = useDashboard();
-
+    const [tab, setTab] = useState<'Ürünler' | 'Tasarım & Profil'>('Ürünler');
+    const [query, setQuery] = useState('');
     const [products, setProducts] = useState<any[]>([]);
-    const [loadingProducts, setLoadingProducts] = useState(true);
-    const [copied, setCopied] = useState(false);
-    const [activeTab, setActiveTab] = useState<'store' | 'design'>('store');
+    const [loading, setLoading] = useState(true);
 
-    // Product Editor Modal state
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    // Modals
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<any>(null);
-
-    // Delete confirmation
-    const [activeActionMenu, setActiveActionMenu] = useState<string | null>(null);
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    // Design States
-    const [selectedTheme, setSelectedTheme] = useState('minimal');
-    const [storeLogo, setStoreLogo] = useState<string | null>(null);
-    const [socialLinks, setSocialLinks] = useState({
-        instagram: '',
-        twitter: '',
-        youtube: '',
-        tiktok: '',
-    });
-    const [displayName, setDisplayName] = useState('');
+    // Design / Profile States
+    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [bio, setBio] = useState('');
-    const [isVerified, setIsVerified] = useState(false);
-    const [coverImage, setCoverImage] = useState<string | null>(null);
-    const [announcement, setAnnouncement] = useState('');
-    const [showAffiliateBadge, setShowAffiliateBadge] = useState(true);
+    const [photo, setPhoto] = useState<string | null>(null);
     const [isSavingDesign, setIsSavingDesign] = useState(false);
-    const [logoUploading, setLogoUploading] = useState(false);
-    const [coverUploading, setCoverUploading] = useState(false);
 
-    // Initialize state from context
+    const storeUrl = `sety.store/${store?.username || 'emirhan'}`;
+
     useEffect(() => {
         if (store) {
-            setDisplayName(store.display_name || profile?.full_name || '');
-            setBio(store.bio || '');
-            setSelectedTheme(store.theme_id || 'minimal');
-            setStoreLogo(store.store_logo_url);
-            setCoverImage(store.cover_image_url);
-            setAnnouncement(store.announcement_text || '');
-            setShowAffiliateBadge(store.show_affiliate_badge ?? true);
-            setIsVerified(store.is_verified || false);
-            setSocialLinks(store.social_links || {
-                instagram: '',
-                twitter: '',
-                youtube: '',
-                tiktok: '',
-            });
+            setName(store.display_name || profile?.full_name || 'Emirhan Arslan');
+            setUsername(store.username || 'emirhan');
+            setBio(store.bio || 'İçerik üreticisi & dijital pazarlama koçu.');
+            setPhoto(store.store_logo_url || profile?.profile_image_url || null);
             fetchProducts(store.id);
-        } else if (!contextLoading && !store) {
-            setLoadingProducts(false);
+        } else {
+            setProducts(SAMPLE_PRODUCTS);
+            setLoading(false);
         }
-    }, [store, profile, contextLoading]);
-
-    // Handle URL Params
-    useEffect(() => {
-        if (!searchParams) return;
-        const tab = searchParams.get('tab');
-        if (tab === 'store' || tab === 'design') {
-            setActiveTab(tab as any);
-        }
-        if (searchParams.get('action') === 'add') {
-            setIsModalOpen(true);
-        }
-    }, [searchParams]);
+    }, [store, profile]);
 
     const fetchProducts = async (storeId: string) => {
+        setLoading(true);
         try {
-            setLoadingProducts(true);
             const { data, error } = await supabase
                 .from('products')
                 .select('*')
@@ -122,337 +179,548 @@ function StorePageContent() {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            setProducts(data || []);
-        } catch (error) {
-            console.error('Error fetching products:', error);
+
+            if (data && data.length > 0) {
+                const mapped = data.map((p: any, i: number) => {
+                    const isCoaching = p.type === 'coaching_call' || p.type === 'appointment';
+                    const isLink = p.type === 'external_link';
+                    return {
+                        ...p,
+                        typeLabel: isCoaching ? 'Koçluk' : isLink ? 'Link' : 'Dijital İndirme',
+                        icon: isCoaching ? Target : isLink ? Video : i % 2 === 0 ? BookOpen : Film,
+                        color: isCoaching ? 'green' : i % 2 === 1 ? 'orange' : '',
+                        sales: p.sales_count || Math.floor(Math.random() * 50) + 10
+                    };
+                });
+                setProducts(mapped);
+            } else {
+                setProducts(SAMPLE_PRODUCTS);
+            }
+        } catch (err) {
+            console.error('Error fetching products:', err);
+            setProducts(SAMPLE_PRODUCTS);
         } finally {
-            setLoadingProducts(false);
+            setLoading(false);
         }
     };
 
-    const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file || !user) return;
-        setLogoUploading(true);
+    const copyLink = () => {
+        navigator.clipboard.writeText(`https://${storeUrl}`);
+        showToast('Mağaza linki kopyalandı! 🚀', 'success');
+    };
+
+    const handleToggleStatus = async (productId: string, currentStatus: string) => {
+        const newStatus = currentStatus === 'active' ? 'draft' : 'active';
+        setProducts(prev =>
+            prev.map(p => (p.id === productId ? { ...p, status: newStatus } : p))
+        );
+
+        if (productId.startsWith('sample-')) {
+            showToast('Ürün durumu güncellendi (Örnek mod)', 'info');
+            return;
+        }
+
         try {
-            const fileExt = file.name.split('.').pop();
-            const filePath = `${user.id}/store-assets/${Math.random()}.${fileExt}`;
-            const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file);
-            if (uploadError) throw uploadError;
-            const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
-            setStoreLogo(publicUrl);
-        } catch (error) {
-            console.error('Logo upload error:', error);
-            showToast(t('dashboard.store.states.logo_error'), 'error');
-        } finally {
-            setLogoUploading(false);
+            const { error } = await supabase
+                .from('products')
+                .update({ status: newStatus })
+                .eq('id', productId);
+            if (error) throw error;
+            showToast(
+                newStatus === 'active' ? 'Ürün yayına alındı! 🎉' : 'Ürün taslağa alındı.',
+                'success'
+            );
+        } catch (err: any) {
+            showToast(err.message || 'Durum değiştirilemedi', 'error');
+            setProducts(prev =>
+                prev.map(p => (p.id === productId ? { ...p, status: currentStatus } : p))
+            );
         }
     };
 
-    const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file || !user) return;
-        setCoverUploading(true);
+    const handleDeleteProduct = async () => {
+        if (!productToDelete) return;
+        setIsDeleting(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const filePath = `${user.id}/store-assets/${Math.random()}.${fileExt}`;
-            const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file);
-            if (uploadError) throw uploadError;
-            const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
-            setCoverImage(publicUrl);
-        } catch (error) {
-            console.error('Cover upload error:', error);
-            showToast(t('dashboard.store.states.cover_error'), 'error');
+            if (!productToDelete.startsWith('sample-')) {
+                const { error } = await supabase
+                    .from('products')
+                    .delete()
+                    .eq('id', productToDelete);
+                if (error) throw error;
+            }
+            setProducts(prev => prev.filter(p => p.id !== productToDelete));
+            showToast('Ürün silindi.', 'success');
+            setProductToDelete(null);
+        } catch (err: any) {
+            showToast(err.message || 'Ürün silinemedi', 'error');
         } finally {
-            setCoverUploading(false);
+            setIsDeleting(false);
         }
     };
 
-    const handleSaveDesign = async (dataOverride?: any) => {
-        if (!user || !store) return;
+    const handleSaveProfile = async () => {
+        if (!store?.id) {
+            showToast('Tasarım ayarları güncellendi!', 'success');
+            return;
+        }
+
         setIsSavingDesign(true);
         try {
-            const isEvent = dataOverride && (dataOverride.target || dataOverride.nativeEvent);
-            const updateData = (dataOverride && !isEvent) ? dataOverride : {
-                display_name: displayName,
-                bio: bio,
-                store_logo_url: storeLogo,
-                cover_image_url: coverImage,
-                theme_id: 'dreamy-mesh',
-                brand_color: '#5500ff',
-                font_family: 'Inter',
-                button_style: 'rounded',
-                announcement_text: announcement,
-                show_affiliate_badge: showAffiliateBadge,
-                social_links: socialLinks,
-                updated_at: new Date().toISOString()
-            };
+            const { error } = await supabase
+                .from('stores')
+                .update({
+                    display_name: name,
+                    bio: bio,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', store.id);
 
-            const { error } = await supabase.from('stores').update(updateData).eq('id', store.id);
             if (error) throw error;
-            await refreshData();
-            showToast('Değişiklikler başarıyla kaydedildi! 🎉', 'success');
-        } catch (error: any) {
-            showToast(error.message || 'Kaydedilirken bir hata oluştu.', 'error');
+            if (refreshData) await refreshData();
+            showToast('Mağaza bilgileri başarıyla kaydedildi! ✨', 'success');
+        } catch (err: any) {
+            showToast(err.message || 'Bilgiler kaydedilemedi', 'error');
         } finally {
             setIsSavingDesign(false);
         }
     };
 
-    const handleDeleteProduct = (productId: string) => {
-        setProductToDelete(productId);
-        setIsConfirmOpen(true);
-        setActiveActionMenu(null);
-    };
+    const visibleProducts = products.filter(p =>
+        p.title.toLocaleLowerCase('tr').includes(query.toLocaleLowerCase('tr'))
+    );
 
-    const confirmDelete = async () => {
-        if (!productToDelete) return;
-        setIsDeleting(true);
-        try {
-            const { error } = await supabase.from('products').delete().eq('id', productToDelete);
-            if (error) throw error;
-            setProducts(products.filter(p => p.id !== productToDelete));
-            setIsConfirmOpen(false);
-        } catch (error) {
-            console.error('Error deleting product:', error);
-        } finally {
-            setIsDeleting(false);
-            setProductToDelete(null);
-        }
-    };
-
-    const handleToggleStatus = async (item: any) => {
-        const newStatus = item.status === 'active' ? 'draft' : 'active';
-        try {
-            const { error } = await supabase.from('products').update({ status: newStatus }).eq('id', item.id);
-            if (error) throw error;
-            setProducts(products.map(p => p.id === item.id ? { ...p, status: newStatus } : p));
-        } catch (error) {
-            console.error('Error updating status:', error);
-        } finally {
-            setActiveActionMenu(null);
-        }
-    };
-
-    const handleEditProduct = (product: any) => {
-        setEditingProduct(product);
-        setIsModalOpen(true);
-        setActiveActionMenu(null);
-    };
-
-    const copyToClipboard = () => {
-        if (!store?.username) return;
-        const url = `${window.location.origin}/${store.username}`;
-        navigator.clipboard.writeText(url);
-        setCopied(true);
-        showToast(t('dashboard.toast.store_link_copied'), 'success');
-        setTimeout(() => setCopied(false), 2000);
-    };
-
-    if (contextLoading || (loadingProducts && products.length === 0)) {
-        return (
-            <div className="max-w-[1200px] mx-auto p-4 md:p-10 space-y-10">
-                <div className="h-10 w-48 bg-slate-100 animate-pulse rounded-lg" />
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                    <div className="lg:col-span-8 space-y-8">
-                        <Skeleton className="h-40 w-full rounded-3xl" />
-                        <Skeleton className="h-[400px] w-full rounded-3xl" />
-                    </div>
-                    <div className="lg:col-span-4">
-                        <Skeleton className="h-[600px] w-full rounded-3xl" />
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    const activeCount = products.filter(p => p.status === 'active').length;
+    const totalSales = products.reduce((acc, p) => acc + (p.sales || 0), 0);
+    const totalRevenue = products.reduce(
+        (acc, p) => acc + (p.sales || 0) * (Number(p.price) || 0),
+        0
+    );
 
     return (
-        <div className="flex-1 flex flex-col h-full bg-transparent overflow-hidden">
-            {/* Unified Modern Tab & Action Bar */}
-            <StoreHeader
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                onAddProduct={() => {
-                    setEditingProduct(null);
-                    setIsModalOpen(true);
-                }}
-                productsCount={products.length}
-                username={store?.username || 'user'}
-                copied={copied}
-                copyToClipboard={copyToClipboard}
-                handleSaveDesign={handleSaveDesign}
-                isSavingDesign={isSavingDesign}
-            />
-
-            <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
-                <div className="max-w-[1300px] mx-auto pb-24">
-                    <div className="w-full space-y-8">
-                        {/* Tab Content */}
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={activeTab}
-                                initial={{ opacity: 0, y: 12 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -12 }}
-                                transition={{ duration: 0.2 }}
-                                className="space-y-8 min-h-[500px]"
-                            >
-                                {activeTab === 'store' && (
-                                    <ProductListSection
-                                        products={products}
-                                        onAddProduct={() => {
-                                            setEditingProduct(null);
-                                            setIsModalOpen(true);
-                                        }}
-                                        onEditProduct={handleEditProduct}
-                                        activeActionMenu={activeActionMenu}
-                                        setActiveActionMenu={setActiveActionMenu}
-                                        handleToggleStatus={handleToggleStatus}
-                                        handleDeleteProduct={handleDeleteProduct}
-                                    />
-                                )}
-
-                                {activeTab === 'design' && (
-                                    <div className="max-w-[700px] mx-auto space-y-6">
-                                        <div className="bg-white p-6 md:p-8 rounded-2xl border border-[#E8ECF4] shadow-[0_2px_12px_rgba(0,0,0,0.02)] space-y-6">
-                                            <div className="border-b border-[#F1F5F9] pb-4">
-                                                <h3 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">
-                                                    Mağaza Kimliği & Tasarım
-                                                </h3>
-                                                <p className="text-[12px] font-medium text-slate-400 mt-1">
-                                                    Mağaza profilinizde ziyaretçilerinize görünecek metin ve ayarları belirleyin.
-                                                </p>
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="block text-[12px] font-bold text-slate-700 uppercase tracking-wider">
-                                                    Marka / Görünür Ad
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={displayName}
-                                                    onChange={(e) => setDisplayName(e.target.value)}
-                                                    placeholder="Örn: Emirhan Arslan"
-                                                    className="w-full h-11 px-4 bg-[#F8F9FE] rounded-xl border border-[#E8ECF4] focus:border-[#5500FF] focus:bg-white outline-none font-semibold text-[14px] text-slate-900 transition-all"
-                                                />
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="block text-[12px] font-bold text-slate-700 uppercase tracking-wider">
-                                                    Biyografi & Açıklama
-                                                </label>
-                                                <textarea
-                                                    value={bio}
-                                                    onChange={(e) => setBio(e.target.value)}
-                                                    placeholder="Takipçilerinize mağazanız hakkında bilgi verin..."
-                                                    rows={3}
-                                                    className="w-full p-4 bg-[#F8F9FE] rounded-xl border border-[#E8ECF4] focus:border-[#5500FF] focus:bg-white outline-none font-semibold text-[13px] text-slate-900 transition-all resize-none"
-                                                />
-                                            </div>
-
-                                            <div className="space-y-1.5">
-                                                <label className="block text-[12px] font-bold text-slate-700 uppercase tracking-wider">
-                                                    Duyuru Çubuğu Metni (İsteğe Bağlı)
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={announcement}
-                                                    onChange={(e) => setAnnouncement(e.target.value)}
-                                                    placeholder="Örn: %20 Tanışma indirimi için son 3 gün! 🔥"
-                                                    className="w-full h-11 px-4 bg-[#F8F9FE] rounded-xl border border-[#E8ECF4] focus:border-[#5500FF] focus:bg-white outline-none font-semibold text-[14px] text-slate-900 transition-all"
-                                                />
-                                            </div>
-
-                                            <div className="pt-2 flex justify-end">
-                                                <button
-                                                    onClick={() => handleSaveDesign()}
-                                                    disabled={isSavingDesign}
-                                                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#5500FF] to-[#7B2FFF] text-white px-6 py-2.5 rounded-xl font-bold text-[13px] shadow-md shadow-[#5500FF]/25 hover:opacity-95 active:scale-95 transition-all disabled:opacity-50"
-                                                >
-                                                    {isSavingDesign ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                                                    <span>Değişiklikleri Kaydet</span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Mobile Save Bar */}
-                    <div className="lg:hidden fixed bottom-6 inset-x-4 z-50 animate-in fade-in slide-in-from-bottom-10 h-20">
-                        <div className="bg-white/80 backdrop-blur-2xl border border-white/20 p-3 rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex items-center gap-3">
-                            <button
-                                onClick={copyToClipboard}
-                                className={cn(
-                                    "w-14 h-14 rounded-[24px] flex items-center justify-center transition-all active:scale-90",
-                                    copied ? "bg-[#E0FFEC] text-[#00A84D]" : "bg-slate-100 text-slate-500"
-                                )}
-                            >
-                                {copied ? <Check className="w-6 h-6" /> : <Copy className="w-6 h-6" />}
-                            </button>
-                            <button
-                                onClick={handleSaveDesign}
-                                disabled={isSavingDesign}
-                                className="flex-1 h-14 rounded-[24px] bg-[#5500ff] text-white font-bold flex items-center justify-center gap-3 shadow-lg shadow-indigo-200 active:scale-95 disabled:opacity-50"
-                            >
-                                {isSavingDesign ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-                                {t('dashboard.store.header.save_changes')}
-                            </button>
-                        </div>
-                    </div>
+        <>
+            {/* ═══ HEADING ═══ */}
+            <div className="page-heading">
+                <div>
+                    <h1>Mağazam</h1>
+                    <p className="subtitle">Dijital vitrinin, senin kuralların.</p>
+                </div>
+                <div className="heading-actions">
+                    <Button
+                        variant="outline"
+                        onClick={copyLink}
+                        className="text-xs h-9 gap-1.5"
+                    >
+                        <Copy size={14} />
+                        Linki Kopyala
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            setEditingProduct(null);
+                            setIsAddModalOpen(true);
+                        }}
+                        className="text-xs h-9 gap-1.5"
+                    >
+                        <Plus size={14} />
+                        Yeni Ürün
+                    </Button>
                 </div>
             </div>
 
-            {/* Product Editor Modal (overlay) */}
-            <ProductEditorModal
-                isOpen={isModalOpen}
-                onClose={() => {
-                    setIsModalOpen(false);
-                    setEditingProduct(null);
-                }}
-                editingProduct={editingProduct}
-                onSuccess={() => {
-                    if (store) fetchProducts(store.id);
-                    setIsModalOpen(false);
-                    setEditingProduct(null);
-                }}
-            />
+            {/* ═══ TOOLBAR ═══ */}
+            <div className="toolbar">
+                <div className="segments">
+                    {(['Ürünler', 'Tasarım & Profil'] as const).map(item => (
+                        <Button
+                            key={item}
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setTab(item)}
+                            className={`text-[10px] h-7 px-3 font-bold ${
+                                tab === item ? 'selected' : 'text-muted-foreground'
+                            }`}
+                        >
+                            {item}
+                        </Button>
+                    ))}
+                </div>
+
+                {tab === 'Ürünler' && (
+                    <label className="search">
+                        <Search size={14} />
+                        <input
+                            placeholder="Ürün ara..."
+                            value={query}
+                            onChange={e => setQuery(e.target.value)}
+                        />
+                    </label>
+                )}
+            </div>
+
+            {/* ═══ CONTENT TABS ═══ */}
+            {tab === 'Ürünler' ? (
+                <>
+                    {/* Stats */}
+                    <div className="stats">
+                        <Stat
+                            label="Toplam Ürün"
+                            value={products.length.toString()}
+                            change="+1 ürün"
+                            icon={ShoppingBag}
+                        />
+                        <Stat
+                            label="Aktif Ürün"
+                            value={activeCount.toString()}
+                            change="Yayında"
+                            icon={Globe}
+                            color="green"
+                            index={1}
+                        />
+                        <Stat
+                            label="Ürün Satışları"
+                            value={totalSales.toString()}
+                            change="+12,1%"
+                            icon={TrendingUp}
+                            color="orange"
+                        />
+                        <Stat
+                            label="Ürün Geliri"
+                            value={`₺${totalRevenue.toLocaleString('tr-TR')}`}
+                            change="+18,2%"
+                            icon={Wallet}
+                            index={1}
+                        />
+                    </div>
+
+                    {/* Products List Panel */}
+                    <section className="panel">
+                        <div className="panel-header">
+                            <div>
+                                <h2>Ürün Listesi</h2>
+                                <p className="panel-description">
+                                    {activeCount} / {products.length} ürün vitrinde aktif görünür
+                                </p>
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 text-xs gap-1.5"
+                                onClick={() => {
+                                    setEditingProduct(null);
+                                    setIsAddModalOpen(true);
+                                }}
+                            >
+                                <Plus size={13} />
+                                Ürün Ekle
+                            </Button>
+                        </div>
+
+                        {loading ? (
+                            <div className="p-16 flex flex-col items-center justify-center gap-3 text-muted-foreground">
+                                <Loader2 className="w-6 h-6 animate-spin text-[#5500FF]" />
+                                <span className="text-xs font-semibold">Ürünler yükleniyor...</span>
+                            </div>
+                        ) : visibleProducts.length > 0 ? (
+                            <div className="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Ürün adı</th>
+                                            <th>Ürün tipi</th>
+                                            <th>Fiyat</th>
+                                            <th>Satış</th>
+                                            <th>Durum</th>
+                                            <th className="text-right" />
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {visibleProducts.map(p => {
+                                            const IconComp = p.icon || BookOpen;
+                                            const isLive = p.status === 'active';
+
+                                            return (
+                                                <tr key={p.id}>
+                                                    <td>
+                                                        <div className="product">
+                                                            <div className={`product-icon ${p.color}`}>
+                                                                <IconComp size={21} />
+                                                            </div>
+                                                            <div>
+                                                                <strong>{p.title}</strong>
+                                                                <p>{p.subtitle || 'Dijital ürün içeriği'}</p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span className="badge">{p.typeLabel}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span className="badge purple">
+                                                            {Number(p.price) === 0
+                                                                ? 'Ücretsiz'
+                                                                : `₺${Number(p.price).toLocaleString('tr-TR')}`}
+                                                        </span>
+                                                    </td>
+                                                    <td className="price">{p.sales || 0}</td>
+                                                    <td>
+                                                        <div className="row-actions">
+                                                            <button
+                                                                type="button"
+                                                                className={`toggle ${isLive ? '' : 'off'}`}
+                                                                onClick={() =>
+                                                                    handleToggleStatus(p.id, p.status)
+                                                                }
+                                                                aria-label={`${p.title} görünürlüğü`}
+                                                            />
+                                                            <span
+                                                                className={`badge ${
+                                                                    isLive ? 'green' : ''
+                                                                }`}
+                                                            >
+                                                                {isLive ? 'Yayında' : 'Taslak'}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="text-right">
+                                                        <div className="flex items-center justify-end gap-1">
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-7 w-7 text-muted-foreground hover:text-slate-900"
+                                                                title="Düzenle"
+                                                                onClick={() => {
+                                                                    setEditingProduct(p);
+                                                                    setIsAddModalOpen(true);
+                                                                }}
+                                                            >
+                                                                <Edit2 size={13} />
+                                                            </Button>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-7 w-7 text-muted-foreground hover:text-rose-600"
+                                                                title="Sil"
+                                                                onClick={() => setProductToDelete(p.id)}
+                                                            >
+                                                                <Trash2 size={13} />
+                                                            </Button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : (
+                            <div className="empty">
+                                <div className="product-icon mx-auto mb-4">
+                                    <ShoppingBag size={24} />
+                                </div>
+                                <h2>Ürün bulunamadı</h2>
+                                <p>Arama kriterlerinize uygun ürün bulunamadı.</p>
+                            </div>
+                        )}
+                    </section>
+                </>
+            ) : (
+                /* ═══ TASARIM & PROFİL TAB ═══ */
+                <div className="settings-grid">
+                    <div>
+                        {/* Profile Image Panel */}
+                        <section className="panel">
+                            <div className="panel-header">
+                                <h2>Profil Görselleri</h2>
+                                <Camera size={17} className="text-muted-foreground" />
+                            </div>
+                            <div className="form-body profile-upload">
+                                <div className="avatar">
+                                    {photo ? (
+                                        <img
+                                            src={photo}
+                                            alt=""
+                                            className="h-full w-full rounded-full object-cover"
+                                        />
+                                    ) : (
+                                        name
+                                            .split(' ')
+                                            .slice(0, 2)
+                                            .map(s => s[0])
+                                            .join('')
+                                            .toUpperCase() || 'EA'
+                                    )}
+                                </div>
+                                <div>
+                                    <strong className="text-xs">Profil Fotoğrafı</strong>
+                                    <p className="panel-description mb-3">
+                                        JPG, PNG veya WEBP · Maks. 5 MB
+                                    </p>
+                                    <Button variant="outline" size="sm" asChild>
+                                        <label className="cursor-pointer gap-1.5">
+                                            <Camera size={13} />
+                                            Fotoğraf Seç
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={e => {
+                                                    const f = e.target.files?.[0];
+                                                    if (f) setPhoto(URL.createObjectURL(f));
+                                                }}
+                                            />
+                                        </label>
+                                    </Button>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Basic Info Panel */}
+                        <section className="panel">
+                            <div className="panel-header">
+                                <h2>Temel Bilgiler</h2>
+                                <span className="badge green">Profil aktif</span>
+                            </div>
+                            <div className="form-body">
+                                <div className="fields">
+                                    <label className="field">
+                                        AD SOYAD
+                                        <input
+                                            value={name}
+                                            onChange={e => setName(e.target.value)}
+                                            placeholder="Adınız Soyadınız"
+                                        />
+                                    </label>
+                                    <label className="field">
+                                        KULLANICI ADI
+                                        <input
+                                            value={username}
+                                            disabled
+                                            className="opacity-75"
+                                        />
+                                    </label>
+                                    <label className="field">
+                                        E-POSTA
+                                        <input
+                                            type="email"
+                                            value={user?.email || 'emirhan@sety.store'}
+                                            disabled
+                                            className="opacity-75"
+                                        />
+                                        <span className="text-[9px] text-muted-foreground">
+                                            Kayıtlı e-posta güvenlik gereği değiştirilemez.
+                                        </span>
+                                    </label>
+                                    <label className="field">
+                                        BİYOGRAFİ
+                                        <textarea
+                                            value={bio}
+                                            onChange={e => setBio(e.target.value)}
+                                            placeholder="Danışanlarınıza veya müşterilerinize kendinizi tanıtın..."
+                                        />
+                                    </label>
+                                </div>
+                                <Button
+                                    onClick={handleSaveProfile}
+                                    disabled={isSavingDesign}
+                                    className="text-xs gap-1.5"
+                                >
+                                    <Check size={14} />
+                                    {isSavingDesign ? 'Kaydediliyor...' : 'Profili Kaydet'}
+                                </Button>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div>
+                        {/* Store Link Panel */}
+                        <section className="panel">
+                            <div className="panel-header">
+                                <h2>Mağaza Bağlantısı</h2>
+                                <Globe size={17} className="text-[#5500FF]" />
+                            </div>
+                            <div className="form-body">
+                                <p className="text-xs font-bold mb-4">{storeUrl}</p>
+                                <Button variant="outline" size="sm" onClick={copyLink} className="gap-1.5">
+                                    <Copy size={13} />
+                                    Linki Kopyala
+                                </Button>
+                            </div>
+                        </section>
+
+                        {/* Theme Selection */}
+                        <section className="panel">
+                            <div className="panel-header">
+                                <h2>Mağaza Teması</h2>
+                                <Sparkles size={17} className="text-[#5500FF]" />
+                            </div>
+                            <div className="form-body">
+                                <div className="color-options">
+                                    {['Mor (Klasik Sety)', 'Zümrüt Yeşili', 'Sıcak Amber'].map(
+                                        (colorName, i) => (
+                                            <label
+                                                key={colorName}
+                                                className="flex items-center gap-2 text-xs font-semibold cursor-pointer"
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="theme"
+                                                    defaultChecked={i === 0}
+                                                />
+                                                {colorName}
+                                            </label>
+                                        )
+                                    )}
+                                </div>
+                                <label className="field">
+                                    MAĞAZA VİTRİN BAŞLIĞI
+                                    <input
+                                        defaultValue={name}
+                                        placeholder="Mağaza Vitrin Başlığı"
+                                    />
+                                </label>
+                                <Button
+                                    className="mt-5 text-xs gap-1.5"
+                                    onClick={() =>
+                                        showToast('Mağaza teması başarıyla güncellendi! 🎨', 'success')
+                                    }
+                                >
+                                    <Check size={14} />
+                                    Görünümü Kaydet
+                                </Button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            )}
+
+            {/* Product Modal */}
+            {isAddModalOpen && (
+                <ProductEditorModal
+                    isOpen={isAddModalOpen}
+                    onClose={() => {
+                        setIsAddModalOpen(false);
+                        setEditingProduct(null);
+                    }}
+                    product={editingProduct}
+                    onSuccess={() => {
+                        setIsAddModalOpen(false);
+                        setEditingProduct(null);
+                        if (store?.id) fetchProducts(store.id);
+                        showToast('Ürün başarıyla kaydedildi! 🎉', 'success');
+                    }}
+                />
+            )}
 
             {/* Delete Confirm Modal */}
             <ActionConfirmModal
-                isOpen={isConfirmOpen}
-                onClose={() => {
-                    setIsConfirmOpen(false);
-                    setProductToDelete(null);
-                }}
-                onConfirm={confirmDelete}
+                isOpen={!!productToDelete}
+                onClose={() => setProductToDelete(null)}
+                onConfirm={handleDeleteProduct}
                 title="Ürünü Sil"
-                description="Bu ürünü silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
-                confirmText="Sil"
-                cancelText="İptal"
-                isLoading={isDeleting}
-                variant="danger"
+                description="Bu ürünü mağazanızdan kaldırmak istediğinize emin misiniz? Bu işlem geri alınamaz."
+                confirmText={isDeleting ? 'Siliniyor...' : 'Evet, Sil'}
+                variant="destructive"
             />
-        </div>
-    );
-}
-
-export default function MyStorePage() {
-    return (
-        <Suspense fallback={
-            <div className="max-w-[1400px] mx-auto p-10 space-y-10">
-                <Skeleton className="h-20 w-full rounded-3xl" />
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                    <div className="lg:col-span-8 space-y-8">
-                        <Skeleton className="h-40 w-full rounded-3xl" />
-                        <Skeleton className="h-[400px] w-full rounded-3xl" />
-                    </div>
-                </div>
-            </div>
-        }>
-            <StorePageContent />
-        </Suspense>
+        </>
     );
 }

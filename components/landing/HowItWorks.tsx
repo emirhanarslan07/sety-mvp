@@ -82,19 +82,28 @@ export function HowItWorks() {
 
                             {/* Dashboard Body with Left Mini Sidebar and Main Area */}
                             <div className="flex bg-[#F8FAFC]">
-                                {/* Modern Sidebar (matching ModernSidebar.tsx) */}
-                                <div className="w-36 lg:w-40 bg-white border-r border-slate-200/70 p-3 hidden sm:flex flex-col justify-between shrink-0">
-                                    <div className="space-y-4">
+                                {/* Modern Sidebar (matching beautiful-page-design Shell) */}
+                                <div className="w-36 lg:w-44 bg-white border-r border-slate-200/70 p-3 hidden sm:flex flex-col justify-between shrink-0">
+                                    <div className="space-y-3">
                                         {/* Logo */}
-                                        <div className="flex items-center gap-2 px-1.5 py-1">
-                                            <SetyLogo size="sm" className="w-6 h-6" />
-                                            <span className="text-sm font-black text-slate-900 tracking-tight font-logo">Sety</span>
+                                        <div className="flex items-center gap-1.5 px-1 py-1">
+                                            <span className="w-6 h-6 rounded-lg bg-[#5500FF] text-white flex items-center justify-center shadow-xs">
+                                                <Zap size={13} fill="currentColor" />
+                                            </span>
+                                            <span className="text-sm font-extrabold text-slate-900 tracking-tight">sety</span>
+                                            <span className="text-[7.5px] font-black bg-[#e5ff66] text-[#1a2e05] px-1.5 py-0.5 rounded-full ml-auto">BETA</span>
+                                        </div>
+
+                                        {/* Store Link Chip */}
+                                        <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-200/80 rounded-md text-[10px] font-bold text-slate-700">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                                            <span className="truncate">sety.store/nova</span>
                                         </div>
 
                                         {/* Nav items */}
-                                        <nav className="space-y-1">
-                                            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-[#5500FF] text-white text-xs font-bold shadow-xs">
-                                                <svg width="14" height="14" fill="none" viewBox="0 0 16 16" className="shrink-0">
+                                        <nav className="space-y-0.5 pt-1">
+                                            <div className="flex items-center gap-2 px-2 py-1 rounded-md bg-[#f0e8ff] text-[#5500FF] text-[11px] font-bold">
+                                                <svg width="13" height="13" fill="none" viewBox="0 0 16 16" className="shrink-0">
                                                     <rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
                                                     <rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
                                                     <rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
@@ -112,8 +121,8 @@ export function HowItWorks() {
                                             ].map((item, idx) => {
                                                 const ItemIcon = item.icon;
                                                 return (
-                                                    <div key={idx} className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-slate-500 text-xs font-semibold hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-default">
-                                                        <ItemIcon className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                                                    <div key={idx} className="flex items-center gap-2 px-2 py-1 rounded-md text-slate-500 text-[11px] font-semibold hover:text-slate-900 transition-colors cursor-default">
+                                                        <ItemIcon className="w-3 h-3 shrink-0 text-slate-400" />
                                                         <span>{item.label}</span>
                                                     </div>
                                                 );
@@ -121,14 +130,25 @@ export function HowItWorks() {
                                         </nav>
                                     </div>
 
-                                    {/* Bottom creator tag */}
-                                    <div className="pt-3 border-t border-slate-100 flex items-center gap-2 px-1">
-                                        <div className="w-7 h-7 rounded-full bg-violet-100 text-[#5500ff] font-extrabold text-xs flex items-center justify-center border border-violet-200">
-                                            N
+                                    {/* Bottom Plan & Creator tag */}
+                                    <div className="pt-2 border-t border-slate-100 space-y-2">
+                                        <div className="bg-[#f7f4ff] border border-violet-100 rounded-md p-1.5 text-[9px]">
+                                            <div className="flex justify-between font-black text-slate-700">
+                                                <span>Founder</span>
+                                                <span className="text-[#5500FF]">9/14 gün</span>
+                                            </div>
+                                            <div className="h-1 bg-white rounded-full mt-1 overflow-hidden">
+                                                <div className="h-full bg-[#5500FF] w-[68%]" />
+                                            </div>
                                         </div>
-                                        <div className="min-w-0">
-                                            <div className="text-[11px] font-black text-slate-900 truncate leading-none">nova.studio</div>
-                                            <div className="text-[9px] text-emerald-600 font-bold mt-0.5 leading-none">● Aktif</div>
+                                        <div className="flex items-center gap-1.5 px-0.5">
+                                            <div className="w-6 h-6 rounded-full bg-violet-100 text-[#5500ff] font-extrabold text-[10px] flex items-center justify-center border border-violet-200">
+                                                N
+                                            </div>
+                                            <div className="min-w-0">
+                                                <div className="text-[10px] font-black text-slate-900 truncate leading-none">Nova Studio</div>
+                                                <div className="text-[8px] text-slate-400 truncate mt-0.5 leading-none">nova@sety.store</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

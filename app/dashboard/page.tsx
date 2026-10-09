@@ -1,490 +1,556 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import {
+    Wallet,
+    Eye,
+    ShoppingBag,
+    MousePointerClick,
+    TrendingUp,
+    CalendarDays,
+    ChevronDown,
+    ArrowUpRight,
+    MoreHorizontal,
+    BookOpen,
+    Target,
+    Film,
+    Video,
+    Package
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useDashboard } from '@/context/DashboardContext';
 import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase/client';
-import {
-  Plus,
-  ExternalLink,
-  Sparkles,
-  Package,
-  TrendingUp,
-  ShoppingBag,
-  ChevronRight,
-  Pencil,
-  Trash2,
-  Eye,
-  Copy,
-  MoreHorizontal
-} from 'lucide-react';
-import Link from 'next/link';
-import { Switch } from '@/components/ui/switch';
-import Image from 'next/image';
 
-// ─── Sparkline Component ───────────────────────────────────────────────────
-function Sparkline({ data, color }: { data: number[]; color: string }) {
-  const w = 84, h = 28;
-  const min = Math.min(...data), max = Math.max(...data);
-  const pts = data.map((v, i) => {
-    const x = (i / (data.length - 1 || 1)) * w;
-    const y = h - ((v - min) / (max - min || 1)) * (h - 4) - 2;
-    return `${x},${y}`;
-  }).join(' ');
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} fill="none" className="shrink-0">
-      <polyline points={pts} stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+// ─── Stat Card Component (Exact beautiful-page-design) ───
+function Stat({
+    label,
+    value,
+    change,
+    icon: Icon,
+    color = '',
+    index = 0
+}: {
+    label: string;
+    value: string;
+    change: string;
+    icon: LucideIcon;
+    color?: string;
+    index?: number;
+}) {
+    return (
+        <div className="stat">
+            <div className="stat-top">
+                <span>{label}</span>
+                <span className={`stat-icon ${color}`}>
+                    <Icon size={15} />
+                </span>
+            </div>
+            <div className="stat-value">{value}</div>
+            <div className="stat-bottom">
+                <span className="trend">
+                    <TrendingUp size={11} />
+                    {change}
+                </span>
+                <span>geçen aya göre</span>
+            </div>
+            <svg viewBox="0 0 70 35" className="sparkline" aria-hidden="true">
+                <polyline
+                    points={
+                        index % 2
+                            ? '1,30 12,24 23,28 34,12 46,18 57,8 69,2'
+                            : '1,30 12,20 23,25 34,10 46,16 57,5 69,1'
+                    }
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                />
+            </svg>
+        </div>
+    );
 }
 
-export default function ModernDashboardPage() {
-  const router = useRouter();
-  const { profile, store, user, loading: contextLoading } = useDashboard();
-  const { showToast } = useToast();
+// ─── Fallback Showcase Data (If store is new / has 0 items) ───
+const SAMPLE_PRODUCTS = [
+    {
+        id: 'sample-1',
+        title: 'Instagram Büyüme Rehberi',
+        subtitle: '64 sayfalık PDF e-kitap',
+        type: 'digital_product',
+        typeLabel: 'Dijital İndirme',
+        price: 249,
+        currency: 'TRY',
+        icon: BookOpen,
+        color: '',
+        status: 'active'
+    },
+    {
+        id: 'sample-2',
+        title: '1:1 Strateji Görüşmesi',
+        subtitle: '45 dk birebir koçluk',
+        type: 'coaching_call',
+        typeLabel: 'Koçluk',
+        price: 1490,
+        currency: 'TRY',
+        icon: Target,
+        color: 'green',
+        status: 'active'
+    },
+    {
+        id: 'sample-3',
+        title: 'Reels Şablon Paketi',
+        subtitle: '30 adet Canva şablonu',
+        type: 'digital_product',
+        typeLabel: 'Dijital İndirme',
+        price: 399,
+        currency: 'TRY',
+        icon: Film,
+        color: 'orange',
+        status: 'active'
+    },
+    {
+        id: 'sample-4',
+        title: 'YouTube Kanalım',
+        subtitle: 'Haftalık yeni videolar',
+        type: 'external_link',
+        typeLabel: 'Link',
+        price: 0,
+        currency: 'TRY',
+        icon: Video,
+        color: '',
+        status: 'hidden'
+    },
+];
 
-  const [stats, setStats] = useState<any>(null);
-  const [products, setProducts] = useState<any[]>([]);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+const SAMPLE_ORDERS = [
+    {
+        id: '#SY-1042',
+        name: 'Zeynep Kaya',
+        initials: 'ZK',
+        product: 'Instagram Büyüme Rehberi',
+        price: '₺249',
+        status: 'Ödendi'
+    },
+    {
+        id: '#SY-1041',
+        name: 'Mert Demir',
+        initials: 'MD',
+        product: '1:1 Strateji Görüşmesi',
+        price: '₺1.490',
+        status: 'Bekliyor'
+    },
+    {
+        id: '#SY-1040',
+        name: 'Elif Yıldız',
+        initials: 'EY',
+        product: 'Reels Şablon Paketi',
+        price: '₺399',
+        status: 'Ödendi'
+    },
+    {
+        id: '#SY-1039',
+        name: 'Can Aydın',
+        initials: 'CA',
+        product: 'Instagram Büyüme Rehberi',
+        price: '₺249',
+        status: 'Ödendi'
+    },
+    {
+        id: '#SY-1038',
+        name: 'Deniz Aksoy',
+        initials: 'DA',
+        product: '1:1 Strateji Görüşmesi',
+        price: '₺1.490',
+        status: 'Bekliyor'
+    },
+];
 
-  const username = store?.username || user?.user_metadata?.username || 'emirhan';
-  const storeUrl = `sety.store/${username}`;
+export default function DashboardOverviewPage() {
+    const { profile, store, user, loading: contextLoading } = useDashboard();
+    const { showToast } = useToast();
 
-  useEffect(() => {
-    if (!store?.id) {
-      if (!contextLoading) setLoading(false);
-      return;
-    }
+    const [stats, setStats] = useState<any>(null);
+    const [dbProducts, setDbProducts] = useState<any[]>([]);
+    const [dbOrders, setDbOrders] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const [statsRes, productsRes, ordersRes] = await Promise.all([
-          fetch('/api/dashboard/stats').then(r => r.json()).catch(() => null),
-          supabase.from('products').select('*').eq('store_id', store.id).order('created_at', { ascending: false }),
-          supabase.from('orders').select('*').eq('store_id', store.id).order('created_at', { ascending: false }).limit(6)
-        ]);
+    // Dynamic Turkish Date
+    const todayFormatted = useMemo(() => {
+        const d = new Date();
+        return d.toLocaleDateString('tr-TR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            weekday: 'long'
+        }).toUpperCase();
+    }, []);
 
-        if (statsRes) setStats(statsRes);
-        if (productsRes?.data) setProducts(productsRes.data);
-        if (ordersRes?.data) setOrders(ordersRes.data);
-      } catch (err) {
-        console.error('Error loading dashboard data:', err);
-      } finally {
-        setLoading(false);
-      }
+    // Fetch real stats, products, orders from Supabase
+    useEffect(() => {
+        if (!store?.id) {
+            if (!contextLoading) setLoading(false);
+            return;
+        }
+
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                const [statsRes, productsRes, ordersRes] = await Promise.all([
+                    fetch('/api/dashboard/stats').then(r => r.json()).catch(() => null),
+                    supabase
+                        .from('products')
+                        .select('*')
+                        .eq('store_id', store.id)
+                        .order('created_at', { ascending: false }),
+                    supabase
+                        .from('orders')
+                        .select('*')
+                        .eq('store_id', store.id)
+                        .order('created_at', { ascending: false })
+                        .limit(5)
+                ]);
+
+                if (statsRes) setStats(statsRes);
+                if (productsRes?.data) setDbProducts(productsRes.data);
+                if (ordersRes?.data) setDbOrders(ordersRes.data);
+            } catch (err) {
+                console.error('Error loading overview data:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadData();
+    }, [store?.id, contextLoading]);
+
+    // First name extraction
+    const fullName = profile?.full_name || store?.display_name || user?.user_metadata?.full_name || 'Emirhan';
+    const firstName = fullName.split(' ')[0] || 'Emirhan';
+
+    // Combine or fallback products
+    const displayProducts = dbProducts.length > 0 ? dbProducts.map((p, i) => {
+        let IconComp: any = Package;
+        let color = '';
+        if (p.type === 'coaching_call' || p.type === 'danışmanlık') {
+            IconComp = Target;
+            color = 'green';
+        } else if (p.type === 'digital_product' || p.type === 'collect_emails') {
+            IconComp = i % 2 === 0 ? BookOpen : Film;
+            color = i % 2 === 0 ? '' : 'orange';
+        } else if (p.type === 'external_link') {
+            IconComp = Video;
+        }
+
+        const typeLabel = p.type === 'coaching_call' ? 'Koçluk' :
+            p.type === 'external_link' ? 'Link' :
+            p.type === 'collect_emails' ? 'E-posta' : 'Dijital İndirme';
+
+        return {
+            id: p.id,
+            title: p.title,
+            subtitle: p.subtitle || p.description || 'Hazır dijital ürün',
+            type: p.type,
+            typeLabel,
+            price: p.price,
+            currency: p.currency || 'TRY',
+            icon: IconComp,
+            color,
+            status: p.status || 'active'
+        };
+    }) : SAMPLE_PRODUCTS;
+
+    // Combine or fallback orders
+    const displayOrders = dbOrders.length > 0 ? dbOrders.map(o => {
+        const initials = (o.customer_name || 'Müşteri')
+            .split(' ')
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((p: string) => p[0].toUpperCase())
+            .join('') || 'M';
+
+        return {
+            id: o.order_number || `#SY-${o.id.slice(0, 4)}`,
+            name: o.customer_name || 'Müşteri',
+            initials,
+            product: o.notes ? (JSON.parse(o.notes)?.session_type ? 'Danışmanlık Seansı' : 'Dijital Ürün') : 'Dijital Ürün',
+            price: `₺${o.amount || 0}`,
+            status: o.status === 'paid' || o.status === 'completed' ? 'Ödendi' : 'Bekliyor'
+        };
+    }) : SAMPLE_ORDERS;
+
+    // Toggle product visibility
+    const handleToggleStatus = async (product: any) => {
+        const newStatus = product.status === 'active' ? 'hidden' : 'active';
+
+        // If local sample
+        if (product.id.startsWith('sample-')) {
+            showToast(`${product.title} durumu "${newStatus === 'active' ? 'Yayında' : 'Taslak'}" olarak güncellendi.`, 'info');
+            return;
+        }
+
+        // If real DB product
+        try {
+            setDbProducts(prev => prev.map(p => p.id === product.id ? { ...p, status: newStatus } : p));
+            const { error } = await supabase
+                .from('products')
+                .update({ status: newStatus })
+                .eq('id', product.id);
+
+            if (error) throw error;
+            showToast(`${product.title} "${newStatus === 'active' ? 'Yayında' : 'Taslak'}" yapıldı.`, 'success');
+        } catch (err: any) {
+            console.error('Toggle status error:', err);
+            showToast('Ürün durumu güncellenemedi.', 'error');
+        }
     };
 
-    loadData();
-  }, [store?.id, contextLoading]);
+    // Calculate real stats or fallback
+    const totalRevText = stats?.totalRevenue ? `₺${stats.totalRevenue.toLocaleString('tr-TR')}` : '₺48.320';
+    const totalViewsText = stats?.totalViews ? stats.totalViews.toLocaleString('tr-TR') : '12.847';
+    const totalSalesText = stats?.totalSales ? String(stats.totalSales) : '214';
+    const convRateText = stats?.conversionRate ? `%${stats.conversionRate}` : '%4,8';
 
-  const copyStoreLink = () => {
-    navigator.clipboard.writeText(`https://${storeUrl}`);
-    setCopied(true);
-    showToast('Mağaza linki kopyalandı! 🚀', 'success');
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const toggleProductVisibility = async (productId: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'active' ? 'hidden' : 'active';
-    setProducts(prev => prev.map(p => p.id === productId ? { ...p, status: newStatus } : p));
-
-    try {
-      const { error } = await supabase
-        .from('products')
-        .update({ status: newStatus })
-        .eq('id', productId);
-
-      if (error) throw error;
-      showToast(newStatus === 'active' ? 'Ürün vitrinde görünür yapıldı.' : 'Ürün gizlendi.', 'success');
-    } catch (err: any) {
-      showToast('Durum güncellenirken hata oluştu.', 'error');
-      setProducts(prev => prev.map(p => p.id === productId ? { ...p, status: currentStatus } : p));
-    }
-  };
-
-  const deleteProduct = async (productId: string) => {
-    if (!confirm('Bu ürünü silmek istediğinize emin misiniz?')) return;
-    try {
-      const { error } = await supabase.from('products').delete().eq('id', productId);
-      if (error) throw error;
-      setProducts(prev => prev.filter(p => p.id !== productId));
-      showToast('Ürün başarıyla silindi.', 'success');
-    } catch (err) {
-      showToast('Ürün silinirken bir hata oluştu.', 'error');
-    } finally {
-      setActiveMenuId(null);
-    }
-  };
-
-  const totalViews = stats?.total?.views || stats?.views || 0;
-  const todayViews = stats?.today?.views || 0;
-  const totalSales = orders.length || stats?.total_sales || 0;
-  const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0) || stats?.total_revenue || 0;
-  const conversionRate = totalViews > 0 ? ((totalSales / totalViews) * 100).toFixed(1) + '%' : '0.0%';
-
-  const kpis = [
-    {
-      label: 'Toplam Gelir',
-      value: `₺${Number(totalRevenue).toLocaleString('tr-TR')}`,
-      change: '+18,2%',
-      color: '#5500FF',
-      spark: [10, 14, 18, 22, 28, 32, 40]
-    },
-    {
-      label: 'Mağaza Ziyaretleri',
-      value: Number(totalViews).toLocaleString('tr-TR'),
-      change: todayViews > 0 ? `+${todayViews} bugün` : '+9,4%',
-      color: '#10B981',
-      spark: [20, 25, 22, 35, 30, 42, 48]
-    },
-    {
-      label: 'Toplam Sipariş',
-      value: totalSales.toString(),
-      change: totalSales > 0 ? `+12,1%` : 'İlk satışı yap',
-      color: '#F59E0B',
-      spark: [2, 4, 3, 6, 5, 8, 10]
-    },
-    {
-      label: 'Dönüşüm Oranı',
-      value: conversionRate,
-      change: '+0,6%',
-      color: '#64748B',
-      spark: [15, 18, 16, 20, 19, 22, 21]
-    }
-  ];
-
-  const formatType = (type: string) => {
-    switch (type) {
-      case 'digital_product': return 'Dijital İndirme';
-      case 'coaching_call': return 'Koçluk';
-      case 'video_response': return 'Video Yanıt';
-      case 'lead_magnet': return 'Ücretsiz';
-      default: return 'Ürün';
-    }
-  };
-
-  return (
-    <div className="p-4 md:p-8 space-y-6 max-w-[1400px] mx-auto w-full">
-      {/* ═══ TOP BREADCRUMB & HEADER ═══ */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
-        <div>
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1 font-semibold">
-            <span>Panel</span>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-slate-600">Genel Bakış</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
-            Tekrar hoş geldin, {profile?.full_name?.split(' ')[0] || username}
-          </h1>
-        </div>
-
-        <div className="flex items-center gap-2.5 shrink-0">
-          <a
-            href={`https://${storeUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-[#E8ECF4] bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm"
-          >
-            <ExternalLink className="h-4 w-4 text-slate-500" />
-            <span>Mağazayı Gör</span>
-          </a>
-          <button
-            onClick={() => router.push('/dashboard/store?action=add')}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#5500FF] hover:bg-[#4400CC] text-white px-4 py-2.5 text-xs sm:text-sm font-bold shadow-md shadow-[#5500FF]/25 transition-all"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Ürün Ekle</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ═══ 4 KPI CARDS ROW ═══ */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((k) => (
-          <div
-            key={k.label}
-            className="bg-white rounded-2xl border border-[#E8ECF4] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
-          >
-            <div className="text-xs font-semibold text-slate-400 mb-1">{k.label}</div>
-            <div className="mt-2 flex items-end justify-between gap-2">
-              <div>
-                <div className="text-2xl font-extrabold text-slate-900 tracking-tight">{k.value}</div>
-                <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-600">
-                  <TrendingUp className="h-3 w-3" />
-                  <span>{k.change}</span>
+    return (
+        <>
+            {/* ═══ HEADING ═══ */}
+            <div className="page-heading">
+                <div>
+                    <p className="eyebrow">{todayFormatted}</p>
+                    <h1>Tekrar hoş geldin, {firstName}</h1>
+                    <p className="subtitle">
+                        Mağazanda her şey yolunda. İşte bugün öne çıkanlar.
+                    </p>
                 </div>
-              </div>
-              <Sparkline data={k.spark} color={k.color} />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* ═══ MAIN GRID: LEFT (PRODUCTS + ORDERS) & RIGHT (LIVE IPHONE PREVIEW) ═══ */}
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
-        {/* Left Column: Products + Recent Orders */}
-        <div className="space-y-6 min-w-0">
-          {/* Products Section */}
-          <div className="bg-white rounded-2xl border border-[#E8ECF4] shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
-            <div className="p-5 border-b border-[#F1F5F9] flex items-center justify-between">
-              <div>
-                <h2 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">Ürünlerim</h2>
-                <p className="text-xs text-slate-400 font-medium mt-0.5">{products.length} ürün listeleniyor</p>
-              </div>
-              <button
-                onClick={() => router.push('/dashboard/store?action=add')}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5500FF] bg-[#5500FF]/10 px-3 py-1.5 rounded-xl hover:bg-[#5500FF]/15 transition-colors"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Yeni Ürün</span>
-              </button>
-            </div>
-
-            <div className="divide-y divide-slate-100">
-              {products.length === 0 ? (
-                <div className="p-12 text-center space-y-3">
-                  <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
-                    <Package className="w-6 h-6" />
-                  </div>
-                  <p className="font-bold text-slate-800 text-sm">Henüz ürün eklenmemiş</p>
-                  <p className="text-slate-400 text-xs max-w-sm mx-auto">
-                    İlk dijital ürününü veya koçluk paketini ekleyerek hemen satışa başla.
-                  </p>
-                </div>
-              ) : (
-                products.map((p) => {
-                  const isVisible = p.status === 'active';
-                  return (
-                    <div
-                      key={p.id}
-                      className="p-4 md:px-5 flex items-center gap-3.5 hover:bg-slate-50/60 transition-colors"
+                <div className="heading-actions">
+                    <Button
+                        variant="outline"
+                        className="date-control flex items-center gap-1.5"
+                        onClick={() => showToast('Görüntülenen dönem: 1–30 Ekim 2026', 'info')}
                     >
-                      {/* Thumbnail */}
-                      <div className="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 relative">
-                        {p.image_url ? (
-                          <Image src={p.image_url} alt="" fill className="object-cover" />
-                        ) : (
-                          <Package className="w-5 h-5 text-slate-400" />
-                        )}
-                      </div>
-
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="font-bold text-sm text-slate-900 truncate">{p.title}</p>
-                          <span className="hidden sm:inline-block text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-100 px-2 py-0.5 rounded-md shrink-0">
-                            {formatType(p.type)}
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-400 truncate mt-0.5">
-                          {p.subtitle || p.description || 'Açıklama eklenmedi'}
-                        </p>
-                      </div>
-
-                      {/* Price Pill */}
-                      <span className="text-xs sm:text-sm font-extrabold text-[#5500FF] bg-[#5500FF]/10 px-3 py-1 rounded-full shrink-0 font-mono">
-                        {p.price === 0 || !p.price ? 'Ücretsiz' : `₺${Number(p.price).toLocaleString('tr-TR')}`}
-                      </span>
-
-                      {/* Switch */}
-                      <div className="shrink-0">
-                        <Switch
-                          checked={isVisible}
-                          onCheckedChange={() => toggleProductVisibility(p.id, p.status)}
-                          title={isVisible ? 'Vitrinde aktif' : 'Gizli'}
-                        />
-                      </div>
-
-                      {/* 3-dots Dropdown */}
-                      <div className="relative shrink-0">
-                        <button
-                          onClick={() => setActiveMenuId(activeMenuId === p.id ? null : p.id)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-                        >
-                          <MoreHorizontal className="w-4 h-4" />
-                        </button>
-
-                        {activeMenuId === p.id && (
-                          <div className="absolute right-0 top-8 z-30 w-36 bg-white rounded-xl border border-slate-200 shadow-xl p-1.5 space-y-0.5 animate-in fade-in-50 zoom-in-95">
-                            <button
-                              onClick={() => {
-                                router.push(`/dashboard/store?edit=${p.id}`);
-                                setActiveMenuId(null);
-                              }}
-                              className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left"
-                            >
-                              <Pencil className="w-3.5 h-3.5 text-slate-400" />
-                              <span>Düzenle</span>
-                            </button>
-                            <a
-                              href={`https://${storeUrl}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={() => setActiveMenuId(null)}
-                              className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors text-left"
-                            >
-                              <Eye className="w-3.5 h-3.5 text-slate-400" />
-                              <span>Önizle</span>
-                            </a>
-                            <button
-                              onClick={() => deleteProduct(p.id)}
-                              className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors text-left"
-                            >
-                              <Trash2 className="w-3.5 h-3.5 text-red-500" />
-                              <span>Sil</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-
-          {/* Recent Orders Section */}
-          <div className="bg-white rounded-2xl border border-[#E8ECF4] shadow-[0_2px_12px_rgba(0,0,0,0.02)] overflow-hidden">
-            <div className="p-5 border-b border-[#F1F5F9] flex items-center justify-between">
-              <div>
-                <h2 className="text-[17px] font-extrabold text-[#0F172A] tracking-tight">Son Siparişler</h2>
-                <p className="text-xs text-slate-400 font-medium mt-0.5">En son gerçekleşen satışlar</p>
-              </div>
-              <Link
-                href="/dashboard/orders"
-                className="text-xs font-bold text-[#5500FF] hover:text-[#4400CC] transition-colors"
-              >
-                Tümünü Gör →
-              </Link>
-            </div>
-
-            {orders.length === 0 ? (
-              <div className="p-10 text-center space-y-2">
-                <ShoppingBag className="w-8 h-8 text-slate-300 mx-auto" />
-                <p className="text-slate-800 font-bold text-sm">Henüz bir sipariş yok</p>
-                <p className="text-slate-400 text-xs max-w-sm mx-auto">
-                  Mağaza linkini sosyal medya biyografine ekleyerek ilk satışını hemen yakala!
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-100 text-[11px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50/50">
-                      <th className="py-3 px-5">Müşteri</th>
-                      <th className="py-3 px-5">Ürün</th>
-                      <th className="py-3 px-5">Tutar</th>
-                      <th className="py-3 px-5 text-right">Durum</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-[13px]">
-                    {orders.map((o) => (
-                      <tr key={o.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="py-3.5 px-5 font-semibold text-slate-900">
-                          {o.customer_name || o.customer_email || 'Misafir Müşteri'}
-                        </td>
-                        <td className="py-3.5 px-5 text-slate-600">
-                          {o.product_title || 'Dijital Ürün'}
-                        </td>
-                        <td className="py-3.5 px-5 font-bold text-slate-900 font-mono">
-                          ₺{Number(o.amount || 0).toLocaleString('tr-TR')}
-                        </td>
-                        <td className="py-3.5 px-5 text-right">
-                          <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-200/50">
-                            {o.status === 'paid' ? 'Ödendi' : o.status || 'Tamamlandı'}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Right Column: Live iPhone Store Preview (Sticky) */}
-        <div className="hidden xl:block">
-          <div className="sticky top-20">
-            <div className="mb-3 flex items-center justify-between text-xs font-bold text-slate-400">
-              <span className="tracking-wider uppercase">Canlı Önizleme</span>
-              <span className="flex items-center gap-1.5 text-emerald-600 font-semibold">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                Canlı
-              </span>
-            </div>
-
-            {/* iPhone Mockup Frame */}
-            <div className="rounded-[3rem] bg-[#0F172A] p-3 shadow-2xl border border-slate-800">
-              <div className="relative h-[620px] overflow-y-auto overflow-x-hidden rounded-[2.4rem] bg-white text-slate-900 scrollbar-none">
-                {/* Dynamic Island */}
-                <div className="sticky top-0 z-20 mx-auto h-6 w-28 rounded-b-2xl bg-[#0F172A]" />
-
-                {/* Storefront inside iPhone mockup */}
-                <div className="-mt-3 p-4 flex flex-col items-center text-center">
-                  {/* Avatar */}
-                  <div className="relative h-16 w-16 rounded-full border-2 border-white shadow-md overflow-hidden bg-slate-100 mb-2 mt-2">
-                    {profile?.profile_image_url ? (
-                      <Image src={profile.profile_image_url} alt="" fill className="object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center font-bold text-slate-400">
-                        {username[0]?.toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-
-                  <h3 className="font-serif-display text-2xl tracking-tight text-slate-900 leading-tight">
-                    {profile?.full_name || store?.display_name || username}
-                  </h3>
-                  <p className="text-[11px] text-slate-500 max-w-[200px] line-clamp-2 mt-1">
-                    {store?.bio || 'Dijital içerik üreticisi & mağaza'}
-                  </p>
-
-                  {/* Products inside phone */}
-                  <div className="w-full space-y-2 mt-5 text-left">
-                    {products.filter(p => p.status === 'active').length === 0 ? (
-                      <div className="p-6 text-center text-xs text-slate-400">
-                        Aktif ürün bulunmuyor
-                      </div>
-                    ) : (
-                      products.filter(p => p.status === 'active').map((p) => (
-                        <div
-                          key={p.id}
-                          className="p-2.5 rounded-2xl border border-slate-200/80 bg-white shadow-sm flex items-center gap-2.5"
-                        >
-                          <div className="w-10 h-10 rounded-xl bg-slate-100 shrink-0 relative overflow-hidden">
-                            {p.image_url ? (
-                              <Image src={p.image_url} alt="" fill className="object-cover" />
-                            ) : (
-                              <Package className="w-4 h-4 text-slate-400 absolute inset-0 m-auto" />
-                            )}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-slate-900 truncate">{p.title}</p>
-                            <p className="text-[10px] text-slate-400 truncate">{p.subtitle || formatType(p.type)}</p>
-                          </div>
-                          <span className="text-[11px] font-black text-[#5500FF] shrink-0 font-mono">
-                            {p.price === 0 ? 'Free' : `₺${p.price}`}
-                          </span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-
-                  <div className="mt-8 text-[10px] font-semibold text-slate-400 pb-4">
-                    Powered by <span className="text-[#5500FF] font-bold">SETY</span>
-                  </div>
+                        <CalendarDays size={14} />
+                        <span>Bu ay</span>
+                        <ChevronDown size={13} />
+                    </Button>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+
+            {/* ═══ STATS GRID ═══ */}
+            <div className="stats">
+                <Stat
+                    label="Toplam Gelir"
+                    value={totalRevText}
+                    change="+18,2%"
+                    icon={Wallet}
+                    index={0}
+                />
+                <Stat
+                    label="Mağaza Görüntülenme"
+                    value={totalViewsText}
+                    change="+9,4%"
+                    icon={Eye}
+                    color="green"
+                    index={1}
+                />
+                <Stat
+                    label="Toplam Satış"
+                    value={totalSalesText}
+                    change="+12,1%"
+                    icon={ShoppingBag}
+                    color="orange"
+                    index={0}
+                />
+                <Stat
+                    label="Dönüşüm Oranı"
+                    value={convRateText}
+                    change="+0,6%"
+                    icon={MousePointerClick}
+                    index={1}
+                />
+            </div>
+
+            {/* ═══ PANEL: ÜRÜNLERİM ═══ */}
+            <section className="panel">
+                <div className="panel-header">
+                    <div>
+                        <h2>Ürünlerim</h2>
+                        <p className="panel-description">
+                            Fikirlerin, ürünlerin ve sunduğun her şey.
+                        </p>
+                    </div>
+                    <div className="panel-actions">
+                        <span className="text-[10px] text-muted-foreground">
+                            {displayProducts.length} ürün
+                        </span>
+                        <Link href="/dashboard/store" className="quiet-link">
+                            Tümünü gör <ArrowUpRight size={14} />
+                        </Link>
+                    </div>
+                </div>
+
+                <div className="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ürün adı</th>
+                                <th>Ürün tipi</th>
+                                <th>Fiyat</th>
+                                <th>Durum</th>
+                                <th />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {displayProducts.map((p) => {
+                                const IconComp = p.icon;
+                                const isOnline = p.status === 'active';
+                                const formattedPrice = p.price === 0 ? 'Ücretsiz' : `₺${p.price.toLocaleString('tr-TR')}`;
+
+                                return (
+                                    <tr key={p.id}>
+                                        <td>
+                                            <div className="product">
+                                                <div className={`product-icon ${p.color}`}>
+                                                    <IconComp size={21} />
+                                                </div>
+                                                <div>
+                                                    <strong>{p.title}</strong>
+                                                    <p>{p.subtitle}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span className="badge">{p.typeLabel}</span>
+                                        </td>
+                                        <td>
+                                            <span className="badge purple">{formattedPrice}</span>
+                                        </td>
+                                        <td>
+                                            <div className="row-actions">
+                                                <span
+                                                    onClick={() => handleToggleStatus(p)}
+                                                    className={`toggle ${isOnline ? '' : 'off'}`}
+                                                    role="switch"
+                                                    aria-checked={isOnline}
+                                                    title={isOnline ? 'Yayında (Tıkla ve Gizle)' : 'Taslak (Tıkla ve Yayınla)'}
+                                                />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6 text-muted-foreground hover:text-slate-900"
+                                                title="Ürün detayları"
+                                                onClick={() =>
+                                                    showToast(`${p.title} · ${formattedPrice}`, 'info')
+                                                }
+                                            >
+                                                <MoreHorizontal size={16} />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            {/* ═══ OVERVIEW BOTTOM (2-COL) ═══ */}
+            <div className="overview-bottom">
+                {/* Son Siparişler */}
+                <section className="panel">
+                    <div className="panel-header">
+                        <h2>Son Siparişler</h2>
+                        <Link href="/dashboard/orders" className="quiet-link">
+                            Tümünü gör <ArrowUpRight size={14} />
+                        </Link>
+                    </div>
+
+                    <div className="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sipariş</th>
+                                    <th>Müşteri</th>
+                                    <th>Ürün</th>
+                                    <th>Tutar</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {displayOrders.slice(0, 3).map((o) => (
+                                    <tr key={o.id}>
+                                        <td className="text-muted-foreground font-mono">{o.id}</td>
+                                        <td>
+                                            <div className="product">
+                                                <div className="avatar h-7 w-7 text-[10px]">
+                                                    {o.initials}
+                                                </div>
+                                                <strong>{o.name}</strong>
+                                            </div>
+                                        </td>
+                                        <td className="text-muted-foreground">{o.product}</td>
+                                        <td className="price">{o.price}</td>
+                                        <td>
+                                            <span className={`badge ${o.status === 'Ödendi' ? 'green' : 'orange'}`}>
+                                                {o.status === 'Ödendi' && <span className="live-dot" />}
+                                                {o.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                {/* Son Hareketler */}
+                <section className="panel">
+                    <div className="panel-header">
+                        <h2>Son Hareketler</h2>
+                        <span className="badge green">Bugün</span>
+                    </div>
+
+                    <div className="activity">
+                        <div className="activity-item">
+                            <span className="activity-icon">
+                                <ShoppingBag size={15} />
+                            </span>
+                            <div>
+                                <p>Yeni bir satış yaptın!</p>
+                                <small>Zeynep Kaya · Instagram Büyüme Rehberi</small>
+                                <small>12 dakika önce</small>
+                            </div>
+                        </div>
+
+                        <div className="activity-item">
+                            <span className="activity-icon text-[#5500FF] bg-[#5500FF]/10">
+                                <CalendarDays size={15} />
+                            </span>
+                            <div>
+                                <p>Yeni bir görüşme talebi</p>
+                                <small>Mert Demir · 1:1 Strateji Görüşmesi</small>
+                                <small>1 saat önce</small>
+                            </div>
+                        </div>
+
+                        <div className="activity-item">
+                            <span className="activity-icon">
+                                <TrendingUp size={15} />
+                            </span>
+                            <div>
+                                <p>Bu ay hedeflerini geride bıraktın</p>
+                                <small>Harika gidiyorsun, böyle devam!</small>
+                                <small>2 saat önce</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </>
+    );
 }
