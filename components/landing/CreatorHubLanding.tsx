@@ -643,15 +643,15 @@ export function CreatorHubLanding() {
 
       {/* ═══ FINAL CTA SECTION ═══ */}
       <section className="final-cta">
-        <span className="eyebrow">
-          <Zap size={14} /> LANSMANA ÖZEL
+        <span className="eyebrow !text-[#C4FF00] inline-flex items-center gap-1.5 justify-center">
+          <Zap size={14} className="fill-[#C4FF00] text-[#C4FF00]" /> LANSMANA ÖZEL
         </span>
-        <h2>
+        <h2 className="!text-white">
           İlk satışına giden yol,
           <br />
-          <span>bugün başlasın.</span>
+          <span className="!text-[#C4FF00]">bugün başlasın.</span>
         </h2>
-        <p>
+        <p className="!text-white/80">
           Aylık ücret yok. Kurulum ücreti yok.
           <br />
           Lansman döneminde sadece üret, paylaş, sat.

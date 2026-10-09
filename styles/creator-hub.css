@@ -1297,22 +1297,25 @@
   position: relative;
 }
 .final-cta > .eyebrow {
-  color: var(--lime);
-  font-size: 9px;
+  color: var(--lime) !important;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 .final-cta h2 {
   font-size: 43px;
   line-height: 1.18;
   font-weight: 800;
   margin-top: 18px;
+  color: #ffffff !important;
 }
 .final-cta h2 span {
-  color: var(--lime);
+  color: var(--lime) !important;
 }
 .final-cta > p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.8;
-  color: color-mix(in oklch, var(--background) 65%, transparent);
+  color: rgba(255, 255, 255, 0.8) !important;
   margin-top: 18px;
 }
 .final-cta .main-cta {
@@ -1331,11 +1334,11 @@
   transform: translateY(-2px);
 }
 .final-cta .hero-checks {
-  color: color-mix(in oklch, var(--background) 60%, transparent);
-  font-size: 8px;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-size: 12px;
 }
 .final-cta .hero-checks svg {
-  color: var(--lime);
+  color: var(--lime) !important;
 }
 .faq-section {
   max-width: 1064px;
