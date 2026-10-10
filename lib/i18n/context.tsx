@@ -27,7 +27,7 @@ interface I18nContextType {
 export const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-    const [lang, setLangState] = useState<Language>('tr');
+    const [lang, setLangState] = useState<Language>('en');
 
     useEffect(() => {
         const savedLang = localStorage.getItem('s_lang') as Language;
@@ -36,7 +36,13 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         if (savedLang && supported.includes(savedLang)) {
             setLangState(savedLang);
         } else {
-            setLangState('tr'); // Global strict fallback to Turkish
+            // Default English, unless browser language is explicitly Turkish
+            const browserLang = typeof navigator !== 'undefined' ? navigator.language?.toLowerCase() : '';
+            if (browserLang.startsWith('tr')) {
+                setLangState('tr');
+            } else {
+                setLangState('en');
+            }
         }
     }, []);
 

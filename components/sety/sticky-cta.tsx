@@ -4,9 +4,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuthModal } from "@/context/AuthModalContext";
+import { useTranslation } from "@/lib/i18n/context";
 
 export function StickyCTA() {
   const { openModal } = useAuthModal();
+  const { lang } = useTranslation();
+  const isEn = lang === 'en';
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -36,10 +39,10 @@ export function StickyCTA() {
             <div className="bg-white/95 backdrop-blur-2xl border border-slate-200/80 p-2 md:p-3 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex items-center justify-between gap-2 md:gap-4">
               <div className="pl-2 md:pl-4">
                 <p className="text-[9px] md:text-[10px] font-black text-[#5500ff] uppercase tracking-widest leading-none mb-1">
-                  Lansmana özel ücretsiz
+                  {isEn ? "Free during launch" : "Lansmana özel ücretsiz"}
                 </p>
                 <p className="text-xs md:text-sm font-bold text-slate-900 leading-none">
-                  Ürettiklerin kazanca dönüşsün.
+                  {isEn ? "Turn your followers into customers." : "Ürettiklerin kazanca dönüşsün."}
                 </p>
               </div>
               <div className="flex-none">
@@ -47,7 +50,7 @@ export function StickyCTA() {
                   onClick={() => openModal("signup")}
                   className="w-auto px-4 md:px-6 rounded-full h-10 md:h-12 bg-[#5500ff] hover:bg-[#5500ff]/90 text-white font-black text-xs md:text-sm shadow-sm active:scale-95 transition-all"
                 >
-                  Mağazanı aç{" "}
+                  {isEn ? "Get your store" : "Mağazanı aç"}{" "}
                   <motion.span
                     animate={{ x: [0, 5, 0] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}

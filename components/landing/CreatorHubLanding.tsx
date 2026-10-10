@@ -20,6 +20,9 @@ import {
   Layers,
   Clock,
   ExternalLink,
+  Mail,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +33,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useAuthModal } from "@/context/AuthModalContext";
+import { useTranslation } from "@/lib/i18n/context";
+import { supabase } from "@/lib/supabase/client";
 import { SetyLogo } from "@/components/sety/brand";
 import { SiteHeader } from "@/components/sety/SiteHeader";
 import { StickyCTA } from "@/components/sety/sticky-cta";
@@ -47,7 +52,7 @@ interface BentoDetail {
   example: string;
 }
 
-const bentoDetails: Record<string, BentoDetail> = {
+const bentoDetailsTR: Record<string, BentoDetail> = {
   session: {
     id: "session",
     badge: "ZAMANINI DEĞERE DÖNÜŞTÜR",
@@ -67,7 +72,7 @@ const bentoDetails: Record<string, BentoDetail> = {
       "Danışanın tek tıkla seans tipini seçip randevusunu oluşturur.",
       "Google Meet / Zoom bağlantısı ve WhatsApp teyidi otomatik iletilir.",
     ],
-    example: "Örnek: Uzm. Klinik Psikolog Gizem Hanım — Ayda 30+ seans randevusu.",
+    example: "Örnek: Danışman Deniz Yılmaz — Ayda 25+ seans randevusu.",
   },
   digital: {
     id: "digital",
@@ -134,33 +139,155 @@ const bentoDetails: Record<string, BentoDetail> = {
   },
 };
 
-const faqs = [
+const bentoDetailsEN: Record<string, BentoDetail> = {
+  session: {
+    id: "session",
+    badge: "MONETIZE YOUR TIME",
+    title: "1:1 Coaching & Consultations",
+    subtitle: "Sell your expertise and time from a single bio link.",
+    description:
+      "Stop the endless back-and-forth messaging on Instagram DMs or WhatsApp. Let clients pick a date and book calls automatically with calendar integration.",
+    items: [
+      "1:1 Coaching & Mentorship sessions",
+      "Career, business & design portfolio reviews",
+      "Tutoring & language practice calls",
+      "Strategy sessions & discovery consultations",
+      "Group workshops & mastermind calls",
+    ],
+    howItWorks: [
+      "Set your available hours and time slots.",
+      "Clients book and pay with 1 click.",
+      "Google Meet / Zoom link is created and sent automatically.",
+    ],
+    example: "Example: Alex Morgan — 25+ coaching calls booked monthly.",
+  },
+  digital: {
+    id: "digital",
+    badge: "CREATE ONCE. SELL FOREVER.",
+    title: "Digital Products & Templates",
+    subtitle: "Turn your creative files into instant downloads.",
+    description:
+      "Deliver files securely with automatic download links instead of sending manual emails. Enjoy hands-free passive income.",
+    items: [
+      "Notion & Canva templates and planners",
+      "Figma UI kits, icon sets & design systems",
+      "Lightroom presets & video LUTs",
+      "Financial spreadsheets & budget planners",
+      "Code snippets, developer starters & prompts",
+    ],
+    howItWorks: [
+      "Upload your file or enter a download URL.",
+      "Buyer receives instant download access immediately upon checkout.",
+      "Licensed file is also emailed to the buyer.",
+    ],
+    example: "Example: Creator Deniz — $4,000+ sold in Notion kits.",
+  },
+  book: {
+    id: "book",
+    badge: "YOUR KNOWLEDGE, A ROADMAP FOR OTHERS.",
+    title: "E-Books & PDF Guides",
+    subtitle: "Package your hard-earned experience into pages.",
+    description:
+      "Your industry insights can guide thousands of others. Educate your audience and build authority with digital guides.",
+    items: [
+      "Industry playbooks and deep-dive case studies",
+      "Step-by-step how-to roadmaps",
+      "Health, fitness & recipe e-books",
+      "Actionable checklists and worksheets",
+      "AI prompt playbooks and workflow recipes",
+    ],
+    howItWorks: [
+      "Upload your PDF guide in 1 click.",
+      "Set your price and add a cover image.",
+      "Followers read and download instantly across mobile and desktop.",
+    ],
+    example: "Example: 'From 0 to First Dollar' 48-page PDF guide.",
+  },
+  community: {
+    id: "community",
+    badge: "STRONGER TOGETHER.",
+    title: "Communities & Newsletters",
+    subtitle: "Build a loyal recurring audience.",
+    description:
+      "Move beyond one-off sales. Create monthly memberships, paid newsletters, or exclusive mastermind groups.",
+    items: [
+      "Private Telegram and Discord community access",
+      "Weekly paid email newsletters",
+      "Bite-sized video mini-courses",
+      "Monthly member Q&A and networking calls",
+      "Accountability circles and masterminds",
+    ],
+    howItWorks: [
+      "Provide your community or course link.",
+      "Subscribers gain automatic access upon signup.",
+      "Track monthly recurring revenue in one central dashboard.",
+    ],
+    example: "Example: 100+ member 'Creative Founders Club'.",
+  },
+};
+
+const faqsTR = [
   [
     "Sety ile neler satabilirim?",
     "Birebir danışmanlık seanslarını, e-kitaplarını, şablonlarını, dijital dosyalarını ve mini kurslarını tek bir mağazada sunabilirsin.",
   ],
   [
     "Mağazamı açmak için teknik bilgi gerekiyor mu?",
-    "Hayır. Mağaza adını belirle, profilini kişiselleştir ve ürünlerini ekle. Kod yazmadan kendi dijital vitrinini oluşturabilirsin.",
+    "Hayır. Mağaza adını belirle, profilini kişiselleştir ve ürünlerini ekle. Kod yazmadan 2 dakikada dijital vitrinini oluşturabilirsin.",
   ],
   [
     "Ödemelerimi nasıl alırım?",
     "Ödeme altyapını mağazana bağlayarak tahsilatını doğrudan kendi banka veya ödeme hesabından yönetebilirsin.",
   ],
   [
-    "Lansman döneminde ücret ödeyecek miyim?",
+    "Lansman döneminde komisyon ödeyecek miyim?",
     "Lansmana özel mağaza açılışı tamamen ücretsizdir (%0 komisyon). Kredi kartı gerekmeden anında başlayabilirsin.",
   ],
   [
     "Seanslar ve dijital ürünler birlikte satılabilir mi?",
-    "Evet. Takipçilerin aynı vitrinde seanslarını inceleyebilir, dijital ürünlerini keşfedebilir ve doğrudan sana ulaşabilir.",
+    "Evet. Takipçilerin aynı vitrinde seanslarını inceleyebilir, dijital ürünlerini keşfedebilir ve doğrudan satın alabilir.",
+  ],
+];
+
+const faqsEN = [
+  [
+    "How do I receive payments?",
+    "Payments are deposited directly to your bank account via our secure payment partners (Stripe, Polar). Fast, secure, and fully automated.",
+  ],
+  [
+    "Does Sety take a commission?",
+    "During our launch period, Sety takes 0% commission. You keep 100% of your earnings, only paying standard payment processing fees.",
+  ],
+  [
+    "Is it hard to connect my payment provider?",
+    "Not at all. You can connect your payment account in under 60 seconds with zero coding or technical setup required.",
+  ],
+  [
+    "How do refunds work?",
+    "You have full control over refund requests and order management directly from your intuitive creator dashboard.",
+  ],
+  [
+    "Do I need technical knowledge?",
+    "No technical skills needed. Customize your storefront, upload your products or calendar, and start selling in 2 minutes.",
   ],
 ];
 
 export function CreatorHubLanding() {
   const { openModal } = useAuthModal();
+  const { lang } = useTranslation();
+  const isEn = lang === 'en';
+
   const [faq, setFaq] = useState<number | null>(null);
   const [activeBento, setActiveBento] = useState<BentoDetail | null>(null);
+
+  // Waitlist form state
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+  const [waitlistError, setWaitlistError] = useState("");
+
+  const bentoDetails = isEn ? bentoDetailsEN : bentoDetailsTR;
+  const faqs = isEn ? faqsEN : faqsTR;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -175,6 +302,47 @@ export function CreatorHubLanding() {
       }
     }
   }, [openModal]);
+
+  // Polar checkout handler with Supabase session check
+  const handlePolarCheckout = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        window.location.href = "https://polar.sh/sety/checkout";
+      } else {
+        openModal("signup");
+      }
+    } catch {
+      openModal("signup");
+    }
+  };
+
+  // Waitlist submit handler
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!waitlistEmail || !waitlistEmail.includes("@")) return;
+
+    setWaitlistLoading(true);
+    setWaitlistError("");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: waitlistEmail, source: "landing_footer" }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setWaitlistSuccess(true);
+        setWaitlistEmail("");
+      } else {
+        setWaitlistError(data.error || "An error occurred. Please try again.");
+      }
+    } catch {
+      setWaitlistError("Connection error. Please try again.");
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
 
   return (
     <div className="landing">
@@ -196,92 +364,163 @@ export function CreatorHubLanding() {
             onClick={() => openModal("signup")}
             className="launch-label cursor-pointer hover:scale-105 transition-transform"
           >
-            <span /> LANSMANA ÖZEL · %0 KOMİSYON <ArrowUpRight size={13} />
+            <span /> {isEn ? "LAUNCH SPECIAL · 0% COMMISSION" : "LANSMANA ÖZEL · %0 KOMİSYON"}{" "}
+            <ArrowUpRight size={13} />
           </button>
           <h1>
-            Takipçilerini müşteriye
-            <br className="desktop-break" /> dönüştürmenin
-            <br />
-            <span>en kolay yolu.</span>
+            {isEn ? (
+              <>
+                The simplest way to turn
+                <br className="desktop-break" /> your followers into
+                <br />
+                <span>customers.</span>
+              </>
+            ) : (
+              <>
+                Takipçilerini müşteriye
+                <br className="desktop-break" /> dönüştürmenin
+                <br />
+                <span>en kolay yolu.</span>
+              </>
+            )}
           </h1>
           <p>
-            Bildiğin, ürettiğin, ilham verdiğin her şeyin bir değeri var.
-            <br className="desktop-break" /> Seanslarını ve dijital ürünlerini tek bir linkten sat.
-            <br />
-            <strong>Sen üret. Sety ile kazanmaya başla.</strong>
+            {isEn ? (
+              <>
+                Put one link in your bio. Sell coaching, digital products, and guides.
+                <br className="desktop-break" /> You create — Sety handles the rest.
+                <br />
+                <strong>You create. Start earning with Sety.</strong>
+              </>
+            ) : (
+              <>
+                Bildiğin, ürettiğin, ilham verdiğin her şeyin bir değeri var.
+                <br className="desktop-break" /> Seanslarını ve dijital ürünlerini tek bir linkten sat.
+                <br />
+                <strong>Sen üret. Sety ile kazanmaya başla.</strong>
+              </>
+            )}
           </p>
           <Button
             className="main-cta hero-main-cta bg-[#5500FF] hover:bg-[#4400cc] !text-white font-black shadow-xl"
             onClick={() => openModal("signup")}
           >
-            <span>Ücretsiz mağazanı aç</span>
+            <span>{isEn ? "Get your free store" : "Ücretsiz mağazanı aç"}</span>
             <ArrowUpRight />
           </Button>
           <div className="hero-checks">
             <span>
-              <Check /> 2 dakikada kurulum
+              <Check /> {isEn ? "2-minute setup" : "2 dakikada kurulum"}
             </span>
             <span>
-              <Check /> Kredi kartı gerekmez
+              <Check /> {isEn ? "No credit card required" : "Kredi kartı gerekmez"}
             </span>
             <span>
-              <Check /> Lansmana özel ücretsiz
+              <Check /> {isEn ? "Free during launch" : "Lansmana özel ücretsiz"}
             </span>
           </div>
         </div>
-        <a href="#nasil-calisir" className="hero-scroll">
-          DAHA FAZLASINI KEŞFET <ChevronDown size={15} />
+        <a href={isEn ? "#how-it-works" : "#nasil-calisir"} className="hero-scroll">
+          {isEn ? "DISCOVER MORE" : "DAHA FAZLASINI KEŞFET"} <ChevronDown size={15} />
         </a>
       </section>
 
       {/* ═══ CREATOR SHOWCASE SECTION ═══ */}
-      <section className="creator-section" id="nasil-calisir">
+      <section className="creator-section" id={isEn ? "how-it-works" : "nasil-calisir"}>
         <div className="section-heading">
           <span className="eyebrow">
-            <span className="tiny-line" /> KÜÇÜK BİR LİNK. BÜYÜK BİR POTANSİYEL.
+            {isEn ? "A STORE THAT REPRESENTS YOU" : "SENİ YANSITAN BİR MAĞAZA"}
           </span>
           <h2>
-            Senin yeteneğin.
-            <br />
-            Senin mağazan. <span>Senin kazancın.</span>
+            {isEn ? (
+              <>
+                Your bio link.
+                <br />
+                <span>Tailored to your work.</span>
+              </>
+            ) : (
+              <>
+                Biyografindeki link.
+                <br />
+                <span>Senin tarzında.</span>
+              </>
+            )}
           </h2>
           <p>
-            Takipçilerinin seni keşfettiği yerden, ilk satışına kadar.
-            <br />
-            Sana ait, profesyonel bir vitrin. Karmaşa yok, sınır yok.
+            {isEn ? (
+              <>
+                Custom branding, smooth checkout, and seamless bookings.
+                <br />
+                Designed specifically for modern digital creators.
+              </>
+            ) : (
+              <>
+                Markana uygun renkler, pürüzsüz ödeme ve otomatik randevu.
+                <br />
+                Yeni nesil üreticiler için tasarlandı.
+              </>
+            )}
           </p>
         </div>
         <CreatorPreview />
         <div className="creator-bottom-wrapper">
           <div className="creator-bottom">
             <span>
-              <ShieldCheck size={18} /> Sana ait bir mağaza, baştan sona.
+              <ShieldCheck size={18} />{" "}
+              {isEn
+                ? "Your store, completely owned by you."
+                : "Sana ait bir mağaza, baştan sona."}
             </span>
             <Button variant="link" asChild>
               <Link href="/denizyilmaz">
-                Örnek mağazayı incele <ArrowUpRight size={16} />
+                {isEn ? "Explore demo store" : "Örnek mağazayı incele"}{" "}
+                <ArrowUpRight size={16} />
               </Link>
             </Button>
           </div>
           <p className="creator-disclaimer-note">
-            * Temsili mağaza ve örnek satış verileri
+            {isEn
+              ? "* Demo store and representative data"
+              : "* Temsili mağaza ve örnek satış verileri"}
           </p>
         </div>
       </section>
 
       {/* ═══ BENTO REVENUE WAYS SECTION ═══ */}
-      <section className="sell-section" id="neler-satabilirsin">
+      <section className="sell-section" id={isEn ? "what-to-sell" : "neler-satabilirsin"}>
         <div className="section-heading">
-          <span className="eyebrow">BİLGİNİ PAYLAŞ. DEĞERİNİ KAZAN.</span>
+          <span className="eyebrow">
+            {isEn ? "MONETIZE YOUR EXPERTISE" : "BİLGİNİ PAYLAŞ. DEĞERİNİ KAZAN."}
+          </span>
           <h2>
-            Tek mağaza.
-            <br />
-            <span>Birden fazla kazanç yolu.</span>
+            {isEn ? (
+              <>
+                You focus on creating.
+                <br />
+                <span>We handle everything else.</span>
+              </>
+            ) : (
+              <>
+                Tek mağaza.
+                <br />
+                <span>Birden fazla kazanç yolu.</span>
+              </>
+            )}
           </h2>
           <p>
-            İster bir saatini, ister aylarca biriktirdiğin bilgiyi sat.
-            <br />
-            Kartlara tıklayarak detayları keşfet.
+            {isEn ? (
+              <>
+                Sell your time, your digital files, or your knowledge from a single link.
+                <br />
+                Click on any card below to explore how it works.
+              </>
+            ) : (
+              <>
+                İster bir saatini, ister aylarca biriktirdiğin bilgiyi sat.
+                <br />
+                Kartlara tıklayarak detayları keşfet.
+              </>
+            )}
           </p>
         </div>
         <div className="bento-grid">
@@ -294,39 +533,60 @@ export function CreatorHubLanding() {
               <span className="bento-icon">
                 <Calendar />
               </span>
-              <span className="category-label">ZAMANINI DEĞERE DÖNÜŞTÜR</span>
+              <span className="category-label">
+                {isEn ? "TURN YOUR TIME INTO VALUE" : "ZAMANINI DEĞERE DÖNÜŞTÜR"}
+              </span>
               <button
                 type="button"
                 className="w-7 h-7 rounded-full bg-slate-100 hover:bg-[#5500FF] hover:text-white flex items-center justify-center transition-colors ml-auto"
-                aria-label="Detayları gör"
+                aria-label="View details"
               >
                 <ArrowUpRight size={15} />
               </button>
             </div>
             <h3>
-              Birebir seanslar.
-              <br />
-              Gerçek bir etki.
+              {isEn ? (
+                <>
+                  1:1 Coaching &<br />
+                  Consultations.
+                </>
+              ) : (
+                <>
+                  Birebir seanslar.
+                  <br />
+                  Gerçek bir etki.
+                </>
+              )}
             </h3>
             <p>
-              Koçluk, danışmanlık veya özel ders.
-              <br />
-              Uzmanlığını, sana ihtiyaç duyanlarla buluştur.
+              {isEn ? (
+                <>
+                  Mentoring, consulting, or tutoring.
+                  <br />
+                  Meet clients seamlessly with auto-booking.
+                </>
+              ) : (
+                <>
+                  Koçluk, danışmanlık veya özel ders.
+                  <br />
+                  Uzmanlığını, sana ihtiyaç duyanlarla buluştur.
+                </>
+              )}
             </p>
             <div className="session-visual">
               <div className="booking-header">
-                <span>Birlikte bir adım ileri.</span>
+                <span>{isEn ? "Take a step forward." : "Birlikte bir adım ileri."}</span>
                 <span className="live-tag">
                   <span /> Online
                 </span>
               </div>
               <div className="booking-days">
                 {[
-                  ["PZT", "12"],
-                  ["SAL", "13"],
-                  ["ÇAR", "14"],
-                  ["PER", "15"],
-                  ["CUM", "16"],
+                  [isEn ? "MON" : "PZT", "12"],
+                  [isEn ? "TUE" : "SAL", "13"],
+                  [isEn ? "WED" : "ÇAR", "14"],
+                  [isEn ? "THU" : "PER", "15"],
+                  [isEn ? "FRI" : "CUM", "16"],
                 ].map(([d, n], i) => (
                   <div className={i === 2 ? "selected" : ""} key={d}>
                     <small>{d}</small>
@@ -343,16 +603,16 @@ export function CreatorHubLanding() {
               </div>
               <div className="booking-footer">
                 <span>
-                  <Calendar size={13} /> 45 dk · Birebir strateji görüşmesi
+                  <Calendar size={13} /> {isEn ? "45 min · Strategy Call" : "45 dk · Birebir strateji görüşmesi"}
                 </span>
-                <strong>₺1.500</strong>
+                <strong>{isEn ? "$75" : "₺1.500"}</strong>
               </div>
             </div>
             <div className="bento-tags">
-              <span>Danışmanlık</span>
-              <span>Koçluk</span>
-              <span>Özel ders</span>
-              <span>Terapi</span>
+              <span>{isEn ? "Coaching" : "Danışmanlık"}</span>
+              <span>{isEn ? "Mentorship" : "Koçluk"}</span>
+              <span>{isEn ? "Tutoring" : "Özel ders"}</span>
+              <span>{isEn ? "Strategy" : "Terapi"}</span>
             </div>
           </article>
 
@@ -365,23 +625,44 @@ export function CreatorHubLanding() {
               <span className="bento-icon">
                 <Download />
               </span>
-              <span className="category-label">BİR KERE ÜRET. TEKRAR TEKRAR SAT.</span>
+              <span className="category-label">
+                {isEn ? "CREATE ONCE. SELL FOREVER." : "BİR KERE ÜRET. TEKRAR TEKRAR SAT."}
+              </span>
               <button
                 type="button"
                 className="w-7 h-7 rounded-full bg-slate-100 hover:bg-[#5500FF] hover:text-white flex items-center justify-center transition-colors ml-auto"
-                aria-label="Detayları gör"
+                aria-label="View details"
               >
                 <ArrowUpRight size={15} />
               </button>
             </div>
             <h3>
-              Dijital ürünler
-              <br />& şablonlar.
+              {isEn ? (
+                <>
+                  Digital products
+                  <br />& templates.
+                </>
+              ) : (
+                <>
+                  Dijital ürünler
+                  <br />& şablonlar.
+                </>
+              )}
             </h3>
             <p>
-              Tasarımlarını, dosyalarını ve hazır çözümlerini
-              <br />
-              indirmeye hazır ürünlere dönüştür.
+              {isEn ? (
+                <>
+                  Notion templates, Canva graphics, and tools
+                  <br />
+                  delivered instantly upon checkout.
+                </>
+              ) : (
+                <>
+                  Tasarımlarını, dosyalarını ve hazır çözümlerini
+                  <br />
+                  indirmeye hazır ürünlere dönüştür.
+                </>
+              )}
             </p>
             <div className="template-visual">
               <div className="template-page">
@@ -391,29 +672,37 @@ export function CreatorHubLanding() {
                   <br />
                   Create more.
                 </strong>
-                <span>İÇERİK PLANLAMA KİTİ</span>
+                <span>{isEn ? "CONTENT PLANNING KIT" : "İÇERİK PLANLAMA KİTİ"}</span>
                 <div className="template-grid">
                   {Array.from({ length: 6 }, (_, i) => (
                     <i key={i} />
                   ))}
                 </div>
               </div>
-              <div className="download-note">
-                <Download size={17} />
+              <div className="template-side">
                 <div>
-                  <b>Bir sonraki büyük fikrin.</b>
-                  <small>Hemen indir · ₺290</small>
+                  <small>{isEn ? "FILE FORMAT" : "DOSYA FORMATI"}</small>
+                  <b>Notion / PDF</b>
+                </div>
+                <div>
+                  <small>{isEn ? "PRICE" : "FİYAT"}</small>
+                  <b>{isEn ? "$19" : "₺290"}</b>
+                </div>
+                <div>
+                  <small>{isEn ? "DELIVERY" : "TESLİMAT"}</small>
+                  <b>{isEn ? "Instant Download" : "Anında İndirme"}</b>
                 </div>
               </div>
             </div>
             <div className="bento-tags">
-              <span>Tasarım şablonları</span>
-              <span>Notion kitleri</span>
-              <span>Dijital dosyalar</span>
+              <span>Notion</span>
+              <span>Canva</span>
+              <span>Presets</span>
+              <span>Figma</span>
             </div>
           </article>
 
-          {/* Card 3: E-Books */}
+          {/* Card 3: E-Books & Guides */}
           <article
             className="bento bento-book cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             onClick={() => setActiveBento(bentoDetails.book)}
@@ -422,53 +711,88 @@ export function CreatorHubLanding() {
               <span className="bento-icon">
                 <BookOpen />
               </span>
-              <span className="category-label">BİLGİN, BİRİNİN YOL HARİTASI.</span>
+              <span className="category-label">
+                {isEn ? "YOUR KNOWLEDGE, A ROADMAP." : "BİLGİN, BİRİNİN YOL HARİTASI."}
+              </span>
               <button
                 type="button"
                 className="w-7 h-7 rounded-full bg-slate-100 hover:bg-[#5500FF] hover:text-white flex items-center justify-center transition-colors ml-auto"
-                aria-label="Detayları gör"
+                aria-label="View details"
               >
                 <ArrowUpRight size={15} />
               </button>
             </div>
-            <h3>E-kitaplar & rehberler.</h3>
+            <h3>
+              {isEn ? (
+                <>
+                  E-Books &<br />
+                  PDF guides.
+                </>
+              ) : (
+                <>
+                  E-Kitaplar &<br />
+                  rehberler.
+                </>
+              )}
+            </h3>
             <p>
-              Bildiğin her şey, birinin öğrenmek istediği şey.
-              <br />
-              Deneyimini sayfalara taşı, gelirini büyüt.
+              {isEn ? (
+                <>
+                  Package your experience into high-value playbooks.
+                  <br />
+                  Educate your followers and earn passively.
+                </>
+              ) : (
+                <>
+                  Yılların deneyimini sayfalara dök.
+                  <br />
+                  Rehberlerinle kitlene ilham ol.
+                </>
+              )}
             </p>
             <div className="book-visual">
               <div className="book-cover">
-                <small>DENİZ YILMAZ</small>
+                <small>GUIDE / 2026</small>
                 <strong>
-                  Fikirden
-                  <br />
-                  ilk satışa.
+                  {isEn ? (
+                    <>
+                      0 TO FIRST
+                      <br />
+                      DOLLAR
+                    </>
+                  ) : (
+                    <>
+                      FİKİRDEN
+                      <br />
+                      İLK SATIŞA
+                    </>
+                  )}
                 </strong>
-                <ArrowUpRight size={42} />
-                <span>YARATICININ YOL HARİTASI</span>
+                <span>{isEn ? "Creator Roadmap" : "Yaratıcının El Kitabı"}</span>
               </div>
-              <div className="book-description">
-                <span>PDF REHBER</span>
-                <b>
-                  Deneyiminden
-                  <br />
-                  doğan bir ürün.
-                </b>
-                <small>48 sayfa, sınırsız ilham.</small>
-                <strong>
-                  ₺190 <ArrowUpRight size={15} />
-                </strong>
+              <div className="book-details">
+                <div>
+                  <small>{isEn ? "LENGTH" : "SAYFA SAYISI"}</small>
+                  <b>48 {isEn ? "Pages" : "Sayfa"}</b>
+                </div>
+                <div>
+                  <small>{isEn ? "PRICE" : "FİYAT"}</small>
+                  <b>{isEn ? "$12" : "₺190"}</b>
+                </div>
+                <div>
+                  <small>{isEn ? "COMPATIBLE" : "UYUMLULUK"}</small>
+                  <b>iOS / Android / PC</b>
+                </div>
               </div>
             </div>
             <div className="bento-tags">
-              <span>PDF Rehber</span>
-              <span>E-Kitap</span>
-              <span>Kontrol listeleri</span>
+              <span>PDF</span>
+              <span>{isEn ? "E-Book" : "E-Kitap"}</span>
+              <span>{isEn ? "Playbook" : "Rehber"}</span>
             </div>
           </article>
 
-          {/* Card 4: Community & Courses */}
+          {/* Card 4: Communities */}
           <article
             className="bento bento-community cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             onClick={() => setActiveBento(bentoDetails.community)}
@@ -477,57 +801,85 @@ export function CreatorHubLanding() {
               <span className="bento-icon">
                 <Users />
               </span>
-              <span className="category-label">BİRLİKTE DAHA FAZLASI.</span>
+              <span className="category-label">
+                {isEn ? "STRONGER TOGETHER." : "BİRLİKTE DAHA FAZLASI."}
+              </span>
               <button
                 type="button"
                 className="w-7 h-7 rounded-full bg-slate-100 hover:bg-[#5500FF] hover:text-white flex items-center justify-center transition-colors ml-auto"
-                aria-label="Detayları gör"
+                aria-label="View details"
               >
                 <ArrowUpRight size={15} />
               </button>
             </div>
-            <h3>Topluluklar & mini kurslar.</h3>
+            <h3>
+              {isEn ? (
+                <>
+                  Communities &<br />
+                  memberships.
+                </>
+              ) : (
+                <>
+                  Topluluklar &<br />
+                  mini kurslar.
+                </>
+              )}
+            </h3>
             <p>
-              Seninle aynı tutkuyu paylaşan insanları bir araya getir.
-              <br />
-              Bilgini bir deneyime dönüştür.
+              {isEn ? (
+                <>
+                  Build recurring income through Telegram groups,
+                  <br />
+                  Discord channels, and private newsletters.
+                </>
+              ) : (
+                <>
+                  Tek seferlik satışın ötesine geç.
+                  <br />
+                  Abonelik ve özel erişimle kitle büyüt.
+                </>
+              )}
             </p>
             <div className="community-visual">
-              <div className="community-people">
-                {["D", "A", "E", "S", "M"].map((x) => (
-                  <span key={x}>{x}</span>
-                ))}
-                <span>+24</span>
-              </div>
-              <div className="course-row">
-                <span>
-                  <Check size={15} />
-                </span>
-                <b>01 — Fikrini bul</b>
-                <small>12 dk</small>
-              </div>
-              <div className="course-row">
-                <span>02</span>
-                <b>İlk adımını at</b>
-                <small>18 dk</small>
-              </div>
-              <div className="course-row">
-                <span>03</span>
-                <b>Birlikte büyütelim</b>
-                <small>24 dk</small>
+              <div className="community-card-inner">
+                <div className="community-header">
+                  <span>{isEn ? "CREATOR MASTERMIND" : "YARATICILAR TOPLULUĞU"}</span>
+                  <span className="member-count">100+ {isEn ? "Members" : "Üye"}</span>
+                </div>
+                <div className="community-members">
+                  {["A", "B", "C", "D", "E"].map((x) => (
+                    <span key={x}>{x}</span>
+                  ))}
+                  <span className="more">+95</span>
+                </div>
+                <div className="community-footer">
+                  <div>
+                    <small>{isEn ? "PLATFORM" : "KANAL"}</small>
+                    <b>Discord / Telegram</b>
+                  </div>
+                  <div>
+                    <small>{isEn ? "PRICE" : "FİYAT"}</small>
+                    <b>{isEn ? "$9/mo" : "₺99/ay"}</b>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="bento-tags">
-              <span>Topluluk erişimi</span>
-              <span>Video kurs</span>
-              <span>Bülten</span>
+              <span>{isEn ? "Memberships" : "Topluluk erişimi"}</span>
+              <span>{isEn ? "Video courses" : "Video kurs"}</span>
+              <span>{isEn ? "Newsletters" : "Bülten"}</span>
             </div>
           </article>
         </div>
         <div className="sell-bottom">
-          <span>Ne üretiyorsan, onun için bir Sety var.</span>
+          <span>
+            {isEn
+              ? "Whatever you create, there is a home for it on Sety."
+              : "Ne üretiyorsan, onun için bir Sety var."}
+          </span>
           <Button onClick={() => openModal("signup")}>
-            Kendi mağazanı oluştur <ArrowUpRight />
+            {isEn ? "Create your store" : "Kendi mağazanı oluştur"}{" "}
+            <ArrowUpRight />
           </Button>
         </div>
       </section>
@@ -551,7 +903,7 @@ export function CreatorHubLanding() {
             <div className="space-y-4 my-4">
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
-                  Neler Satabilirsin?
+                  {isEn ? "What You Can Sell" : "Neler Satabilirsin?"}
                 </h4>
                 <div className="grid grid-cols-1 gap-2">
                   {activeBento.items.map((item) => (
@@ -568,7 +920,7 @@ export function CreatorHubLanding() {
 
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                  Nasıl Çalışır?
+                  {isEn ? "How It Works" : "Nasıl Çalışır?"}
                 </h4>
                 <ul className="space-y-1.5 text-xs text-slate-600">
                   {activeBento.howItWorks.map((step, idx) => (
@@ -583,7 +935,7 @@ export function CreatorHubLanding() {
               </div>
 
               <div className="p-3 rounded-xl bg-purple-50/70 border border-purple-100/80 text-xs text-purple-900 font-medium">
-                💡 <b>Örnek:</b> {activeBento.example}
+                💡 <b>{isEn ? "Example:" : "Örnek:"}</b> {activeBento.example}
               </div>
             </div>
 
@@ -593,7 +945,7 @@ export function CreatorHubLanding() {
                 onClick={() => setActiveBento(null)}
                 className="rounded-full text-xs"
               >
-                Kapat
+                {isEn ? "Close" : "Kapat"}
               </Button>
               <Button
                 onClick={() => {
@@ -602,7 +954,8 @@ export function CreatorHubLanding() {
                 }}
                 className="rounded-full bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold text-xs shadow-md"
               >
-                Bu Alanda Mağaza Aç <ArrowUpRight size={14} className="ml-1" />
+                {isEn ? "Start Selling in This Niche" : "Bu Alanda Mağaza Aç"}{" "}
+                <ArrowUpRight size={14} className="ml-1" />
               </Button>
             </div>
           </DialogContent>
@@ -612,19 +965,41 @@ export function CreatorHubLanding() {
       {/* ═══ 3 STEPS SECTION ═══ */}
       <section className="steps-section">
         <div className="steps-intro">
-          <span className="eyebrow">FİKİRDEN İLK SATIŞA</span>
+          <span className="eyebrow">
+            {isEn ? "FROM IDEA TO FIRST DOLLAR" : "FİKİRDEN İLK SATIŞA"}
+          </span>
           <h2>
-            Bir kahve molasında
-            <br />
-            <span>mağazan yayında.</span>
+            {isEn ? (
+              <>
+                Live in minutes,
+                <br />
+                <span>while having coffee.</span>
+              </>
+            ) : (
+              <>
+                Bir kahve molasında
+                <br />
+                <span>mağazan yayında.</span>
+              </>
+            )}
           </h2>
           <p>
-            Teknik detayları değil,
-            <br />
-            bir sonraki büyük fikrini düşün.
+            {isEn ? (
+              <>
+                Forget technical headaches.
+                <br />
+                Focus on what you love creating.
+              </>
+            ) : (
+              <>
+                Teknik detayları değil,
+                <br />
+                bir sonraki büyük fikrini düşün.
+              </>
+            )}
           </p>
           <Button variant="link" onClick={() => openModal("signup")}>
-            Hadi başlayalım <ArrowRight />
+            {isEn ? "Get started" : "Hadi başlayalım"} <ArrowRight />
           </Button>
         </div>
         <div className="steps-list">
@@ -632,20 +1007,26 @@ export function CreatorHubLanding() {
             {
               n: "01",
               icon: Palette,
-              title: "Kendin gibi bir mağaza oluştur.",
-              text: "Adını seç, profilini ekle. Renklerinle, tarzınla tamamen sana ait bir vitrin.",
+              title: isEn ? "Set up your store." : "Kendin gibi bir mağaza oluştur.",
+              text: isEn
+                ? "Add your digital products and go live instantly with your unique bio link."
+                : "Adını seç, profilini ekle. Renklerinle, tarzınla tamamen sana ait bir vitrin.",
             },
             {
               n: "02",
               icon: Plus,
-              title: "İlk ürününe bir yer aç.",
-              text: "Seans, e-kitap ya da şablon. Ürününü ekle, fiyatını belirle, satışa hazır ol.",
+              title: isEn ? "Share your link." : "İlk ürününe bir yer aç.",
+              text: isEn
+                ? "Add your Sety link to your bio on Instagram, TikTok, or X and start selling immediately."
+                : "Seans, e-kitap ya da şablon. Ürününü ekle, fiyatını belirle, satışa hazır ol.",
             },
             {
               n: "03",
               icon: MousePointer2,
-              title: "Linkini paylaş. Kazanmaya başla.",
-              text: "Biyografine tek link koy. Takipçilerin keşfetsin, ürünlerin değerini bulsun.",
+              title: isEn ? "Get paid." : "Linkini paylaş. Kazanmaya başla.",
+              text: isEn
+                ? "Sales are notified in real time. Payment goes directly to your account."
+                : "Biyografine tek link koy. Takipçilerin keşfetsin, ürünlerin değerini bulsun.",
             },
           ].map((x) => (
             <div className="step" key={x.n}>
@@ -660,37 +1041,60 @@ export function CreatorHubLanding() {
         </div>
       </section>
 
-      {/* ═══ FINAL CTA SECTION ═══ */}
+      {/* ═══ PRICING / FINAL CTA SECTION (Connected to Polar) ═══ */}
       <section className="final-cta">
         <span className="eyebrow !text-[#C4FF00] inline-flex items-center gap-1.5 justify-center">
-          <Zap size={14} className="fill-[#C4FF00] text-[#C4FF00]" /> LANSMANA ÖZEL
+          <Zap size={14} className="fill-[#C4FF00] text-[#C4FF00]" />{" "}
+          {isEn ? "FREE DURING LAUNCH" : "LANSMANA ÖZEL"}
         </span>
         <h2 className="!text-white">
-          İlk satışına giden yol,
-          <br />
-          <span className="!text-[#C4FF00]">bugün başlasın.</span>
+          {isEn ? (
+            <>
+              Free during launch.
+              <br />
+              <span className="!text-[#C4FF00]">Start selling today.</span>
+            </>
+          ) : (
+            <>
+              İlk satışına giden yol,
+              <br />
+              <span className="!text-[#C4FF00]">bugün başlasın.</span>
+            </>
+          )}
         </h2>
         <p className="!text-white/80">
-          Aylık ücret yok. Kurulum ücreti yok.
-          <br />
-          Lansman döneminde sadece üret, paylaş, sat.
+          {isEn ? (
+            <>
+              No commission. No monthly fee. No setup cost.
+              <br />
+              Just open your store and monetize your audience.
+            </>
+          ) : (
+            <>
+              Aylık ücret yok. Kurulum ücreti yok.
+              <br />
+              Lansman döneminde sadece üret, paylaş, sat.
+            </>
+          )}
         </p>
         <Button
           className="main-cta bg-[#C4FF00] hover:bg-[#b2ee00] text-slate-950 font-black shadow-lg"
-          onClick={() => openModal("signup")}
+          onClick={handlePolarCheckout}
         >
-          <span>Şimdi ücretsiz mağazanı aç</span>
+          <span>
+            {isEn ? "Get started — no credit card needed" : "Şimdi ücretsiz mağazanı aç"}
+          </span>
           <ArrowUpRight />
         </Button>
         <div className="hero-checks">
           <span>
-            <Check /> Kredi kartı gerekmez
+            <Check /> {isEn ? "2-minute setup" : "Kredi kartı gerekmez"}
           </span>
           <span>
-            <Check /> Kontrol tamamen sende
+            <Check /> {isEn ? "Unlimited products" : "Kontrol tamamen sende"}
           </span>
           <span>
-            <Check /> %0 komisyon
+            <Check /> {isEn ? "0% commission" : "%0 komisyon"}
           </span>
         </div>
       </section>
@@ -698,16 +1102,38 @@ export function CreatorHubLanding() {
       {/* ═══ FAQ SECTION ═══ */}
       <section className="faq-section">
         <div>
-          <span className="eyebrow">AKLINDA KALMASIN.</span>
+          <span className="eyebrow">
+            {isEn ? "NO GUESSWORK." : "AKLINDA KALMASIN."}
+          </span>
           <h2>
-            Güzel sorular.
-            <br />
-            <span>Net cevaplar.</span>
+            {isEn ? (
+              <>
+                Common questions.
+                <br />
+                <span>Clear answers.</span>
+              </>
+            ) : (
+              <>
+                Güzel sorular.
+                <br />
+                <span>Net cevaplar.</span>
+              </>
+            )}
           </h2>
           <p>
-            Yeni bir başlangıç için
-            <br />
-            bilmek isteyeceklerin.
+            {isEn ? (
+              <>
+                Everything you need to know
+                <br />
+                before launching your store.
+              </>
+            ) : (
+              <>
+                Yeni bir başlangıç için
+                <br />
+                bilmek isteyeceklerin.
+              </>
+            )}
           </p>
         </div>
         <div className="faq-list">
@@ -727,22 +1153,75 @@ export function CreatorHubLanding() {
         </div>
       </section>
 
-      {/* ═══ EXPANDED FOOTER WITH SOCIALS ═══ */}
+      {/* ═══ EXPANDED FOOTER WITH WAITLIST & SOCIALS ═══ */}
       <footer className="footer pb-32">
         <div className="max-w-[1140px] mx-auto px-6 pt-16 pb-12">
+          {/* Waitlist / Newsletter Banner */}
+          <div className="mb-14 p-8 rounded-3xl bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800 shadow-xl">
+            <div className="space-y-1.5 text-center md:text-left">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#C4FF00]">
+                {isEn ? "STAY UPDATED" : "GÜNCEL KAL"}
+              </span>
+              <h3 className="text-xl md:text-2xl font-black tracking-tight">
+                {isEn ? "Join the Sety Creator Circle" : "Sety Üretici Topluluğuna Katıl"}
+              </h3>
+              <p className="text-xs text-slate-400 max-w-md">
+                {isEn
+                  ? "Get early product drops, growth guides, and platform updates delivered to your inbox."
+                  : "Yeni özellikler, büyüme rehberleri ve lansman duyuruları için e-postanı bırak."}
+              </p>
+            </div>
+
+            <form onSubmit={handleWaitlistSubmit} className="w-full md:w-auto flex flex-col sm:flex-row gap-2.5">
+              {waitlistSuccess ? (
+                <div className="flex items-center gap-2 px-5 py-3 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+                  <CheckCircle2 size={16} />
+                  <span>{isEn ? "You're on the list! 🎉" : "Sıraya başarıyla eklendiniz! 🎉"}</span>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="email"
+                    required
+                    value={waitlistEmail}
+                    onChange={(e) => setWaitlistEmail(e.target.value)}
+                    placeholder={isEn ? "Enter your email" : "E-posta adresini yaz"}
+                    className="px-4 py-2.5 rounded-full bg-white/10 border border-white/15 text-white placeholder:text-slate-400 text-xs focus:outline-hidden focus:ring-2 focus:ring-[#5500FF] min-w-[240px]"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={waitlistLoading}
+                    className="rounded-full bg-[#5500FF] hover:bg-[#4400cc] text-white text-xs font-black px-5 py-2.5 shrink-0"
+                  >
+                    {waitlistLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <span>{isEn ? "Join Waitlist" : "Haberdar Ol"}</span>
+                    )}
+                  </Button>
+                </>
+              )}
+              {waitlistError && (
+                <p className="text-[11px] text-red-400 mt-1 sm:hidden">{waitlistError}</p>
+              )}
+            </form>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 border-b border-slate-200/80 pb-12">
             {/* Col 1: Brand & Socials */}
             <div className="space-y-4">
               <SetyLogo />
               <p className="text-xs text-slate-600 leading-relaxed max-w-[260px]">
-                Takipçilerini müşteriye dönüştürmenin en kolay yolu. Seanslarını ve dijital ürünlerini tek linkten sat.
+                {isEn
+                  ? "The simplest way to turn your followers into customers. Sell 1:1 sessions and digital products from a single link in bio."
+                  : "Takipçilerini müşteriye dönüştürmenin en kolay yolu. Seanslarını ve dijital ürünlerini tek linkten sat."}
               </p>
               <div className="flex items-center gap-2 pt-2">
                 <a
                   href="https://instagram.com/sety.store"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-[#5500FF] hover:border-[#5500FF]/40 shadow-xs transition-all"
+                  className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-[#5500FF] hover:border-[#5500FF]/40 shadow-2xs transition-all"
                   aria-label="Instagram"
                 >
                   <svg className="w-3.5 h-3.5 fill-currentColor" viewBox="0 0 24 24">
@@ -750,68 +1229,71 @@ export function CreatorHubLanding() {
                   </svg>
                 </a>
                 <a
-                  href="https://x.com/setystore"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-black hover:border-black/40 shadow-xs transition-all"
-                  aria-label="X (Twitter)"
+                  href="mailto:hello@sety.store"
+                  className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-[#5500FF] hover:border-[#5500FF]/40 shadow-2xs transition-all"
+                  aria-label="Email"
                 >
-                  <svg className="w-3.5 h-3.5 fill-currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://linkedin.com/company/setystore"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-full border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:text-[#0A66C2] hover:border-[#0A66C2]/40 shadow-xs transition-all"
-                  aria-label="LinkedIn"
-                >
-                  <svg className="w-3.5 h-3.5 fill-currentColor" viewBox="0 0 24 24">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.762-2.239-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                  </svg>
+                  <Mail size={14} />
                 </a>
               </div>
             </div>
 
-            {/* Col 2: Ürün & Keşfet */}
+            {/* Col 2: Navigation */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                Ürün & Keşfet
+                {isEn ? "Product" : "Ürün & Keşfet"}
               </h4>
               <ul className="space-y-2 text-xs text-slate-600">
                 <li>
-                  <a href="#nasil-calisir" className="hover:text-[#5500FF] transition-colors">
-                    Nasıl Çalışır?
+                  <a
+                    href={isEn ? "#how-it-works" : "#nasil-calisir"}
+                    className="hover:text-[#5500FF] transition-colors"
+                  >
+                    {isEn ? "How It Works" : "Nasıl Çalışır?"}
                   </a>
                 </li>
                 <li>
-                  <a href="#neler-satabilirsin" className="hover:text-[#5500FF] transition-colors">
-                    Neler Satabilirsin?
+                  <a
+                    href={isEn ? "#what-to-sell" : "#neler-satabilirsin"}
+                    className="hover:text-[#5500FF] transition-colors"
+                  >
+                    {isEn ? "What You Can Sell" : "Neler Satabilirsin?"}
                   </a>
                 </li>
                 <li>
-                  <Link href="/denizyilmaz" className="hover:text-[#5500FF] transition-colors inline-flex items-center gap-1">
-                    Örnek Vitrin (Deniz Yılmaz) <ArrowUpRight size={11} />
+                  <Link
+                    href="/denizyilmaz"
+                    className="hover:text-[#5500FF] transition-colors inline-flex items-center gap-1"
+                  >
+                    {isEn ? "Demo Store (Deniz Yilmaz)" : "Örnek Vitrin (Deniz Yılmaz)"}{" "}
+                    <ArrowUpRight size={11} />
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard" className="hover:text-[#5500FF] transition-colors inline-flex items-center gap-1">
-                    Canlı Panel Önizleme <ArrowUpRight size={11} />
+                  <Link
+                    href="/dashboard"
+                    className="hover:text-[#5500FF] transition-colors inline-flex items-center gap-1"
+                  >
+                    {isEn ? "Live Dashboard Preview" : "Canlı Panel Önizleme"}{" "}
+                    <ArrowUpRight size={11} />
                   </Link>
                 </li>
                 <li>
-                  <button type="button" onClick={() => openModal("login")} className="hover:text-[#5500FF] transition-colors">
-                    Giriş Yap
+                  <button
+                    type="button"
+                    onClick={() => openModal("login")}
+                    className="hover:text-[#5500FF] transition-colors"
+                  >
+                    {isEn ? "Log In" : "Giriş Yap"}
                   </button>
                 </li>
               </ul>
             </div>
 
-            {/* Col 3: Çözümler */}
+            {/* Col 3: Categories */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                Kazanç Yolları
+                {isEn ? "Ways to Earn" : "Kazanç Yolları"}
               </h4>
               <ul className="space-y-2 text-xs text-slate-600">
                 <li>
@@ -820,7 +1302,7 @@ export function CreatorHubLanding() {
                     onClick={() => setActiveBento(bentoDetails.session)}
                     className="hover:text-[#5500FF] transition-colors text-left"
                   >
-                    Birebir Seans & Danışmanlık
+                    {isEn ? "1:1 Coaching & Calls" : "Birebir Seans & Danışmanlık"}
                   </button>
                 </li>
                 <li>
@@ -829,7 +1311,7 @@ export function CreatorHubLanding() {
                     onClick={() => setActiveBento(bentoDetails.digital)}
                     className="hover:text-[#5500FF] transition-colors text-left"
                   >
-                    Dijital Ürünler & Şablonlar
+                    {isEn ? "Digital Products & Kits" : "Dijital Ürünler & Şablonlar"}
                   </button>
                 </li>
                 <li>
@@ -838,7 +1320,7 @@ export function CreatorHubLanding() {
                     onClick={() => setActiveBento(bentoDetails.book)}
                     className="hover:text-[#5500FF] transition-colors text-left"
                   >
-                    E-Kitaplar & Rehberler
+                    {isEn ? "E-Books & Frameworks" : "E-Kitaplar & Rehberler"}
                   </button>
                 </li>
                 <li>
@@ -847,45 +1329,53 @@ export function CreatorHubLanding() {
                     onClick={() => setActiveBento(bentoDetails.community)}
                     className="hover:text-[#5500FF] transition-colors text-left"
                   >
-                    Topluluklar & Mini Kurslar
+                    {isEn ? "Communities & Memberships" : "Topluluklar & Mini Kurslar"}
                   </button>
                 </li>
               </ul>
             </div>
 
-            {/* Col 4: Kurumsal & Güvenlik */}
+            {/* Col 4: Legal & Security */}
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                Güvenlik & Yasal
+                {isEn ? "Legal & Trust" : "Güvenlik & Yasal"}
               </h4>
               <ul className="space-y-2 text-xs text-slate-600">
                 <li>
                   <Link href="/privacy" className="hover:text-[#5500FF] transition-colors">
-                    Gizlilik Politikası
+                    {isEn ? "Privacy Policy" : "Gizlilik Politikası"}
                   </Link>
                 </li>
                 <li>
                   <Link href="/terms" className="hover:text-[#5500FF] transition-colors">
-                    Kullanım Şartları
+                    {isEn ? "Terms of Service" : "Kullanım Şartları"}
                   </Link>
                 </li>
                 <li>
                   <Link href="/refund" className="hover:text-[#5500FF] transition-colors">
-                    İade Koşulları
+                    {isEn ? "Refund Policy" : "İade Koşulları"}
                   </Link>
                 </li>
                 <li className="pt-1 text-[11px] text-slate-400 flex items-center gap-1">
                   <ShieldCheck size={13} className="text-emerald-500" />
-                  Shopier & SSL Korumalı
+                  <span>{isEn ? "Polar & SSL Encrypted" : "Polar & SSL Korumalı"}</span>
+                </li>
+                <li className="text-[11px] text-slate-400">
+                  <span>Contact: </span>
+                  <a href="mailto:hello@sety.store" className="text-[#5500FF] hover:underline font-medium">
+                    hello@sety.store
+                  </a>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-            <span>© 2026 Sety. Tüm hakları saklıdır.</span>
-            <span>Üreten herkes için, özenle tasarlandı.</span>
-            <span className="font-semibold text-slate-700">Türkiye’den, dünyaya 🚀</span>
+            <span>© 2026 Sety. {isEn ? "All rights reserved." : "Tüm hakları saklıdır."}</span>
+            <span>{isEn ? "Crafted with care for independent creators." : "Üreten herkes için, özenle tasarlandı."}</span>
+            <span className="font-semibold text-slate-700">
+              {isEn ? "Global Creator Platform 🚀" : "Türkiye’den, dünyaya 🚀"}
+            </span>
           </div>
         </div>
       </footer>
