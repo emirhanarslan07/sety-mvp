@@ -234,7 +234,7 @@ function DashboardLayoutContent({
                             Hayallerin için daha fazla alan.<br />
                             Satışlarından komisyon alınmaz.
                         </p>
-                        <Link href="/dashboard/settings">
+                        <Link href="/dashboard/billing">
                             Planı keşfet <ArrowUpRight size={12} />
                         </Link>
                     </div>

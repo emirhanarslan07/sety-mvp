@@ -208,7 +208,7 @@ export function CreatorHubLanding() {
             Bildiğin, ürettiğin, ilham verdiğin her şeyin bir değeri var.
             <br className="desktop-break" /> Seanslarını ve dijital ürünlerini tek bir linkten sat.
             <br />
-            <span className="hero-highlight-tag">Sen üret, Sety ile kazanmaya başla ✨</span>
+            <strong>Sen üret. Sety ile kazanmaya başla.</strong>
           </p>
           <Button
             className="main-cta hero-main-cta bg-[#5500FF] hover:bg-[#4400cc] !text-white font-black shadow-xl"

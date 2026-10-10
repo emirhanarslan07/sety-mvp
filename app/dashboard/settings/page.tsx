@@ -507,17 +507,17 @@ function SettingsContent() {
                                                 <Zap size={11} fill="#C4FF00" stroke="#C4FF00" />
                                                 FOUNDER PLAN
                                             </span>
-                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                                                Lansman Özel · %0 Komisyon
+                                             <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                                                Lansman Özel · Sety Pro Deneme
                                             </h3>
                                             <p className="text-xs text-slate-500 font-medium mt-1">
-                                                Lansman süresince tüm Sety Pro özellikleri ve %0 komisyon avantajı hesabınıza tanımlıdır.
+                                                Lansman süresince tüm Sety Pro özellikleri ve %0 komisyon avantajı 14 gün boyunca ücretsiz hesabınıza tanımlıdır.
                                             </p>
                                         </div>
                                         <div className="text-right">
                                             <span className="text-2xl font-black text-slate-900">₺0</span>
-                                            <span className="text-xs text-slate-400 font-bold"> / ömür boyu</span>
-                                            <div className="text-[10px] text-emerald-600 font-bold mt-0.5">● Aktif Abonelik</div>
+                                            <span className="text-xs text-slate-400 font-bold"> / 14 gün deneme</span>
+                                            <div className="text-[10px] text-emerald-600 font-bold mt-0.5">● Aktif Deneme</div>
                                         </div>
                                     </div>
 
