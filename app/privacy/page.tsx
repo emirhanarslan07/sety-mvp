@@ -8,11 +8,11 @@ export default function PrivacyPage() {
             <div className="container mx-auto px-4 py-12 md:py-20">
                 <div className="mx-auto max-w-3xl bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-100">
                     <Link
-                        href="/auth"
-                        className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-[#7C3AED] transition-colors mb-8 group"
+                        href="/"
+                        className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-[#5500FF] transition-colors mb-8 group"
                     >
                         <ChevronLeft className="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-1" />
-                        Geri Dön
+                        Ana Sayfaya Dön
                     </Link>
 
                     <div className="flex items-center gap-3 mb-4">

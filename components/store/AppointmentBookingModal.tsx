@@ -107,9 +107,10 @@ export default function AppointmentBookingModal({
 
     // Configuration from product
     const coachingConfig = product?.coaching_config || {};
-    const allowOnline = coachingConfig.allow_online ?? true;
-    const allowInPerson = coachingConfig.allow_in_person ?? false;
-    const defaultMode = coachingConfig.default_mode || (allowOnline ? 'online' : 'in_person');
+    const productMode = product?.mode as ('online' | 'in_person' | undefined);
+    const allowOnline = productMode ? productMode === 'online' : (coachingConfig.allow_online ?? true);
+    const allowInPerson = productMode ? productMode === 'in_person' : (coachingConfig.allow_in_person ?? false);
+    const defaultMode = productMode || coachingConfig.default_mode || (allowOnline ? 'online' : 'in_person');
     const locationAddress = coachingConfig.location_address || 'Haydarbey Mah., Açıkgöz Plaza Kat:1 No:3, Kahramanmaraş';
     const rawOptions: string[] = coachingConfig.options || [];
 
@@ -135,8 +136,24 @@ export default function AppointmentBookingModal({
     const [loading, setLoading] = useState(false);
     const [orderNumber, setOrderNumber] = useState<string>('');
 
-    // Available options based on session type and coachingConfig
+    // Available options based on session type, area_options and coachingConfig
     const availableOptions = useMemo(() => {
+        if (product?.area_options && Array.isArray(product.area_options) && product.area_options.length > 0) {
+            return product.area_options.map((opt: any) => {
+                const title = typeof opt === 'string' ? opt : opt.title;
+                const desc = typeof opt === 'string' ? '' : (opt.description || opt.desc || '');
+                const duration = typeof opt === 'string' ? '50 dk' : (opt.duration || '50 dk');
+                const tLower = title.toLowerCase();
+                const icon = tLower.includes('çift') || tLower.includes('evlilik')
+                    ? '👥'
+                    : tLower.includes('çocuk') || tLower.includes('ergen')
+                    ? '🧒'
+                    : tLower.includes('ön') || tLower.includes('tanışma')
+                    ? '💬'
+                    : '👤';
+                return { title, desc, duration, icon };
+            });
+        }
         if (rawOptions && rawOptions.length > 0) {
             return rawOptions.map(opt => {
                 const isCouple = opt.toLowerCase().includes('çift') || opt.toLowerCase().includes('evlilik');
@@ -157,7 +174,7 @@ export default function AppointmentBookingModal({
             });
         }
         return sessionType === 'in_person' ? DEFAULT_OPTIONS_IN_PERSON : DEFAULT_OPTIONS_ONLINE;
-    }, [rawOptions, sessionType]);
+    }, [product?.area_options, rawOptions, sessionType]);
 
     // Initialize state when modal opens
     useEffect(() => {
@@ -167,12 +184,14 @@ export default function AppointmentBookingModal({
             const initMode = defaultMode;
             setSessionType(initMode);
 
-            const initialOptions = rawOptions.length > 0
-                ? rawOptions
-                : (initMode === 'in_person' ? DEFAULT_OPTIONS_IN_PERSON.map(o => o.title) : DEFAULT_OPTIONS_ONLINE.map(o => o.title));
-
-            if (initialOptions.length > 0) {
-                setSelectedOption(initialOptions[0]);
+            if (product?.area_options && Array.isArray(product.area_options) && product.area_options.length > 0) {
+                const first = product.area_options[0];
+                setSelectedOption(typeof first === 'string' ? first : first.title);
+            } else if (rawOptions.length > 0) {
+                setSelectedOption(rawOptions[0]);
+            } else {
+                const defaults = initMode === 'in_person' ? DEFAULT_OPTIONS_IN_PERSON : DEFAULT_OPTIONS_ONLINE;
+                setSelectedOption(defaults[0].title);
             }
 
             // Set initial selected date to tomorrow
@@ -197,7 +216,7 @@ export default function AppointmentBookingModal({
         return () => {
             document.body.style.overflow = 'unset';
         };
-    }, [isOpen, defaultMode, rawOptions]);
+    }, [isOpen, defaultMode, rawOptions, product?.area_options]);
 
     // Calendar generation
     const calendarDays = useMemo(() => {
@@ -350,7 +369,7 @@ export default function AppointmentBookingModal({
     };
 
     const whatsappDirectMessage = encodeURIComponent(
-        `Merhaba Gizem Hanım, sety.store üzerinden ${selectedDateLabel} tarihindeki ${selectedTimeSlot} ${selectedOption} için randevu talebi oluşturdum (${orderNumber || 'Talep'}). Seans detaylarını görüşmek isterim.`
+        `Merhaba ${creatorName}, sety.store üzerinden ${selectedDateLabel} tarihindeki ${selectedTimeSlot} ${selectedOption} için randevu talebi oluşturdum (${orderNumber || 'Talep'}). Seans detaylarını görüşmek isterim.`
     );
     const whatsappDirectUrl = `https://wa.me/${cleanWaNumber}?text=${whatsappDirectMessage}`;
 
@@ -416,7 +435,7 @@ export default function AppointmentBookingModal({
 
                             {/* Options Cards */}
                             <div className="space-y-2.5">
-                                {availableOptions.map(opt => {
+                                {availableOptions.map((opt: any) => {
                                     const isSelected = selectedOption === opt.title;
                                     return (
                                         <div

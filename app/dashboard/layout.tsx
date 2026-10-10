@@ -87,14 +87,17 @@ function DashboardLayoutContent({
     // Fetch orders count
     useEffect(() => {
         if (store?.id) {
-            supabase
-                .from('orders')
-                .select('id', { count: 'exact', head: true })
-                .eq('store_id', store.id)
-                .then(({ count }) => {
+            (async () => {
+                try {
+                    const { count } = await supabase
+                        .from('orders')
+                        .select('id', { count: 'exact', head: true })
+                        .eq('store_id', store.id);
                     if (count && count > 0) setOrderCount(count);
-                })
-                .catch(() => {});
+                } catch {
+                    // ignore
+                }
+            })();
         }
     }, [store?.id]);
 

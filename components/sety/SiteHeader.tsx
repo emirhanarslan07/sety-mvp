@@ -14,7 +14,7 @@ export function SiteHeader() {
       <SetyLogo />
       <nav className="desktop-nav">
         <a href="#nasil-calisir">Nasıl çalışır?</a>
-        <a href="#neler-satabilirsin">Neler satabilirsiniz?</a>
+        <a href="#neler-satabilirsin">Neler satabilirsin?</a>
         <Link href="/psikologgizemtepebas">
           Örnek mağaza <ArrowUpRight size={13} />
         </Link>

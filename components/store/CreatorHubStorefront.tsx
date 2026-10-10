@@ -134,7 +134,7 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
             links={[
               { url: 'https://instagram.com/psikologgizemtepebas', type: 'instagram', title: 'Instagram' },
               { url: 'https://wa.me/905069863046', type: 'whatsapp', title: 'WhatsApp' },
-              { url: 'https://doktortakvimi.com', type: 'doktortakvimi', title: 'DoktorTakvimi' },
+              { url: 'https://www.doktortakvimi.com/profil/gizem-tepebas-2', type: 'doktortakvimi', title: 'DoktorTakvimi' },
               { url: 'tel:+905069863046', type: 'phone', title: 'Telefon' },
               { url: 'https://maps.google.com/?q=Açıkgöz+Plaza+Kahramanmaraş', type: 'location', title: 'Açıkgöz Plaza Konumu' },
             ]}

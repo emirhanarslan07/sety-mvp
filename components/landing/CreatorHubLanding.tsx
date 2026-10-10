@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -161,6 +161,20 @@ export function CreatorHubLanding() {
   const { openModal } = useAuthModal();
   const [faq, setFaq] = useState<number | null>(null);
   const [activeBento, setActiveBento] = useState<BentoDetail | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const auth = urlParams.get("auth");
+      if (auth === "signup" || auth === "register") {
+        openModal("signup");
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else if (auth === "login") {
+        openModal("login");
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  }, [openModal]);
 
   return (
     <div className="landing">

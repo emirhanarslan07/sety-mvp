@@ -1,18 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { SetyLogo } from '@/components/ui/SetyLogo';
+import { useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { SetyLogo } from '@/components/sety/brand';
 import { motion } from 'framer-motion';
 
-export default function AuthPage() {
+function AuthRedirect() {
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     useEffect(() => {
-        // We've switched to PKCE flow, so this bridge page is no longer needed.
-        // Redirect to home so the user can click login again.
-        router.replace('/');
-    }, [router]);
+        const mode = searchParams.get('mode');
+        const auth = mode === 'register' || mode === 'signup' ? 'signup' : 'login';
+        router.replace(`/?auth=${auth}`);
+    }, [router, searchParams]);
 
     return (
         <div className="flex min-h-screen bg-white items-center justify-center">
@@ -22,10 +23,18 @@ export default function AuthPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <SetyLogo size="lg" className="animate-pulse" />
+                    <SetyLogo />
                 </motion.div>
                 <p className="text-slate-400 font-medium text-sm">Yönlendiriliyorsunuz...</p>
             </div>
         </div>
+    );
+}
+
+export default function AuthPage() {
+    return (
+        <Suspense fallback={<div className="flex min-h-screen bg-white items-center justify-center" />}>
+            <AuthRedirect />
+        </Suspense>
     );
 }

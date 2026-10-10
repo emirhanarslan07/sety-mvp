@@ -8,11 +8,11 @@ export default function TermsPage() {
             <div className="container mx-auto px-4 py-12 md:py-20">
                 <div className="mx-auto max-w-3xl bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-100">
                     <Link
-                        href="/auth"
-                        className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-[#6a5fff] transition-colors mb-8 group"
+                        href="/"
+                        className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-[#5500FF] transition-colors mb-8 group"
                     >
                         <ChevronLeft className="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-1" />
-                        Geri Dön
+                        Ana Sayfaya Dön
                     </Link>
 
                     <h1 className="mb-2 text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">

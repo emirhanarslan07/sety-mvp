@@ -3110,8 +3110,9 @@ tbody tr:last-child td {
     font-size: 7px;
   }
   .preview-caption {
-    bottom: 10px;
-    font-size: 7px;
+    bottom: 14px;
+    font-size: 10px;
+    font-weight: 700;
   }
   .creator-bottom {
     font-size: 8px;
@@ -3779,7 +3780,9 @@ tbody tr:last-child td {
     transform: rotate(-2deg);
   }
   .preview-caption {
-    bottom: 8px;
+    bottom: 14px;
+    font-size: 10px;
+    font-weight: 700;
   }
   .sale-info {
     flex-wrap: wrap;

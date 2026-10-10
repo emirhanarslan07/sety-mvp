@@ -719,7 +719,7 @@ export default function StorePage() {
                 title="Ürünü Sil"
                 description="Bu ürünü mağazanızdan kaldırmak istediğinize emin misiniz? Bu işlem geri alınamaz."
                 confirmText={isDeleting ? 'Siliniyor...' : 'Evet, Sil'}
-                variant="destructive"
+                variant="danger"
             />
         </>
     );

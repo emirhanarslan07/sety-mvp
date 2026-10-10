@@ -25,6 +25,8 @@ interface ProductEditorModalProps {
     onSuccess: () => void;
     isLandingPage?: boolean;
     editingProduct?: any;
+    product?: any;
+    defaultType?: any;
 }
 
 const CURRENCIES = [
@@ -67,13 +69,17 @@ export default function ProductEditorModal({
     productType: initialProductType,
     onSuccess,
     isLandingPage = false,
-    editingProduct = null,
+    editingProduct: passedEditingProduct = null,
+    product = null,
+    defaultType = null,
 }: ProductEditorModalProps) {
     const { showToast } = useToast();
+    const editingProduct = passedEditingProduct || product;
+    const resolvedProductType = initialProductType || defaultType;
 
     // Determine starting step: if productType already given (edit flow), skip step 1
-    const [step, setStep] = useState<1 | 2>(initialProductType || editingProduct ? 2 : 1);
-    const [selectedType, setSelectedType] = useState<any>(initialProductType || null);
+    const [step, setStep] = useState<1 | 2>(resolvedProductType || editingProduct ? 2 : 1);
+    const [selectedType, setSelectedType] = useState<any>(resolvedProductType || null);
     const [loading, setLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [imageUploading, setImageUploading] = useState(false);
