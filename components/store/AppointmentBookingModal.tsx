@@ -312,14 +312,14 @@ export default function AppointmentBookingModal({
 
         try {
             const res = await createAppointmentRequestAction({
-                profileUserId: profile.user_id || 'gizem-tepebas-user',
-                profileId: profile.id || 'gizem-tepebas-store',
-                productId: product.id,
-                productTitle: `${product.title} - ${selectedOption}`,
-                productPrice: product.price || 0,
-                currency: product.currency || 'TRY',
+                profileUserId: profile?.user_id || 'gizem-tepebas-user',
+                profileId: profile?.id || 'gizem-tepebas-store',
+                productId: product?.id || 'appointment-service',
+                productTitle: `${product?.title || 'Randevu'} - ${selectedOption}`,
+                productPrice: product?.price || 0,
+                currency: product?.currency || 'TRY',
                 creatorName,
-                creatorEmail: profile.email || 'emirhanarslan896@gmail.com',
+                creatorEmail: profile?.email || 'emirhanarslan896@gmail.com',
                 fullName,
                 phone,
                 email,

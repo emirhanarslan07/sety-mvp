@@ -231,11 +231,16 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
             mode: selectedProduct.mode,
             area_options: selectedProduct.area_options,
           }}
-          store={{
-            username: store.username || 'psikologgizemtepebas',
-            name: 'Gizem Tepebaş',
+          profile={{
+            id: store?.id || 'gizem-tepebas-store',
+            user_id: store?.user_id || 'gizem-tepebas-user',
+            username: store?.username || 'psikologgizemtepebas',
+            full_name: 'Gizem Tepebaş',
+            display_name: 'Gizem Tepebaş',
+            email: 'psikologgizemtepebas@gmail.com',
             social_links: {
               whatsapp: '905069863046',
+              phone: '05069863046',
             },
           }}
         />
