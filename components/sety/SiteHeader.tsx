@@ -15,12 +15,12 @@ export function SiteHeader() {
       <nav className="desktop-nav">
         <a href="#nasil-calisir">Nasıl çalışır?</a>
         <a href="#neler-satabilirsin">Neler satabilirsin?</a>
-        <Link href="/psikologgizemtepebas">
+        <Link href="/denizyilmaz">
           Örnek mağaza <ArrowUpRight size={13} />
         </Link>
       </nav>
       <div className="header-actions">
-        <Button variant="ghost" onClick={() => openModal('login')}>
+        <Button className="btn-login" onClick={() => openModal('login')}>
           Giriş yap
         </Button>
         <Button className="pill" onClick={() => openModal('signup')}>

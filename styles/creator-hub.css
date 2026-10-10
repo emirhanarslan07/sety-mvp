@@ -174,16 +174,34 @@
 .header-actions > button {
   font-size: 12px;
 }
-.site-header .header-actions .pill {
+.site-header .header-actions .btn-login {
   background: var(--lime) !important;
   color: #0f172a !important;
   font-weight: 800;
   border: none !important;
+  border-radius: 50px !important;
   box-shadow: 0 3px 12px color-mix(in oklch, var(--lime) 40%, transparent);
   transition: all 0.2s ease;
+  padding: 0 16px;
+  height: 36px;
+}
+.site-header .header-actions .btn-login:hover {
+  background: color-mix(in oklch, var(--lime) 88%, white) !important;
+  transform: translateY(-1px);
+}
+.site-header .header-actions .pill {
+  background: #5500FF !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  border: none !important;
+  border-radius: 50px !important;
+  box-shadow: 0 3px 14px rgba(85, 0, 255, 0.35);
+  transition: all 0.2s ease;
+  padding: 0 16px;
+  height: 36px;
 }
 .site-header .header-actions .pill:hover {
-  background: color-mix(in oklch, var(--lime) 88%, white) !important;
+  background: #4400cc !important;
   transform: translateY(-1px);
 }
 .my-store {
@@ -782,28 +800,66 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   z-index: 20;
 }
+.creator-bottom-wrapper {
+  max-width: 990px;
+  margin: 16px auto 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
 .creator-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 990px;
-  margin: 0 auto;
-  padding: 21px 0;
-  border-top: 1px solid var(--border);
-  font-size: 10px;
-  color: var(--muted-foreground);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
 }
 .creator-bottom > span {
   display: flex;
-  gap: 7px;
+  gap: 8px;
   align-items: center;
+  font-size: 14px;
+  font-weight: 750;
+  color: var(--foreground);
 }
 .creator-bottom > span svg {
-  color: var(--success);
+  color: var(--primary);
 }
 .creator-bottom button,
 .creator-bottom a {
-  font-size: 10px;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #5500FF !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+.creator-bottom a:hover {
+  color: #4400cc !important;
+  transform: translateX(2px);
+}
+.creator-disclaimer-note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  font-weight: 600;
+  margin-top: 8px;
+  letter-spacing: -0.2px;
+}
+.hero-highlight-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 4px 14px;
+  border-radius: 100px;
+  background: color-mix(in oklch, var(--lime) 30%, white);
+  border: 1px solid color-mix(in oklch, var(--lime) 75%, transparent);
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--lime) 20%, transparent);
 }
 .sell-section {
   padding: 86px 32px 65px;

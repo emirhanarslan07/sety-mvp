@@ -135,7 +135,6 @@ export function CreatorPreview() {
           <Star size={12} fill="currentColor" /> Senin içeriklerin. Senin müşterilerin.
         </small>
       </div>
-      <span className="preview-caption">Örnek mağaza ve temsili satış verileri</span>
     </div>
   );
 }

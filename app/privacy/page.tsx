@@ -151,8 +151,8 @@ export default function PrivacyPage() {
                                 Alıcı Ödemeleri ve Finansal Veriler
                             </h2>
                             <div className="pl-11 space-y-3 text-slate-600 leading-relaxed">
-                                <p>Sety, mağaza sahiplerinin (creator'ların) kendi müşterilerinden (alıcılardan) aldığı ödemelere ait kredi kartı, banka bilgileri veya diğer finansal verileri kesinlikle işlemez, saklamaz veya platform sunucularından geçirmez. Bu ödemeler, mağaza sahibinin kendi hesabına bağladığı üçüncü taraf ödeme aracıları (Stripe, PayPal, iyzico vb.) tarafından doğrudan ve ilgili kuruluşların kendi gizlilik politikaları çerçevesinde güvenli bir şekilde işlenir.</p>
-                                <p>Sety, yalnızca mağaza sahiplerinin platform kullanımına yönelik (Sety Pro aboneliği) gerçekleştirdiği ödemeleri yetkili ödeme ortağımız Paddle aracılığıyla yönetir.</p>
+                                <p>Sety, mağaza sahiplerinin (üreticilerin) kendi müşterilerinden (alıcılardan) aldığı ödemelere ait kredi kartı, banka bilgileri veya diğer hassas finansal verileri kesinlikle işlemez, saklamaz veya platform sunucularından geçirmez. Bu ödemeler, mağaza sahibinin kendi hesabına bağladığı lisanslı ve PCI-DSS Seviye 1 sertifikalı güvenli üçüncü taraf ödeme aracıları (Shopier, Stripe, Polar, iyzico vb.) tarafından doğrudan ve ilgili kuruluşların kendi gizlilik ve güvenlik protokolleri çerçevesinde güvenli bir şekilde işlenir.</p>
+                                <p>Sety, yalnızca mağaza sahiplerinin platform kullanımına yönelik abonelik işlemlerini yetkili ödeme sağlayıcıları aracılığıyla güvenle yönetir.</p>
                             </div>
                         </section>
 

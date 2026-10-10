@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
     Camera,
@@ -11,7 +12,10 @@ import {
     Palette,
     ShieldCheck,
     CreditCard,
-    Loader2
+    Loader2,
+    ArrowUpRight,
+    Zap,
+    Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase/client';
@@ -24,7 +28,7 @@ function SettingsContent() {
     const { store, user, profile, refreshData } = useDashboard();
     const { showToast } = useToast();
 
-    const [tab, setTab] = useState<'Profil' | 'Görünüm' | 'Ödeme Yöntemleri' | 'Güvenlik'>('Profil');
+    const [tab, setTab] = useState<'Profil' | 'Görünüm' | 'Ödeme Yöntemleri' | 'Abonelik' | 'Güvenlik'>('Profil');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
 
@@ -99,7 +103,10 @@ function SettingsContent() {
     };
 
     const handleSaveProfile = async () => {
-        if (!user) return;
+        if (!user) {
+            showToast('Profil bilgileri kaydedildi! ✨ (Önizleme modu)', 'success');
+            return;
+        }
         setSaving(true);
         try {
             const { error: profileError } = await supabase
@@ -130,7 +137,10 @@ function SettingsContent() {
     };
 
     const handleSavePayment = async () => {
-        if (!user) return;
+        if (!user) {
+            showToast('Ödeme ve banka bilgileri başarıyla kaydedildi! 💳', 'success');
+            return;
+        }
         setSaving(true);
         try {
             const { error } = await supabase
@@ -149,6 +159,11 @@ function SettingsContent() {
     const handleUpdatePassword = async () => {
         if (!newPassword || newPassword.length < 6) {
             showToast('Şifre en az 6 karakter olmalıdır.', 'error');
+            return;
+        }
+        if (!user) {
+            showToast('Şifreniz başarıyla güncellendi! 🔒 (Önizleme modu)', 'success');
+            setNewPassword('');
             return;
         }
         setSaving(true);
@@ -204,7 +219,7 @@ function SettingsContent() {
             {/* ═══ TOOLBAR TABS ═══ */}
             <div className="toolbar">
                 <div className="segments">
-                    {(['Profil', 'Görünüm', 'Ödeme Yöntemleri', 'Güvenlik'] as const).map(item => (
+                    {(['Profil', 'Görünüm', 'Ödeme Yöntemleri', 'Abonelik', 'Güvenlik'] as const).map(item => (
                         <Button
                             key={item}
                             size="sm"
@@ -326,20 +341,30 @@ function SettingsContent() {
                     </div>
 
                     <div>
-                        {/* Store Link Panel */}
-                        <section className="panel">
-                            <div className="panel-header">
-                                <h2>Mağaza Bağlantısı</h2>
-                                <Globe size={17} className="text-[#5500FF]" />
-                            </div>
-                            <div className="form-body">
-                                <p className="text-xs font-bold mb-4">
-                                    sety.store/{username || 'emirhan'}
-                                </p>
-                                <Button variant="outline" size="sm" onClick={copyLink} className="gap-1.5">
-                                    <Copy size={13} />
-                                    Linki Kopyala
-                                </Button>
+                        {/* Store Link Sleek Banner */}
+                        <section className="panel !p-4 bg-gradient-to-br from-violet-50/70 to-purple-50/40 border border-violet-100/90 rounded-2xl mb-4">
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="min-w-0">
+                                    <div className="flex items-center gap-1.5 text-[10px] font-black text-[#5500FF] uppercase tracking-wider mb-0.5">
+                                        <Globe size={12} />
+                                        <span>CANLI MAĞAZAN</span>
+                                    </div>
+                                    <div className="text-xs font-black text-slate-900 truncate">
+                                        sety.store/{username || 'emirhan'}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                    <Button variant="outline" size="sm" onClick={copyLink} className="h-7 px-2.5 text-[11px] gap-1 bg-white hover:bg-slate-50 font-bold border-slate-200 shadow-2xs">
+                                        <Copy size={11} />
+                                        <span>Kopyala</span>
+                                    </Button>
+                                    <Button size="sm" asChild className="h-7 px-2.5 text-[11px] bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold shadow-2xs">
+                                        <a href={`https://sety.store/${username || 'emirhan'}`} target="_blank" rel="noopener noreferrer">
+                                            <span>Vitrine Git</span>
+                                            <ArrowUpRight size={11} className="ml-0.5" />
+                                        </a>
+                                    </Button>
+                                </div>
                             </div>
                         </section>
 
@@ -391,6 +416,8 @@ function SettingsContent() {
                         <h2>{tab}</h2>
                         {tab === 'Görünüm' ? (
                             <Palette className="text-[#5500FF]" size={17} />
+                        ) : tab === 'Abonelik' ? (
+                            <Zap className="text-[#5500FF]" size={17} fill="#C4FF00" />
                         ) : tab === 'Güvenlik' ? (
                             <ShieldCheck className="text-[#5500FF]" size={17} />
                         ) : (
@@ -447,6 +474,13 @@ function SettingsContent() {
                                     </div>
                                     <span className="badge green">Aktif</span>
                                 </div>
+                                <div className="setting-row mt-3">
+                                    <div>
+                                        <strong className="text-sm">Shopier / Kart Altyapısı</strong>
+                                        <p>Kredi ve banka kartı ile güvenli tahsilat (%0 lansman komisyonu).</p>
+                                    </div>
+                                    <span className="badge green">Aktif</span>
+                                </div>
                                 <label className="field mt-5">
                                     IBAN VEYA SHOPİER ÖDEME LİNKİ
                                     <input
@@ -463,6 +497,57 @@ function SettingsContent() {
                                     <Check size={14} />
                                     {saving ? 'Kaydediliyor...' : 'Kaydet'}
                                 </Button>
+                            </>
+                        ) : tab === 'Abonelik' ? (
+                            <>
+                                <div className="p-6 rounded-2xl bg-gradient-to-br from-[#5500FF]/5 via-purple-50/50 to-transparent border border-purple-100">
+                                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                                        <div>
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#5500FF] text-white text-[10px] font-black uppercase tracking-wider mb-2">
+                                                <Zap size={11} fill="#C4FF00" stroke="#C4FF00" />
+                                                FOUNDER PLAN
+                                            </span>
+                                            <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                                                Lansman Özel · %0 Komisyon
+                                            </h3>
+                                            <p className="text-xs text-slate-500 font-medium mt-1">
+                                                Lansman süresince tüm Sety Pro özellikleri ve %0 komisyon avantajı hesabınıza tanımlıdır.
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            <span className="text-2xl font-black text-slate-900">₺0</span>
+                                            <span className="text-xs text-slate-400 font-bold"> / ömür boyu</span>
+                                            <div className="text-[10px] text-emerald-600 font-bold mt-0.5">● Aktif Abonelik</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-6 pt-5 border-t border-purple-100/70 text-xs text-slate-700">
+                                        <div className="flex items-center gap-2 font-semibold">
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> Sınırsız dijital ürün satışı
+                                        </div>
+                                        <div className="flex items-center gap-2 font-semibold">
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> 1:1 Seans & takvim entegrasyonu
+                                        </div>
+                                        <div className="flex items-center gap-2 font-semibold">
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> Özel sety.store/{username || 'emirhan'} linki
+                                        </div>
+                                        <div className="flex items-center gap-2 font-semibold">
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> E-posta toplama & müşteri listesi
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mt-5 flex items-center justify-between gap-4">
+                                    <p className="text-xs text-slate-500">
+                                        Polar & Shopier faturalandırma geçmişinizi görmek için fatura sayfasına geçin.
+                                    </p>
+                                    <Button variant="outline" size="sm" asChild className="text-xs gap-1.5 shrink-0">
+                                        <Link href="/dashboard/billing">
+                                            <span>Faturaları İncele</span>
+                                            <ArrowUpRight size={13} />
+                                        </Link>
+                                    </Button>
+                                </div>
                             </>
                         ) : (
                             <>

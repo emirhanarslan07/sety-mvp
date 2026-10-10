@@ -35,7 +35,7 @@ export default function NotFound() {
             Ana Sayfaya Dön
           </Link>
           <Link
-            href="/psikologgizemtepebas"
+            href="/denizyilmaz"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm border border-slate-200 shadow-xs transition-all"
           >
             Örnek Vitrini Gör

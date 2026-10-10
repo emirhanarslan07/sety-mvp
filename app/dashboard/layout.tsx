@@ -176,10 +176,10 @@ function DashboardLayoutContent({
             <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
                 {/* Brand */}
                 <div className="brand">
-                    <span className="brand-mark">
-                        <Zap size={23} fill="currentColor" />
+                    <span className="brand-mark bg-[#5500FF] text-[#C4FF00] flex items-center justify-center">
+                        <Zap size={20} fill="#C4FF00" stroke="#C4FF00" />
                     </span>
-                    <span>sety</span>
+                    <span className="font-sans font-black tracking-tight text-[19px] text-slate-900">Sety</span>
                     <span className="beta">BETA</span>
                 </div>
 

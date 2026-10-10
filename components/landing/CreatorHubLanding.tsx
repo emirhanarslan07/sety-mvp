@@ -208,10 +208,10 @@ export function CreatorHubLanding() {
             Bildiğin, ürettiğin, ilham verdiğin her şeyin bir değeri var.
             <br className="desktop-break" /> Seanslarını ve dijital ürünlerini tek bir linkten sat.
             <br />
-            <strong>Sen üret. Sety ile kazanmaya başla.</strong>
+            <span className="hero-highlight-tag">Sen üret, Sety ile kazanmaya başla ✨</span>
           </p>
           <Button
-            className="main-cta bg-[#C4FF00] hover:bg-[#b2ee00] text-slate-950 font-black shadow-lg"
+            className="main-cta hero-main-cta bg-[#5500FF] hover:bg-[#4400cc] !text-white font-black shadow-xl"
             onClick={() => openModal("signup")}
           >
             <span>Ücretsiz mağazanı aç</span>
@@ -252,15 +252,20 @@ export function CreatorHubLanding() {
           </p>
         </div>
         <CreatorPreview />
-        <div className="creator-bottom">
-          <span>
-            <ShieldCheck size={16} /> Sana ait bir mağaza, baştan sona.
-          </span>
-          <Button variant="link" asChild>
-            <Link href="/psikologgizemtepebas">
-              Örnek mağazayı incele <ArrowUpRight />
-            </Link>
-          </Button>
+        <div className="creator-bottom-wrapper">
+          <div className="creator-bottom">
+            <span>
+              <ShieldCheck size={18} /> Sana ait bir mağaza, baştan sona.
+            </span>
+            <Button variant="link" asChild>
+              <Link href="/denizyilmaz">
+                Örnek mağazayı incele <ArrowUpRight size={16} />
+              </Link>
+            </Button>
+          </div>
+          <p className="creator-disclaimer-note">
+            * Temsili mağaza ve örnek satış verileri
+          </p>
         </div>
       </section>
 
@@ -786,8 +791,8 @@ export function CreatorHubLanding() {
                   </a>
                 </li>
                 <li>
-                  <Link href="/psikologgizemtepebas" className="hover:text-[#5500FF] transition-colors inline-flex items-center gap-1">
-                    Örnek Vitrin (Gizem Tepebaş) <ArrowUpRight size={11} />
+                  <Link href="/denizyilmaz" className="hover:text-[#5500FF] transition-colors inline-flex items-center gap-1">
+                    Örnek Vitrin (Deniz Yılmaz) <ArrowUpRight size={11} />
                   </Link>
                 </li>
                 <li>
