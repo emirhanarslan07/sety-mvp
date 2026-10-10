@@ -18,19 +18,23 @@ export async function POST(req: Request) {
 
         const cleanEmail = email.toLowerCase().trim();
 
-        const { data, error } = await supabase
+        // Check if already in waitlist
+        const { data: existing } = await supabase
             .from('waitlist')
-            .upsert(
-                { email: cleanEmail, feature },
-                { onConflict: 'email' }
-            );
+            .select('id')
+            .eq('email', cleanEmail)
+            .maybeSingle();
+
+        if (existing) {
+            return NextResponse.json({ success: true, message: 'Already subscribed' });
+        }
+
+        const { error } = await supabase
+            .from('waitlist')
+            .insert({ email: cleanEmail, feature });
 
         if (error) {
-            console.error('Waitlist upsert error:', error);
-            // If duplicate email, still consider successful
-            if (error.code === '23505') {
-                return NextResponse.json({ success: true, message: 'Already subscribed' });
-            }
+            console.error('Waitlist insert error:', error);
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
