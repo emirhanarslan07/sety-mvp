@@ -364,7 +364,7 @@ export function CreatorHubLanding() {
             onClick={() => openModal("signup")}
             className="launch-label cursor-pointer hover:scale-105 transition-transform"
           >
-            <span /> {isEn ? "LAUNCH SPECIAL · 0% COMMISSION" : "LANSMANA ÖZEL · %0 KOMİSYON"}{" "}
+            <span /> {isEn ? "LAUNCH SPECIAL · 47 SPOTS REMAINING" : "LANSMANA ÖZEL · 47 KONTENJAN KALDI"}{" "}
             <ArrowUpRight size={13} />
           </button>
           <h1>
@@ -1045,7 +1045,7 @@ export function CreatorHubLanding() {
       <section className="final-cta">
         <span className="eyebrow !text-[#C4FF00] inline-flex items-center gap-1.5 justify-center">
           <Zap size={14} className="fill-[#C4FF00] text-[#C4FF00]" />{" "}
-          {isEn ? "FREE DURING LAUNCH" : "LANSMANA ÖZEL"}
+          {isEn ? "FREE DURING LAUNCH · ONLY 47 SPOTS LEFT" : "LANSMANA ÖZEL · 47 KONTENJAN KALDI"}
         </span>
         <h2 className="!text-white">
           {isEn ? (

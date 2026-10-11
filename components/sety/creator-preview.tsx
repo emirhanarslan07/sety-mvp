@@ -25,7 +25,7 @@ export function CreatorPreview() {
           <span className="micro-icon">
             <Wallet size={16} />
           </span>{" "}
-          {isEn ? "MONTHLY REVENUE" : "BU AYKİ KAZANCIN"}
+          {isEn ? "SAMPLE STORE REVENUE" : "ÖRNEK MAĞAZA GELİRİ"}
         </span>
         <strong>
           {isEn ? "$2,850" : "₺42.850"}<span>.00</span>

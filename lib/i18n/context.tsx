@@ -36,13 +36,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         if (savedLang && supported.includes(savedLang)) {
             setLangState(savedLang);
         } else {
-            // Default English, unless browser language is explicitly Turkish
-            const browserLang = typeof navigator !== 'undefined' ? navigator.language?.toLowerCase() : '';
-            if (browserLang.startsWith('tr')) {
-                setLangState('tr');
-            } else {
-                setLangState('en');
-            }
+            // Always default to English for global audience & Product Hunt
+            setLangState('en');
         }
     }, []);
 
