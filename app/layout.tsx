@@ -143,7 +143,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     const cookieStore = cookies();
-    const lang = cookieStore.get('s_lang')?.value || 'tr';
+    const lang = cookieStore.get('s_lang')?.value || 'en';
 
     return (
         <html lang={lang} className={`${manrope.variable} ${inter.variable} ${plusJakartaSans.variable} ${cairo.variable} ${montserrat.variable} ${syne.variable} ${spaceMono.variable} ${playfair.variable} ${outfit.variable} ${bebasNeue.variable} ${poppins.variable} ${lexend.variable}`} suppressHydrationWarning>
