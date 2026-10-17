@@ -40,13 +40,13 @@ import { OnboardingScreen } from '@/components/dashboard/OnboardingScreen';
 import './dashboard.css';
 
 const navigation = [
-    { to: '/dashboard', label: 'Genel Bakış', icon: Grid2X2 },
-    { to: '/dashboard/store', label: 'Mağazam', icon: Store },
-    { to: '/dashboard/orders', label: 'Siparişler', icon: ShoppingBag },
-    { to: '/dashboard/appointments', label: 'Randevular', icon: CalendarDays },
-    { to: '/dashboard/customers', label: 'Müşteriler', icon: Users },
-    { to: '/dashboard/analytics', label: 'Analitik', icon: BarChart2 },
-    { to: '/dashboard/settings', label: 'Ayarlar', icon: Settings },
+    { to: '/dashboard', label: 'Overview', icon: Grid2X2 },
+    { to: '/dashboard/store', label: 'My Store', icon: Store },
+    { to: '/dashboard/orders', label: 'Orders', icon: ShoppingBag },
+    { to: '/dashboard/appointments', label: 'Appointments', icon: CalendarDays },
+    { to: '/dashboard/customers', label: 'Customers', icon: Users },
+    { to: '/dashboard/analytics', label: 'Analytics', icon: BarChart2 },
+    { to: '/dashboard/settings', label: 'Settings', icon: Settings },
 ] as const;
 
 function DashboardLayoutContent({
@@ -79,7 +79,7 @@ function DashboardLayoutContent({
         if (n.to === '/dashboard') return pathname === '/dashboard';
         return pathname.startsWith(n.to);
     });
-    const activeLabel = activeItem?.label || 'Panel';
+    const activeLabel = activeItem?.label || 'Dashboard';
 
     // Note: Guest users can preview the dashboard layout without forced redirects.
 
@@ -104,7 +104,7 @@ function DashboardLayoutContent({
     const copyLink = () => {
         navigator.clipboard.writeText(`https://${storeUrl}`);
         setCopied(true);
-        showToast('Mağaza linki kopyalandı! 🚀', 'success');
+        showToast('Store link copied! 🚀', 'success');
         setTimeout(() => setCopied(false), 2000);
     };
 
@@ -121,7 +121,7 @@ function DashboardLayoutContent({
                     title: newTitle.trim(),
                     type: newType,
                     price: parseFloat(newPrice) || 0,
-                    currency: 'TRY',
+                    currency: 'USD',
                     subtitle: newDesc.trim() || undefined,
                     status: 'active'
                 }]);
@@ -129,15 +129,15 @@ function DashboardLayoutContent({
                 if (error) throw error;
             }
 
-            showToast('Ürün başarıyla mağazanıza eklendi! 🎉', 'success');
+            showToast('Product added to your store! 🎉', 'success');
             setNewTitle('');
             setNewDesc('');
-            setNewPrice('249');
+            setNewPrice('19');
             setAddOpen(false);
             if (refreshData) refreshData();
         } catch (err: any) {
             console.error('Error creating product:', err);
-            showToast(err.message || 'Ürün eklenirken bir hata oluştu.', 'error');
+            showToast(err.message || 'Failed to add product.', 'error');
         } finally {
             setIsCreatingProduct(false);
         }
@@ -176,7 +176,7 @@ function DashboardLayoutContent({
             <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
                 {/* Brand */}
                 <div className="brand">
-                    <span className="brand-mark bg-[#5500FF] text-[#C4FF00] flex items-center justify-center">
+                    <span className="brand-mark rounded-full bg-[#5500FF] text-[#C4FF00] flex items-center justify-center">
                         <Zap size={20} fill="#C4FF00" stroke="#C4FF00" />
                     </span>
                     <span className="font-sans font-black tracking-tight text-[19px] text-slate-900">Sety</span>
@@ -191,7 +191,7 @@ function DashboardLayoutContent({
                         variant="ghost"
                         size="icon"
                         className="h-5 w-5 ml-auto text-slate-400 hover:text-slate-900"
-                        title="Mağaza linkini kopyala"
+                        title="Copy store link"
                         onClick={copyLink}
                     >
                         {copied ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
@@ -200,7 +200,7 @@ function DashboardLayoutContent({
 
                 {/* Navigation */}
                 <nav className="nav">
-                    <div className="nav-label">Çalışma alanı</div>
+                    <div className="nav-label">Workspace</div>
                     {navigation.map((n) => {
                         const isActive = n.to === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(n.to);
                         return (
@@ -212,7 +212,7 @@ function DashboardLayoutContent({
                             >
                                 <n.icon />
                                 <span>{n.label}</span>
-                                {n.label === 'Siparişler' && orderCount > 0 && (
+                                {n.label === 'Orders' && orderCount > 0 && (
                                     <span className="nav-count">{orderCount}</span>
                                 )}
                             </Link>
@@ -224,18 +224,18 @@ function DashboardLayoutContent({
                 <div className="sidebar-bottom">
                     <div className="plan">
                         <div className="plan-title">
-                            <span>Founder Planı</span>
-                            <span className="text-[#5500FF]">9 / 14 gün</span>
+                            <span>Founder Plan</span>
+                            <span className="text-[#5500FF]">9 / 14 days</span>
                         </div>
                         <div className="plan-track">
                             <span style={{ width: '68%' }} />
                         </div>
                         <p>
-                            Hayallerin için daha fazla alan.<br />
-                            Satışlarından komisyon alınmaz.
+                            More space for your vision.<br />
+                            0% commission on sales.
                         </p>
                         <Link href="/dashboard/billing">
-                            Planı keşfet <ArrowUpRight size={12} />
+                            Explore plan <ArrowUpRight size={12} />
                         </Link>
                     </div>
 
@@ -259,7 +259,7 @@ function DashboardLayoutContent({
                             variant="ghost"
                             size="icon"
                             className="ml-auto h-7 w-7 text-slate-400"
-                            title="Hesap ayarları"
+                            title="Account settings"
                         >
                             <ChevronsUpDown size={14} />
                         </Button>
@@ -284,12 +284,12 @@ function DashboardLayoutContent({
                             variant="ghost"
                             size="icon"
                             onClick={() => setSidebarOpen(!sidebarOpen)}
-                            aria-label="Menüyü aç"
+                            aria-label="Toggle menu"
                         >
                             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                         </Button>
                         <div className="breadcrumb">
-                            Panel <ChevronRight size={12} />
+                            Dashboard <ChevronRight size={12} />
                             <span>{activeLabel}</span>
                         </div>
                     </div>
@@ -299,8 +299,8 @@ function DashboardLayoutContent({
                             variant="ghost"
                             size="icon"
                             className="notification text-slate-500 hover:text-slate-900"
-                            title="Bildirimler"
-                            onClick={() => showToast('Yeni bildiriminiz bulunmuyor.', 'info')}
+                            title="Notifications"
+                            onClick={() => showToast('No new notifications.', 'info')}
                         >
                             <Bell size={18} />
                         </Button>
@@ -314,7 +314,7 @@ function DashboardLayoutContent({
                                 rel="noopener noreferrer"
                             >
                                 <ExternalLink size={13} className="mr-1.5" />
-                                Mağazayı Gör
+                                View Store
                             </a>
                         </Button>
 
@@ -323,7 +323,7 @@ function DashboardLayoutContent({
                             className="text-xs bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold rounded-xl"
                         >
                             <Plus size={14} className="mr-1.5" />
-                            Ürün Ekle
+                            Add Product
                         </Button>
                     </div>
                 </header>
@@ -332,10 +332,10 @@ function DashboardLayoutContent({
                     {children}
 
                     <footer className="footer-note">
-                        <span>© 2026 Sety · Üret, paylaş, kazan.</span>
+                        <span>© 2026 Sety · Create, share, earn.</span>
                         <span className="flex items-center gap-2">
                             <span className="live-dot" />
-                            Tüm sistemler çalışıyor <span className="ml-2">· Canlı veriler</span>
+                            All systems operational <span className="ml-2">· Live data</span>
                         </span>
                     </footer>
                 </div>
@@ -346,18 +346,18 @@ function DashboardLayoutContent({
                 <DialogContent className="sm:max-w-md bg-white rounded-2xl p-6">
                     <DialogHeader>
                         <DialogTitle className="text-lg font-bold text-slate-900">
-                            Yeni Ürün Ekle
+                            Add New Product
                         </DialogTitle>
                         <DialogDescription className="text-xs text-slate-500">
-                            Mağazana yeni bir dijital ürün veya danışmanlık hizmeti ekle.
+                            Add a new digital product or coaching session to your store.
                         </DialogDescription>
                     </DialogHeader>
 
                     <form onSubmit={handleCreateProduct} className="flex flex-col gap-4 mt-2">
                         <label className="field">
-                            ÜRÜN ADI
+                            PRODUCT TITLE
                             <input
-                                placeholder="Örn: 1:1 Strateji Görüşmesi veya E-Kitap"
+                                placeholder="e.g. 1:1 Strategy Call or E-Book"
                                 value={newTitle}
                                 onChange={(e) => setNewTitle(e.target.value)}
                                 required
@@ -366,23 +366,23 @@ function DashboardLayoutContent({
 
                         <div className="fields mb-0">
                             <label className="field">
-                                ÜRÜN TİPİ
+                                PRODUCT TYPE
                                 <select
                                     value={newType}
                                     onChange={(e) => setNewType(e.target.value)}
                                 >
-                                    <option value="digital_product">Dijital İndirme</option>
-                                    <option value="coaching_call">Koçluk & Danışmanlık</option>
-                                    <option value="external_link">Direkt Link</option>
+                                    <option value="digital_product">Digital Download</option>
+                                    <option value="coaching_call">Coaching & Consulting</option>
+                                    <option value="external_link">Direct Link</option>
                                 </select>
                             </label>
 
                             <label className="field">
-                                FİYAT (₺)
+                                PRICE ($)
                                 <input
                                     type="number"
                                     min="0"
-                                    placeholder="249"
+                                    placeholder="19"
                                     value={newPrice}
                                     onChange={(e) => setNewPrice(e.target.value)}
                                     required
@@ -391,9 +391,9 @@ function DashboardLayoutContent({
                         </div>
 
                         <label className="field">
-                            AÇIKLAMA
+                            DESCRIPTION
                             <textarea
-                                placeholder="Ürün açıklaması veya seans detayları..."
+                                placeholder="Product description or session details..."
                                 value={newDesc}
                                 onChange={(e) => setNewDesc(e.target.value)}
                             />
@@ -409,7 +409,7 @@ function DashboardLayoutContent({
                             ) : (
                                 <Plus size={16} />
                             )}
-                            <span>Ürün Ekle</span>
+                            <span>Add Product</span>
                         </Button>
                     </form>
                 </DialogContent>

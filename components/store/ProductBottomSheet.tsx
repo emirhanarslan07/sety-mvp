@@ -234,18 +234,18 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                         <CheckCircle2 className="w-10 h-10 text-emerald-500 animate-bounce" />
                     </div>
                     <h2 className="text-[28px] md:text-[32px] font-black text-slate-900 mb-4 tracking-tight">
-                        {t('public.success_title') || 'Harika!'}
+                        {t('public.success_title') || 'Awesome!'}
                     </h2>
                     
                     <div className="flex flex-col items-center max-w-sm w-full">
                         <p className="text-[16px] md:text-[18px] text-slate-500 font-medium mb-8 leading-relaxed">
-                            {isCoaching ? (t('public.coaching_success') || 'Randevu talebiniz alındı. Sizinle en kısa sürede iletişime geçeceğiz.') :
-                                (product.digital_file_url || product.file_url || product.redirect_url) ? (t('public.delivery_ready') || 'Ürününüz hazır! Aşağıdaki butona tıklayarak erişebilirsiniz.') :
-                                    isManual ? (t('public.manual_payment_instruction') || 'Ödemeyi tamamlamak için aşağıdaki bilgileri kullanın.') :
-                                        (t('public.order_captured') || 'Bilgileriniz başarıyla kaydedildi!')}
+                            {isCoaching ? (t('public.coaching_success') || 'Your session request has been received. We will contact you shortly.') :
+                                (product.digital_file_url || product.file_url || product.redirect_url) ? (t('public.delivery_ready') || 'Your product is ready! Click the button below to access.') :
+                                    isManual ? (t('public.manual_payment_instruction') || 'Use the payment details below to complete your order.') :
+                                        (t('public.order_captured') || 'Your information has been successfully recorded!')}
                             <br />
                             <span className="text-[13px] opacity-60 mt-3 block">
-                                {t('public.order_email_sent') || 'Sipariş detayları e-posta adresinize de gönderildi.'}
+                                {t('public.order_email_sent') || 'Order confirmation has also been sent to your email.'}
                             </span>
                         </p>
 
@@ -253,7 +253,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                         {isManual && paymentInfo && (
                             <div className="w-full bg-slate-50 rounded-3xl p-6 mb-8 border-2 border-slate-100 text-left">
                                 <label className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 block">
-                                    {t('public.payment_details') || 'Ödeme Bilgileri'}
+                                    {t('public.payment_details') || 'Payment Details'}
                                 </label>
                                 <div className="bg-white p-4 rounded-2xl border border-slate-100 flex items-center justify-between gap-4 group">
                                     <code className="text-[14px] font-bold text-slate-900 break-all">
@@ -262,7 +262,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     <button 
                                         onClick={() => {
                                             navigator.clipboard.writeText(paymentInfo);
-                                            showToast(t('common.copied') || 'Kopyalandı!', 'success');
+                                            showToast(t('common.copied') || 'Copied!', 'success');
                                         }}
                                         className="shrink-0 w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center hover:bg-[#6C47FF] transition-all active:scale-95"
                                     >
@@ -270,7 +270,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     </button>
                                 </div>
                                 <p className="text-[12px] text-slate-400 font-medium mt-4 italic">
-                                    {t('public.manual_payment_footer') || 'Ödeme yaparken açıklama kısmına e-posta adresinizi yazmayı unutmayın.'}
+                                    {t('public.manual_payment_footer') || 'Remember to include your email address in the payment note/description.'}
                                 </p>
                             </div>
                         )}
@@ -283,7 +283,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                 }}
                                 className="h-16 px-10 w-full rounded-2xl bg-slate-900 hover:bg-[#6C47FF] text-white font-black text-[17px] shadow-2xl flex items-center justify-center gap-3 group transition-all"
                             >
-                                {product.redirect_url ? (t('public.go_to_link') || 'Bağlantıya Git') : (t('public.download_now') || 'Şimdi İndir')}
+                                {product.redirect_url ? (t('public.go_to_link') || 'Go to Link') : (t('public.download_now') || 'Download Now')}
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Button>
                         )}
@@ -425,13 +425,13 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                             const Icon = getFallbackIcon(product.type);
                                             return <Icon className="w-3.5 h-3.5" strokeWidth={2} />;
                                         })()}
-                                        {product.type === 'digital_product' ? 'Dijital Ürün' :
-                                         product.type === 'coaching_call' ? 'Birebir Seans' :
-                                         product.type === 'video_response' ? 'Video Yanıt' :
-                                         product.type === 'private_group' ? 'Özel Grup' :
-                                         product.type === 'collect_emails' ? 'E-posta Toplama' :
-                                         product.type === 'lead_magnet' ? 'Ücretsiz İçerik' :
-                                         product.type === 'external_link' ? 'Harici Bağlantı' : 'Ürün'}
+                                        {product.type === 'digital_product' ? 'Digital Product' :
+                                         product.type === 'coaching_call' ? '1:1 Coaching' :
+                                         product.type === 'video_response' ? 'Video Response' :
+                                         product.type === 'private_group' ? 'Private Community' :
+                                         product.type === 'collect_emails' ? 'Newsletter' :
+                                         product.type === 'lead_magnet' ? 'Free Resource' :
+                                         product.type === 'external_link' ? 'External Link' : 'Product'}
                                     </span>
                                     <h1 className="text-[28px] md:text-[36px] font-[1000] text-slate-900 tracking-tight leading-[1.1]">
                                         {product.title}
@@ -444,7 +444,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                                 color: profile?.brand_color || '#6C47FF'
                                             }}
                                         >
-                                            {product.price === 0 ? (t('public.free') || 'Ücretsiz') : formatCurrency(product.price, product.currency || 'TRY')}
+                                            {product.price === 0 ? (t('public.free') || 'Free') : formatCurrency(product.price, product.currency || 'USD')}
                                         </span>
                                     </div>
                                 </motion.div>
@@ -480,10 +480,10 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     >
                                         <div className="flex items-center gap-3">
                                             <Calendar className="w-6 h-6 text-emerald-600" />
-                                            <h3 className="text-[16px] font-black text-emerald-900">Takvim Randevusu</h3>
+                                            <h3 className="text-[16px] font-black text-emerald-900">Calendar Booking</h3>
                                         </div>
                                         <p className="text-[14px] text-emerald-800/80 font-medium leading-relaxed">
-                                            Ödemenizi tamamladıktan sonra, bir sonraki ekranda doğrudan takvim üzerinden uygun bir tarih ve saat seçebileceksiniz.
+                                            After completing your request, you will select an available date and time slot directly on the calendar.
                                         </p>
                                     </motion.div>
                                 )}
@@ -503,27 +503,27 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                             <User className="w-5 h-5" style={{ color: profile?.brand_color || '#6C47FF' }} />
                                         </div>
                                         <div>
-                                            <h3 className="text-[18px] font-black text-slate-900 tracking-tight leading-tight">Bilgileriniz</h3>
-                                            <p className="text-[13px] text-slate-400 font-medium mt-0.5">Ürünü alabilmeniz için bilgilerinizi girin</p>
+                                            <h3 className="text-[18px] font-black text-slate-900 tracking-tight leading-tight">Your Details</h3>
+                                            <p className="text-[13px] text-slate-400 font-medium mt-0.5">Enter your details to receive your order</p>
                                         </div>
                                     </div>
 
                                     <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8 space-y-4">
                                         <div className="space-y-2">
-                                            <label className="text-[13px] font-bold text-slate-500 ml-1">Adınız Soyadınız</label>
+                                            <label className="text-[13px] font-bold text-slate-500 ml-1">Full Name</label>
                                             <div className="relative group">
                                                 <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
                                                 <input
                                                     type="text"
                                                     value={name}
                                                     onChange={(e) => setName(e.target.value)}
-                                                    placeholder="Adınız Soyadınız"
+                                                    placeholder="Full Name"
                                                     className="w-full h-14 pl-12 pr-5 rounded-xl bg-slate-50 border-2 border-slate-100 text-[15px] font-bold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
                                                 />
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[13px] font-bold text-slate-500 ml-1">E-posta Adresiniz</label>
+                                            <label className="text-[13px] font-bold text-slate-500 ml-1">Email Address</label>
                                             <div className="relative group">
                                                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-slate-600 transition-colors" />
                                                 <input
@@ -531,20 +531,20 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                                     type="email"
                                                     value={email}
                                                     onChange={(e) => setEmail(e.target.value)}
-                                                    placeholder="ornek@mail.com"
+                                                    placeholder="you@example.com"
                                                     className="w-full h-14 pl-12 pr-5 rounded-xl bg-slate-50 border-2 border-slate-100 text-[15px] font-bold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-100 outline-none transition-all"
                                                 />
                                             </div>
                                         </div>
                                         {isCoaching && (
                                             <div className="space-y-2">
-                                                <label className="text-[13px] font-bold text-slate-500 ml-1">Notunuz (opsiyonel)</label>
+                                                <label className="text-[13px] font-bold text-slate-500 ml-1">Notes (optional)</label>
                                                 <div className="relative group">
                                                     <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-slate-300 group-focus-within:text-[#6C47FF] transition-colors" />
                                                     <textarea
                                                         value={message}
                                                         onChange={(e) => setMessage(e.target.value)}
-                                                        placeholder="Görüşmede konuşmak istediğiniz konular..."
+                                                        placeholder="Topics you'd like to discuss in the session..."
                                                         className="w-full min-h-[100px] pl-12 pr-5 py-4 rounded-xl bg-slate-50 border-2 border-transparent text-[15px] font-semibold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-[#6C47FF]/30 outline-none transition-all resize-none"
                                                     />
                                                 </div>
@@ -552,14 +552,14 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                         )}
                                         {isVideoResponse && (
                                             <div className="space-y-2">
-                                                <label className="text-[13px] font-bold text-slate-500 ml-1">Talebiniz/Sorunuz *</label>
+                                                <label className="text-[13px] font-bold text-slate-500 ml-1">Your Request / Question *</label>
                                                 <div className="relative group">
                                                     <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-slate-300 group-focus-within:text-[#6C47FF] transition-colors" />
                                                     <textarea
                                                         value={message}
                                                         onChange={(e) => setMessage(e.target.value)}
                                                         required
-                                                        placeholder="Videonuzda/ürününüzde ele alınmasını istediğiniz detayları yazın..."
+                                                        placeholder="Describe details you would like covered in the video..."
                                                         className="w-full min-h-[120px] pl-12 pr-5 py-4 rounded-xl bg-slate-50 border-2 border-transparent text-[15px] font-semibold text-slate-900 placeholder:text-slate-300 focus:bg-white focus:border-[#6C47FF]/30 outline-none transition-all resize-none"
                                                     />
                                                 </div>
@@ -570,7 +570,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     {/* Trust */}
                                     <div className="flex items-center gap-2 px-1">
                                         <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                                        <span className="text-[12px] font-bold text-slate-400">Bilgileriniz güvende · SSL korumalı</span>
+                                        <span className="text-[12px] font-bold text-slate-400">Your details are safe · 256-bit SSL encrypted</span>
                                     </div>
                                 </motion.div>
 
@@ -589,7 +589,7 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                     {selectedDate && (
                                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#6C47FF]/10 text-[#6C47FF] text-[12px] font-bold">
                                             <Calendar className="w-3 h-3" />
-                                            {selectedDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}
+                                            {selectedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}
                                         </span>
                                     )}
                                     {selectedTime && (
@@ -616,11 +616,11 @@ export default function ProductBottomSheet({ isOpen, onClose, product, onPurchas
                                 } : {}}
                             >
                                 <span className="tracking-tight">
-                                    {loading ? 'İşleniyor...' :
-                                        success ? 'Harika! Yönlendiriliyorsunuz' :
-                                            isCoaching ? 'Randevu İçin İlerle' :
-                                                isVideoResponse ? 'Talebi Gönder' :
-                                                    product.price === 0 ? 'Ücretsiz Al' : `${formatCurrency(product.price, product.currency || 'TRY')} — Hemen Al`}
+                                    {loading ? 'Processing...' :
+                                        success ? 'Awesome! Redirecting...' :
+                                            isCoaching ? 'Continue to Booking' :
+                                                isVideoResponse ? 'Send Request' :
+                                                    product.price === 0 ? 'Get Free' : `${formatCurrency(product.price, product.currency || 'USD')} — Buy Now`}
                                 </span>
                                 {loading ? (
                                     <Loader2 className="w-6 h-6 animate-spin" />

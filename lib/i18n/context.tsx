@@ -30,15 +30,9 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     const [lang, setLangState] = useState<Language>('en');
 
     useEffect(() => {
-        const savedLang = localStorage.getItem('s_lang') as Language;
-        const supported = ['tr', 'en', 'ar', 'ru', 'de', 'es', 'pt', 'fr', 'zh', 'hi'];
-
-        if (savedLang && supported.includes(savedLang)) {
-            setLangState(savedLang);
-        } else {
-            // Always default to English for global audience & Product Hunt
-            setLangState('en');
-        }
+        // Enforce English for global platform
+        setLangState('en');
+        localStorage.setItem('s_lang', 'en');
     }, []);
 
     useEffect(() => {

@@ -100,12 +100,12 @@ const getFallbackIcon = (type: string) => {
 
 const formatTypeLabel = (type: string) => {
     switch (type) {
-        case 'digital_product': return 'DİJİTAL İNDİRME';
-        case 'coaching_call': return 'BİREBİR KOÇLUK';
-        case 'video_response': return 'VİDEO YANIT';
-        case 'lead_magnet': return 'ÜCRETSİZ REHBER';
-        case 'collect_emails': return 'E-BÜLTEN';
-        case 'external_link': return 'BAĞLANTI';
+        case 'digital_product': return 'DIGITAL DOWNLOAD';
+        case 'coaching_call': return '1:1 COACHING';
+        case 'video_response': return 'VIDEO RESPONSE';
+        case 'lead_magnet': return 'FREE RESOURCE';
+        case 'collect_emails': return 'NEWSLETTER';
+        case 'external_link': return 'LINK';
         default: return type.replace('_', ' ').toUpperCase();
     }
 };
@@ -330,17 +330,17 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                 <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-slate-400">
                     <Box className="w-8 h-8" />
                 </div>
-                <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Mağaza Bulunamadı</h1>
-                <p className="text-slate-500 mb-6 text-sm">Aradığınız kullanıcıya ait bir mağaza bulunamadı veya kapatılmış olabilir.</p>
+                <h1 className="text-2xl font-extrabold text-slate-900 mb-2">Store Not Found</h1>
+                <p className="text-slate-500 mb-6 text-sm">The creator store you are looking for could not be found or is inactive.</p>
                 <Button onClick={() => router.push('/')} className="bg-[#5500FF] rounded-xl h-11 px-6 font-bold text-white hover:bg-[#4400cc]">
-                    Ana Sayfaya Dön
+                    Back to Home
                 </Button>
             </div>
         );
     }
 
     const displayName = profile?.display_name || profile?.full_name || `@${profile?.username}`;
-    const announcementText = profile?.announcement_text || 'Bu hafta tüm e-kitap ve rehberlerde özel fırsat';
+    const announcementText = profile?.announcement_text || 'Special offers on all digital resources this week';
     const socialPlatforms = [
         { key: 'twitter', icon: Twitter, href: profile?.twitter || profile?.social_links?.twitter || profile?.social_links?.x, label: 'Twitter' },
         { key: 'instagram', icon: Instagram, href: profile?.instagram || profile?.social_links?.instagram, label: 'Instagram' },
@@ -540,7 +540,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                     {visibleProducts.length === 0 ? (
                         <div className="rounded-3xl border border-dashed border-slate-200 p-12 text-center text-slate-400">
                             <Box className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                            <p className="text-sm font-semibold">Bu mağazada henüz ürün bulunmuyor.</p>
+                            <p className="text-sm font-semibold">No products available in this store yet.</p>
                         </div>
                     ) : (
                         visibleProducts.map((product, idx) => {
@@ -583,7 +583,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                         {isLeadDone ? (
                                             <div className="flex items-center gap-2.5 rounded-xl bg-emerald-50 border border-emerald-200/70 p-3.5 text-emerald-700 text-xs font-bold">
                                                 <Check className="w-4 h-4 shrink-0" />
-                                                <span>Harika! İndirme bağlantısı e-posta adresine gönderildi.</span>
+                                                <span>Awesome! The download link has been sent to your email.</span>
                                             </div>
                                         ) : (
                                             <form onSubmit={(e) => handleInlineLeadSubmit(e, product)} className="flex flex-col sm:flex-row gap-2.5 mt-2">
@@ -592,7 +592,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                                     required
                                                     value={leadEmails[product.id] || ''}
                                                     onChange={(e) => setLeadEmails(prev => ({ ...prev, [product.id]: e.target.value }))}
-                                                    placeholder="E-posta adresini gir..."
+                                                    placeholder="Enter your email..."
                                                     className="flex-1 h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-[#5500FF] focus:bg-white focus:ring-2 focus:ring-[#5500FF]/10 transition-all font-medium"
                                                 />
                                                 <button
@@ -600,7 +600,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                                     disabled={isLeadSubmitting}
                                                     className="h-11 px-5 rounded-xl bg-[#5500FF] hover:bg-[#4400cc] active:scale-[0.98] text-white text-xs font-bold tracking-wide uppercase shadow-md shadow-[#5500FF]/20 transition-all flex items-center justify-center gap-2 shrink-0 disabled:opacity-60"
                                                 >
-                                                    {isLeadSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : (product.button_text || 'Hemen İndir')}
+                                                    {isLeadSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : (product.button_text || 'Download Now')}
                                                 </button>
                                             </form>
                                         )}
@@ -612,12 +612,12 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                             const isCoaching = product.type === 'coaching_call' || product.type === 'danışmanlık';
                             const isExternalLink = product.type === 'external_link';
                             const coachingCfg = product.coaching_config;
-                            const durationText = coachingCfg?.duration_minutes ? `${coachingCfg.duration_minutes} Dk` : '60 Dk';
+                            const durationText = coachingCfg?.duration_minutes ? `${coachingCfg.duration_minutes} Min` : '60 Min';
                             const modeText = coachingCfg?.allow_in_person && coachingCfg?.allow_online
-                                ? 'Yüz Yüze veya Online'
+                                ? 'In-person or Online'
                                 : coachingCfg?.allow_in_person
-                                    ? 'Yüz Yüze'
-                                    : 'Online Görüşme';
+                                    ? 'In-person'
+                                    : 'Online Call';
                             const coachingBadge = `${durationText} • ${modeText}`;
 
                             return (
@@ -639,7 +639,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                         />
                                         <div className="absolute top-2 left-2 sm:hidden">
                                             <span className="rounded-full bg-white/90 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold text-[#5500FF] shadow-sm">
-                                                {isCoaching ? 'DANIŞMANLIK' : isExternalLink ? 'İLETİŞİM' : formatTypeLabel(product.type)}
+                                                {isCoaching ? 'COACHING' : isExternalLink ? 'LINK' : formatTypeLabel(product.type)}
                                             </span>
                                         </div>
                                     </div>
@@ -648,7 +648,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
                                         <div className="hidden sm:block mb-1">
                                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5500FF]">
-                                                {isCoaching ? 'DANIŞMANLIK & SEANS' : isExternalLink ? 'HIZLI İLETİŞİM' : formatTypeLabel(product.type)}
+                                                {isCoaching ? 'COACHING & SESSION' : isExternalLink ? 'DIRECT LINK' : formatTypeLabel(product.type)}
                                             </span>
                                         </div>
                                         <h3 className="font-sans text-[17px] sm:text-[18px] font-bold text-slate-900 leading-snug group-hover:text-[#5500FF] transition-colors line-clamp-1">
@@ -672,17 +672,17 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                                         {!isExternalLink && (
                                             <div className="text-base sm:text-lg font-black text-slate-900 tracking-tight font-sans">
                                                 {isCoaching && coachingCfg?.hide_price
-                                                    ? 'ÖN GÖRÜŞME'
+                                                    ? 'DISCOVERY CALL'
                                                     : product.price === 0
-                                                        ? 'ÜCRETSİZ'
-                                                        : formatCurrency(product.price, product.currency || 'TRY')}
+                                                        ? 'FREE'
+                                                        : formatCurrency(product.price, product.currency || 'USD')}
                                             </div>
                                         )}
                                         <span className={cn(
                                             "inline-flex items-center gap-1.5 rounded-full text-white px-4 py-2 text-xs font-bold transition-all shadow-sm group-hover:shadow-md",
                                             isCoaching ? "bg-[#5500FF] hover:bg-[#4400cc]" : "bg-slate-900 group-hover:bg-[#5500FF]"
                                         )}>
-                                            <span>{isCoaching ? 'Randevu Talep Et' : (product.button_text || 'Görüntüle')}</span>
+                                            <span>{isCoaching ? 'Book Session' : (product.button_text || 'View')}</span>
                                             <ChevronRight className="h-3.5 w-3.5 stroke-[2.5]" />
                                         </span>
                                     </div>
@@ -702,7 +702,7 @@ export default function PublicStoreClient({ initialProfile, initialProducts }: P
                     ) : (
                         <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
                             <Lock className="w-3.5 h-3.5 text-slate-400" />
-                            <span>Güvenli Ödeme · Shopier & Kart Korumalı</span>
+                            <span>Secure Checkout · SSL Encrypted</span>
                         </div>
                     )}
 

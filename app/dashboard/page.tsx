@@ -24,7 +24,7 @@ import { useDashboard } from '@/context/DashboardContext';
 import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase/client';
 
-// ─── Stat Card Component (Exact beautiful-page-design) ───
+// ─── Stat Card Component ───
 function Stat({
     label,
     value,
@@ -54,7 +54,7 @@ function Stat({
                     <TrendingUp size={11} />
                     {change}
                 </span>
-                <span>geçen aya göre</span>
+                <span>vs last month</span>
             </div>
             <svg viewBox="0 0 70 35" className="sparkline" aria-hidden="true">
                 <polyline
@@ -74,101 +74,6 @@ function Stat({
     );
 }
 
-// ─── Fallback Showcase Data (If store is new / has 0 items) ───
-const SAMPLE_PRODUCTS = [
-    {
-        id: 'sample-1',
-        title: 'Instagram Büyüme Rehberi',
-        subtitle: '64 sayfalık PDF e-kitap',
-        type: 'digital_product',
-        typeLabel: 'Dijital İndirme',
-        price: 249,
-        currency: 'TRY',
-        icon: BookOpen,
-        color: '',
-        status: 'active'
-    },
-    {
-        id: 'sample-2',
-        title: '1:1 Strateji Görüşmesi',
-        subtitle: '45 dk birebir koçluk',
-        type: 'coaching_call',
-        typeLabel: 'Koçluk',
-        price: 1490,
-        currency: 'TRY',
-        icon: Target,
-        color: 'green',
-        status: 'active'
-    },
-    {
-        id: 'sample-3',
-        title: 'Reels Şablon Paketi',
-        subtitle: '30 adet Canva şablonu',
-        type: 'digital_product',
-        typeLabel: 'Dijital İndirme',
-        price: 399,
-        currency: 'TRY',
-        icon: Film,
-        color: 'orange',
-        status: 'active'
-    },
-    {
-        id: 'sample-4',
-        title: 'YouTube Kanalım',
-        subtitle: 'Haftalık yeni videolar',
-        type: 'external_link',
-        typeLabel: 'Link',
-        price: 0,
-        currency: 'TRY',
-        icon: Video,
-        color: '',
-        status: 'hidden'
-    },
-];
-
-const SAMPLE_ORDERS = [
-    {
-        id: '#SY-1042',
-        name: 'Zeynep Kaya',
-        initials: 'ZK',
-        product: 'Instagram Büyüme Rehberi',
-        price: '₺249',
-        status: 'Ödendi'
-    },
-    {
-        id: '#SY-1041',
-        name: 'Mert Demir',
-        initials: 'MD',
-        product: '1:1 Strateji Görüşmesi',
-        price: '₺1.490',
-        status: 'Bekliyor'
-    },
-    {
-        id: '#SY-1040',
-        name: 'Elif Yıldız',
-        initials: 'EY',
-        product: 'Reels Şablon Paketi',
-        price: '₺399',
-        status: 'Ödendi'
-    },
-    {
-        id: '#SY-1039',
-        name: 'Can Aydın',
-        initials: 'CA',
-        product: 'Instagram Büyüme Rehberi',
-        price: '₺249',
-        status: 'Ödendi'
-    },
-    {
-        id: '#SY-1038',
-        name: 'Deniz Aksoy',
-        initials: 'DA',
-        product: '1:1 Strateji Görüşmesi',
-        price: '₺1.490',
-        status: 'Bekliyor'
-    },
-];
-
 export default function DashboardOverviewPage() {
     const { profile, store, user, loading: contextLoading } = useDashboard();
     const { showToast } = useToast();
@@ -178,10 +83,10 @@ export default function DashboardOverviewPage() {
     const [dbOrders, setDbOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Dynamic Turkish Date
+    // Dynamic English Date
     const todayFormatted = useMemo(() => {
         const d = new Date();
-        return d.toLocaleDateString('tr-TR', {
+        return d.toLocaleDateString('en-US', {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
@@ -228,11 +133,11 @@ export default function DashboardOverviewPage() {
     }, [store?.id, contextLoading]);
 
     // First name extraction
-    const fullName = profile?.full_name || store?.display_name || user?.user_metadata?.full_name || 'Emirhan';
-    const firstName = fullName.split(' ')[0] || 'Emirhan';
+    const fullName = profile?.full_name || store?.display_name || user?.user_metadata?.full_name || 'Creator';
+    const firstName = fullName.split(' ')[0] || 'Creator';
 
-    // Combine or fallback products
-    const displayProducts = dbProducts.length > 0 ? dbProducts.map((p, i) => {
+    // Format products
+    const displayProducts = dbProducts.map((p, i) => {
         let IconComp: any = Package;
         let color = '';
         if (p.type === 'coaching_call' || p.type === 'danışmanlık') {
@@ -245,54 +150,47 @@ export default function DashboardOverviewPage() {
             IconComp = Video;
         }
 
-        const typeLabel = p.type === 'coaching_call' ? 'Koçluk' :
+        const typeLabel = p.type === 'coaching_call' ? 'Coaching' :
             p.type === 'external_link' ? 'Link' :
-            p.type === 'collect_emails' ? 'E-posta' : 'Dijital İndirme';
+            p.type === 'collect_emails' ? 'Email' : 'Digital Download';
 
         return {
             id: p.id,
             title: p.title,
-            subtitle: p.subtitle || p.description || 'Hazır dijital ürün',
+            subtitle: p.subtitle || p.description || 'Digital product',
             type: p.type,
             typeLabel,
             price: p.price,
-            currency: p.currency || 'TRY',
+            currency: p.currency || 'USD',
             icon: IconComp,
             color,
             status: p.status || 'active'
         };
-    }) : SAMPLE_PRODUCTS;
+    });
 
-    // Combine or fallback orders
-    const displayOrders = dbOrders.length > 0 ? dbOrders.map(o => {
-        const initials = (o.customer_name || 'Müşteri')
+    // Format orders
+    const displayOrders = dbOrders.map(o => {
+        const initials = (o.customer_name || 'Customer')
             .split(' ')
             .filter(Boolean)
             .slice(0, 2)
             .map((p: string) => p[0].toUpperCase())
-            .join('') || 'M';
+            .join('') || 'C';
 
         return {
             id: o.order_number || `#SY-${o.id.slice(0, 4)}`,
-            name: o.customer_name || 'Müşteri',
+            name: o.customer_name || 'Customer',
             initials,
-            product: o.notes ? (JSON.parse(o.notes)?.session_type ? 'Danışmanlık Seansı' : 'Dijital Ürün') : 'Dijital Ürün',
-            price: `₺${o.amount || 0}`,
-            status: o.status === 'paid' || o.status === 'completed' ? 'Ödendi' : 'Bekliyor'
+            product: o.notes ? (JSON.parse(o.notes)?.session_type ? 'Coaching Session' : 'Digital Product') : 'Digital Product',
+            price: `$${o.amount || 0}`,
+            status: o.status === 'paid' || o.status === 'completed' ? 'Paid' : 'Pending'
         };
-    }) : SAMPLE_ORDERS;
+    });
 
     // Toggle product visibility
     const handleToggleStatus = async (product: any) => {
         const newStatus = product.status === 'active' ? 'hidden' : 'active';
 
-        // If local sample
-        if (product.id.startsWith('sample-')) {
-            showToast(`${product.title} durumu "${newStatus === 'active' ? 'Yayında' : 'Taslak'}" olarak güncellendi.`, 'info');
-            return;
-        }
-
-        // If real DB product
         try {
             setDbProducts(prev => prev.map(p => p.id === product.id ? { ...p, status: newStatus } : p));
             const { error } = await supabase
@@ -301,18 +199,18 @@ export default function DashboardOverviewPage() {
                 .eq('id', product.id);
 
             if (error) throw error;
-            showToast(`${product.title} "${newStatus === 'active' ? 'Yayında' : 'Taslak'}" yapıldı.`, 'success');
+            showToast(`${product.title} updated to "${newStatus === 'active' ? 'Live' : 'Draft'}".`, 'success');
         } catch (err: any) {
             console.error('Toggle status error:', err);
-            showToast('Ürün durumu güncellenemedi.', 'error');
+            showToast('Failed to update product status.', 'error');
         }
     };
 
-    // Calculate real stats or fallback
-    const totalRevText = stats?.totalRevenue ? `₺${stats.totalRevenue.toLocaleString('tr-TR')}` : '₺48.320';
-    const totalViewsText = stats?.totalViews ? stats.totalViews.toLocaleString('tr-TR') : '12.847';
-    const totalSalesText = stats?.totalSales ? String(stats.totalSales) : '214';
-    const convRateText = stats?.conversionRate ? `%${stats.conversionRate}` : '%4,8';
+    // Real stats with zero fallback (no fake hardcoded stats)
+    const totalRevText = stats?.totalRevenue ? `$${Number(stats.totalRevenue).toLocaleString('en-US')}` : '$0';
+    const totalViewsText = stats?.totalViews ? Number(stats.totalViews).toLocaleString('en-US') : '0';
+    const totalSalesText = stats?.totalSales ? String(stats.totalSales) : '0';
+    const convRateText = stats?.conversionRate ? `${stats.conversionRate}%` : '0%';
 
     return (
         <>
@@ -320,19 +218,19 @@ export default function DashboardOverviewPage() {
             <div className="page-heading">
                 <div>
                     <p className="eyebrow">{todayFormatted}</p>
-                    <h1>Tekrar hoş geldin, {firstName}</h1>
+                    <h1>Welcome back, {firstName}</h1>
                     <p className="subtitle">
-                        Mağazanda her şey yolunda. İşte bugün öne çıkanlar.
+                        Everything is running smoothly. Here is your store summary today.
                     </p>
                 </div>
                 <div className="heading-actions">
                     <Button
                         variant="outline"
                         className="date-control flex items-center gap-1.5"
-                        onClick={() => showToast('Görüntülenen dönem: 1–30 Ekim 2026', 'info')}
+                        onClick={() => showToast('Viewing period: Current Month', 'info')}
                     >
                         <CalendarDays size={14} />
-                        <span>Bu ay</span>
+                        <span>This month</span>
                         <ChevronDown size={13} />
                     </Button>
                 </div>
@@ -341,52 +239,52 @@ export default function DashboardOverviewPage() {
             {/* ═══ STATS GRID ═══ */}
             <div className="stats">
                 <Stat
-                    label="Toplam Gelir"
+                    label="Total Revenue"
                     value={totalRevText}
-                    change="+18,2%"
+                    change={stats?.totalRevenue ? "+18.2%" : "0%"}
                     icon={Wallet}
                     index={0}
                 />
                 <Stat
-                    label="Mağaza Görüntülenme"
+                    label="Store Views"
                     value={totalViewsText}
-                    change="+9,4%"
+                    change={stats?.totalViews ? "+9.4%" : "0%"}
                     icon={Eye}
                     color="green"
                     index={1}
                 />
                 <Stat
-                    label="Toplam Satış"
+                    label="Total Sales"
                     value={totalSalesText}
-                    change="+12,1%"
+                    change={stats?.totalSales ? "+12.1%" : "0%"}
                     icon={ShoppingBag}
                     color="orange"
                     index={0}
                 />
                 <Stat
-                    label="Dönüşüm Oranı"
+                    label="Conversion Rate"
                     value={convRateText}
-                    change="+0,6%"
+                    change={stats?.conversionRate ? "+0.6%" : "0%"}
                     icon={MousePointerClick}
                     index={1}
                 />
             </div>
 
-            {/* ═══ PANEL: ÜRÜNLERİM ═══ */}
+            {/* ═══ PANEL: MY PRODUCTS ═══ */}
             <section className="panel">
                 <div className="panel-header">
                     <div>
-                        <h2>Ürünlerim</h2>
+                        <h2>My Products</h2>
                         <p className="panel-description">
-                            Fikirlerin, ürünlerin ve sunduğun her şey.
+                            Your digital products, coaching, and resources.
                         </p>
                     </div>
                     <div className="panel-actions">
                         <span className="text-[10px] text-muted-foreground">
-                            {displayProducts.length} ürün
+                            {displayProducts.length} {displayProducts.length === 1 ? 'product' : 'products'}
                         </span>
                         <Link href="/dashboard/store" className="quiet-link">
-                            Tümünü gör <ArrowUpRight size={14} />
+                            View all <ArrowUpRight size={14} />
                         </Link>
                     </div>
                 </div>
@@ -395,65 +293,73 @@ export default function DashboardOverviewPage() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Ürün adı</th>
-                                <th>Ürün tipi</th>
-                                <th>Fiyat</th>
-                                <th>Durum</th>
+                                <th>Product Name</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Status</th>
                                 <th />
                             </tr>
                         </thead>
                         <tbody>
-                            {displayProducts.map((p) => {
-                                const IconComp = p.icon;
-                                const isOnline = p.status === 'active';
-                                const formattedPrice = p.price === 0 ? 'Ücretsiz' : `₺${p.price.toLocaleString('tr-TR')}`;
+                            {displayProducts.length > 0 ? (
+                                displayProducts.map((p) => {
+                                    const IconComp = p.icon;
+                                    const isOnline = p.status === 'active';
+                                    const formattedPrice = p.price === 0 ? 'Free' : `$${p.price.toLocaleString('en-US')}`;
 
-                                return (
-                                    <tr key={p.id}>
-                                        <td>
-                                            <div className="product">
-                                                <div className={`product-icon ${p.color}`}>
-                                                    <IconComp size={21} />
+                                    return (
+                                        <tr key={p.id}>
+                                            <td>
+                                                <div className="product">
+                                                    <div className={`product-icon ${p.color}`}>
+                                                        <IconComp size={21} />
+                                                    </div>
+                                                    <div>
+                                                        <strong>{p.title}</strong>
+                                                        <p>{p.subtitle}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <strong>{p.title}</strong>
-                                                    <p>{p.subtitle}</p>
+                                            </td>
+                                            <td>
+                                                <span className="badge">{p.typeLabel}</span>
+                                            </td>
+                                            <td>
+                                                <span className="badge purple">{formattedPrice}</span>
+                                            </td>
+                                            <td>
+                                                <div className="row-actions">
+                                                    <span
+                                                        onClick={() => handleToggleStatus(p)}
+                                                        className={`toggle ${isOnline ? '' : 'off'}`}
+                                                        role="switch"
+                                                        aria-checked={isOnline}
+                                                        title={isOnline ? 'Active (Click to hide)' : 'Draft (Click to publish)'}
+                                                    />
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span className="badge">{p.typeLabel}</span>
-                                        </td>
-                                        <td>
-                                            <span className="badge purple">{formattedPrice}</span>
-                                        </td>
-                                        <td>
-                                            <div className="row-actions">
-                                                <span
-                                                    onClick={() => handleToggleStatus(p)}
-                                                    className={`toggle ${isOnline ? '' : 'off'}`}
-                                                    role="switch"
-                                                    aria-checked={isOnline}
-                                                    title={isOnline ? 'Yayında (Tıkla ve Gizle)' : 'Taslak (Tıkla ve Yayınla)'}
-                                                />
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-6 w-6 text-muted-foreground hover:text-slate-900"
-                                                title="Ürün detayları"
-                                                onClick={() =>
-                                                    showToast(`${p.title} · ${formattedPrice}`, 'info')
-                                                }
-                                            >
-                                                <MoreHorizontal size={16} />
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                            </td>
+                                            <td>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-6 w-6 text-muted-foreground hover:text-slate-900"
+                                                    title="Product details"
+                                                    onClick={() =>
+                                                        showToast(`${p.title} · ${formattedPrice}`, 'info')
+                                                    }
+                                                >
+                                                    <MoreHorizontal size={16} />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan={5} className="text-center py-10 text-muted-foreground text-xs">
+                                        No products created yet. Click <strong className="text-slate-900">Add Product</strong> above to start!
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -461,12 +367,12 @@ export default function DashboardOverviewPage() {
 
             {/* ═══ OVERVIEW BOTTOM (2-COL) ═══ */}
             <div className="overview-bottom">
-                {/* Son Siparişler */}
+                {/* Recent Orders */}
                 <section className="panel">
                     <div className="panel-header">
-                        <h2>Son Siparişler</h2>
+                        <h2>Recent Orders</h2>
                         <Link href="/dashboard/orders" className="quiet-link">
-                            Tümünü gör <ArrowUpRight size={14} />
+                            View all <ArrowUpRight size={14} />
                         </Link>
                     </div>
 
@@ -474,80 +380,80 @@ export default function DashboardOverviewPage() {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Sipariş</th>
-                                    <th>Müşteri</th>
-                                    <th>Ürün</th>
-                                    <th>Tutar</th>
-                                    <th>Durum</th>
+                                    <th>Order</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {displayOrders.slice(0, 3).map((o) => (
-                                    <tr key={o.id}>
-                                        <td className="text-muted-foreground font-mono">{o.id}</td>
-                                        <td>
-                                            <div className="product">
-                                                <div className="avatar h-7 w-7 text-[10px]">
-                                                    {o.initials}
+                                {displayOrders.length > 0 ? (
+                                    displayOrders.slice(0, 3).map((o) => (
+                                        <tr key={o.id}>
+                                            <td className="text-muted-foreground font-mono">{o.id}</td>
+                                            <td>
+                                                <div className="product">
+                                                    <div className="avatar h-7 w-7 text-[10px]">
+                                                        {o.initials}
+                                                    </div>
+                                                    <strong>{o.name}</strong>
                                                 </div>
-                                                <strong>{o.name}</strong>
-                                            </div>
-                                        </td>
-                                        <td className="text-muted-foreground">{o.product}</td>
-                                        <td className="price">{o.price}</td>
-                                        <td>
-                                            <span className={`badge ${o.status === 'Ödendi' ? 'green' : 'orange'}`}>
-                                                {o.status === 'Ödendi' && <span className="live-dot" />}
-                                                {o.status}
-                                            </span>
+                                            </td>
+                                            <td className="text-muted-foreground">{o.product}</td>
+                                            <td className="price">{o.price}</td>
+                                            <td>
+                                                <span className={`badge ${o.status === 'Paid' ? 'green' : 'orange'}`}>
+                                                    {o.status === 'Paid' && <span className="live-dot" />}
+                                                    {o.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan={5} className="text-center py-8 text-muted-foreground text-xs">
+                                            No orders yet. Your sales will appear here.
                                         </td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </section>
 
-                {/* Son Hareketler */}
+                {/* Recent Activity */}
                 <section className="panel">
                     <div className="panel-header">
-                        <h2>Son Hareketler</h2>
-                        <span className="badge green">Bugün</span>
+                        <h2>Recent Activity</h2>
+                        <span className="badge green">Live</span>
                     </div>
 
                     <div className="activity">
-                        <div className="activity-item">
-                            <span className="activity-icon">
-                                <ShoppingBag size={15} />
-                            </span>
-                            <div>
-                                <p>Yeni bir satış yaptın!</p>
-                                <small>Zeynep Kaya · Instagram Büyüme Rehberi</small>
-                                <small>12 dakika önce</small>
+                        {displayOrders.length > 0 ? (
+                            displayOrders.slice(0, 3).map((o, idx) => (
+                                <div className="activity-item" key={o.id || idx}>
+                                    <span className="activity-icon">
+                                        <ShoppingBag size={15} />
+                                    </span>
+                                    <div>
+                                        <p>New order received!</p>
+                                        <small>{o.name} · {o.product}</small>
+                                        <small>{o.price}</small>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="activity-item">
+                                <span className="activity-icon">
+                                    <ShoppingBag size={15} />
+                                </span>
+                                <div>
+                                    <p>Ready for your first sale</p>
+                                    <small>Share your store link on Instagram, TikTok or Twitter.</small>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="activity-item">
-                            <span className="activity-icon text-[#5500FF] bg-[#5500FF]/10">
-                                <CalendarDays size={15} />
-                            </span>
-                            <div>
-                                <p>Yeni bir görüşme talebi</p>
-                                <small>Mert Demir · 1:1 Strateji Görüşmesi</small>
-                                <small>1 saat önce</small>
-                            </div>
-                        </div>
-
-                        <div className="activity-item">
-                            <span className="activity-icon">
-                                <TrendingUp size={15} />
-                            </span>
-                            <div>
-                                <p>Bu ay hedeflerini geride bıraktın</p>
-                                <small>Harika gidiyorsun, böyle devam!</small>
-                                <small>2 saat önce</small>
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </section>
             </div>

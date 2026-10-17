@@ -28,37 +28,37 @@ function SettingsContent() {
     const { store, user, profile, refreshData } = useDashboard();
     const { showToast } = useToast();
 
-    const [tab, setTab] = useState<'Profil' | 'Görünüm' | 'Ödeme Yöntemleri' | 'Abonelik' | 'Güvenlik'>('Profil');
+    const [tab, setTab] = useState<'Profile' | 'Appearance' | 'Payment Methods' | 'Subscription' | 'Security'>('Profile');
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
 
     // Profile state
-    const [name, setName] = useState('Emirhan Arslan');
-    const [username, setUsername] = useState('emirhan');
-    const [email, setEmail] = useState('emirhan@sety.store');
-    const [bio, setBio] = useState('İçerik üreticisi & dijital pazarlama koçu.');
+    const [name, setName] = useState('Creator');
+    const [username, setUsername] = useState('creator');
+    const [email, setEmail] = useState('creator@sety.store');
+    const [bio, setBio] = useState('Digital creator & coach.');
     const [photo, setPhoto] = useState<string | null>(null);
     const [photoUploading, setPhotoUploading] = useState(false);
     const [notif, setNotif] = useState(true);
 
     // Appearance state
-    const [selectedTheme, setSelectedTheme] = useState('Mor');
-    const [storeTitle, setStoreTitle] = useState('Emirhan Arslan');
+    const [selectedTheme, setSelectedTheme] = useState('Purple');
+    const [storeTitle, setStoreTitle] = useState('Creator');
 
     // Payment state
-    const [iban, setIban] = useState('TR00 0000 0000 0000 0000 00');
+    const [iban, setIban] = useState('');
 
     // Security state
     const [newPassword, setNewPassword] = useState('');
 
     useEffect(() => {
         if (profile || store) {
-            setName(profile?.full_name || store?.display_name || 'Emirhan Arslan');
-            setUsername(store?.username || 'emirhan');
-            setEmail(profile?.email || user?.email || 'emirhan@sety.store');
-            setBio(store?.bio || 'İçerik üreticisi & dijital pazarlama koçu.');
+            setName(profile?.full_name || store?.display_name || 'Creator');
+            setUsername(store?.username || 'creator');
+            setEmail(profile?.email || user?.email || 'creator@sety.store');
+            setBio(store?.bio || 'Digital creator & coach.');
             setPhoto(profile?.profile_image_url || store?.store_logo_url || null);
-            setStoreTitle(store?.display_name || profile?.full_name || 'Emirhan Arslan');
+            setStoreTitle(store?.display_name || profile?.full_name || 'Creator');
             if (profile?.payment_url) {
                 setIban(profile.payment_url);
             }
@@ -93,10 +93,10 @@ function SettingsContent() {
                 .eq('user_id', user.id);
 
             if (refreshData) await refreshData();
-            showToast('Profil fotoğrafı güncellendi! 📸', 'success');
+            showToast('Profile photo updated! 📸', 'success');
         } catch (err: any) {
             console.error('Photo upload error:', err);
-            showToast('Fotoğraf yüklenirken bir hata oluştu.', 'error');
+            showToast('Failed to upload photo.', 'error');
         } finally {
             setPhotoUploading(false);
         }
@@ -104,7 +104,7 @@ function SettingsContent() {
 
     const handleSaveProfile = async () => {
         if (!user) {
-            showToast('Profil bilgileri kaydedildi! ✨ (Önizleme modu)', 'success');
+            showToast('Profile saved! ✨ (Preview mode)', 'success');
             return;
         }
         setSaving(true);
@@ -127,10 +127,10 @@ function SettingsContent() {
             }
 
             if (refreshData) await refreshData();
-            showToast('Profil bilgileri başarıyla kaydedildi! ✨', 'success');
+            showToast('Profile information saved! ✨', 'success');
         } catch (err: any) {
             console.error('Save profile error:', err);
-            showToast(err.message || 'Profil kaydedilemedi.', 'error');
+            showToast(err.message || 'Failed to save profile.', 'error');
         } finally {
             setSaving(false);
         }
@@ -138,7 +138,7 @@ function SettingsContent() {
 
     const handleSavePayment = async () => {
         if (!user) {
-            showToast('Ödeme ve banka bilgileri başarıyla kaydedildi! 💳', 'success');
+            showToast('Payment settings saved! 💳', 'success');
             return;
         }
         setSaving(true);
@@ -148,9 +148,9 @@ function SettingsContent() {
                 .update({ payment_url: iban })
                 .eq('user_id', user.id);
             if (error) throw error;
-            showToast('Ödeme bilgileri başarıyla kaydedildi! 💳', 'success');
+            showToast('Payment settings saved! 💳', 'success');
         } catch (err: any) {
-            showToast(err.message || 'Ödeme bilgileri kaydedilemedi.', 'error');
+            showToast(err.message || 'Failed to save payment settings.', 'error');
         } finally {
             setSaving(false);
         }
@@ -158,11 +158,11 @@ function SettingsContent() {
 
     const handleUpdatePassword = async () => {
         if (!newPassword || newPassword.length < 6) {
-            showToast('Şifre en az 6 karakter olmalıdır.', 'error');
+            showToast('Password must be at least 6 characters.', 'error');
             return;
         }
         if (!user) {
-            showToast('Şifreniz başarıyla güncellendi! 🔒 (Önizleme modu)', 'success');
+            showToast('Password updated! 🔒 (Preview mode)', 'success');
             setNewPassword('');
             return;
         }
@@ -170,10 +170,10 @@ function SettingsContent() {
         try {
             const { error } = await supabase.auth.updateUser({ password: newPassword });
             if (error) throw error;
-            showToast('Şifreniz başarıyla güncellendi! 🔒', 'success');
+            showToast('Password updated successfully! 🔒', 'success');
             setNewPassword('');
         } catch (err: any) {
-            showToast(err.message || 'Şifre güncellenemedi.', 'error');
+            showToast(err.message || 'Failed to update password.', 'error');
         } finally {
             setSaving(false);
         }
@@ -181,7 +181,7 @@ function SettingsContent() {
 
     const copyLink = () => {
         navigator.clipboard.writeText(`https://sety.store/${username}`);
-        showToast('Mağaza bağlantısı kopyalandı! 🚀', 'success');
+        showToast('Store link copied! 🚀', 'success');
     };
 
     const initials = name
@@ -189,29 +189,29 @@ function SettingsContent() {
         .filter(Boolean)
         .slice(0, 2)
         .map(s => s[0].toUpperCase())
-        .join('') || 'EA';
+        .join('') || 'CR';
 
     return (
         <>
             {/* ═══ HEADING ═══ */}
             <div className="page-heading">
                 <div>
-                    <h1>Hesap ve Mağaza Ayarları</h1>
-                    <p className="subtitle">Mağazana kendi imzanı at.</p>
+                    <h1>Account & Store Settings</h1>
+                    <p className="subtitle">Make your store uniquely yours.</p>
                 </div>
                 <div className="heading-actions">
                     <Button
                         onClick={() => {
-                            if (tab === 'Profil') handleSaveProfile();
-                            else if (tab === 'Ödeme Yöntemleri') handleSavePayment();
-                            else if (tab === 'Güvenlik') handleUpdatePassword();
-                            else showToast('Değişiklikler kaydedildi! ✨', 'success');
+                            if (tab === 'Profile') handleSaveProfile();
+                            else if (tab === 'Payment Methods') handleSavePayment();
+                            else if (tab === 'Security') handleUpdatePassword();
+                            else showToast('Changes saved! ✨', 'success');
                         }}
                         disabled={saving}
                         className="text-xs h-9 gap-1.5"
                     >
                         <Check size={14} />
-                        {saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}
+                        {saving ? 'Saving...' : 'Save Changes'}
                     </Button>
                 </div>
             </div>
@@ -219,7 +219,7 @@ function SettingsContent() {
             {/* ═══ TOOLBAR TABS ═══ */}
             <div className="toolbar">
                 <div className="segments">
-                    {(['Profil', 'Görünüm', 'Ödeme Yöntemleri', 'Abonelik', 'Güvenlik'] as const).map(item => (
+                    {(['Profile', 'Appearance', 'Payment Methods', 'Subscription', 'Security'] as const).map(item => (
                         <Button
                             key={item}
                             size="sm"
@@ -236,13 +236,13 @@ function SettingsContent() {
             </div>
 
             {/* ═══ TAB CONTENT ═══ */}
-            {tab === 'Profil' ? (
+            {tab === 'Profile' ? (
                 <div className="settings-grid">
                     <div>
                         {/* Profile Image Panel */}
                         <section className="panel">
                             <div className="panel-header">
-                                <h2>Profil Görselleri</h2>
+                                <h2>Profile Photos</h2>
                                 <Camera size={17} className="text-muted-foreground" />
                             </div>
                             <div className="form-body profile-upload">
@@ -258,9 +258,9 @@ function SettingsContent() {
                                     )}
                                 </div>
                                 <div>
-                                    <strong className="text-xs">Profil Fotoğrafı</strong>
+                                    <strong className="text-xs">Profile Photo</strong>
                                     <p className="panel-description mb-3">
-                                        JPG, PNG veya WEBP · Maks. 5 MB
+                                        JPG, PNG or WEBP · Max 5 MB
                                     </p>
                                     <Button variant="outline" size="sm" asChild>
                                         <label className="cursor-pointer gap-1.5">
@@ -269,7 +269,7 @@ function SettingsContent() {
                                             ) : (
                                                 <Camera size={13} />
                                             )}
-                                            {photoUploading ? 'Yükleniyor...' : 'Fotoğraf Seç'}
+                                            {photoUploading ? 'Uploading...' : 'Select Photo'}
                                             <input
                                                 type="file"
                                                 accept="image/*"
@@ -286,21 +286,21 @@ function SettingsContent() {
                         {/* Basic Info Panel */}
                         <section className="panel">
                             <div className="panel-header">
-                                <h2>Temel Bilgiler</h2>
-                                <span className="badge green">Profil aktif</span>
+                                <h2>Basic Information</h2>
+                                <span className="badge green">Profile active</span>
                             </div>
                             <div className="form-body">
                                 <div className="fields">
                                     <label className="field">
-                                        AD SOYAD
+                                        FULL NAME
                                         <input
                                             value={name}
                                             onChange={e => setName(e.target.value)}
-                                            placeholder="Adınız Soyadınız"
+                                            placeholder="Your Full Name"
                                         />
                                     </label>
                                     <label className="field">
-                                        KULLANICI ADI
+                                        USERNAME
                                         <input
                                             value={username}
                                             disabled
@@ -308,7 +308,7 @@ function SettingsContent() {
                                         />
                                     </label>
                                     <label className="field">
-                                        E-POSTA
+                                        EMAIL
                                         <input
                                             type="email"
                                             value={email}
@@ -316,15 +316,15 @@ function SettingsContent() {
                                             className="opacity-75"
                                         />
                                         <span className="text-[9px] text-muted-foreground">
-                                            Kayıtlı e-posta güvenlik gereği değiştirilemez.
+                                            Registered email cannot be modified for security reasons.
                                         </span>
                                     </label>
                                     <label className="field">
-                                        BİYOGRAFİ
+                                        BIO
                                         <textarea
                                             value={bio}
                                             onChange={e => setBio(e.target.value)}
-                                            placeholder="Danışanlarınıza ve kitlenize kendinizi anlatın..."
+                                            placeholder="Introduce yourself to your clients and audience..."
                                         />
                                     </label>
                                 </div>
@@ -334,7 +334,7 @@ function SettingsContent() {
                                     className="text-xs gap-1.5"
                                 >
                                     <Check size={14} />
-                                    {saving ? 'Kaydediliyor...' : 'Profili Kaydet'}
+                                    {saving ? 'Saving...' : 'Save Profile'}
                                 </Button>
                             </div>
                         </section>
@@ -347,20 +347,20 @@ function SettingsContent() {
                                 <div className="min-w-0">
                                     <div className="flex items-center gap-1.5 text-[10px] font-black text-[#5500FF] uppercase tracking-wider mb-0.5">
                                         <Globe size={12} />
-                                        <span>CANLI MAĞAZAN</span>
+                                        <span>LIVE STOREFRONT</span>
                                     </div>
                                     <div className="text-xs font-black text-slate-900 truncate">
-                                        sety.store/{username || 'emirhan'}
+                                        sety.store/{username || 'creator'}
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1.5 shrink-0">
                                     <Button variant="outline" size="sm" onClick={copyLink} className="h-7 px-2.5 text-[11px] gap-1 bg-white hover:bg-slate-50 font-bold border-slate-200 shadow-2xs">
                                         <Copy size={11} />
-                                        <span>Kopyala</span>
+                                        <span>Copy</span>
                                     </Button>
                                     <Button size="sm" asChild className="h-7 px-2.5 text-[11px] bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold shadow-2xs">
-                                        <a href={`https://sety.store/${username || 'emirhan'}`} target="_blank" rel="noopener noreferrer">
-                                            <span>Vitrine Git</span>
+                                        <a href={`https://sety.store/${username || 'creator'}`} target="_blank" rel="noopener noreferrer">
+                                            <span>Visit Store</span>
                                             <ArrowUpRight size={11} className="ml-0.5" />
                                         </a>
                                     </Button>
@@ -371,28 +371,28 @@ function SettingsContent() {
                         {/* Notification Preferences */}
                         <section className="panel">
                             <div className="panel-header">
-                                <h2>Bildirim Tercihleri</h2>
+                                <h2>Notification Preferences</h2>
                                 <Mail size={17} className="text-[#5500FF]" />
                             </div>
                             <div className="form-body">
                                 <div className="setting-row">
                                     <div>
-                                        <strong className="text-xs">Sipariş bildirimleri</strong>
-                                        <p>Yeni satışlarından ve randevu taleplerinden haberdar ol.</p>
+                                        <strong className="text-xs">Order notifications</strong>
+                                        <p>Get notified on new sales and booking requests.</p>
                                     </div>
                                     <button
                                         type="button"
                                         className={`toggle ${notif ? '' : 'off'}`}
                                         onClick={() => setNotif(!notif)}
-                                        aria-label="Sipariş bildirimleri"
+                                        aria-label="Order notifications"
                                     />
                                 </div>
                                 <div className="setting-row">
                                     <div>
-                                        <strong className="text-xs">Haftalık özet</strong>
-                                        <p>Mağazan için haftalık büyüme raporu.</p>
+                                        <strong className="text-xs">Weekly summary</strong>
+                                        <p>Weekly growth updates for your store.</p>
                                     </div>
-                                    <span className="badge green">Aktif</span>
+                                    <span className="badge green">Active</span>
                                 </div>
                             </div>
                         </section>
@@ -401,24 +401,24 @@ function SettingsContent() {
                         <section className="panel">
                             <div className="form-body">
                                 <ShieldCheck className="text-[#10B981] mb-3" size={26} />
-                                <h2>Hesabın güvende</h2>
+                                <h2>Your account is protected</h2>
                                 <p className="subtitle text-xs">
-                                    Hesap şifreni ve oturum güvenliğini Güvenlik sekmesinden dilediğin zaman güncelleyebilirsin.
+                                    You can update your login password and manage credentials under the Security tab.
                                 </p>
                             </div>
                         </section>
                     </div>
                 </div>
             ) : (
-                /* ═══ OTHER TABS (Görünüm, Ödeme Yöntemleri, Güvenlik) ═══ */
+                /* ═══ OTHER TABS (Appearance, Payment Methods, Security, Subscription) ═══ */
                 <section className="panel">
                     <div className="panel-header">
                         <h2>{tab}</h2>
-                        {tab === 'Görünüm' ? (
+                        {tab === 'Appearance' ? (
                             <Palette className="text-[#5500FF]" size={17} />
-                        ) : tab === 'Abonelik' ? (
+                        ) : tab === 'Subscription' ? (
                             <Zap className="text-[#5500FF]" size={17} fill="#C4FF00" />
-                        ) : tab === 'Güvenlik' ? (
+                        ) : tab === 'Security' ? (
                             <ShieldCheck className="text-[#5500FF]" size={17} />
                         ) : (
                             <CreditCard className="text-[#5500FF]" size={17} />
@@ -426,11 +426,11 @@ function SettingsContent() {
                     </div>
 
                     <div className="form-body max-w-2xl">
-                        {tab === 'Görünüm' ? (
+                        {tab === 'Appearance' ? (
                             <>
-                                <h2>Mağaza Teması</h2>
+                                <h2>Storefront Theme</h2>
                                 <div className="color-options">
-                                    {['Mor (Klasik Sety)', 'Yeşil (Doğal)', 'Turuncu (Sıcak)'].map(
+                                    {['Purple (Classic Sety)', 'Emerald Green (Natural)', 'Warm Amber (Warm)'].map(
                                         (themeName, i) => (
                                             <label
                                                 key={themeName}
@@ -448,45 +448,45 @@ function SettingsContent() {
                                     )}
                                 </div>
                                 <label className="field">
-                                    MAĞAZA BAŞLIĞI
+                                    STOREFRONT TITLE
                                     <input
                                         value={storeTitle}
                                         onChange={e => setStoreTitle(e.target.value)}
-                                        placeholder="Mağaza Vitrin Başlığı"
+                                        placeholder="Storefront Header Title"
                                     />
                                 </label>
                                 <Button
                                     className="mt-5 text-xs gap-1.5"
                                     onClick={() =>
-                                        showToast('Görünüm tercihleri başarıyla kaydedildi! 🎨', 'success')
+                                        showToast('Appearance settings saved! 🎨', 'success')
                                     }
                                 >
                                     <Check size={14} />
-                                    Görünümü Kaydet
+                                    Save Appearance
                                 </Button>
                             </>
-                        ) : tab === 'Ödeme Yöntemleri' ? (
+                        ) : tab === 'Payment Methods' ? (
                             <>
                                 <div className="setting-row">
                                     <div>
-                                        <strong className="text-sm">Banka Havalesi / FAST</strong>
-                                        <p>Satış ve seans ödemelerini doğrudan banka hesabına al.</p>
+                                        <strong className="text-sm">Bank Wire / Direct Transfer</strong>
+                                        <p>Receive sales and consultation payouts directly to your account.</p>
                                     </div>
-                                    <span className="badge green">Aktif</span>
+                                    <span className="badge green">Active</span>
                                 </div>
                                 <div className="setting-row mt-3">
                                     <div>
-                                        <strong className="text-sm">Shopier / Kart Altyapısı</strong>
-                                        <p>Kredi ve banka kartı ile güvenli tahsilat (%0 lansman komisyonu).</p>
+                                        <strong className="text-sm">Polar / Global Card Checkout</strong>
+                                        <p>Secure global card processing (0% launch commission).</p>
                                     </div>
-                                    <span className="badge green">Aktif</span>
+                                    <span className="badge green">Active</span>
                                 </div>
                                 <label className="field mt-5">
-                                    IBAN VEYA SHOPİER ÖDEME LİNKİ
+                                    IBAN OR PAYMENT URL
                                     <input
                                         value={iban}
                                         onChange={e => setIban(e.target.value)}
-                                        placeholder="TR00 0000 0000 0000 0000 00 veya https://shopier.com/..."
+                                        placeholder="IBAN or payment link..."
                                     />
                                 </label>
                                 <Button
@@ -495,10 +495,10 @@ function SettingsContent() {
                                     onClick={handleSavePayment}
                                 >
                                     <Check size={14} />
-                                    {saving ? 'Kaydediliyor...' : 'Kaydet'}
+                                    {saving ? 'Saving...' : 'Save Payment Info'}
                                 </Button>
                             </>
-                        ) : tab === 'Abonelik' ? (
+                        ) : tab === 'Subscription' ? (
                             <>
                                 <div className="p-6 rounded-2xl bg-gradient-to-br from-[#5500FF]/5 via-purple-50/50 to-transparent border border-purple-100">
                                     <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -508,42 +508,42 @@ function SettingsContent() {
                                                 FOUNDER PLAN
                                             </span>
                                              <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                                                Lansman Özel · Sety Pro Deneme
+                                                Launch Special · Sety Pro Trial
                                             </h3>
                                             <p className="text-xs text-slate-500 font-medium mt-1">
-                                                Lansman süresince tüm Sety Pro özellikleri ve %0 komisyon avantajı 14 gün boyunca ücretsiz hesabınıza tanımlıdır.
+                                                All Sety Pro features and 0% commission are included in your 14-day free trial during launch.
                                             </p>
                                         </div>
                                         <div className="text-right">
-                                            <span className="text-2xl font-black text-slate-900">₺0</span>
-                                            <span className="text-xs text-slate-400 font-bold"> / 14 gün deneme</span>
-                                            <div className="text-[10px] text-emerald-600 font-bold mt-0.5">● Aktif Deneme</div>
+                                            <span className="text-2xl font-black text-slate-900">$0</span>
+                                            <span className="text-xs text-slate-400 font-bold"> / 14-day trial</span>
+                                            <div className="text-[10px] text-emerald-600 font-bold mt-0.5">● Active Trial</div>
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-6 pt-5 border-t border-purple-100/70 text-xs text-slate-700">
                                         <div className="flex items-center gap-2 font-semibold">
-                                            <Check size={14} className="text-emerald-500 shrink-0" /> Sınırsız dijital ürün satışı
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> Unlimited digital products
                                         </div>
                                         <div className="flex items-center gap-2 font-semibold">
-                                            <Check size={14} className="text-emerald-500 shrink-0" /> 1:1 Seans & takvim entegrasyonu
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> 1:1 Coaching & calendar scheduling
                                         </div>
                                         <div className="flex items-center gap-2 font-semibold">
-                                            <Check size={14} className="text-emerald-500 shrink-0" /> Özel sety.store/{username || 'emirhan'} linki
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> Custom sety.store/{username || 'creator'} link
                                         </div>
                                         <div className="flex items-center gap-2 font-semibold">
-                                            <Check size={14} className="text-emerald-500 shrink-0" /> E-posta toplama & müşteri listesi
+                                            <Check size={14} className="text-emerald-500 shrink-0" /> Email lead capture & customer list
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="mt-5 flex items-center justify-between gap-4">
                                     <p className="text-xs text-slate-500">
-                                        Polar & Shopier faturalandırma geçmişinizi görmek için fatura sayfasına geçin.
+                                        To view your billing history and subscription details, visit the billing page.
                                     </p>
                                     <Button variant="outline" size="sm" asChild className="text-xs gap-1.5 shrink-0">
                                         <Link href="/dashboard/billing">
-                                            <span>Faturaları İncele</span>
+                                            <span>View Billing</span>
                                             <ArrowUpRight size={13} />
                                         </Link>
                                     </Button>
@@ -552,12 +552,12 @@ function SettingsContent() {
                         ) : (
                             <>
                                 <label className="field">
-                                    YENİ ŞİFRE
+                                    NEW PASSWORD
                                     <input
                                         type="password"
                                         value={newPassword}
                                         onChange={e => setNewPassword(e.target.value)}
-                                        placeholder="En az 6 karakter"
+                                        placeholder="Min. 6 characters"
                                     />
                                 </label>
                                 <Button
@@ -566,7 +566,7 @@ function SettingsContent() {
                                     onClick={handleUpdatePassword}
                                 >
                                     <ShieldCheck size={14} />
-                                    {saving ? 'Güncelleniyor...' : 'Şifreyi Güncelle'}
+                                    {saving ? 'Updating...' : 'Update Password'}
                                 </Button>
                             </>
                         )}

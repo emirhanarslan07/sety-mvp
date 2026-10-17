@@ -19,7 +19,6 @@ import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/context/ToastContext';
 import { useDashboard } from '@/context/DashboardContext';
-import { supabase } from '@/lib/supabase/client';
 import { ConfirmModal } from './ConfirmModal';
 
 // ─── Stat Card ───
@@ -52,7 +51,7 @@ function Stat({
                     <TrendingUp size={11} />
                     {change}
                 </span>
-                <span>geçen aya göre</span>
+                <span>vs last month</span>
             </div>
             <svg viewBox="0 0 70 35" className="sparkline" aria-hidden="true">
                 <polyline
@@ -72,69 +71,10 @@ function Stat({
     );
 }
 
-// ─── Sample Orders (Showcase fallback) ───
-const SAMPLE_ORDERS = [
-    {
-        id: '#SY-1042',
-        name: 'Zeynep Kaya',
-        initials: 'ZK',
-        email: 'zeynep.kaya@example.com',
-        product: 'Instagram Büyüme Rehberi',
-        price: '₺249',
-        priceRaw: 249,
-        status: 'Ödendi',
-        date: '9 Eki, 11:42'
-    },
-    {
-        id: '#SY-1041',
-        name: 'Mert Demir',
-        initials: 'MD',
-        email: 'mert.demir@example.com',
-        product: '1:1 Strateji Görüşmesi',
-        price: '₺1.490',
-        priceRaw: 1490,
-        status: 'Bekliyor',
-        date: '9 Eki, 10:28'
-    },
-    {
-        id: '#SY-1040',
-        name: 'Elif Yıldız',
-        initials: 'EY',
-        email: 'elif.yildiz@example.com',
-        product: 'Reels Şablon Paketi',
-        price: '₺399',
-        priceRaw: 399,
-        status: 'Ödendi',
-        date: '8 Eki, 18:15'
-    },
-    {
-        id: '#SY-1039',
-        name: 'Can Aydın',
-        initials: 'CA',
-        email: 'can.aydin@example.com',
-        product: 'Instagram Büyüme Rehberi',
-        price: '₺249',
-        priceRaw: 249,
-        status: 'Ödendi',
-        date: '8 Eki, 16:03'
-    },
-    {
-        id: '#SY-1038',
-        name: 'Deniz Aksoy',
-        initials: 'DA',
-        email: 'deniz.aksoy@example.com',
-        product: '1:1 Strateji Görüşmesi',
-        price: '₺1.490',
-        priceRaw: 1490,
-        status: 'Bekliyor',
-        date: '8 Eki, 14:46'
-    }
-];
-
 export default function OrdersPage() {
     const { showToast } = useToast();
     const { store } = useDashboard();
-    const [tab, setTab] = useState<'Tümü' | 'Bekleyen Onay' | 'Tamamlanan'>('Tümü');
+    const [tab, setTab] = useState<'All' | 'Pending Approval' | 'Completed'>('All');
     const [query, setQuery] = useState('');
     const [orders, setOrders] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -155,13 +95,13 @@ export default function OrdersPage() {
             if (data.orders && Array.isArray(data.orders) && data.orders.length > 0) {
                 // Map API orders to table format
                 const mapped = data.orders.map((o: any) => {
-                    const name = o.customer_name || 'Gizli Müşteri';
+                    const name = o.customer_name || 'Customer';
                     const initials = name
                         .split(' ')
                         .filter(Boolean)
                         .slice(0, 2)
                         .map((p: string) => p[0].toUpperCase())
-                        .join('') || 'M';
+                        .join('') || 'C';
                     
                     const isPending = o.status === 'pending' || o.status === 'awaiting_payment';
                     const isCompleted = o.status === 'completed' || o.status === 'paid';
@@ -172,11 +112,11 @@ export default function OrdersPage() {
                         name,
                         initials,
                         email: o.customer_email || '—',
-                        product: o.product?.title || o.notes || 'Dijital Ürün',
-                        price: `₺${Number(o.amount || 0).toLocaleString('tr-TR')}`,
+                        product: o.product?.title || o.notes || 'Digital Product',
+                        price: `$${Number(o.amount || 0).toLocaleString('en-US')}`,
                         priceRaw: Number(o.amount || 0),
-                        status: isPending ? 'Bekliyor' : isCompleted ? 'Ödendi' : o.status,
-                        date: new Date(o.created_at).toLocaleDateString('tr-TR', {
+                        status: isPending ? 'Pending' : isCompleted ? 'Paid' : o.status,
+                        date: new Date(o.created_at).toLocaleDateString('en-US', {
                             day: 'numeric',
                             month: 'short',
                             hour: '2-digit',
@@ -187,11 +127,11 @@ export default function OrdersPage() {
                 });
                 setOrders(mapped);
             } else {
-                setOrders(SAMPLE_ORDERS);
+                setOrders([]);
             }
         } catch (err) {
             console.error(err);
-            setOrders(SAMPLE_ORDERS);
+            setOrders([]);
         } finally {
             setIsLoading(false);
         }
@@ -204,13 +144,13 @@ export default function OrdersPage() {
             const data = await res.json();
             if (data.error) throw new Error(data.error);
 
-            showToast('Sipariş başarıyla onaylandı ve teslim edildi! ✨', 'success');
+            showToast('Order confirmed and delivered successfully! ✨', 'success');
             setIsModalOpen(false);
             setOrders(prev =>
-                prev.map(o => (o.rawId === orderId ? { ...o, status: 'Ödendi' } : o))
+                prev.map(o => (o.rawId === orderId ? { ...o, status: 'Paid' } : o))
             );
         } catch (err: any) {
-            showToast(err.message || 'Onaylama başarısız oldu', 'error');
+            showToast(err.message || 'Failed to confirm order', 'error');
         } finally {
             setProcessingId(null);
             setSelectedOrder(null);
@@ -218,17 +158,17 @@ export default function OrdersPage() {
     };
 
     const handleReject = async (orderId: string) => {
-        if (!confirm('Bu siparişi reddetmek istediğinize emin misiniz?')) return;
+        if (!confirm('Are you sure you want to decline this order?')) return;
         setProcessingId(orderId);
         try {
             const res = await fetch(`/api/orders/${orderId}/reject`, { method: 'POST' });
             const data = await res.json();
             if (data.error) throw new Error(data.error);
 
-            showToast('Sipariş reddedildi', 'success');
+            showToast('Order declined', 'success');
             setOrders(prev => prev.filter(o => o.rawId !== orderId));
         } catch (err: any) {
-            showToast(err.message || 'Reddetme başarısız oldu', 'error');
+            showToast(err.message || 'Failed to decline order', 'error');
         } finally {
             setProcessingId(null);
         }
@@ -237,19 +177,19 @@ export default function OrdersPage() {
     // Filtered orders
     const visibleOrders = orders.filter(o => {
         const matchesTab =
-            tab === 'Tümü' ||
-            (tab === 'Bekleyen Onay' ? o.status === 'Bekliyor' : o.status === 'Ödendi');
+            tab === 'All' ||
+            (tab === 'Pending Approval' ? o.status === 'Pending' : o.status === 'Paid');
         const matchesQuery =
             `${o.name} ${o.id} ${o.product} ${o.email}`
-                .toLocaleLowerCase('tr')
-                .includes(query.toLocaleLowerCase('tr'));
+                .toLowerCase()
+                .includes(query.toLowerCase());
         return matchesTab && matchesQuery;
     });
 
     // CSV Download
     const downloadCSV = () => {
         const rows = [
-            ['Sipariş ID', 'Müşteri', 'E-posta', 'Ürün', 'Tutar', 'Durum', 'Tarih'],
+            ['Order ID', 'Customer', 'Email', 'Product', 'Amount', 'Status', 'Date'],
             ...visibleOrders.map(o => [
                 o.id,
                 o.name,
@@ -266,16 +206,16 @@ export default function OrdersPage() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `sety-siparisler-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `sety-orders-${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('Sipariş listesi CSV formatında indirildi 📊', 'success');
+        showToast('Orders list exported as CSV 📊', 'success');
     };
 
     // Calculate dynamic stats
     const totalCount = orders.length;
-    const completedCount = orders.filter(o => o.status === 'Ödendi').length;
-    const pendingCount = orders.filter(o => o.status === 'Bekliyor').length;
+    const completedCount = orders.filter(o => o.status === 'Paid').length;
+    const pendingCount = orders.filter(o => o.status === 'Pending').length;
     const totalRevenue = orders.reduce((acc, o) => acc + (o.priceRaw || 0), 0);
     const avgOrder = totalCount > 0 ? (totalRevenue / totalCount).toFixed(2) : '0';
 
@@ -284,8 +224,8 @@ export default function OrdersPage() {
             {/* ═══ HEADING ═══ */}
             <div className="page-heading">
                 <div>
-                    <h1>Siparişler</h1>
-                    <p className="subtitle">Her sipariş, yeni bir başarı hikayesi.</p>
+                    <h1>Orders</h1>
+                    <p className="subtitle">Every order is a new milestone in your creator journey.</p>
                 </div>
                 <div className="heading-actions">
                     <Button
@@ -294,7 +234,7 @@ export default function OrdersPage() {
                         onClick={downloadCSV}
                     >
                         <Download size={14} />
-                        Dışa Aktar
+                        Export CSV
                     </Button>
                 </div>
             </div>
@@ -302,30 +242,30 @@ export default function OrdersPage() {
             {/* ═══ STATS ═══ */}
             <div className="stats">
                 <Stat
-                    label="Toplam Sipariş"
+                    label="Total Orders"
                     value={totalCount.toString()}
-                    change="+12,1%"
+                    change={totalCount > 0 ? "+12.1%" : "0%"}
                     icon={ShoppingBag}
                 />
                 <Stat
-                    label="Tamamlanan"
+                    label="Completed"
                     value={completedCount.toString()}
-                    change={totalCount > 0 ? `%${Math.round((completedCount / totalCount) * 100)}` : '%100'}
+                    change={totalCount > 0 ? `${Math.round((completedCount / totalCount) * 100)}%` : '0%'}
                     icon={Check}
                     color="green"
                     index={1}
                 />
                 <Stat
-                    label="Bekleyen Onay"
+                    label="Pending Approval"
                     value={pendingCount.toString()}
-                    change={pendingCount > 0 ? `${pendingCount} yeni sipariş` : 'Bekleyen yok'}
+                    change={pendingCount > 0 ? `${pendingCount} new` : 'None pending'}
                     icon={CreditCard}
                     color="orange"
                 />
                 <Stat
-                    label="Ortalama Sipariş"
-                    value={`₺${Number(avgOrder).toLocaleString('tr-TR')}`}
-                    change="+5,2%"
+                    label="Average Order"
+                    value={`$${Number(avgOrder).toLocaleString('en-US')}`}
+                    change={totalCount > 0 ? "+5.2%" : "0%"}
                     icon={CircleDollarSign}
                     index={1}
                 />
@@ -334,7 +274,7 @@ export default function OrdersPage() {
             {/* ═══ TOOLBAR ═══ */}
             <div className="toolbar">
                 <div className="segments">
-                    {(['Tümü', 'Bekleyen Onay', 'Tamamlanan'] as const).map(item => (
+                    {(['All', 'Pending Approval', 'Completed'] as const).map(item => (
                         <Button
                             key={item}
                             size="sm"
@@ -352,7 +292,7 @@ export default function OrdersPage() {
                 <label className="search">
                     <Search size={14} />
                     <input
-                        placeholder="Müşteri veya sipariş ara..."
+                        placeholder="Search customer or order..."
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                     />
@@ -362,29 +302,29 @@ export default function OrdersPage() {
             {/* ═══ ORDERS TABLE PANEL ═══ */}
             <section className="panel">
                 <div className="panel-header">
-                    <h2>Sipariş Listesi</h2>
+                    <h2>Orders List</h2>
                     <span className="badge">
-                        {visibleOrders.length} sipariş listeleniyor
+                        {visibleOrders.length} {visibleOrders.length === 1 ? 'order' : 'orders'} listed
                     </span>
                 </div>
 
                 {isLoading ? (
                     <div className="p-16 flex flex-col items-center justify-center gap-3 text-muted-foreground">
                         <Loader2 className="w-6 h-6 animate-spin text-[#5500FF]" />
-                        <span className="text-xs font-semibold">Siparişler yükleniyor...</span>
+                        <span className="text-xs font-semibold">Loading orders...</span>
                     </div>
                 ) : visibleOrders.length > 0 ? (
                     <div className="table-wrap">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Sipariş</th>
-                                    <th>Müşteri</th>
-                                    <th>Ürün</th>
-                                    <th>Tutar</th>
-                                    <th>Durum</th>
-                                    <th>Tarih</th>
-                                    <th className="text-right">İşlem</th>
+                                    <th>Order</th>
+                                    <th>Customer</th>
+                                    <th>Product</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th className="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -413,18 +353,16 @@ export default function OrdersPage() {
                                         <td>
                                             <span
                                                 className={`badge ${
-                                                    o.status === 'Ödendi' ? 'green' : 'orange'
+                                                    o.status === 'Paid' ? 'green' : 'orange'
                                                 }`}
                                             >
-                                                <span
-                                                    className={o.status === 'Ödendi' ? 'live-dot' : ''}
-                                                />
+                                                {o.status === 'Paid' && <span className="live-dot" />}
                                                 {o.status}
                                             </span>
                                         </td>
                                         <td className="text-muted-foreground text-xs">{o.date}</td>
                                         <td className="text-right">
-                                            {o.status === 'Bekliyor' && o.rawId ? (
+                                            {o.status === 'Pending' && o.rawId ? (
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Button
                                                         size="sm"
@@ -437,7 +375,7 @@ export default function OrdersPage() {
                                                         }}
                                                     >
                                                         <Check size={12} className="mr-1" />
-                                                        Onayla
+                                                        Approve
                                                     </Button>
                                                     <Button
                                                         size="sm"
@@ -451,7 +389,7 @@ export default function OrdersPage() {
                                                 </div>
                                             ) : (
                                                 <span className="text-xs text-muted-foreground font-medium">
-                                                    Tamamlandı
+                                                    Completed
                                                 </span>
                                             )}
                                         </td>
@@ -465,15 +403,15 @@ export default function OrdersPage() {
                         <div className="product-icon mx-auto mb-4">
                             <ShoppingBag size={24} />
                         </div>
-                        <h2>Sipariş bulunamadı</h2>
-                        <p>Arama kriterlerinize uygun sipariş bulunmuyor.</p>
+                        <h2>No orders found</h2>
+                        <p>No orders received yet or none match your search criteria.</p>
                     </div>
                 )}
 
                 {/* Footer Pagination */}
                 <div className="panel-header border-t border-border">
                     <span className="text-[10px] text-muted-foreground">
-                        {visibleOrders.length} sipariş görüntüleniyor
+                        Showing {visibleOrders.length} {visibleOrders.length === 1 ? 'order' : 'orders'}
                     </span>
                     <div className="flex gap-2">
                         <Button
@@ -481,7 +419,7 @@ export default function OrdersPage() {
                             size="icon"
                             className="h-7 w-7"
                             disabled
-                            aria-label="Önceki sayfa"
+                            aria-label="Previous page"
                         >
                             <ChevronLeft size={13} />
                         </Button>
@@ -493,7 +431,7 @@ export default function OrdersPage() {
                             size="icon"
                             className="h-7 w-7"
                             disabled
-                            aria-label="Sonraki sayfa"
+                            aria-label="Next page"
                         >
                             <ChevronRight size={13} />
                         </Button>

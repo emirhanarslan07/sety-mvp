@@ -11,8 +11,6 @@ import {
     MessageCircle,
     MapPin,
     Globe,
-    Phone,
-    Mail,
     Plus,
     Loader2
 } from 'lucide-react';
@@ -54,7 +52,7 @@ function Stat({
                     <TrendingUp size={11} />
                     {change}
                 </span>
-                <span>geçen aya göre</span>
+                <span>vs last month</span>
             </div>
             <svg viewBox="0 0 70 35" className="sparkline" aria-hidden="true">
                 <polyline
@@ -74,58 +72,11 @@ function Stat({
     );
 }
 
-// ─── Sample Demo Appointments ───
-const SAMPLE_APPOINTMENTS = [
-    {
-        id: 'sample-apt-1',
-        name: 'Mert Demir',
-        initials: 'MD',
-        email: 'mert.demir@example.com',
-        phone: '0555 123 4567',
-        service: '1:1 Strateji Görüşmesi',
-        date: '12 Ekim, Pazartesi',
-        time: '14:00 – 14:45',
-        type: 'online' as const,
-        price: '₺1.490',
-        priceRaw: 1490,
-        status: 'new' as const
-    },
-    {
-        id: 'sample-apt-2',
-        name: 'Deniz Aksoy',
-        initials: 'DA',
-        email: 'deniz.aksoy@example.com',
-        phone: '0532 987 6543',
-        service: 'Klinik Değerlendirme & Seans',
-        date: '13 Ekim, Salı',
-        time: '11:00 – 11:45',
-        type: 'in_person' as const,
-        location: 'Açıkgöz Plaza K:3 D:12',
-        price: '₺1.850',
-        priceRaw: 1850,
-        status: 'confirmed' as const
-    },
-    {
-        id: 'sample-apt-3',
-        name: 'Selin Yılmaz',
-        initials: 'SY',
-        email: 'selin.yilmaz@example.com',
-        phone: '0544 555 6677',
-        service: '1:1 Strateji Görüşmesi',
-        date: '14 Ekim, Çarşamba',
-        time: '15:00 – 15:45',
-        type: 'online' as const,
-        price: '₺1.490',
-        priceRaw: 1490,
-        status: 'completed' as const
-    }
-];
-
 export default function AppointmentsPage() {
     const { store } = useDashboard();
     const { showToast } = useToast();
 
-    const [tab, setTab] = useState<'Yeni Talepler' | 'Onaylananlar' | 'Tamamlanan' | 'Tümü'>('Yeni Talepler');
+    const [tab, setTab] = useState<'New Requests' | 'Confirmed' | 'Completed' | 'All'>('New Requests');
     const [query, setQuery] = useState('');
     const [appointments, setAppointments] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -136,7 +87,7 @@ export default function AppointmentsPage() {
         if (store?.id) {
             fetchAppointments();
         } else {
-            setAppointments(SAMPLE_APPOINTMENTS);
+            setAppointments([]);
             setLoading(false);
         }
     }, [store?.id]);
@@ -185,13 +136,13 @@ export default function AppointmentsPage() {
                     const statusVal =
                         meta?.appointment_status ||
                         (row.status === 'paid' ? 'confirmed' : 'new');
-                    const name = row.customer_name || 'Danışan';
+                    const name = row.customer_name || 'Client';
                     const initials = name
                         .split(' ')
                         .filter(Boolean)
                         .slice(0, 2)
                         .map((p: string) => p[0].toUpperCase())
-                        .join('') || 'D';
+                        .join('') || 'C';
 
                     parsed.push({
                         id: row.id,
@@ -199,52 +150,41 @@ export default function AppointmentsPage() {
                         name,
                         initials,
                         email: row.customer_email || '—',
-                        phone: meta?.phone || 'Belirtilmedi',
-                        service: row.product?.title || 'Danışmanlık Seansı',
-                        date: meta?.preferred_date || new Date(row.created_at).toLocaleDateString('tr-TR'),
-                        time: meta?.time_slot || 'Gündüz',
+                        phone: meta?.phone || 'Not provided',
+                        service: row.product?.title || 'Coaching Session',
+                        date: meta?.preferred_date || new Date(row.created_at).toLocaleDateString('en-US'),
+                        time: meta?.time_slot || 'Daytime',
                         type: meta?.session_type || 'online',
                         location: meta?.location,
-                        price: `₺${Number(row.amount || 0).toLocaleString('tr-TR')}`,
+                        price: `$${Number(row.amount || 0).toLocaleString('en-US')}`,
                         priceRaw: Number(row.amount || 0),
                         status: statusVal
                     });
                 }
             });
 
-            if (parsed.length > 0) {
-                setAppointments(parsed);
-            } else {
-                setAppointments(SAMPLE_APPOINTMENTS);
-            }
+            setAppointments(parsed);
         } catch (err) {
             console.error('Error fetching appointments:', err);
-            setAppointments(SAMPLE_APPOINTMENTS);
+            setAppointments([]);
         } finally {
             setLoading(false);
         }
     };
 
     const handleConfirm = async (apt: any) => {
-        if (!apt.rawId) {
-            // Local fallback
-            setAppointments(prev =>
-                prev.map(a => (a.id === apt.id ? { ...a, status: 'confirmed' } : a))
-            );
-            showToast('Örnek randevu onaylandı ✨', 'success');
-            return;
-        }
+        if (!apt.rawId) return;
 
         setActionLoadingId(apt.id);
         try {
             const res = await updateAppointmentStatusAction(apt.rawId, 'confirmed');
             if (!res.success) throw new Error(res.error);
-            showToast('Randevu onaylandı! 🚀', 'success');
+            showToast('Appointment confirmed! 🚀', 'success');
             setAppointments(prev =>
                 prev.map(a => (a.id === apt.id ? { ...a, status: 'confirmed' } : a))
             );
         } catch (err: any) {
-            showToast(err.message || 'Onaylanamadı', 'error');
+            showToast(err.message || 'Failed to confirm', 'error');
         } finally {
             setActionLoadingId(null);
         }
@@ -254,14 +194,14 @@ export default function AppointmentsPage() {
     const visible = appointments.filter(a => {
         const matchesQuery =
             `${a.name} ${a.service} ${a.email} ${a.phone}`
-                .toLocaleLowerCase('tr')
-                .includes(query.toLocaleLowerCase('tr'));
+                .toLowerCase()
+                .includes(query.toLowerCase());
 
         const matchesTab =
-            tab === 'Tümü' ||
-            (tab === 'Yeni Talepler' && a.status === 'new') ||
-            (tab === 'Onaylananlar' && a.status === 'confirmed') ||
-            (tab === 'Tamamlanan' && a.status === 'completed');
+            tab === 'All' ||
+            (tab === 'New Requests' && a.status === 'new') ||
+            (tab === 'Confirmed' && a.status === 'confirmed') ||
+            (tab === 'Completed' && a.status === 'completed');
 
         return matchesTab && matchesQuery;
     });
@@ -277,8 +217,8 @@ export default function AppointmentsPage() {
             {/* ═══ HEADING ═══ */}
             <div className="page-heading">
                 <div>
-                    <h1>Randevular & Danışmanlık</h1>
-                    <p className="subtitle">Bilgini paylaş, anlamlı bağlantılar kur.</p>
+                    <h1>Appointments & Coaching</h1>
+                    <p className="subtitle">Share your expertise and build 1:1 client relationships.</p>
                 </div>
                 <div className="heading-actions">
                     <Button
@@ -286,7 +226,7 @@ export default function AppointmentsPage() {
                         className="text-xs h-9 gap-1.5"
                     >
                         <Plus size={14} />
-                        Yeni Seans Hizmeti
+                        New Coaching Service
                     </Button>
                 </div>
             </div>
@@ -294,29 +234,29 @@ export default function AppointmentsPage() {
             {/* ═══ STATS ═══ */}
             <div className="stats">
                 <Stat
-                    label="Toplam Talep"
+                    label="Total Requests"
                     value={totalCount.toString()}
-                    change="+8 talep"
+                    change={totalCount > 0 ? "+8 requests" : "0%"}
                     icon={CalendarDays}
                 />
                 <Stat
-                    label="Bekleyen / Yeni"
+                    label="Pending / New"
                     value={newCount.toString()}
-                    change={newCount > 0 ? `${newCount} yeni talep` : 'Bekleyen yok'}
+                    change={newCount > 0 ? `${newCount} new` : 'None pending'}
                     icon={Users}
                     color="orange"
                     index={1}
                 />
                 <Stat
-                    label="Onaylanan"
+                    label="Confirmed"
                     value={confirmedCount.toString()}
-                    change="Bu hafta"
+                    change={confirmedCount > 0 ? "This week" : "0%"}
                     icon={Check}
                 />
                 <Stat
-                    label="Tamamlanan"
+                    label="Completed"
                     value={completedCount.toString()}
-                    change="+5 seans"
+                    change={completedCount > 0 ? `${completedCount} sessions` : "0%"}
                     icon={Video}
                     color="green"
                     index={1}
@@ -326,7 +266,7 @@ export default function AppointmentsPage() {
             {/* ═══ TOOLBAR ═══ */}
             <div className="toolbar">
                 <div className="segments">
-                    {(['Yeni Talepler', 'Onaylananlar', 'Tamamlanan', 'Tümü'] as const).map(item => (
+                    {(['New Requests', 'Confirmed', 'Completed', 'All'] as const).map(item => (
                         <Button
                             key={item}
                             size="sm"
@@ -344,7 +284,7 @@ export default function AppointmentsPage() {
                 <label className="search">
                     <Search size={14} />
                     <input
-                        placeholder="Danışan ara..."
+                        placeholder="Search client..."
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                     />
@@ -356,26 +296,26 @@ export default function AppointmentsPage() {
                 <div className="panel-header">
                     <h2>{tab}</h2>
                     <span className="badge purple">
-                        {visible.length} seans randevusu
+                        {visible.length} {visible.length === 1 ? 'session' : 'sessions'}
                     </span>
                 </div>
 
                 {loading ? (
                     <div className="p-16 flex flex-col items-center justify-center gap-3 text-muted-foreground">
                         <Loader2 className="w-6 h-6 animate-spin text-[#5500FF]" />
-                        <span className="text-xs font-semibold">Randevular yükleniyor...</span>
+                        <span className="text-xs font-semibold">Loading appointments...</span>
                     </div>
                 ) : visible.length > 0 ? (
                     <div className="table-wrap">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Danışan</th>
-                                    <th>Seans Tarihi</th>
-                                    <th>Saat & Mod</th>
-                                    <th>Tutar</th>
-                                    <th>Durum</th>
-                                    <th className="text-right">İşlem</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Time & Mode</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th className="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -400,12 +340,12 @@ export default function AppointmentsPage() {
                                                     {a.type === 'in_person' ? (
                                                         <>
                                                             <MapPin size={10} className="text-emerald-600" />
-                                                            {a.location || 'Yüz yüze'}
+                                                            {a.location || 'In-person'}
                                                         </>
                                                     ) : (
                                                         <>
                                                             <Globe size={10} className="text-indigo-600" />
-                                                            Online (Meet / Zoom)
+                                                            Online (Google Meet / Zoom)
                                                         </>
                                                     )}
                                                 </span>
@@ -428,24 +368,24 @@ export default function AppointmentsPage() {
                                                     }
                                                 />
                                                 {a.status === 'confirmed'
-                                                    ? 'Onaylandı'
+                                                    ? 'Confirmed'
                                                     : a.status === 'completed'
-                                                    ? 'Tamamlandı'
-                                                    : 'Yeni talep'}
+                                                    ? 'Completed'
+                                                    : 'New Request'}
                                             </span>
                                         </td>
                                         <td className="text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                {a.phone && a.phone !== 'Belirtilmedi' && (
+                                                {a.phone && a.phone !== 'Not provided' && (
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
                                                         className="h-7 text-xs text-emerald-600 hover:bg-emerald-50 px-2"
                                                         onClick={() => {
                                                             const clean = a.phone.replace(/\D/g, '');
-                                                            window.open(`https://wa.me/90${clean.startsWith('0') ? clean.slice(1) : clean}`, '_blank');
+                                                            window.open(`https://wa.me/${clean}`, '_blank');
                                                         }}
-                                                        title="WhatsApp ile yaz"
+                                                        title="Message on WhatsApp"
                                                     >
                                                         <MessageCircle size={13} className="mr-1" />
                                                         WhatsApp
@@ -459,7 +399,7 @@ export default function AppointmentsPage() {
                                                     onClick={() => handleConfirm(a)}
                                                 >
                                                     <Check size={12} className="mr-1" />
-                                                    {a.status === 'confirmed' ? 'Onaylandı' : 'Onayla'}
+                                                    {a.status === 'confirmed' ? 'Confirmed' : 'Confirm'}
                                                 </Button>
                                             </div>
                                         </td>
@@ -473,8 +413,8 @@ export default function AppointmentsPage() {
                         <div className="product-icon mx-auto mb-4">
                             <CalendarDays size={24} />
                         </div>
-                        <h2>Bu görünümde randevu bulunmuyor</h2>
-                        <p>Diğer randevularınızı Tümü sekmesinde görebilirsiniz.</p>
+                        <h2>No appointments found</h2>
+                        <p>When clients book coaching sessions with you, they will appear here.</p>
                     </div>
                 )}
             </section>
@@ -487,7 +427,7 @@ export default function AppointmentsPage() {
                     defaultType="coaching_call"
                     onSuccess={() => {
                         setIsAddModalOpen(false);
-                        showToast('Yeni seans hizmeti başarıyla oluşturuldu! 🚀', 'success');
+                        showToast('New coaching session created successfully! 🚀', 'success');
                         fetchAppointments();
                     }}
                 />

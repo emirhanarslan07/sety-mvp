@@ -16,12 +16,12 @@ interface OnboardingScreenProps {
 }
 
 const NICHES = [
-    'Yazılım / Teknoloji',
-    'Tasarım / Sanat',
-    'Koçluk / Danışmanlık',
-    'Eğitim / Kurs',
-    'E-kitap / Şablon',
-    'Diğer'
+    'Software & Tech',
+    'Design & Creative',
+    'Coaching & Consulting',
+    'Education & Courses',
+    'E-books & Templates',
+    'Other'
 ];
 
 export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps) {
@@ -35,7 +35,7 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
     const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
-    // Phase 4: Import State
+    // 1-Click Import State
     const [importUrl, setImportUrl] = useState('');
     const [isImporting, setIsImporting] = useState(false);
     const [importSuccess, setImportSuccess] = useState(false);
@@ -110,7 +110,7 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
 
     const handleComplete = async () => {
         if (!isAvailable || username.length < 3) {
-            showToast("Lütfen geçerli ve kullanılabilir bir mağaza adı girin.", "error");
+            showToast("Please enter a valid, available store handle.", "error");
             return;
         }
 
@@ -128,18 +128,18 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                 throw new Error(result.error);
             }
             
-            showToast("Mağazanız başarıyla oluşturuldu!", "success");
+            showToast("Your store is ready! Welcome aboard! 🚀", "success");
             await refreshData();
         } catch (error: any) {
             console.error("Error completing onboarding:", error);
-            showToast(error.message || "Bir hata oluştu.", "error");
+            showToast(error.message || "Failed to set up store.", "error");
             setLoading(false);
         }
     };
 
     const handleImport = async () => {
         if (!importUrl || importUrl.length < 5) {
-            showToast("Lütfen geçerli bir Linktree veya Stan Store linki girin.", "error");
+            showToast("Please enter a valid Linktree or Stan Store URL.", "error");
             return;
         }
 
@@ -154,7 +154,7 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
 
             if (result.success) {
                 setImportSuccess(true);
-                showToast("Profiliniz başarıyla kopyalandı! (Magic Import)", "success");
+                showToast("Profile imported successfully! ✨", "success");
                 
                 if (result.data.image) {
                     setImportedImage(result.data.image);
@@ -168,13 +168,13 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                     }
                 }
             } else {
-                showToast(result.error || "İçe aktarılırken bir hata oluştu.", "error");
-                showToast("Profilinizi otomatik çekemedik, lütfen aşağıdaki formdan manuel olarak devam edin.", "info");
+                showToast(result.error || "Import failed.", "error");
+                showToast("Could not auto-import. Please fill in the details manually below.", "info");
             }
         } catch (error) {
             console.error("Import error:", error);
-            showToast("Bağlantı hatası.", "error");
-            showToast("Lütfen mağaza bilgilerinizi manuel olarak girin.", "info");
+            showToast("Connection error.", "error");
+            showToast("Please enter your store info manually.", "info");
         } finally {
             setIsImporting(false);
         }
@@ -204,13 +204,13 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                 </div>
 
                     <h1 className="text-3xl md:text-4xl font-bold text-slate-900 text-center mb-3 tracking-tight">
-                        Sety'ye Hoş Geldin! <span className="inline-block hover:scale-110 transition-transform origin-bottom-left cursor-default">🚀</span>
+                        Welcome to Sety! <span className="inline-block hover:scale-110 transition-transform origin-bottom-left cursor-default">🚀</span>
                     </h1>
                     <p className="text-slate-500 font-medium text-center mb-8 text-[15px] leading-relaxed max-w-[90%] mx-auto">
-                        Mağazanı 2 dakikada kur veya varolan hesabını tek tıkla Sety'ye taşı.
+                        Set up your store in 2 minutes or import your existing profile with one click.
                     </p>
 
-                    {/* Phase 4: 1-Click Migration Engine */}
+                    {/* 1-Click Migration Engine */}
                     <div className="mb-8 p-5 bg-[#5500ff]/[0.02] border border-[#5500ff]/10 rounded-3xl relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-3 opacity-20 pointer-events-none">
                             <DownloadCloud className="w-16 h-16 text-[#5500ff]" />
@@ -218,14 +218,14 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                         <div className="relative z-10">
                             <label className="text-sm font-bold text-[#5500ff] ml-1 flex items-center gap-2 mb-3">
                                 <span className="flex h-5 w-5 rounded-full bg-[#5500ff]/10 items-center justify-center">✨</span>
-                                Linktree / Stan Store'dan Aktar (Magic)
+                                Import from Linktree / Stan Store
                             </label>
                             <div className="flex gap-2 mb-3">
                                 <input
                                     type="text"
                                     value={importUrl}
                                     onChange={(e) => setImportUrl(e.target.value)}
-                                    placeholder="Linkinizi yapıştırın (örn: linktr.ee/john)"
+                                    placeholder="Paste your link (e.g. stan.store/john)"
                                     className="flex-1 h-12 px-4 bg-white border border-slate-200 rounded-xl outline-none font-medium text-slate-900 placeholder:text-slate-400 focus:border-[#5500ff] focus:ring-2 focus:ring-[#5500ff]/10 transition-all text-sm"
                                 />
                                 <Button 
@@ -233,7 +233,7 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                                     disabled={isImporting || importSuccess}
                                     className={`h-12 px-5 rounded-xl font-bold text-white transition-all shadow-md ${importSuccess ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-[#5500ff] hover:bg-[#4400cc]'}`}
                                 >
-                                    {isImporting ? <Loader2 className="w-5 h-5 animate-spin" /> : importSuccess ? <Check className="w-5 h-5" /> : 'İçe Aktar'}
+                                    {isImporting ? <Loader2 className="w-5 h-5 animate-spin" /> : importSuccess ? <Check className="w-5 h-5" /> : 'Import'}
                                 </Button>
                             </div>
                             {importedImage && (
@@ -243,10 +243,9 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                                     className="flex items-center gap-3 mt-4 pt-4 border-t border-[#5500ff]/10"
                                 >
                                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
-                                        {/* Using our Proxy API to bypass CORS/Referrer policies */}
                                         <img src={`/api/proxy-image?url=${encodeURIComponent(importedImage)}`} alt="Profile" className="w-full h-full object-cover" />
                                     </div>
-                                    <p className="text-sm font-medium text-[#5500ff]">Profil resminiz güvenle çekildi!</p>
+                                    <p className="text-sm font-medium text-[#5500ff]">Profile photo imported!</p>
                                 </motion.div>
                             )}
                         </div>
@@ -254,14 +253,14 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
 
                     <div className="relative flex items-center py-4 mb-4">
                         <div className="flex-grow border-t border-slate-100"></div>
-                        <span className="flex-shrink-0 mx-4 text-slate-400 text-sm font-medium">veya manuel kur</span>
+                        <span className="flex-shrink-0 mx-4 text-slate-400 text-sm font-medium">or set up manually</span>
                         <div className="flex-grow border-t border-slate-100"></div>
                     </div>
 
                     <div className="space-y-6 mb-10">
                         {/* Username Input */}
                         <div className="space-y-2 relative">
-                            <label className="text-sm font-semibold text-slate-700 ml-1">Mağaza Linkin</label>
+                            <label className="text-sm font-semibold text-slate-700 ml-1">Your Store Handle</label>
                             <div className="relative flex items-center group bg-white border-2 border-slate-100 hover:border-slate-200 focus-within:border-[#5500ff] focus-within:ring-4 focus-within:ring-[#5500ff]/10 rounded-2xl transition-all shadow-sm h-14 overflow-hidden">
                                 <span className="pl-4 pr-0.5 text-slate-400 font-medium select-none group-focus-within:text-[#5500ff] whitespace-nowrap transition-colors">
                                     sety.store/
@@ -270,7 +269,7 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                                     type="text"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                                    placeholder="mağaza-adin"
+                                    placeholder="your-name"
                                     className="flex-1 h-full bg-transparent outline-none font-medium text-slate-900 placeholder:text-slate-300 pr-12 min-w-0"
                                 />
                                 <div className="absolute right-4 flex items-center z-10">
@@ -291,13 +290,13 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                         </div>
                         <AnimatePresence mode="wait">
                             {username.length > 0 && username.length < 3 && (
-                                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-rose-500 font-medium ml-1">En az 3 karakter girmelisiniz.</motion.p>
+                                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-rose-500 font-medium ml-1">Must be at least 3 characters.</motion.p>
                             )}
                             {username.length >= 3 && !isChecking && !isAvailable && (
-                                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-rose-500 font-medium ml-1">Bu mağaza adı maalesef alınmış.</motion.p>
+                                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-rose-500 font-medium ml-1">Sorry, this handle is already taken.</motion.p>
                             )}
                             {username.length >= 3 && !isChecking && isAvailable && (
-                                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-emerald-500 font-medium ml-1">Harika! Bu ad kullanılabilir.</motion.p>
+                                <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-xs text-emerald-500 font-medium ml-1">Great! This handle is available.</motion.p>
                             )}
                         </AnimatePresence>
                     </div>
@@ -305,14 +304,14 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                     {/* Custom Dropdown */}
                     <div className="space-y-2 relative" ref={dropdownRef}>
                         <label className="text-sm font-semibold text-slate-700 ml-1">
-                            Kategori <span className="text-slate-400 font-normal ml-1">(İsteğe bağlı)</span>
+                            Category <span className="text-slate-400 font-normal ml-1">(Optional)</span>
                         </label>
                         <div 
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                             className={`w-full h-14 px-4 rounded-2xl bg-white border-2 hover:border-slate-200 outline-none transition-all font-medium flex items-center justify-between cursor-pointer shadow-sm ${isDropdownOpen ? 'border-[#5500ff] ring-4 ring-[#5500ff]/10' : 'border-slate-100'}`}
                         >
                             <span className={niche ? 'text-slate-900 font-semibold' : 'text-slate-400'}>
-                                {niche || 'Seçiniz...'}
+                                {niche || 'Select category...'}
                             </span>
                             <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
                         </div>
@@ -356,7 +355,7 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
                             <Loader2 className="w-6 h-6 animate-spin" />
                         ) : (
                             <span className="flex items-center gap-2">
-                                Mağazamı Oluştur
+                                Create My Store
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </span>
                         )}
@@ -366,4 +365,3 @@ export function OnboardingScreen({ profile, refreshData }: OnboardingScreenProps
         </div>
     );
 }
-

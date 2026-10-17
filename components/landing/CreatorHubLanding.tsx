@@ -472,7 +472,7 @@ export function CreatorHubLanding() {
                 : "Sana ait bir mağaza, baştan sona."}
             </span>
             <Button variant="link" asChild>
-              <Link href="/denizyilmaz">
+              <Link href="/emma">
                 {isEn ? "Explore demo store" : "Örnek mağazayı incele"}{" "}
                 <ArrowUpRight size={16} />
               </Link>
@@ -1079,7 +1079,7 @@ export function CreatorHubLanding() {
         </p>
         <Button
           className="main-cta bg-[#C4FF00] hover:bg-[#b2ee00] text-slate-950 font-black shadow-lg"
-          onClick={handlePolarCheckout}
+          onClick={() => openModal("signup")}
         >
           <span>
             {isEn ? "Get started — no credit card needed" : "Şimdi ücretsiz mağazanı aç"}
@@ -1262,10 +1262,10 @@ export function CreatorHubLanding() {
                 </li>
                 <li>
                   <Link
-                    href="/denizyilmaz"
+                    href="/emma"
                     className="hover:text-[#5500FF] transition-colors inline-flex items-center gap-1"
                   >
-                    {isEn ? "Demo Store (Deniz Yilmaz)" : "Örnek Vitrin (Deniz Yılmaz)"}{" "}
+                    {isEn ? "Demo Store (Emma Carter)" : "Demo Store (Emma Carter)"}{" "}
                     <ArrowUpRight size={11} />
                   </Link>
                 </li>

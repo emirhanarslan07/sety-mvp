@@ -39,56 +39,56 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
 
   const offerings = [
     {
-      id: 'deniz-mentorship',
-      title: '1:1 Mentörlük & Marka Danışmanlığı',
-      desc: 'Birebir 45 dakikalık online seans. İçerik üretimi, takipçileri müşteriye dönüştürme ve büyüme stratejisi.',
+      id: 'emma-mentorship',
+      title: '1:1 Mentorship & Brand Strategy',
+      desc: 'Direct 45-minute online video call. Turn your audience into loyal paying clients.',
       icon: Video,
-      type: '1:1 ONLINE SEANS',
-      duration: '45 dakika',
-      price: '₺1.500',
-      priceNum: 1500,
+      type: '1:1 VIDEO SESSION',
+      duration: '45 mins',
+      price: '$75',
+      priceNum: 75,
       color: 'lilac',
       mode: 'online' as const,
       area_options: [
-        { id: 'strategy', title: 'İçerik & Büyüme Stratejisi', description: 'Takipçiyi müşteriye dönüştürme ve etkileşim artırma seansı', duration: '45 Dk' },
-        { id: 'review', title: 'Portföy & Tasarım İncelemesi', description: 'Notion, Canva ve portföy çalışmalarınızı birebir analiz', duration: '45 Dk' },
-        { id: 'roadmap', title: 'Dijital Ürün Yol Haritası', description: 'İlk e-kitabını veya şablonunu satışa çıkarma planlaması', duration: '45 Dk' },
+        { id: 'strategy', title: 'Content & Growth Strategy', description: 'Monetize your audience and scale engagement', duration: '45 Mins' },
+        { id: 'review', title: 'Portfolio & Product Review', description: 'Deep dive into your Notion systems, guides, or digital offerings', duration: '45 Mins' },
+        { id: 'roadmap', title: 'Digital Product Roadmap', description: 'Step-by-step launch plan for your first e-book or template', duration: '45 Mins' },
       ],
       action: 'booking' as const,
     },
     {
-      id: 'deniz-content-kit',
-      title: 'İçerik Planlama Kiti (Notion + Canva)',
-      desc: 'Bir aylık içerik üretimi tek sistemde. 30 hazır şablon, kanca listesi ve takvim.',
+      id: 'emma-content-kit',
+      title: 'Content Planning OS (Notion + Canva)',
+      desc: 'One month of content in one simple system. 30 ready-to-use templates, hook vault & calendar.',
       icon: Download,
-      type: 'DİJİTAL ÜRÜN',
-      duration: 'Anında İndirme',
-      price: '₺290',
-      priceNum: 290,
+      type: 'DIGITAL PRODUCT',
+      duration: 'Instant Download',
+      price: '$19',
+      priceNum: 19,
       color: 'lime',
       action: 'digital' as const,
     },
     {
-      id: 'deniz-ebook',
-      title: 'Yaratıcının Yol Haritası (PDF E-Kitap)',
-      desc: 'Fikirden ilk 10.000 TL kazanca giden adımlar. 48 sayfalık pratik e-kitap rehber.',
+      id: 'emma-ebook',
+      title: 'The Creator\'s Roadmap (PDF Guide)',
+      desc: 'From zero to your first $1,000 online. A 48-page actionable handbook.',
       icon: BookOpen,
-      type: 'E-KİTAP REHBER',
-      duration: '48 Sayfa · PDF',
-      price: '₺190',
-      priceNum: 190,
+      type: 'E-BOOK GUIDE',
+      duration: '48 Pages · PDF',
+      price: '$12',
+      priceNum: 12,
       color: 'peach',
       action: 'digital' as const,
     },
     {
-      id: 'deniz-community',
-      title: 'Yaratıcı Girişimciler Topluluğu',
-      desc: 'Özel Discord kanalı, haftalık canlı yayınlar, soru-cevap ve üretici network ağı.',
+      id: 'emma-community',
+      title: 'Creative Founders Circle',
+      desc: 'Private Discord community, weekly live coaching sessions, and peer creator network.',
       icon: Users,
-      type: 'ÖZEL TOPLULUK',
-      duration: 'Aylık Üyelik',
-      price: '₺99/ay',
-      priceNum: 99,
+      type: 'EXCLUSIVE COMMUNITY',
+      duration: 'Monthly Access',
+      price: '$9/mo',
+      priceNum: 9,
       color: 'lilac',
       action: 'digital' as const,
     },
@@ -97,7 +97,7 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailSub || !emailSub.includes('@')) {
-      showToast('Lütfen geçerli bir e-posta adresi girin.', 'error');
+      showToast('Please enter a valid email address.', 'error');
       return;
     }
     setSubmittingLead(true);
@@ -107,14 +107,14 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: emailSub.trim().toLowerCase(),
-          creator_id: store?.id || 'deniz-yilmaz-store',
+          creator_id: store?.id || 'emma-carter-store',
           source: 'storefront_newsletter'
         })
       });
-      showToast('Harika! Bültene başarıyla kaydoldunuz 🎉', 'success');
+      showToast('You are on the list! Welcome aboard 🎉', 'success');
       setEmailSub('');
     } catch {
-      showToast('Bültene başarıyla kaydoldunuz! ✨', 'success');
+      showToast('Subscribed successfully! ✨', 'success');
       setEmailSub('');
     } finally {
       setSubmittingLead(false);
@@ -125,25 +125,27 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
     if (item.action === 'booking') {
       setSelectedProduct(item);
     } else {
-      showToast(`"${item.title}" için ödeme & indirme sayfası açılıyor...`, 'success');
+      showToast(`Redirecting to secure checkout for "${item.title}"...`, 'success');
     }
   };
+
+  const creatorName = store?.display_name || store?.full_name || 'Emma Carter';
 
   return (
     <div className="storefront">
       {/* Top Banner */}
       <div className="store-banner">
-        KENDİ HİKÂYENİ YAZ · DİJİTAL ÜRÜNLER & 1:1 SEANSLAR
+        BUILD YOUR STORE · DIGITAL PRODUCTS & 1:1 COACHING
       </div>
 
       {/* Top Navigation */}
       <div className="store-nav">
         <Button variant="ghost" asChild>
           <Link href="/">
-            <ArrowLeft size={14} className="mr-1" /> Sety’ye dön
+            <ArrowLeft size={14} className="mr-1" /> Back to Sety
           </Link>
         </Button>
-        <span className="store-demo-label">Örnek vitrin</span>
+        <span className="store-demo-label">Demo Storefront</span>
       </div>
 
       {/* Main Store Area */}
@@ -152,52 +154,52 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
         <div className="store-profile">
           <img
             src="/creator-deniz.jpg"
-            alt="Deniz Yılmaz"
+            alt={creatorName}
             width={1024}
             height={1024}
             loading="eager"
           />
-          <span className="eyebrow">İÇERİK ÜRETİCİSİ & YARATICI GİRİŞİMCİ</span>
+          <span className="eyebrow">DIGITAL CREATOR & ENTREPRENEUR</span>
           <h1>
-            Deniz Yılmaz{' '}
+            {creatorName}{' '}
             <span className="verified">
               <Check size={14} />
             </span>
           </h1>
           <div className="font-semibold text-xs sm:text-sm text-slate-800 tracking-tight mt-0.5">
-            Dijital Ürünler · Tasarım Şablonları · 1:1 Mentörlük
+            Digital Products · Notion Templates · 1:1 Coaching
           </div>
           <p className="mt-1">
-            Bildiğim, tasarladığım ve ürettiğim her şeyi tek bir yerde topladım. Kendi yaratıcı yolculuğuna bugün başla.
+            Everything I design, build, and teach in one simple place. Start monetizing your creative journey today.
           </p>
 
           <span className="profile-location">
-            <MapPin size={13} /> İstanbul · Online & Global Teslimat
+            <MapPin size={13} /> Worldwide · Instant & Global Delivery
           </span>
 
           <div className="store-tags">
-            <span>Notion Şablonu</span>
-            <span>Canva Kiti</span>
-            <span>E-Kitap</span>
-            <span>1:1 Mentörlük</span>
-            <span>Topluluk</span>
+            <span>Notion Template</span>
+            <span>Canva Kit</span>
+            <span>E-Book</span>
+            <span>1:1 Coaching</span>
+            <span>Community</span>
           </div>
 
-          {/* Branded Quick Contact Bar */}
+          {/* Quick Contact Bar */}
           <SmartSocialLinks
             links={[
-              { url: 'https://instagram.com/deniz.yilmaz', type: 'instagram', title: 'Instagram' },
-              { url: 'https://youtube.com/@denizyilmaz', type: 'youtube', title: 'YouTube' },
-              { url: 'https://behance.net/denizyilmaz', type: 'behance', title: 'Behance' },
-              { url: 'https://x.com/denizyilmaz', type: 'twitter', title: 'X (Twitter)' },
-              { url: 'https://wa.me/905550000000?text=Merhaba%20Deniz,%20ürünlerin%20hakkında%20bilgi%20almak%20istiyorum.', type: 'whatsapp', title: 'WhatsApp İletişim' },
+              { url: 'https://instagram.com/emmacarter', type: 'instagram', title: 'Instagram' },
+              { url: 'https://youtube.com/@emmacarter', type: 'youtube', title: 'YouTube' },
+              { url: 'https://behance.net/emmacarter', type: 'behance', title: 'Behance' },
+              { url: 'https://x.com/emmacarter', type: 'twitter', title: 'X (Twitter)' },
+              { url: 'https://wa.me/15550192834?text=Hi%20Emma,%20I%20would%20like%20to%20learn%20more%20about%20your%20offerings.', type: 'whatsapp', title: 'WhatsApp' },
             ]}
           />
         </div>
 
         {/* Section Label */}
         <div className="store-section-label">
-          ÖNE ÇIKAN ÜRÜNLER & SEANSLAR <span>04 ÜRÜN</span>
+          FEATURED PRODUCTS & SESSIONS <span>04 ITEMS</span>
         </div>
 
         {/* Products List */}
@@ -222,7 +224,7 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
                   onClick={() => handleProductClick(item)}
                   className="bg-[#5500FF] hover:bg-[#4400cc] text-white flex items-center justify-between shadow-sm"
                 >
-                  <span>{item.action === 'booking' ? 'Randevu talep et' : 'Satın al & İndir'}</span>
+                  <span>{item.action === 'booking' ? 'Book session' : 'Buy & Download'}</span>
                   <ArrowUpRight size={14} />
                 </Button>
               </div>
@@ -238,10 +240,10 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
             </div>
             <div>
               <strong className="text-sm font-black text-slate-900">
-                Yeni Şablonları & Rehberleri İlk Sen Gör
+                Be the first to get new templates & guides
               </strong>
               <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
-                Her hafta paylaştığım ücretsiz tasarım ipuçları ve indirimler için bültene abone ol.
+                Join our newsletter for weekly free frameworks, design tips, and early-bird discounts.
               </p>
             </div>
           </div>
@@ -250,7 +252,7 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
               type="email"
               value={emailSub}
               onChange={(e) => setEmailSub(e.target.value)}
-              placeholder="E-posta adresin..."
+              placeholder="Your email address..."
               required
               className="flex-1 bg-white border border-slate-200 rounded-full px-4 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#5500FF] shadow-2xs"
             />
@@ -259,7 +261,7 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
               disabled={submittingLead}
               className="rounded-full bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold text-xs px-5 shadow-sm shrink-0"
             >
-              {submittingLead ? <Loader2 size={13} className="animate-spin" /> : 'Abone Ol'}
+              {submittingLead ? <Loader2 size={13} className="animate-spin" /> : 'Subscribe'}
             </Button>
           </form>
         </div>
@@ -268,16 +270,16 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
         <div className="store-note">
           <BookOpen size={16} />
           <p>
-            Her yolculuk bir fikirle başlar.
+            Every journey starts with a single idea.
             <br />
-            Sen üretmeye devam et, Sety vitrinin her zaman açık.
+            You focus on creating — Sety handles the rest.
           </p>
         </div>
 
         {/* Store Footer */}
         <div className="store-powered">
           <span>
-            <LockKeyhole size={12} /> Güvenli Mağaza Altyapısı · SSL Korumalı
+            <LockKeyhole size={12} /> Secure Creator Storefront · 256-Bit SSL Encrypted
           </span>
           <span className="flex items-center gap-1 font-semibold text-slate-700">
             Powered by <SetyLogo />
@@ -295,20 +297,20 @@ export function CreatorHubStorefront({ store }: CreatorHubStorefrontProps) {
             title: selectedProduct.title,
             description: selectedProduct.desc,
             price: selectedProduct.priceNum,
-            currency: 'TRY',
+            currency: 'USD',
             mode: selectedProduct.mode,
             area_options: selectedProduct.area_options,
           }}
           profile={{
-            id: store?.id || 'deniz-yilmaz-store',
-            user_id: store?.user_id || 'deniz-yilmaz-user',
-            username: store?.username || 'denizyilmaz',
-            full_name: 'Deniz Yılmaz',
-            display_name: 'Deniz Yılmaz',
-            email: 'deniz@sety.store',
+            id: store?.id || 'emma-carter-store',
+            user_id: store?.user_id || 'emma-carter-user',
+            username: store?.username || 'emma',
+            full_name: 'Emma Carter',
+            display_name: 'Emma Carter',
+            email: 'emma@sety.store',
             social_links: {
-              whatsapp: '905550000000',
-              phone: '05550000000',
+              whatsapp: '15550192834',
+              phone: '15550192834',
             },
           }}
         />

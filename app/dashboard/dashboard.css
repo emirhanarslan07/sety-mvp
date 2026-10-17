@@ -76,7 +76,7 @@
 .sety-shell .brand-mark {
   width: 37px;
   height: 37px;
-  border-radius: 12px;
+  border-radius: 50%;
   background: var(--primary);
   color: var(--primary-foreground);
   display: grid;

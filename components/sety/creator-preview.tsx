@@ -63,20 +63,20 @@ export function CreatorPreview() {
             width={1024}
             height={1024}
             loading="lazy"
-            alt="Creator Deniz Yilmaz"
+            alt="Creator Emma Carter"
           />
           <span className="photo-label">{isEn ? "TELL YOUR STORY." : "KENDİ HİKÂYENİ YAZ."}</span>
         </div>
         <div className="phone-content">
           <div className="creator-name">
-            Deniz Yılmaz{" "}
+            Emma Carter{" "}
             <span>
               <Check size={11} />
             </span>
           </div>
           <p>{isEn ? "Digital Creator & Entrepreneur" : "İçerik üreticisi & yaratıcı girişimci"}</p>
           <div className="phone-socials">
-            ↗ <span>deniz.yilmaz</span> · <span>{isEn ? "Contact" : "İletişim"}</span>
+            ↗ <span>emmacarter</span> · <span>{isEn ? "Contact" : "İletişim"}</span>
           </div>
           <div className="phone-product">
             <span className="product-art lilac">

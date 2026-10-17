@@ -60,7 +60,7 @@ function Stat({
                     <TrendingUp size={11} />
                     {change}
                 </span>
-                <span>geçen aya göre</span>
+                <span>vs last month</span>
             </div>
             <svg viewBox="0 0 70 35" className="sparkline" aria-hidden="true">
                 <polyline
@@ -80,63 +80,11 @@ function Stat({
     );
 }
 
-// ─── Fallback Sample Products ───
-const SAMPLE_PRODUCTS = [
-    {
-        id: 'sample-p1',
-        title: 'Instagram Büyüme Rehberi',
-        subtitle: '64 sayfalık PDF e-kitap',
-        type: 'digital_product',
-        typeLabel: 'Dijital İndirme',
-        price: 249,
-        sales: 86,
-        status: 'active',
-        icon: BookOpen,
-        color: ''
-    },
-    {
-        id: 'sample-p2',
-        title: '1:1 Strateji Görüşmesi',
-        subtitle: '45 dk birebir koçluk',
-        type: 'coaching_call',
-        typeLabel: 'Koçluk',
-        price: 1490,
-        sales: 24,
-        status: 'active',
-        icon: Target,
-        color: 'green'
-    },
-    {
-        id: 'sample-p3',
-        title: 'Reels Şablon Paketi',
-        subtitle: '30 adet Canva şablonu',
-        type: 'digital_product',
-        typeLabel: 'Dijital İndirme',
-        price: 399,
-        sales: 104,
-        status: 'active',
-        icon: Film,
-        color: 'orange'
-    },
-    {
-        id: 'sample-p4',
-        title: 'YouTube Kanalım',
-        subtitle: 'Haftalık yeni videolar',
-        type: 'external_link',
-        typeLabel: 'Link',
-        price: 0,
-        sales: 0,
-        status: 'draft',
-        icon: Video,
-        color: ''
-    }
-];
-
 export default function StorePage() {
     const { store, user, profile, refreshData } = useDashboard();
     const { showToast } = useToast();
 
-    const [tab, setTab] = useState<'Ürünler' | 'Tasarım & Profil'>('Ürünler');
+    const [tab, setTab] = useState<'Products' | 'Design & Profile'>('Products');
     const [query, setQuery] = useState('');
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -154,17 +102,17 @@ export default function StorePage() {
     const [photo, setPhoto] = useState<string | null>(null);
     const [isSavingDesign, setIsSavingDesign] = useState(false);
 
-    const storeUrl = `sety.store/${store?.username || 'emirhan'}`;
+    const storeUrl = `sety.store/${store?.username || 'creator'}`;
 
     useEffect(() => {
         if (store) {
-            setName(store.display_name || profile?.full_name || 'Emirhan Arslan');
-            setUsername(store.username || 'emirhan');
-            setBio(store.bio || 'İçerik üreticisi & dijital pazarlama koçu.');
+            setName(store.display_name || profile?.full_name || 'Creator');
+            setUsername(store.username || 'creator');
+            setBio(store.bio || 'Digital creator & coach.');
             setPhoto(store.store_logo_url || profile?.profile_image_url || null);
             fetchProducts(store.id);
         } else {
-            setProducts(SAMPLE_PRODUCTS);
+            setProducts([]);
             setLoading(false);
         }
     }, [store, profile]);
@@ -186,19 +134,19 @@ export default function StorePage() {
                     const isLink = p.type === 'external_link';
                     return {
                         ...p,
-                        typeLabel: isCoaching ? 'Koçluk' : isLink ? 'Link' : 'Dijital İndirme',
+                        typeLabel: isCoaching ? 'Coaching' : isLink ? 'Link' : 'Digital Download',
                         icon: isCoaching ? Target : isLink ? Video : i % 2 === 0 ? BookOpen : Film,
                         color: isCoaching ? 'green' : i % 2 === 1 ? 'orange' : '',
-                        sales: p.sales_count || Math.floor(Math.random() * 50) + 10
+                        sales: p.sales_count || 0
                     };
                 });
                 setProducts(mapped);
             } else {
-                setProducts(SAMPLE_PRODUCTS);
+                setProducts([]);
             }
         } catch (err) {
             console.error('Error fetching products:', err);
-            setProducts(SAMPLE_PRODUCTS);
+            setProducts([]);
         } finally {
             setLoading(false);
         }
@@ -206,7 +154,7 @@ export default function StorePage() {
 
     const copyLink = () => {
         navigator.clipboard.writeText(`https://${storeUrl}`);
-        showToast('Mağaza linki kopyalandı! 🚀', 'success');
+        showToast('Store link copied! 🚀', 'success');
     };
 
     const handleToggleStatus = async (productId: string, currentStatus: string) => {
@@ -215,11 +163,6 @@ export default function StorePage() {
             prev.map(p => (p.id === productId ? { ...p, status: newStatus } : p))
         );
 
-        if (productId.startsWith('sample-')) {
-            showToast('Ürün durumu güncellendi (Örnek mod)', 'info');
-            return;
-        }
-
         try {
             const { error } = await supabase
                 .from('products')
@@ -227,11 +170,11 @@ export default function StorePage() {
                 .eq('id', productId);
             if (error) throw error;
             showToast(
-                newStatus === 'active' ? 'Ürün yayına alındı! 🎉' : 'Ürün taslağa alındı.',
+                newStatus === 'active' ? 'Product published! 🎉' : 'Product set to draft.',
                 'success'
             );
         } catch (err: any) {
-            showToast(err.message || 'Durum değiştirilemedi', 'error');
+            showToast(err.message || 'Failed to update status', 'error');
             setProducts(prev =>
                 prev.map(p => (p.id === productId ? { ...p, status: currentStatus } : p))
             );
@@ -242,18 +185,17 @@ export default function StorePage() {
         if (!productToDelete) return;
         setIsDeleting(true);
         try {
-            if (!productToDelete.startsWith('sample-')) {
-                const { error } = await supabase
-                    .from('products')
-                    .delete()
-                    .eq('id', productToDelete);
-                if (error) throw error;
-            }
+            const { error } = await supabase
+                .from('products')
+                .delete()
+                .eq('id', productToDelete);
+            if (error) throw error;
+            
             setProducts(prev => prev.filter(p => p.id !== productToDelete));
-            showToast('Ürün silindi.', 'success');
+            showToast('Product deleted.', 'success');
             setProductToDelete(null);
         } catch (err: any) {
-            showToast(err.message || 'Ürün silinemedi', 'error');
+            showToast(err.message || 'Failed to delete product', 'error');
         } finally {
             setIsDeleting(false);
         }
@@ -261,7 +203,7 @@ export default function StorePage() {
 
     const handleSaveProfile = async () => {
         if (!store?.id) {
-            showToast('Tasarım ayarları güncellendi!', 'success');
+            showToast('Profile updated!', 'success');
             return;
         }
 
@@ -278,16 +220,16 @@ export default function StorePage() {
 
             if (error) throw error;
             if (refreshData) await refreshData();
-            showToast('Mağaza bilgileri başarıyla kaydedildi! ✨', 'success');
+            showToast('Store profile saved successfully! ✨', 'success');
         } catch (err: any) {
-            showToast(err.message || 'Bilgiler kaydedilemedi', 'error');
+            showToast(err.message || 'Failed to save profile', 'error');
         } finally {
             setIsSavingDesign(false);
         }
     };
 
     const visibleProducts = products.filter(p =>
-        p.title.toLocaleLowerCase('tr').includes(query.toLocaleLowerCase('tr'))
+        p.title.toLowerCase().includes(query.toLowerCase())
     );
 
     const activeCount = products.filter(p => p.status === 'active').length;
@@ -302,8 +244,8 @@ export default function StorePage() {
             {/* ═══ HEADING ═══ */}
             <div className="page-heading">
                 <div>
-                    <h1>Mağazam</h1>
-                    <p className="subtitle">Dijital vitrinin, senin kuralların.</p>
+                    <h1>My Store</h1>
+                    <p className="subtitle">Your digital storefront, your rules.</p>
                 </div>
                 <div className="heading-actions">
                     <Button
@@ -312,7 +254,7 @@ export default function StorePage() {
                         className="text-xs h-9 gap-1.5"
                     >
                         <Copy size={14} />
-                        Linki Kopyala
+                        Copy Link
                     </Button>
                     <Button
                         onClick={() => {
@@ -322,7 +264,7 @@ export default function StorePage() {
                         className="text-xs h-9 gap-1.5"
                     >
                         <Plus size={14} />
-                        Yeni Ürün
+                        New Product
                     </Button>
                 </div>
             </div>
@@ -330,7 +272,7 @@ export default function StorePage() {
             {/* ═══ TOOLBAR ═══ */}
             <div className="toolbar">
                 <div className="segments">
-                    {(['Ürünler', 'Tasarım & Profil'] as const).map(item => (
+                    {(['Products', 'Design & Profile'] as const).map(item => (
                         <Button
                             key={item}
                             size="sm"
@@ -345,11 +287,11 @@ export default function StorePage() {
                     ))}
                 </div>
 
-                {tab === 'Ürünler' && (
+                {tab === 'Products' && (
                     <label className="search">
                         <Search size={14} />
                         <input
-                            placeholder="Ürün ara..."
+                            placeholder="Search product..."
                             value={query}
                             onChange={e => setQuery(e.target.value)}
                         />
@@ -358,35 +300,35 @@ export default function StorePage() {
             </div>
 
             {/* ═══ CONTENT TABS ═══ */}
-            {tab === 'Ürünler' ? (
+            {tab === 'Products' ? (
                 <>
                     {/* Stats */}
                     <div className="stats">
                         <Stat
-                            label="Toplam Ürün"
+                            label="Total Products"
                             value={products.length.toString()}
-                            change="+1 ürün"
+                            change={products.length > 0 ? "+1 product" : "0%"}
                             icon={ShoppingBag}
                         />
                         <Stat
-                            label="Aktif Ürün"
+                            label="Active Products"
                             value={activeCount.toString()}
-                            change="Yayında"
+                            change="Live"
                             icon={Globe}
                             color="green"
                             index={1}
                         />
                         <Stat
-                            label="Ürün Satışları"
+                            label="Product Sales"
                             value={totalSales.toString()}
-                            change="+12,1%"
+                            change={totalSales > 0 ? "+12.1%" : "0%"}
                             icon={TrendingUp}
                             color="orange"
                         />
                         <Stat
-                            label="Ürün Geliri"
-                            value={`₺${totalRevenue.toLocaleString('tr-TR')}`}
-                            change="+18,2%"
+                            label="Product Revenue"
+                            value={`$${totalRevenue.toLocaleString('en-US')}`}
+                            change={totalRevenue > 0 ? "+18.2%" : "0%"}
                             icon={Wallet}
                             index={1}
                         />
@@ -396,9 +338,9 @@ export default function StorePage() {
                     <section className="panel">
                         <div className="panel-header">
                             <div>
-                                <h2>Ürün Listesi</h2>
+                                <h2>Product List</h2>
                                 <p className="panel-description">
-                                    {activeCount} / {products.length} ürün vitrinde aktif görünür
+                                    {activeCount} / {products.length} products active on storefront
                                 </p>
                             </div>
                             <Button
@@ -411,25 +353,25 @@ export default function StorePage() {
                                 }}
                             >
                                 <Plus size={13} />
-                                Ürün Ekle
+                                Add Product
                             </Button>
                         </div>
 
                         {loading ? (
                             <div className="p-16 flex flex-col items-center justify-center gap-3 text-muted-foreground">
                                 <Loader2 className="w-6 h-6 animate-spin text-[#5500FF]" />
-                                <span className="text-xs font-semibold">Ürünler yükleniyor...</span>
+                                <span className="text-xs font-semibold">Loading products...</span>
                             </div>
                         ) : visibleProducts.length > 0 ? (
                             <div className="table-wrap">
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Ürün adı</th>
-                                            <th>Ürün tipi</th>
-                                            <th>Fiyat</th>
-                                            <th>Satış</th>
-                                            <th>Durum</th>
+                                            <th>Product Name</th>
+                                            <th>Type</th>
+                                            <th>Price</th>
+                                            <th>Sales</th>
+                                            <th>Status</th>
                                             <th className="text-right" />
                                         </tr>
                                     </thead>
@@ -447,7 +389,7 @@ export default function StorePage() {
                                                             </div>
                                                             <div>
                                                                 <strong>{p.title}</strong>
-                                                                <p>{p.subtitle || 'Dijital ürün içeriği'}</p>
+                                                                <p>{p.subtitle || 'Digital product'}</p>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -457,8 +399,8 @@ export default function StorePage() {
                                                     <td>
                                                         <span className="badge purple">
                                                             {Number(p.price) === 0
-                                                                ? 'Ücretsiz'
-                                                                : `₺${Number(p.price).toLocaleString('tr-TR')}`}
+                                                                ? 'Free'
+                                                                : `$${Number(p.price).toLocaleString('en-US')}`}
                                                         </span>
                                                     </td>
                                                     <td className="price">{p.sales || 0}</td>
@@ -470,14 +412,14 @@ export default function StorePage() {
                                                                 onClick={() =>
                                                                     handleToggleStatus(p.id, p.status)
                                                                 }
-                                                                aria-label={`${p.title} görünürlüğü`}
+                                                                aria-label={`${p.title} visibility`}
                                                             />
                                                             <span
                                                                 className={`badge ${
                                                                     isLive ? 'green' : ''
                                                                 }`}
                                                             >
-                                                                {isLive ? 'Yayında' : 'Taslak'}
+                                                                {isLive ? 'Live' : 'Draft'}
                                                             </span>
                                                         </div>
                                                     </td>
@@ -487,7 +429,7 @@ export default function StorePage() {
                                                                 variant="ghost"
                                                                 size="icon"
                                                                 className="h-7 w-7 text-muted-foreground hover:text-slate-900"
-                                                                title="Düzenle"
+                                                                title="Edit"
                                                                 onClick={() => {
                                                                     setEditingProduct(p);
                                                                     setIsAddModalOpen(true);
@@ -499,7 +441,7 @@ export default function StorePage() {
                                                                 variant="ghost"
                                                                 size="icon"
                                                                 className="h-7 w-7 text-muted-foreground hover:text-rose-600"
-                                                                title="Sil"
+                                                                title="Delete"
                                                                 onClick={() => setProductToDelete(p.id)}
                                                             >
                                                                 <Trash2 size={13} />
@@ -517,20 +459,20 @@ export default function StorePage() {
                                 <div className="product-icon mx-auto mb-4">
                                     <ShoppingBag size={24} />
                                 </div>
-                                <h2>Ürün bulunamadı</h2>
-                                <p>Arama kriterlerinize uygun ürün bulunamadı.</p>
+                                <h2>No products found</h2>
+                                <p>Click &quot;Add Product&quot; to list your first digital guide, resource, or session.</p>
                             </div>
                         )}
                     </section>
                 </>
             ) : (
-                /* ═══ TASARIM & PROFİL TAB ═══ */
+                /* ═══ DESIGN & PROFILE TAB ═══ */
                 <div className="settings-grid">
                     <div>
                         {/* Profile Image Panel */}
                         <section className="panel">
                             <div className="panel-header">
-                                <h2>Profil Görselleri</h2>
+                                <h2>Profile Photos</h2>
                                 <Camera size={17} className="text-muted-foreground" />
                             </div>
                             <div className="form-body profile-upload">
@@ -551,14 +493,14 @@ export default function StorePage() {
                                     )}
                                 </div>
                                 <div>
-                                    <strong className="text-xs">Profil Fotoğrafı</strong>
+                                    <strong className="text-xs">Profile Photo</strong>
                                     <p className="panel-description mb-3">
-                                        JPG, PNG veya WEBP · Maks. 5 MB
+                                        JPG, PNG or WEBP · Max 5 MB
                                     </p>
                                     <Button variant="outline" size="sm" asChild>
                                         <label className="cursor-pointer gap-1.5">
                                             <Camera size={13} />
-                                            Fotoğraf Seç
+                                            Select Photo
                                             <input
                                                 type="file"
                                                 accept="image/*"
@@ -577,21 +519,21 @@ export default function StorePage() {
                         {/* Basic Info Panel */}
                         <section className="panel">
                             <div className="panel-header">
-                                <h2>Temel Bilgiler</h2>
-                                <span className="badge green">Profil aktif</span>
+                                <h2>Basic Information</h2>
+                                <span className="badge green">Profile active</span>
                             </div>
                             <div className="form-body">
                                 <div className="fields">
                                     <label className="field">
-                                        AD SOYAD
+                                        FULL NAME
                                         <input
                                             value={name}
                                             onChange={e => setName(e.target.value)}
-                                            placeholder="Adınız Soyadınız"
+                                            placeholder="Your Full Name"
                                         />
                                     </label>
                                     <label className="field">
-                                        KULLANICI ADI
+                                        USERNAME
                                         <input
                                             value={username}
                                             disabled
@@ -599,23 +541,23 @@ export default function StorePage() {
                                         />
                                     </label>
                                     <label className="field">
-                                        E-POSTA
+                                        EMAIL
                                         <input
                                             type="email"
-                                            value={user?.email || 'emirhan@sety.store'}
+                                            value={user?.email || 'creator@sety.store'}
                                             disabled
                                             className="opacity-75"
                                         />
                                         <span className="text-[9px] text-muted-foreground">
-                                            Kayıtlı e-posta güvenlik gereği değiştirilemez.
+                                            Account email cannot be modified for security reasons.
                                         </span>
                                     </label>
                                     <label className="field">
-                                        BİYOGRAFİ
+                                        BIO
                                         <textarea
                                             value={bio}
                                             onChange={e => setBio(e.target.value)}
-                                            placeholder="Danışanlarınıza veya müşterilerinize kendinizi tanıtın..."
+                                            placeholder="Tell your audience and clients who you are..."
                                         />
                                     </label>
                                 </div>
@@ -625,7 +567,7 @@ export default function StorePage() {
                                     className="text-xs gap-1.5"
                                 >
                                     <Check size={14} />
-                                    {isSavingDesign ? 'Kaydediliyor...' : 'Profili Kaydet'}
+                                    {isSavingDesign ? 'Saving...' : 'Save Profile'}
                                 </Button>
                             </div>
                         </section>
@@ -635,14 +577,14 @@ export default function StorePage() {
                         {/* Store Link Panel */}
                         <section className="panel">
                             <div className="panel-header">
-                                <h2>Mağaza Bağlantısı</h2>
+                                <h2>Storefront Link</h2>
                                 <Globe size={17} className="text-[#5500FF]" />
                             </div>
                             <div className="form-body">
                                 <p className="text-xs font-bold mb-4">{storeUrl}</p>
                                 <Button variant="outline" size="sm" onClick={copyLink} className="gap-1.5">
                                     <Copy size={13} />
-                                    Linki Kopyala
+                                    Copy Link
                                 </Button>
                             </div>
                         </section>
@@ -650,12 +592,12 @@ export default function StorePage() {
                         {/* Theme Selection */}
                         <section className="panel">
                             <div className="panel-header">
-                                <h2>Mağaza Teması</h2>
+                                <h2>Store Theme</h2>
                                 <Sparkles size={17} className="text-[#5500FF]" />
                             </div>
                             <div className="form-body">
                                 <div className="color-options">
-                                    {['Mor (Klasik Sety)', 'Zümrüt Yeşili', 'Sıcak Amber'].map(
+                                    {['Purple (Classic Sety)', 'Emerald Green', 'Warm Amber'].map(
                                         (colorName, i) => (
                                             <label
                                                 key={colorName}
@@ -672,20 +614,20 @@ export default function StorePage() {
                                     )}
                                 </div>
                                 <label className="field">
-                                    MAĞAZA VİTRİN BAŞLIĞI
+                                    STOREFRONT TITLE
                                     <input
                                         defaultValue={name}
-                                        placeholder="Mağaza Vitrin Başlığı"
+                                        placeholder="Storefront Title"
                                     />
                                 </label>
                                 <Button
                                     className="mt-5 text-xs gap-1.5"
                                     onClick={() =>
-                                        showToast('Mağaza teması başarıyla güncellendi! 🎨', 'success')
+                                        showToast('Store theme updated successfully! 🎨', 'success')
                                     }
                                 >
                                     <Check size={14} />
-                                    Görünümü Kaydet
+                                    Save Appearance
                                 </Button>
                             </div>
                         </section>
@@ -706,7 +648,7 @@ export default function StorePage() {
                         setIsAddModalOpen(false);
                         setEditingProduct(null);
                         if (store?.id) fetchProducts(store.id);
-                        showToast('Ürün başarıyla kaydedildi! 🎉', 'success');
+                        showToast('Product saved successfully! 🎉', 'success');
                     }}
                 />
             )}
@@ -716,9 +658,9 @@ export default function StorePage() {
                 isOpen={!!productToDelete}
                 onClose={() => setProductToDelete(null)}
                 onConfirm={handleDeleteProduct}
-                title="Ürünü Sil"
-                description="Bu ürünü mağazanızdan kaldırmak istediğinize emin misiniz? Bu işlem geri alınamaz."
-                confirmText={isDeleting ? 'Siliniyor...' : 'Evet, Sil'}
+                title="Delete Product"
+                description="Are you sure you want to delete this product? This action cannot be undone."
+                confirmText={isDeleting ? 'Deleting...' : 'Yes, Delete'}
                 variant="danger"
             />
         </>

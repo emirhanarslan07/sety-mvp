@@ -47,7 +47,7 @@ function Stat({
                     <TrendingUp size={11} />
                     {change}
                 </span>
-                <span>geçen aya göre</span>
+                <span>vs last month</span>
             </div>
             <svg viewBox="0 0 70 35" className="sparkline" aria-hidden="true">
                 <polyline
@@ -67,55 +67,6 @@ function Stat({
     );
 }
 
-// ─── Sample Customers (Showcase fallback) ───
-const SAMPLE_CUSTOMERS = [
-    {
-        id: 'cust-1',
-        name: 'Zeynep Kaya',
-        initials: 'ZK',
-        email: 'zeynep.kaya@example.com',
-        orderCount: 3,
-        totalSpent: 897,
-        lastOrder: '9 Eki'
-    },
-    {
-        id: 'cust-2',
-        name: 'Mert Demir',
-        initials: 'MD',
-        email: 'mert.demir@example.com',
-        orderCount: 1,
-        totalSpent: 1490,
-        lastOrder: '9 Eki'
-    },
-    {
-        id: 'cust-3',
-        name: 'Elif Yıldız',
-        initials: 'EY',
-        email: 'elif.yildiz@example.com',
-        orderCount: 2,
-        totalSpent: 648,
-        lastOrder: '8 Eki'
-    },
-    {
-        id: 'cust-4',
-        name: 'Can Aydın',
-        initials: 'CA',
-        email: 'can.aydin@example.com',
-        orderCount: 1,
-        totalSpent: 249,
-        lastOrder: '8 Eki'
-    },
-    {
-        id: 'cust-5',
-        name: 'Deniz Aksoy',
-        initials: 'DA',
-        email: 'deniz.aksoy@example.com',
-        orderCount: 2,
-        totalSpent: 1739,
-        lastOrder: '8 Eki'
-    }
-];
-
 export default function CustomersPage() {
     const { store } = useDashboard();
     const { showToast } = useToast();
@@ -127,7 +78,7 @@ export default function CustomersPage() {
         if (store?.id) {
             fetchCustomers();
         } else {
-            setCustomers(SAMPLE_CUSTOMERS);
+            setCustomers([]);
             setLoading(false);
         }
     }, [store?.id]);
@@ -149,13 +100,13 @@ export default function CustomersPage() {
 
             if (data && data.length > 0) {
                 const processed = data.map((c: any) => {
-                    const name = c.name || c.email?.split('@')[0] || 'Müşteri';
+                    const name = c.name || c.email?.split('@')[0] || 'Customer';
                     const initials = name
                         .split(' ')
                         .filter(Boolean)
                         .slice(0, 2)
                         .map((p: string) => p[0].toUpperCase())
-                        .join('') || 'M';
+                        .join('') || 'C';
 
                     const ordersList = c.orders || [];
                     const totalSpent = ordersList.reduce(
@@ -163,7 +114,7 @@ export default function CustomersPage() {
                         0
                     );
                     const lastOrderDate = ordersList.length > 0
-                        ? new Date(ordersList[ordersList.length - 1].created_at).toLocaleDateString('tr-TR', {
+                        ? new Date(ordersList[ordersList.length - 1].created_at).toLocaleDateString('en-US', {
                               day: 'numeric',
                               month: 'short'
                           })
@@ -181,11 +132,11 @@ export default function CustomersPage() {
                 });
                 setCustomers(processed);
             } else {
-                setCustomers(SAMPLE_CUSTOMERS);
+                setCustomers([]);
             }
         } catch (error) {
             console.error('Error fetching customers:', error);
-            setCustomers(SAMPLE_CUSTOMERS);
+            setCustomers([]);
         } finally {
             setLoading(false);
         }
@@ -193,12 +144,12 @@ export default function CustomersPage() {
 
     const downloadCSV = () => {
         const rows = [
-            ['Müşteri Adı', 'E-posta', 'Sipariş Sayısı', 'Toplam Harcama', 'Son Alışveriş'],
+            ['Customer Name', 'Email', 'Order Count', 'Total Spent', 'Last Purchase'],
             ...visibleCustomers.map(c => [
                 c.name,
                 c.email,
                 c.orderCount,
-                `₺${c.totalSpent}`,
+                `$${c.totalSpent}`,
                 c.lastOrder
             ])
         ];
@@ -208,14 +159,14 @@ export default function CustomersPage() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `sety-musteriler-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `sety-customers-${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('Müşteri listesi dışa aktarıldı 📊', 'success');
+        showToast('Customer list exported as CSV 📊', 'success');
     };
 
     const visibleCustomers = customers.filter(c =>
-        `${c.name} ${c.email}`.toLocaleLowerCase('tr').includes(query.toLocaleLowerCase('tr'))
+        `${c.name} ${c.email}`.toLowerCase().includes(query.toLowerCase())
     );
 
     // Dynamic stats
@@ -229,8 +180,8 @@ export default function CustomersPage() {
             {/* ═══ HEADING ═══ */}
             <div className="page-heading">
                 <div>
-                    <h1>Müşteriler</h1>
-                    <p className="subtitle">Ürettiklerini seven insanlarla tanış.</p>
+                    <h1>Customers</h1>
+                    <p className="subtitle">Connect with the people who love what you create.</p>
                 </div>
                 <div className="heading-actions">
                     <Button
@@ -239,7 +190,7 @@ export default function CustomersPage() {
                         onClick={downloadCSV}
                     >
                         <ArrowDownToLine size={14} />
-                        Dışa Aktar
+                        Export CSV
                     </Button>
                 </div>
             </div>
@@ -247,30 +198,30 @@ export default function CustomersPage() {
             {/* ═══ STATS ═══ */}
             <div className="stats">
                 <Stat
-                    label="Toplam Müşteri"
+                    label="Total Customers"
                     value={totalCount.toString()}
-                    change="+14,3%"
+                    change={totalCount > 0 ? "+14.3%" : "0%"}
                     icon={Users}
                 />
                 <Stat
-                    label="Yeni Müşteriler"
-                    value={Math.max(1, Math.round(totalCount * 0.3)).toString()}
-                    change="Bu ay"
+                    label="New Customers"
+                    value={totalCount > 0 ? Math.max(1, Math.round(totalCount * 0.3)).toString() : '0'}
+                    change={totalCount > 0 ? "This month" : "0%"}
                     icon={Users}
                     color="green"
                     index={1}
                 />
                 <Stat
-                    label="Tekrar Alışveriş"
+                    label="Repeat Buyers"
                     value={repeatCount.toString()}
-                    change="+8,2%"
+                    change={totalCount > 0 ? "+8.2%" : "0%"}
                     icon={ShoppingBag}
                     color="orange"
                 />
                 <Stat
-                    label="Müşteri Başına Gelir"
-                    value={`₺${Number(avgPerCustomer).toLocaleString('tr-TR')}`}
-                    change="+6,4%"
+                    label="Revenue per Customer"
+                    value={`$${Number(avgPerCustomer).toLocaleString('en-US')}`}
+                    change={totalCount > 0 ? "+6.4%" : "0%"}
                     icon={Wallet}
                     index={1}
                 />
@@ -279,14 +230,14 @@ export default function CustomersPage() {
             {/* ═══ TOOLBAR ═══ */}
             <div className="toolbar">
                 <h2 className="flex items-center">
-                    Müşteri Listesi
+                    Customer List
                     <span className="badge purple ml-2">{visibleCustomers.length}</span>
                 </h2>
 
                 <label className="search">
                     <Search size={14} />
                     <input
-                        placeholder="Müşteri veya e-posta ara..."
+                        placeholder="Search customer or email..."
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                     />
@@ -298,18 +249,18 @@ export default function CustomersPage() {
                 {loading ? (
                     <div className="p-16 flex flex-col items-center justify-center gap-3 text-muted-foreground">
                         <Loader2 className="w-6 h-6 animate-spin text-[#5500FF]" />
-                        <span className="text-xs font-semibold">Müşteriler yükleniyor...</span>
+                        <span className="text-xs font-semibold">Loading customers...</span>
                     </div>
                 ) : visibleCustomers.length > 0 ? (
                     <div className="table-wrap">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Müşteri</th>
-                                    <th>E-posta</th>
-                                    <th>Sipariş</th>
-                                    <th>Toplam Harcama</th>
-                                    <th>Son Alışveriş</th>
+                                    <th>Customer</th>
+                                    <th>Email</th>
+                                    <th>Orders</th>
+                                    <th>Total Spent</th>
+                                    <th>Last Purchase</th>
                                     <th className="text-right" />
                                 </tr>
                             </thead>
@@ -325,7 +276,7 @@ export default function CustomersPage() {
                                         <td className="text-muted-foreground">{c.email}</td>
                                         <td className="font-semibold">{c.orderCount}</td>
                                         <td className="price">
-                                            ₺{Number(c.totalSpent).toLocaleString('tr-TR')}
+                                            ${Number(c.totalSpent).toLocaleString('en-US')}
                                         </td>
                                         <td className="text-muted-foreground">{c.lastOrder}</td>
                                         <td className="text-right">
@@ -333,7 +284,7 @@ export default function CustomersPage() {
                                                 variant="ghost"
                                                 size="icon"
                                                 className="h-7 w-7 text-muted-foreground"
-                                                title="Müşteri bilgileri"
+                                                title="Customer details"
                                                 onClick={() =>
                                                     showToast(`${c.name} · ${c.email}`, 'info')
                                                 }
@@ -351,8 +302,8 @@ export default function CustomersPage() {
                         <div className="product-icon mx-auto mb-4">
                             <Users size={24} />
                         </div>
-                        <h2>Müşteri bulunamadı</h2>
-                        <p>Arama kriterinizle eşleşen müşteri kaydı bulunamadı.</p>
+                        <h2>No customers yet</h2>
+                        <p>When people purchase your products or book sessions, they will appear here.</p>
                     </div>
                 )}
             </section>

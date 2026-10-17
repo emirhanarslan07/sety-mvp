@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowLeft, Home, Sparkles } from 'lucide-react';
+import { Home, Sparkles } from 'lucide-react';
 import { SetyLogo } from '@/components/sety/brand';
 
 export default function NotFound() {
@@ -15,15 +15,15 @@ export default function NotFound() {
         </div>
 
         <span className="text-[12px] font-extrabold uppercase tracking-widest text-[#5500FF] mb-2">
-          404 · SAYFA BULUNAMADI
+          404 · PAGE NOT FOUND
         </span>
 
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
-          Aradığınız sayfa mevcut değil
+          This page does not exist
         </h1>
 
         <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8 max-w-sm">
-          Bu bağlantı taşınmış, silinmiş veya henüz oluşturulmamış bir mağazaya ait olabilir.
+          The link you followed may be broken, or the creator store hasn&apos;t been published yet.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full justify-center">
@@ -32,13 +32,13 @@ export default function NotFound() {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#5500FF] hover:bg-[#4400cc] text-white font-bold text-sm shadow-md transition-all active:scale-95"
           >
             <Home className="w-4 h-4" />
-            Ana Sayfaya Dön
+            Back to Home
           </Link>
           <Link
-            href="/denizyilmaz"
+            href="/emma"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm border border-slate-200 shadow-xs transition-all"
           >
-            Örnek Vitrini Gör
+            Explore Demo Store
           </Link>
         </div>
       </div>

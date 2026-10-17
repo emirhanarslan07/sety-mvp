@@ -111,7 +111,7 @@ export async function generateMetadata(
 
     if (!data) {
         return {
-            title: 'Mağaza Bulunamadı | Sety',
+            title: 'Store Not Found | Sety',
         };
     }
 

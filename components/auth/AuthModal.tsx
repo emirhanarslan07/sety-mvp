@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase/client';
 import { useToast } from '@/context/ToastContext';
 import { SetyLogo } from '@/components/sety/brand';
 import { Button } from '@/components/ui/button';
-import { Mail, Lock, Eye, EyeOff, Loader2, ArrowUpRight, ShieldCheck, Check } from 'lucide-react';
+import { Eye, EyeOff, Loader2, ArrowUpRight, ShieldCheck } from 'lucide-react';
 
 export function AuthModal() {
     const { isOpen, mode, closeModal, openModal } = useAuthModal();
@@ -35,7 +35,7 @@ export function AuthModal() {
                 setLoading(false);
             }
         } catch (err: any) {
-            showToast(err.message || 'Google girişi sırasında bir hata oluştu', 'error');
+            showToast(err.message || 'An error occurred during Google sign-in.', 'error');
             setLoading(false);
         }
     };
@@ -53,7 +53,7 @@ export function AuthModal() {
                 });
 
                 if (signInError) {
-                    setError('Geçersiz e-posta veya şifre.');
+                    setError('Invalid email or password.');
                     setLoading(false);
                 } else {
                     closeModal();
@@ -75,13 +75,13 @@ export function AuthModal() {
                     setError(signUpError.message);
                     setLoading(false);
                 } else {
-                    showToast('Hesabınız oluşturuldu! Giriş yapabilirsiniz.', 'success');
+                    showToast('Account created! You can now sign in.', 'success');
                     openModal('login');
                     setLoading(false);
                 }
             }
         } catch (err: any) {
-            setError(err.message || 'İşlem başarısız oldu.');
+            setError(err.message || 'Authentication failed. Please try again.');
             setLoading(false);
         }
     };
@@ -90,10 +90,10 @@ export function AuthModal() {
         <Dialog open={isOpen} onOpenChange={(open) => !open && closeModal()}>
             <DialogContent className="max-w-[390px] w-[calc(100vw-32px)] p-6 sm:p-7 bg-white rounded-3xl border border-slate-200/80 shadow-2xl overflow-hidden font-sans">
                 <DialogTitle className="sr-only">
-                    {isLogin ? 'Sety Giriş Yap' : 'Sety Kayıt Ol'}
+                    {isLogin ? 'Sign In to Sety' : 'Create your Sety Store'}
                 </DialogTitle>
                 <DialogDescription className="sr-only">
-                    {isLogin ? 'Mağazanıza giriş yapın' : 'Yeni bir mağaza açın'}
+                    {isLogin ? 'Sign in to your creator store' : 'Create your free store'}
                 </DialogDescription>
 
                 <div className="flex flex-col items-center text-center">
@@ -103,15 +103,15 @@ export function AuthModal() {
                     </div>
 
                     <span className="text-[10px] font-bold uppercase tracking-wider text-[#5500FF] mb-1">
-                        {isLogin ? 'TEKRAR HOŞ GELDİN' : 'BİR SONRAKİ ADIMIN, SETY'}
+                        {isLogin ? 'WELCOME BACK' : 'YOUR NEXT CHAPTER, SETY'}
                     </span>
                     <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-1.5">
-                        {isLogin ? 'Mağazana giriş yap' : 'Ürettiklerine yer aç'}
+                        {isLogin ? 'Sign in to your store' : 'Claim your digital space'}
                     </h2>
                     <p className="text-xs text-slate-500 font-medium mb-5 max-w-[280px]">
                         {isLogin
-                            ? 'Satışlarını, siparişlerini ve randevularını yönet.'
-                            : 'Fikirlerini, seanslarını ve bilgini gelire dönüştür.'}
+                            ? 'Manage your sales, orders, and consultations.'
+                            : 'Turn your knowledge, sessions, and guides into income.'}
                     </p>
 
                     {/* Minimal Official Google Button */}
@@ -127,13 +127,13 @@ export function AuthModal() {
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
                             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
                         </svg>
-                        <span>Google ile devam et</span>
+                        <span>Continue with Google</span>
                     </button>
 
                     {/* Divider */}
                     <div className="w-full flex items-center gap-3 my-4">
                         <div className="h-px bg-slate-100 flex-1" />
-                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">veya e-posta ile</span>
+                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">or with email</span>
                         <div className="h-px bg-slate-100 flex-1" />
                     </div>
 
@@ -145,7 +145,7 @@ export function AuthModal() {
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    placeholder="Adın ve soyadın"
+                                    placeholder="Full name"
                                     required
                                     className="w-full h-10 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#5500FF] focus:ring-2 focus:ring-[#5500FF]/15 transition-all"
                                 />
@@ -157,7 +157,7 @@ export function AuthModal() {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="E-posta adresin"
+                                placeholder="Email address"
                                 required
                                 autoComplete="email"
                                 className="w-full h-10 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#5500FF] focus:ring-2 focus:ring-[#5500FF]/15 transition-all"
@@ -169,7 +169,7 @@ export function AuthModal() {
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Şifren (en az 6 karakter)"
+                                placeholder="Password (min. 6 characters)"
                                 required
                                 minLength={6}
                                 autoComplete={isLogin ? 'current-password' : 'new-password'}
@@ -179,7 +179,7 @@ export function AuthModal() {
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                                aria-label={showPassword ? 'Şifreyi gizle' : 'Şifreyi göster'}
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
                             >
                                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                             </button>
@@ -200,7 +200,7 @@ export function AuthModal() {
                                 <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
                                 <>
-                                    <span>{isLogin ? 'Mağazama Giriş Yap' : 'Ücretsiz Mağazamı Aç'}</span>
+                                    <span>{isLogin ? 'Sign In to Store' : 'Create Free Store'}</span>
                                     <ArrowUpRight size={14} />
                                 </>
                             )}
@@ -210,16 +210,16 @@ export function AuthModal() {
                     {/* Trust badges */}
                     <div className="flex items-center justify-center gap-3 mt-4 text-[11px] font-medium text-slate-400">
                         <span className="flex items-center gap-1">
-                            <ShieldCheck size={13} className="text-emerald-500" /> Kredi kartı gerekmez
+                            <ShieldCheck size={13} className="text-emerald-500" /> No credit card required
                         </span>
                         <span>·</span>
-                        <span>%0 komisyon</span>
+                        <span>0% commission</span>
                     </div>
 
                     {/* Switch mode */}
                     <div className="mt-4 pt-3 border-t border-slate-100 w-full">
                         <p className="text-xs text-slate-500 font-medium">
-                            {isLogin ? 'Henüz hesabın yok mu?' : 'Zaten bir hesabın var mı?'}{' '}
+                            {isLogin ? "Don't have an account yet?" : 'Already have an account?'}{' '}
                             <button
                                 type="button"
                                 onClick={() => {
@@ -228,7 +228,7 @@ export function AuthModal() {
                                 }}
                                 className="text-[#5500FF] font-bold hover:underline ml-1"
                             >
-                                {isLogin ? 'Ücretsiz Kayıt Ol' : 'Giriş Yap'}
+                                {isLogin ? 'Sign Up Free' : 'Sign In'}
                             </button>
                         </p>
                     </div>

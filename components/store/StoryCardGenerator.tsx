@@ -99,7 +99,7 @@ export default function StoryCardGenerator({ isOpen, onClose, product, profile }
 
                                         <div className="text-center space-y-6">
                                             <h1 className="text-7xl font-black tracking-tight px-10 leading-tight italic">
-                                                BU ÜRÜNÜ YENİ ALDIM! 🚀
+                                                JUST PURCHASED! 🚀
                                             </h1>
                                             <div className="h-2 w-32 bg-white/30 rounded-full mx-auto" />
                                             <p className="text-4xl font-bold opacity-90 uppercase tracking-widest">
@@ -148,7 +148,7 @@ export default function StoryCardGenerator({ isOpen, onClose, product, profile }
                                             )}
                                         </div>
                                         <div className="text-center space-y-2">
-                                            <p className="text-lg font-black italic">YENİ ALINDI! 🚀</p>
+                                            <p className="text-lg font-black italic">JUST PURCHASED! 🚀</p>
                                             <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80">{product.title}</p>
                                         </div>
                                     </div>
@@ -168,14 +168,14 @@ export default function StoryCardGenerator({ isOpen, onClose, product, profile }
                                 className="w-full h-16 rounded-[24px] bg-[#5500ff] hover:bg-blue-700 text-white font-black text-lg shadow-xl flex items-center justify-center gap-3"
                             >
                                 {generating ? <Loader2 className="w-6 h-6 animate-spin" /> : <Download className="w-6 h-6" />}
-                                {generating ? 'Görsel Hazırlanıyor...' : 'Story Kartını İndir'}
+                                {generating ? 'Generating Story Card...' : 'Download Story Card'}
                             </Button>
                             <Button
                                 onClick={onClose}
                                 variant="ghost"
                                 className="w-full h-14 rounded-[20px] text-slate-400 font-bold hover:bg-slate-50"
                             >
-                                Kapat
+                                Close
                             </Button>
                         </div>
                     </motion.div>

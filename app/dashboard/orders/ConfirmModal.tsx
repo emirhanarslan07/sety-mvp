@@ -43,44 +43,46 @@ export function ConfirmModal({ isOpen, onClose, order, onConfirm, isConfirming }
                         <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center mb-5">
                             <CheckCircle2 className="w-6 h-6" />
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Siparişi Onayla</h2>
-                        <p className="text-sm font-bold text-slate-400 mt-2">Bu siparişi onayladığınızda müşteriye teslimat otomatik olarak yapılacaktır.</p>
+                        <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Confirm Order</h2>
+                        <p className="text-sm font-bold text-slate-400 mt-2">
+                            Once confirmed, digital files or booking confirmation will be automatically delivered to the customer.
+                        </p>
                     </div>
 
                     <div className="space-y-6">
                         <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
                             <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Sipariş No</p>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Order ID</p>
                                     <p className="font-bold text-slate-800">{order.order_number}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Tutar</p>
-                                    <p className="font-bold text-slate-800">{order.product?.price} {order.product?.currency}</p>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Amount</p>
+                                    <p className="font-bold text-slate-800">${order.product?.price || order.amount} {order.product?.currency || 'USD'}</p>
                                 </div>
                             </div>
                             
                             <div className="space-y-3 pt-4 border-t border-slate-200/60">
                                 <div>
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Ürün</p>
-                                    <p className="font-bold text-slate-700">{order.product?.name}</p>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Product</p>
+                                    <p className="font-bold text-slate-700">{order.product?.name || order.product?.title || 'Digital Product'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Müşteri</p>
-                                    <p className="font-bold text-slate-700">{order.customer?.email}</p>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Customer</p>
+                                    <p className="font-bold text-slate-700">{order.customer?.email || order.customer_email || '—'}</p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="space-y-3">
-                            <p className="text-sm font-bold text-slate-900">Teslimat Özeti:</p>
+                            <p className="text-sm font-bold text-slate-900">Delivery Summary:</p>
                             <div className="flex items-center gap-3 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
                                 <Mail className="w-4 h-4 text-[#5500ff]" />
-                                E-posta ile {order.product?.type === 'digital_product' ? 'indirme linki' : 'bilgilendirme'} gönderilecek
+                                Delivery email with {order.product?.type === 'digital_product' ? 'download link' : 'access details'} will be sent
                             </div>
                             <div className="flex items-center gap-3 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl p-3 shadow-sm">
                                 <Send className="w-4 h-4 text-[#0088cc]" />
-                                Telegram bildirimi gönderilecek (varsa)
+                                Instant notification to your connected channels
                             </div>
                         </div>
 
@@ -90,7 +92,7 @@ export function ConfirmModal({ isOpen, onClose, order, onConfirm, isConfirming }
                                 disabled={isConfirming}
                                 className="flex-1 h-12 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-colors"
                             >
-                                Vazgeç
+                                Cancel
                             </button>
                             <button
                                 onClick={() => onConfirm(order.id)}
@@ -98,9 +100,9 @@ export function ConfirmModal({ isOpen, onClose, order, onConfirm, isConfirming }
                                 className="flex-[2] h-12 rounded-xl bg-emerald-500 text-white font-bold shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 active:scale-95 transition-all flex items-center justify-center gap-2"
                             >
                                 {isConfirming ? (
-                                    <><Loader2 className="w-5 h-5 animate-spin" /> Onaylanıyor...</>
+                                    <><Loader2 className="w-5 h-5 animate-spin" /> Confirming...</>
                                 ) : (
-                                    <>Onayla ve Gönder</>
+                                    <>Confirm & Deliver</>
                                 )}
                             </button>
                         </div>

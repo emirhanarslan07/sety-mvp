@@ -30,10 +30,10 @@ interface ProductEditorModalProps {
 }
 
 const CURRENCIES = [
-    { value: 'TRY', label: '₺ TRY — Türk Lirası' },
-    { value: 'USD', label: '$ USD — Amerikan Doları' },
+    { value: 'USD', label: '$ USD — US Dollar' },
     { value: 'EUR', label: '€ EUR — Euro' },
-    { value: 'GBP', label: '£ GBP — İngiliz Sterlini' },
+    { value: 'GBP', label: '£ GBP — British Pound' },
+    { value: 'TRY', label: '₺ TRY — Turkish Lira' },
 ];
 
 const DEFAULT_COVERS: Record<string, string[]> = {
@@ -88,7 +88,7 @@ export default function ProductEditorModal({
     const [title, setTitle] = useState(editingProduct?.title || '');
     const [description, setDescription] = useState(editingProduct?.description || '');
     const [price, setPrice] = useState(editingProduct?.price?.toString() || '');
-    const [currency, setCurrency] = useState(editingProduct?.currency || 'TRY');
+    const [currency, setCurrency] = useState(editingProduct?.currency || 'USD');
     const [checkoutUrl, setCheckoutUrl] = useState(editingProduct?.external_checkout_url || '');
     const [imageUrl, setImageUrl] = useState(editingProduct?.image_url || '');
 
@@ -134,7 +134,7 @@ export default function ProductEditorModal({
                 setTitle('');
                 setDescription('');
                 setPrice('');
-                setCurrency('TRY');
+                setCurrency('USD');
                 setCheckoutUrl('');
                 setImageUrl('');
                 setCoachingOnline(true);
@@ -149,12 +149,12 @@ export default function ProductEditorModal({
 
     const productTypes = getProductTypes((key) => {
         const map: Record<string, string> = {
-            'dashboard.store.product_types.digital_product.title': 'Dijital Ürün',
-            'dashboard.store.product_types.digital_product.desc': 'PDF, e-kitap, şablon, video, kurs — her türlü dijital dosya veya içerik',
-            'dashboard.store.product_types.coaching_call.title': 'Koçluk / Görüşme',
-            'dashboard.store.product_types.coaching_call.desc': 'Birebir ücretli görüşme veya koçluk seansı',
-            'dashboard.store.product_types.external_link.title': 'Link',
-            'dashboard.store.product_types.external_link.desc': 'Herhangi bir URL\'ye yönlendirme — ücretsiz veya ücretli',
+            'dashboard.store.product_types.digital_product.title': 'Digital Product',
+            'dashboard.store.product_types.digital_product.desc': 'PDFs, e-books, templates, videos, courses — any digital file or content',
+            'dashboard.store.product_types.coaching_call.title': '1:1 Coaching & Consultation',
+            'dashboard.store.product_types.coaching_call.desc': 'Paid 1-on-1 calls, strategy sessions, or consulting',
+            'dashboard.store.product_types.external_link.title': 'Direct Link',
+            'dashboard.store.product_types.external_link.desc': 'Redirect to any URL — free resource, community, or affiliate link',
         };
         return map[key] || key;
     });
@@ -167,16 +167,16 @@ export default function ProductEditorModal({
         setImageUploading(true);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('Oturum bulunamadı');
+            if (!user) throw new Error('Session not found');
             const fileExt = file.name.split('.').pop();
             const filePath = `${user.id}/product-thumbnails/${Math.random()}.${fileExt}`;
             const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file);
             if (uploadError) throw uploadError;
             const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
             setImageUrl(publicUrl);
-            showToast('Görsel yüklendi.', 'success');
+            showToast('Image uploaded successfully.', 'success');
         } catch (err: any) {
-            showToast(`Hata: ${err.message}`, 'error');
+            showToast(`Error: ${err.message}`, 'error');
         } finally {
             setImageUploading(false);
         }
@@ -186,30 +186,30 @@ export default function ProductEditorModal({
         const isCoachingType = selectedType?.id === 'coaching_call';
 
         if (!title.trim()) {
-            showToast('Lütfen bir başlık girin.', 'error');
+            showToast('Please enter a product title.', 'error');
             return;
         }
 
         if (isCoachingType) {
             if (!coachingOnline && !coachingInPerson) {
-                showToast('Lütfen en az bir görüşme türü (Online veya Yüz Yüze) seçin.', 'error');
+                showToast('Please select at least one format (Online or In-person).', 'error');
                 return;
             }
             if (coachingInPerson && !coachingLocation.trim()) {
-                showToast('Lütfen yüz yüze görüşme için klinik adresini girin.', 'error');
+                showToast('Please enter the location address for in-person sessions.', 'error');
                 return;
             }
             if (coachingPaymentMode === 'pay_now' && !checkoutUrl.trim()) {
-                showToast('Lütfen Shopier veya ödeme linkinizi girin.', 'error');
+                showToast('Please enter your checkout payment link.', 'error');
                 return;
             }
         } else if (!isLinkType && !checkoutUrl.trim()) {
-            showToast('Lütfen ödeme/yönlendirme linkini girin.', 'error');
+            showToast('Please enter a checkout or download URL.', 'error');
             return;
         }
 
         if (isLinkType && !checkoutUrl.trim()) {
-            showToast('Lütfen bir URL girin.', 'error');
+            showToast('Please enter a target URL.', 'error');
             return;
         }
 
@@ -217,14 +217,14 @@ export default function ProductEditorModal({
         setIsSuccess(false);
         try {
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) throw new Error('Oturum bulunamadı');
+            if (!user) throw new Error('Session not found');
 
             const { data: storeData } = await supabase
                 .from('stores')
                 .select('id')
                 .eq('user_id', user.id)
                 .single();
-            if (!storeData) throw new Error('Mağaza bulunamadı');
+            if (!storeData) throw new Error('Store not found');
 
             const coachingConfig = isCoachingType ? {
                 allow_online: coachingOnline,
@@ -248,7 +248,7 @@ export default function ProductEditorModal({
                 status: 'active',
                 visibility: isLandingPage ? 'hidden' : 'public',
                 thumbnail_style: 'callout',
-                button_text: isCoachingType ? 'Randevu Talep Et' : isLinkType ? 'Bağlantıyı Aç' : 'Hemen Al',
+                button_text: isCoachingType ? 'Book Session' : isLinkType ? 'Open Link' : 'Buy Now',
                 coaching_config: coachingConfig,
             };
 
@@ -263,12 +263,12 @@ export default function ProductEditorModal({
             if (error) throw error;
 
             setIsSuccess(true);
-            showToast(editingProduct ? 'Ürün güncellendi! ✨' : 'Ürün yayınlandı! ✨', 'success');
+            showToast(editingProduct ? 'Product updated! ✨' : 'Product published! ✨', 'success');
             await new Promise((r) => setTimeout(r, 800));
             onSuccess();
             onClose();
         } catch (err: any) {
-            showToast(err.message || 'Bir hata oluştu.', 'error');
+            showToast(err.message || 'An error occurred.', 'error');
         } finally {
             setLoading(false);
         }
@@ -294,21 +294,21 @@ export default function ProductEditorModal({
                         <div>
                             <h2 className="text-[22px] font-bold text-slate-900 tracking-tight">
                                 {step === 1
-                                    ? 'Ürün Tipi Seç'
+                                    ? 'Select Product Type'
                                     : editingProduct
-                                        ? 'Ürünü Düzenle'
+                                        ? 'Edit Product'
                                         : selectedType?.id === 'digital_product'
-                                            ? '📦 Dijital Ürün'
+                                            ? '📦 Digital Product'
                                             : selectedType?.id === 'coaching_call'
-                                                ? '🎯 Koçluk / Görüşme'
+                                                ? '🎯 Coaching & Consultation'
                                                 : '🔗 Link'
                                 }
                             </h2>
                             {step === 2 && (
                                 <p className="text-[13px] font-bold text-slate-400 mt-0.5">
                                     {isLinkType
-                                        ? 'URL ve başlık girin.'
-                                        : 'Bilgileri doldurun, ödeme linkini girin.'}
+                                        ? 'Enter title and destination URL.'
+                                        : 'Fill in details and set your checkout link.'}
                                 </p>
                             )}
                         </div>
@@ -367,7 +367,7 @@ export default function ProductEditorModal({
                             {/* Image Upload & Gallery */}
                             <div className="space-y-3">
                                 <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                    Kapak Görseli <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>
+                                    Cover Image <span className="text-slate-300 font-bold normal-case tracking-normal">(optional)</span>
                                 </label>
                                 <div className="flex flex-col gap-4">
                                     <div className="flex items-center gap-5">
@@ -380,7 +380,7 @@ export default function ProductEditorModal({
                                         </div>
                                         <label className="cursor-pointer h-12 px-6 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[13px] flex items-center gap-2 transition-all active:scale-95">
                                             <Upload className="w-4 h-4" />
-                                            {imageUploading ? 'Yükleniyor...' : imageUrl ? 'Özel Görsel Yükle' : 'Görsel Seç'}
+                                            {imageUploading ? 'Uploading...' : imageUrl ? 'Upload Custom Image' : 'Select Image'}
                                             <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={imageUploading} />
                                         </label>
                                     </div>
@@ -413,13 +413,13 @@ export default function ProductEditorModal({
                             {/* Title */}
                             <div className="space-y-2">
                                 <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                    {isLinkType ? 'Bağlantı Başlığı' : 'Ürün Adı'} <span className="text-[#5500ff]">*</span>
+                                    {isLinkType ? 'Link Title' : 'Product Title'} <span className="text-[#5500ff]">*</span>
                                 </label>
                                 <input
                                     type="text"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    placeholder={isLinkType ? 'örn: Telegram Grubum' : selectedType?.id === 'coaching_call' ? 'örn: 1 Saatlik Danışmanlık' : 'örn: 30 Günlük Beslenme Planı'}
+                                    placeholder={isLinkType ? 'e.g. My Community' : selectedType?.id === 'coaching_call' ? 'e.g. 1-Hour Strategy Session' : 'e.g. 30-Day Growth Guide'}
                                     className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all"
                                 />
                             </div>
@@ -427,12 +427,12 @@ export default function ProductEditorModal({
                             {/* Description */}
                             <div className="space-y-2">
                                 <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                    Açıklama <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>
+                                    Description <span className="text-slate-300 font-bold normal-case tracking-normal">(optional)</span>
                                 </label>
                                 <textarea
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    placeholder="Ürününüzü kısaca açıklayın..."
+                                    placeholder="Briefly describe what buyers or clients will get..."
                                     rows={3}
                                     className="w-full px-5 py-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all resize-none"
                                 />
@@ -441,13 +441,13 @@ export default function ProductEditorModal({
                             {/* COACHING CALL SPECIFIC FIELDS */}
                             {selectedType?.id === 'coaching_call' ? (
                                 <div className="space-y-6 pt-2">
-                                    {/* 1. Seans Seçenekleri */}
+                                    {/* 1. Session Format */}
                                     <div className="space-y-3 p-5 rounded-2xl bg-indigo-50/50 border border-[#5500ff]/15">
                                         <label className="block text-[13px] font-bold text-slate-900 uppercase tracking-wider">
-                                            Seans & Görüşme Türü <span className="text-[#5500ff]">*</span>
+                                            Session Format <span className="text-[#5500ff]">*</span>
                                         </label>
                                         <p className="text-[12px] text-slate-500 font-medium">
-                                            Danışanlarınızın talep edebileceği görüşme türlerini belirleyin.
+                                            Choose how you conduct this session.
                                         </p>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                                             <label className={cn(
@@ -461,7 +461,7 @@ export default function ProductEditorModal({
                                                     className="w-4 h-4 accent-[#5500ff] rounded"
                                                 />
                                                 <div>
-                                                    <span className="text-[14px] font-bold block text-slate-900">🌐 Online Görüşme</span>
+                                                    <span className="text-[14px] font-bold block text-slate-900">🌐 Online Meeting</span>
                                                     <span className="text-[11px] text-slate-400 font-medium">Google Meet / Zoom</span>
                                                 </div>
                                             </label>
@@ -477,8 +477,8 @@ export default function ProductEditorModal({
                                                     className="w-4 h-4 accent-[#5500ff] rounded"
                                                 />
                                                 <div>
-                                                    <span className="text-[14px] font-bold block text-slate-900">📍 Yüz Yüze Görüşme</span>
-                                                    <span className="text-[11px] text-slate-400 font-medium">Klinik / Ofis Ortamı</span>
+                                                    <span className="text-[14px] font-bold block text-slate-900">📍 In-Person Meeting</span>
+                                                    <span className="text-[11px] text-slate-400 font-medium">Office / Studio</span>
                                                 </div>
                                             </label>
                                         </div>
@@ -486,23 +486,23 @@ export default function ProductEditorModal({
                                         {coachingInPerson && (
                                             <div className="mt-3 space-y-1.5 animate-in fade-in">
                                                 <label className="block text-[12px] font-bold text-slate-700">
-                                                    Klinik / Ofis Adresi veya Konum <span className="text-[#5500ff]">*</span>
+                                                    Office / Meeting Address <span className="text-[#5500ff]">*</span>
                                                 </label>
                                                 <input
                                                     type="text"
                                                     value={coachingLocation}
                                                     onChange={(e) => setCoachingLocation(e.target.value)}
-                                                    placeholder="örn: Bağdat Caddesi No: 42, Kadıköy / İstanbul"
+                                                    placeholder="e.g. 123 Main St, New York"
                                                     className="w-full h-12 px-4 bg-white rounded-xl border-2 border-slate-200 focus:border-[#5500ff] outline-none font-bold text-[14px] text-slate-900 transition-all placeholder:text-slate-400"
                                                 />
                                             </div>
                                         )}
                                     </div>
 
-                                    {/* 2. Seans Süresi */}
+                                    {/* 2. Session Duration */}
                                     <div className="space-y-2">
                                         <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                            Seans Süresi
+                                            Session Duration
                                         </label>
                                         <div className="grid grid-cols-4 gap-2.5">
                                             {[30, 45, 60, 90].map((mins) => (
@@ -517,18 +517,18 @@ export default function ProductEditorModal({
                                                             : "bg-slate-50 text-slate-700 border-transparent hover:border-slate-200"
                                                     )}
                                                 >
-                                                    {mins} dk
+                                                    {mins} min
                                                 </button>
                                             ))}
                                         </div>
                                     </div>
 
-                                    {/* 3. Ücret Gösterimi */}
+                                    {/* 3. Pricing & Currency */}
                                     <div className="space-y-3">
                                         <div className="grid grid-cols-2 gap-4">
                                             <div className="space-y-2">
                                                 <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                                    Seans Ücreti
+                                                    Session Fee
                                                 </label>
                                                 <input
                                                     type="number"
@@ -537,13 +537,13 @@ export default function ProductEditorModal({
                                                     disabled={coachingHidePrice}
                                                     value={coachingHidePrice ? '' : price}
                                                     onChange={(e) => setPrice(e.target.value)}
-                                                    placeholder={coachingHidePrice ? 'Gizli' : '2000'}
+                                                    placeholder={coachingHidePrice ? 'Hidden' : '99'}
                                                     className="w-full h-14 px-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-[#5500ff]/30 outline-none font-bold text-[15px] text-slate-900 transition-all disabled:opacity-40"
                                                 />
                                             </div>
                                             <div className="space-y-2">
                                                 <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                                    Para Birimi
+                                                    Currency
                                                 </label>
                                                 <select
                                                     value={currency}
@@ -566,16 +566,16 @@ export default function ProductEditorModal({
                                                 className="w-4 h-4 accent-[#5500ff] rounded"
                                             />
                                             <div className="flex-1">
-                                                <span className="text-[13px] font-bold text-slate-900 block">Fiyat İletişimde Paylaşılacaktır / Ön Görüşme Ücretsiz</span>
-                                                <span className="text-[11px] text-slate-400 font-medium">Vitrinizde fiyat yerine "Ön Görüşme Ücretsiz / İletişimde Belirlenir" gösterilir.</span>
+                                                <span className="text-[13px] font-bold text-slate-900 block">Custom Quote / Free Initial Consultation</span>
+                                                <span className="text-[11px] text-slate-400 font-medium">Hides price on store and displays &quot;Free Consultation / Request Quote&quot;.</span>
                                             </div>
                                         </label>
                                     </div>
 
-                                    {/* 4. Ödeme Yöntemi */}
+                                    {/* 4. Payment Flow */}
                                     <div className="space-y-3 p-5 rounded-2xl bg-slate-50 border border-slate-200/90">
                                         <label className="block text-[13px] font-bold text-slate-900 uppercase tracking-wider">
-                                            Ödeme & Talep Yöntemi
+                                            Booking & Payment Mode
                                         </label>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                             <button
@@ -589,11 +589,11 @@ export default function ProductEditorModal({
                                                 )}
                                             >
                                                 <div className="text-[14px] font-black text-slate-900 mb-1 flex items-center gap-2">
-                                                    <span>📋 Sadece Ön Talep Topla</span>
+                                                    <span>📋 Booking Request Only</span>
                                                     {coachingPaymentMode === 'request_only' && <span className="w-2 h-2 rounded-full bg-[#5500ff]" />}
                                                 </div>
                                                 <p className="text-[12px] text-slate-500 leading-snug">
-                                                    Ödeme seansta veya manuel alınır. Danışan formu doldurur, talep panelinize düşer.
+                                                    Collect requests first. Clients submit details and booking appears in your appointments.
                                                 </p>
                                             </button>
 
@@ -608,11 +608,11 @@ export default function ProductEditorModal({
                                                 )}
                                             >
                                                 <div className="text-[14px] font-black text-slate-900 mb-1 flex items-center gap-2">
-                                                    <span>💳 Ödeme Linki / Shopier</span>
+                                                    <span>💳 Direct Checkout</span>
                                                     {coachingPaymentMode === 'pay_now' && <span className="w-2 h-2 rounded-full bg-[#5500ff]" />}
                                                 </div>
                                                 <p className="text-[12px] text-slate-500 leading-snug">
-                                                    Danışan formu doldurunca doğrudan Shopier / kartla ödeme linkinize yönlendirilir.
+                                                    Clients are directed to your checkout URL to pay when they book.
                                                 </p>
                                             </button>
                                         </div>
@@ -620,7 +620,7 @@ export default function ProductEditorModal({
                                         {coachingPaymentMode === 'pay_now' && (
                                             <div className="mt-3 space-y-1.5 animate-in fade-in">
                                                 <label className="block text-[12px] font-bold text-slate-700">
-                                                    Shopier / Ödeme Linki <span className="text-[#5500ff]">*</span>
+                                                    Checkout Link <span className="text-[#5500ff]">*</span>
                                                 </label>
                                                 <div className="relative">
                                                     <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -628,7 +628,7 @@ export default function ProductEditorModal({
                                                         type="url"
                                                         value={checkoutUrl}
                                                         onChange={(e) => setCheckoutUrl(e.target.value)}
-                                                        placeholder="https://shopier.com/..."
+                                                        placeholder="https://polar.sh/..."
                                                         className="w-full h-12 pl-11 pr-4 bg-white rounded-xl border-2 border-slate-200 focus:border-[#5500ff] outline-none font-bold text-[14px] text-slate-900 transition-all placeholder:text-slate-400"
                                                     />
                                                 </div>
@@ -642,8 +642,8 @@ export default function ProductEditorModal({
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
                                             <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                                Fiyat {!isLinkType && <span className="text-[#5500ff]">*</span>}
-                                                {isLinkType && <span className="text-slate-300 font-bold normal-case tracking-normal">(opsiyonel)</span>}
+                                                Price {!isLinkType && <span className="text-[#5500ff]">*</span>}
+                                                {isLinkType && <span className="text-slate-300 font-bold normal-case tracking-normal">(optional)</span>}
                                             </label>
                                             <input
                                                 type="number"
@@ -657,7 +657,7 @@ export default function ProductEditorModal({
                                         </div>
                                         <div className="space-y-2">
                                             <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                                Para Birimi
+                                                Currency
                                             </label>
                                             <select
                                                 value={currency}
@@ -674,7 +674,7 @@ export default function ProductEditorModal({
                                     {/* Checkout / Link URL */}
                                     <div className="space-y-2">
                                         <label className="block text-[13px] font-bold text-slate-500 uppercase tracking-widest">
-                                            {isLinkType ? 'Yönlendirme URL\'si' : 'Ödeme Linki'} <span className="text-[#5500ff]">*</span>
+                                            {isLinkType ? 'Target URL' : 'Checkout Link'} <span className="text-[#5500ff]">*</span>
                                         </label>
                                         <div className="relative">
                                             <Link2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -692,8 +692,8 @@ export default function ProductEditorModal({
                                                     <Link2 className="w-4 h-4 text-[#5500ff]" />
                                                 </div>
                                                 <p className="text-[13px] text-slate-500 font-medium leading-relaxed">
-                                                    Müşterileriniz satın al dediklerinde bu linke yönlendirilecek.
-                                                    <strong className="text-slate-700 block mt-1">Iyzico, Shopier, Stripe, Calendly veya WhatsApp linki ekleyebilirsiniz.</strong>
+                                                    Customers clicking &quot;Buy&quot; will be redirected to this checkout link.
+                                                    <strong className="text-slate-700 block mt-1">You can connect Polar, Stripe, Lemon Squeezy, or your custom checkout.</strong>
                                                 </p>
                                             </div>
                                         )}
@@ -711,7 +711,7 @@ export default function ProductEditorModal({
                             onClick={onClose}
                             className="h-13 px-8 rounded-2xl text-[15px] font-bold text-slate-400 hover:bg-slate-50 transition-all"
                         >
-                            İptal
+                            Cancel
                         </button>
                         <button
                             onClick={handleSubmit}
@@ -719,11 +719,11 @@ export default function ProductEditorModal({
                             className="flex-1 h-14 max-w-[280px] rounded-2xl bg-[#5500ff] hover:bg-[#4400cc] text-white font-bold text-[16px] shadow-xl shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-60 flex items-center justify-center gap-3"
                         >
                             {isSuccess ? (
-                                <><Check className="w-5 h-5 text-[#C4FF00]" /> {editingProduct ? 'Güncellendi!' : 'Yayında! 🎉'}</>
+                                <><Check className="w-5 h-5 text-[#C4FF00]" /> {editingProduct ? 'Updated!' : 'Live! 🎉'}</>
                             ) : loading ? (
-                                <><Loader2 className="w-5 h-5 animate-spin" /> Kaydediliyor...</>
+                                <><Loader2 className="w-5 h-5 animate-spin" /> Saving...</>
                             ) : (
-                                editingProduct ? 'Değişiklikleri Kaydet' : '🚀 Yayınla'
+                                editingProduct ? 'Save Changes' : '🚀 Publish'
                             )}
                         </button>
                     </div>

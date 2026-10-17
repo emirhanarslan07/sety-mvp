@@ -32,11 +32,11 @@ interface AppointmentBookingModalProps {
 }
 
 const MONTH_NAMES = [
-    'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const DAY_NAMES = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 // Stan Store 1-hour time slots
 const DEFAULT_HOURLY_SLOTS = [
@@ -51,48 +51,48 @@ const DEFAULT_HOURLY_SLOTS = [
 
 const DEFAULT_OPTIONS_IN_PERSON = [
     {
-        title: 'Yetişkin Seansı (Bireysel Terapi)',
-        desc: 'Kaygı, depresyon, stres ve kişisel farkındalık odaklı birebir seans.',
-        duration: '50 dk',
+        title: '1:1 In-Person Consultation',
+        desc: 'Deep-dive strategy session focused on goals, roadmap, and milestone planning.',
+        duration: '50 min',
         icon: '👤'
     },
     {
-        title: 'Çocuk & Ergen Danışmanlığı',
-        desc: 'Gelişimsel süreçler, sınav kaygısı ve duygusal regülasyon desteği.',
-        duration: '50 dk',
-        icon: '🧒'
+        title: 'Executive Mentorship & Review',
+        desc: 'Comprehensive review of your business, content strategy, and execution funnel.',
+        duration: '50 min',
+        icon: '🚀'
     },
     {
-        title: 'Çift ve Evlilik Terapisi',
-        desc: 'İlişki dinamikleri, iletişim problemleri ve evlilik danışmanlığı.',
-        duration: '60 dk',
+        title: 'Strategy & Growth Workshop',
+        desc: 'In-depth partnership and operations alignment for long-term growth.',
+        duration: '60 min',
         icon: '👥'
     }
 ];
 
 const DEFAULT_OPTIONS_ONLINE = [
     {
-        title: 'Bireysel Yetişkin Terapisi',
-        desc: 'Google Meet / Zoom üzerinden güvenli online terapi seansı.',
-        duration: '50 dk',
+        title: '1:1 Online Video Coaching',
+        desc: 'Private online consultation conducted over Google Meet or Zoom.',
+        duration: '50 min',
         icon: '👤'
     },
     {
-        title: 'Online Ergen Danışmanlığı',
-        desc: 'Ergenlik dönemi rehberliği ve duygusal destek seansları.',
-        duration: '50 dk',
-        icon: '🧒'
+        title: 'Brand & Monetization Coaching',
+        desc: 'Turn your followers into customers with proven offer design and positioning.',
+        duration: '45 min',
+        icon: '🚀'
     },
     {
-        title: 'Online Çift ve Evlilik Terapisi',
-        desc: 'Uzaktan katılım ile çift ve ilişki danışmanlığı seansı.',
-        duration: '60 dk',
-        icon: '👥'
+        title: 'Portfolio & Product Teardown',
+        desc: 'Interactive live feedback and UX optimization for your digital products.',
+        duration: '45 min',
+        icon: '🎨'
     },
     {
-        title: 'Online Ön Görüşme & Değerlendirme',
-        desc: 'Süreç ve seans planlaması için kısa tanışma ve değerlendirme.',
-        duration: '30 dk',
+        title: 'Introductory Discovery Call',
+        desc: 'Short alignment session to assess your goals and recommended action plan.',
+        duration: '30 min',
         icon: '💬'
     }
 ];
@@ -101,106 +101,101 @@ export default function AppointmentBookingModal({
     isOpen,
     onClose,
     product,
-    profile,
+    profile
 }: AppointmentBookingModalProps) {
     const { showToast } = useToast();
 
-    // Configuration from product
-    const coachingConfig = product?.coaching_config || {};
-    const productMode = product?.mode as ('online' | 'in_person' | undefined);
-    const allowOnline = productMode ? productMode === 'online' : (coachingConfig.allow_online ?? true);
-    const allowInPerson = productMode ? productMode === 'in_person' : (coachingConfig.allow_in_person ?? false);
-    const defaultMode = productMode || coachingConfig.default_mode || (allowOnline ? 'online' : 'in_person');
-    const locationAddress = coachingConfig.location_address || 'Haydarbey Mah., Açıkgöz Plaza Kat:1 No:3, Kahramanmaraş';
-    const rawOptions: string[] = coachingConfig.options || [];
-
-    // Steps: 1 = Service Option, 2 = Calendar & Hour, 3 = Client Info, 4 = Success
+    // Steps: 1: Service/Option -> 2: Date & Hourly Slot -> 3: Contact Info -> 4: Success
     const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
-    // Selected state
-    const [sessionType, setSessionType] = useState<'online' | 'in_person'>(defaultMode);
+    // Form states
     const [selectedOption, setSelectedOption] = useState<string>('');
     const [selectedDate, setSelectedDate] = useState<string>('');
     const [selectedDateLabel, setSelectedDateLabel] = useState<string>('');
-    const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('14:00 - 15:00');
-
-    // Calendar state
-    const [viewDate, setViewDate] = useState<Date>(new Date());
-
-    // Client form state
-    const [fullName, setFullName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [clientNote, setClientNote] = useState('');
-
-    const [loading, setLoading] = useState(false);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('');
+    const [fullName, setFullName] = useState<string>('');
+    const [phone, setPhone] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [clientNote, setClientNote] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
     const [orderNumber, setOrderNumber] = useState<string>('');
 
-    // Available options based on session type, area_options and coachingConfig
+    // Calendar view state (Month)
+    const [viewDate, setViewDate] = useState<Date>(new Date());
+
+    const coachingConfig = product?.coaching_config;
+    const allowInPerson = coachingConfig?.allow_in_person ?? false;
+    const allowOnline = coachingConfig?.allow_online ?? true;
+    const defaultMode = allowInPerson && !allowOnline ? 'in_person' : 'online';
+    const [sessionType, setSessionType] = useState<'online' | 'in_person'>(defaultMode);
+
+    const locationAddress = coachingConfig?.location_address || profile?.location || 'New York, NY';
+
+    // Parse options: prefer product.area_options if provided, otherwise default based on type
+    const rawOptions = sessionType === 'in_person' ? DEFAULT_OPTIONS_IN_PERSON : DEFAULT_OPTIONS_ONLINE;
     const availableOptions = useMemo(() => {
-        if (product?.area_options && Array.isArray(product.area_options) && product.area_options.length > 0) {
+        if (Array.isArray(product?.area_options) && product.area_options.length > 0) {
             return product.area_options.map((opt: any) => {
                 const title = typeof opt === 'string' ? opt : opt.title;
-                const desc = typeof opt === 'string' ? '' : (opt.description || opt.desc || '');
-                const duration = typeof opt === 'string' ? '50 dk' : (opt.duration || '50 dk');
+                const desc = typeof opt === 'object' && opt.desc ? opt.desc : 'Personalized consultation and guidance.';
+                const duration = typeof opt === 'object' && opt.duration ? opt.duration : (product?.coaching_config?.duration_minutes ? `${product.coaching_config.duration_minutes} min` : '50 min');
                 const tLower = title.toLowerCase();
-                const icon = tLower.includes('çift') || tLower.includes('evlilik')
-                    ? '👥'
-                    : tLower.includes('çocuk') || tLower.includes('ergen')
-                    ? '🧒'
-                    : tLower.includes('ön') || tLower.includes('tanışma')
+                const icon = tLower.includes('online') || tLower.includes('video')
+                    ? '🌐'
+                    : tLower.includes('brand') || tLower.includes('growth')
+                    ? '🚀'
+                    : tLower.includes('intro') || tLower.includes('discovery')
                     ? '💬'
                     : '👤';
                 return { title, desc, duration, icon };
             });
         }
-        if (rawOptions && rawOptions.length > 0) {
-            return rawOptions.map(opt => {
-                const isCouple = opt.toLowerCase().includes('çift') || opt.toLowerCase().includes('evlilik');
-                const isChild = opt.toLowerCase().includes('çocuk') || opt.toLowerCase().includes('ergen');
-                const isPre = opt.toLowerCase().includes('ön görüşme') || opt.toLowerCase().includes('değerlendirme');
-                return {
-                    title: opt,
-                    desc: isCouple
-                        ? 'İlişki dinamikleri ve evlilik danışmanlığı'
-                        : isChild
-                        ? 'Gelişimsel süreçler ve duygusal destek'
-                        : isPre
-                        ? 'Seans öncesi kısa tanışma ve planlama'
-                        : 'Kişisel farkındalık ve terapi süreci',
-                    duration: isCouple ? '60 dk' : isPre ? '30 dk' : '50 dk',
-                    icon: isCouple ? '👥' : isChild ? '🧒' : isPre ? '💬' : '👤'
-                };
+        if (Array.isArray(coachingConfig?.options) && coachingConfig.options.length > 0) {
+            return coachingConfig.options.map((opt: any) => {
+                if (typeof opt === 'string') {
+                    return {
+                        title: opt,
+                        desc: 'Personalized 1:1 consultation.',
+                        duration: `${coachingConfig.duration_minutes || 50} min`,
+                        icon: '👤'
+                    };
+                }
+                return opt;
             });
         }
-        return sessionType === 'in_person' ? DEFAULT_OPTIONS_IN_PERSON : DEFAULT_OPTIONS_ONLINE;
-    }, [product?.area_options, rawOptions, sessionType]);
+        return rawOptions;
+    }, [product?.area_options, coachingConfig, rawOptions, sessionType]);
 
-    // Initialize state when modal opens
+    // Initial setup on open
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
             setStep(1);
-            const initMode = defaultMode;
-            setSessionType(initMode);
+            setFullName('');
+            setPhone('');
+            setEmail('');
+            setClientNote('');
+            setOrderNumber('');
 
-            if (product?.area_options && Array.isArray(product.area_options) && product.area_options.length > 0) {
-                const first = product.area_options[0];
+            const defaults = sessionType === 'in_person' ? DEFAULT_OPTIONS_IN_PERSON : DEFAULT_OPTIONS_ONLINE;
+            const custom = product?.area_options;
+            if (Array.isArray(custom) && custom.length > 0) {
+                const first = custom[0];
                 setSelectedOption(typeof first === 'string' ? first : first.title);
-            } else if (rawOptions.length > 0) {
-                setSelectedOption(rawOptions[0]);
+            } else if (Array.isArray(coachingConfig?.options) && coachingConfig.options.length > 0) {
+                const first = coachingConfig.options[0];
+                setSelectedOption(typeof first === 'string' ? first : first.title);
             } else {
-                const defaults = initMode === 'in_person' ? DEFAULT_OPTIONS_IN_PERSON : DEFAULT_OPTIONS_ONLINE;
                 setSelectedOption(defaults[0].title);
             }
 
-            // Set initial selected date to tomorrow
+            // Tomorrow as default date
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             const tomorrowIso = tomorrow.toISOString().split('T')[0];
             setSelectedDate(tomorrowIso);
             setSelectedDateLabel(
-                tomorrow.toLocaleDateString('tr-TR', {
+                tomorrow.toLocaleDateString('en-US', {
                     day: 'numeric',
                     month: 'long',
                     year: 'numeric',
@@ -283,7 +278,7 @@ export default function AppointmentBookingModal({
         if (day.isPast || day.empty) return;
         setSelectedDate(day.iso);
         setSelectedDateLabel(
-            day.dateObj.toLocaleDateString('tr-TR', {
+            day.dateObj.toLocaleDateString('en-US', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric',
@@ -302,28 +297,24 @@ export default function AppointmentBookingModal({
 
     if (!isOpen || !product) return null;
 
-    const creatorName = profile?.display_name || profile?.full_name || 'Gizem Hanım';
-    const psychologistPhone = profile?.social_links?.phone || profile?.social_links?.whatsapp || '05069863046';
-    const cleanPhoneDigits = psychologistPhone.replace(/\D/g, '');
-    const cleanWaNumber = cleanPhoneDigits.startsWith('90')
-        ? cleanPhoneDigits
-        : cleanPhoneDigits.startsWith('0')
-        ? '9' + cleanPhoneDigits
-        : '90' + cleanPhoneDigits;
+    const creatorName = profile?.display_name || profile?.full_name || 'Emma Carter';
+    const creatorPhone = profile?.social_links?.phone || profile?.social_links?.whatsapp || '+1234567890';
+    const cleanPhoneDigits = creatorPhone.replace(/\D/g, '');
+    const cleanWaNumber = cleanPhoneDigits;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!fullName.trim()) {
-            showToast('Lütfen adınızı ve soyadınızı girin.', 'error');
+            showToast('Please enter your full name.', 'error');
             return;
         }
-        if (!phone.trim() || phone.replace(/\D/g, '').length < 10) {
-            showToast('Lütfen geçerli bir telefon numarası girin (WhatsApp teyidi için gereklidir).', 'error');
+        if (!phone.trim() || phone.replace(/\D/g, '').length < 8) {
+            showToast('Please enter a valid phone number (required for booking confirmation).', 'error');
             return;
         }
         if (!email.trim() || !email.includes('@')) {
-            showToast('Lütfen geçerli bir e-posta adresi girin.', 'error');
+            showToast('Please enter a valid email address.', 'error');
             return;
         }
 
@@ -331,14 +322,14 @@ export default function AppointmentBookingModal({
 
         try {
             const res = await createAppointmentRequestAction({
-                profileUserId: profile?.user_id || 'gizem-tepebas-user',
-                profileId: profile?.id || 'gizem-tepebas-store',
+                profileUserId: profile?.user_id || 'creator-user',
+                profileId: profile?.id || 'creator-store',
                 productId: product?.id || 'appointment-service',
-                productTitle: `${product?.title || 'Randevu'} - ${selectedOption}`,
+                productTitle: `${product?.title || 'Coaching Session'} - ${selectedOption}`,
                 productPrice: product?.price || 0,
-                currency: product?.currency || 'TRY',
+                currency: product?.currency || 'USD',
                 creatorName,
-                creatorEmail: profile?.email || 'emirhanarslan896@gmail.com',
+                creatorEmail: profile?.email || 'creator@sety.store',
                 fullName,
                 phone,
                 email,
@@ -346,56 +337,57 @@ export default function AppointmentBookingModal({
                 locationAddress: sessionType === 'in_person' ? locationAddress : 'Google Meet / Zoom',
                 preferredDate: selectedDateLabel || selectedDate,
                 timeSlot: selectedTimeSlot,
-                clientNote: clientNote.trim() ? `[Alan: ${selectedOption}] ${clientNote}` : `[Alan: ${selectedOption}]`,
+                clientNote: clientNote.trim() ? `[Topic: ${selectedOption}] ${clientNote}` : `[Topic: ${selectedOption}]`,
                 paymentMode: 'request_only',
             });
 
             if (!res.success) {
-                throw new Error(res.error || 'Randevu talebi oluşturulamadı');
+                throw new Error(res.error || 'Could not submit appointment request');
             }
 
             setOrderNumber(res.orderNumber || 'SY-1042');
             setStep(4);
-            showToast('Randevu talebiniz başarıyla alındı! 🎉', 'success');
+            showToast('Appointment request submitted successfully! 🎉', 'success');
         } catch (err: any) {
             console.error('Appointment error:', err);
             // Local fallback for demo
             setOrderNumber('SY-' + Math.floor(1000 + Math.random() * 9000));
             setStep(4);
-            showToast('Randevu talebiniz başarıyla kaydedildi! ✨', 'success');
+            showToast('Appointment request recorded! ✨', 'success');
         } finally {
             setLoading(false);
         }
     };
 
     const whatsappDirectMessage = encodeURIComponent(
-        `Merhaba ${creatorName}, sety.store üzerinden ${selectedDateLabel} tarihindeki ${selectedTimeSlot} ${selectedOption} için randevu talebi oluşturdum (${orderNumber || 'Talep'}). Seans detaylarını görüşmek isterim.`
+        `Hi ${creatorName}, I have submitted a booking request on sety.store for ${selectedOption} on ${selectedDateLabel} at ${selectedTimeSlot} (Ref: #${orderNumber || 'Request'}). Looking forward to our session!`
     );
     const whatsappDirectUrl = `https://wa.me/${cleanWaNumber}?text=${whatsappDirectMessage}`;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
             <div
-                className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col max-h-[92vh] overflow-hidden"
+                className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 flex flex-col max-h-[92vh] overflow-hidden font-sans"
                 onClick={e => e.stopPropagation()}
             >
                 {/* ═══ MODAL HEADER ═══ */}
-                <div className="relative px-6 pt-6 pb-4 border-b border-slate-100 bg-white">
+                <div className="relative p-6 pb-4 border-b border-slate-100 bg-white">
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="absolute right-5 top-5 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
-                        aria-label="Kapat"
+                        className="absolute right-5 top-5 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors"
+                        aria-label="Close"
                     >
-                        <X className="w-5 h-5" />
+                        <X className="w-4 h-4" />
                     </button>
 
                     <div className="pr-8">
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-violet-50 text-[#5500FF] text-[11px] font-extrabold uppercase tracking-wider mb-1.5">
                             <Sparkles className="w-3 h-3" />
-                            {sessionType === 'in_person' ? 'Yüz Yüze Danışmanlık' : 'Online Danışmanlık'}
+                            {sessionType === 'in_person' ? 'In-Person Consultation' : '1:1 Video Consultation'}
                         </div>
                         <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-tight">
-                            {step === 4 ? 'Talebiniz Alındı' : product.title}
+                            {step === 4 ? 'Request Received' : product.title}
                         </h2>
                     </div>
 
@@ -421,15 +413,15 @@ export default function AppointmentBookingModal({
 
                 {/* ═══ MODAL SCROLLABLE BODY ═══ */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                    {/* ═══ STEP 1: Danışmanlık Alanı / Hizmet Seçimi ═══ */}
+                    {/* ═══ STEP 1: Consultation Topic Selection ═══ */}
                     {step === 1 && (
                         <div className="space-y-5 animate-in fade-in duration-200">
                             <div>
                                 <h3 className="text-[17px] font-black text-slate-900 tracking-tight">
-                                    Seans Alanını Seçin
+                                    Select Session Focus
                                 </h3>
                                 <p className="text-[13px] text-slate-500 mt-0.5">
-                                    Görüşmek istediğiniz çalışma alanını belirleyin.
+                                    Choose the topic or goal you would like to work on.
                                 </p>
                             </div>
 
@@ -469,11 +461,11 @@ export default function AppointmentBookingModal({
                                                     className={cn(
                                                         "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
                                                         isSelected
-                                                            ? "border-[#5500FF] bg-[#5500FF] text-white text-xs"
+                                                            ? "border-[#5500FF] bg-[#5500FF]"
                                                             : "border-slate-300 bg-white"
                                                     )}
                                                 >
-                                                    {isSelected && '✓'}
+                                                    {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
                                                 </div>
                                             </div>
                                         </div>
@@ -481,46 +473,71 @@ export default function AppointmentBookingModal({
                                 })}
                             </div>
 
-                            {/* Location / Platform badge note */}
-                            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center gap-2.5 text-xs text-slate-600">
-                                {sessionType === 'in_person' ? (
-                                    <>
-                                        <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
-                                        <span className="font-semibold text-slate-700 truncate">
-                                            {locationAddress}
-                                        </span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Globe className="w-4 h-4 text-[#5500FF] shrink-0" />
-                                        <span className="font-semibold text-slate-700">
-                                            Google Meet / Zoom (Bağlantı linki WhatsApp ile iletilecektir)
-                                        </span>
-                                    </>
-                                )}
-                            </div>
+                            {/* Session Mode Selector (if both enabled) */}
+                            {allowInPerson && allowOnline && (
+                                <div className="pt-2 border-t border-slate-100">
+                                    <label className="text-[12px] font-bold text-slate-600 block mb-2">
+                                        Session Mode
+                                    </label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => setSessionType('online')}
+                                            className={cn(
+                                                "p-3 rounded-xl border-2 text-xs font-bold flex items-center justify-center gap-2 transition-all",
+                                                sessionType === 'online'
+                                                    ? "border-[#5500FF] bg-violet-50 text-[#5500FF]"
+                                                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                                            )}
+                                        >
+                                            <Globe className="w-4 h-4" />
+                                            <span>Online (Video)</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSessionType('in_person')}
+                                            className={cn(
+                                                "p-3 rounded-xl border-2 text-xs font-bold flex items-center justify-center gap-2 transition-all",
+                                                sessionType === 'in_person'
+                                                    ? "border-[#5500FF] bg-violet-50 text-[#5500FF]"
+                                                    : "border-slate-200 text-slate-600 hover:border-slate-300"
+                                            )}
+                                        >
+                                            <MapPin className="w-4 h-4" />
+                                            <span>In-Person</span>
+                                        </button>
+                                    </div>
+                                    {sessionType === 'in_person' && (
+                                        <p className="text-[11px] text-slate-500 mt-2 flex items-center gap-1.5">
+                                            <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                            <span>{locationAddress}</span>
+                                        </p>
+                                    )}
+                                </div>
+                            )}
 
+                            {/* Next Button */}
                             <button
                                 type="button"
                                 onClick={() => setStep(2)}
                                 disabled={!selectedOption}
-                                className="w-full h-13 rounded-2xl bg-[#5500FF] hover:bg-[#4400cc] text-white text-[15px] font-bold shadow-md shadow-[#5500FF]/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                                className="w-full h-13 rounded-2xl bg-[#5500FF] hover:bg-[#4400cc] text-white text-[15px] font-bold shadow-md shadow-[#5500FF]/25 flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50 mt-4"
                             >
-                                <span>Tarih ve Saat Seçimine Geç</span>
+                                <span>Continue to Date & Time</span>
                                 <ArrowRight className="w-4 h-4" />
                             </button>
                         </div>
                     )}
 
-                    {/* ═══ STEP 2: Stan Store Stili Aylık Takvim & 1 Saatlik Net Slotlar ═══ */}
+                    {/* ═══ STEP 2: Stan Store Style Calendar & 1-Hour Time Slots ═══ */}
                     {step === 2 && (
                         <div className="space-y-6 animate-in fade-in duration-200">
                             <div>
                                 <h3 className="text-[17px] font-black text-slate-900 tracking-tight">
-                                    Tarih ve Saat Seçimi
+                                    Select Date & Time
                                 </h3>
                                 <p className="text-[13px] text-slate-500 mt-0.5">
-                                    Stan Store stili takvimden günü ve uygun bir saat dilimini seçin.
+                                    Choose your preferred day and an available 1-hour time slot.
                                 </p>
                             </div>
 
@@ -542,7 +559,7 @@ export default function AppointmentBookingModal({
                                                     ? "text-slate-300 cursor-not-allowed"
                                                     : "text-slate-600 hover:bg-slate-200 active:scale-95"
                                             )}
-                                            aria-label="Önceki Ay"
+                                            aria-label="Previous Month"
                                         >
                                             <ChevronLeft className="w-4 h-4" />
                                         </button>
@@ -550,7 +567,7 @@ export default function AppointmentBookingModal({
                                             type="button"
                                             onClick={handleNextMonth}
                                             className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 hover:bg-slate-200 active:scale-95 transition-all"
-                                            aria-label="Sonraki Ay"
+                                            aria-label="Next Month"
                                         >
                                             <ChevronRight className="w-4 h-4" />
                                         </button>
@@ -609,14 +626,14 @@ export default function AppointmentBookingModal({
                                 )}
                             </div>
 
-                            {/* ─── HOURLY TIME SLOTS (1 Saatlik Net Dilimler) ─── */}
+                            {/* ─── HOURLY TIME SLOTS ─── */}
                             <div className="space-y-2.5">
                                 <div className="flex items-center justify-between">
                                     <label className="text-[12px] font-extrabold text-slate-500 uppercase tracking-wider block">
-                                        ⏰ Seans Saati (1 Saatlik Dilim)
+                                        ⏰ Available Time Slots
                                     </label>
                                     <span className="text-[11px] text-slate-400 font-semibold">
-                                        {DEFAULT_HOURLY_SLOTS.length} müsait saat
+                                        {DEFAULT_HOURLY_SLOTS.length} slots available
                                     </span>
                                 </div>
 
@@ -650,49 +667,49 @@ export default function AppointmentBookingModal({
                                     onClick={() => setStep(1)}
                                     className="h-13 px-5 rounded-2xl border border-slate-200 text-slate-700 text-[14px] font-bold hover:bg-slate-50 transition-all"
                                 >
-                                    Geri
+                                    Back
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => setStep(3)}
                                     disabled={!selectedDate || !selectedTimeSlot}
-                                    className="flex-1 h-13 rounded-2xl bg-[#5500FF] hover:bg-[#4400cc] text-white text-[15px] font-bold shadow-md shadow-[#5500FF]/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                                    className="flex-1 h-13 rounded-2xl bg-[#5500FF] hover:bg-[#4400cc] text-white text-[15px] font-bold shadow-md shadow-[#5500FF]/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
                                 >
-                                    <span>İletişim Bilgilerine Geç</span>
+                                    <span>Continue to Details</span>
                                     <ArrowRight className="w-4 h-4" />
                                 </button>
                             </div>
                         </div>
                     )}
 
-                    {/* ═══ STEP 3: Danışan İletişim Bilgileri ═══ */}
+                    {/* ═══ STEP 3: Contact & Booking Confirmation ═══ */}
                     {step === 3 && (
                         <form onSubmit={handleSubmit} className="space-y-5 animate-in fade-in duration-200">
                             <div>
                                 <h3 className="text-[17px] font-black text-slate-900 tracking-tight">
-                                    İletişim & Randevu Teyidi
+                                    Contact & Confirmation
                                 </h3>
                                 <p className="text-[13px] text-slate-500 mt-0.5">
-                                    Talebinizin onaylanması için lütfen iletişim bilgilerinizi girin.
+                                    Please provide your contact details to submit your booking request.
                                 </p>
                             </div>
 
                             {/* Booking Summary Pill */}
                             <div className="p-4 rounded-2xl bg-violet-50/60 border border-violet-100 space-y-1.5 text-xs">
                                 <div className="flex items-center justify-between text-slate-700">
-                                    <span className="font-semibold text-slate-500">Seçilen Alan:</span>
+                                    <span className="font-semibold text-slate-500">Selected Focus:</span>
                                     <span className="font-black text-slate-900">{selectedOption}</span>
                                 </div>
                                 <div className="flex items-center justify-between text-slate-700">
-                                    <span className="font-semibold text-slate-500">Tarih & Saat:</span>
+                                    <span className="font-semibold text-slate-500">Date & Time:</span>
                                     <span className="font-black text-[#5500FF]">
                                         {selectedDateLabel} · {selectedTimeSlot}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between text-slate-700">
-                                    <span className="font-semibold text-slate-500">Görüşme Modu:</span>
+                                    <span className="font-semibold text-slate-500">Session Mode:</span>
                                     <span className="font-black text-slate-900">
-                                        {sessionType === 'in_person' ? '📍 Yüz Yüze Klinik' : '🌐 Online Seans'}
+                                        {sessionType === 'in_person' ? '📍 In-Person Session' : '🌐 Online Video Call'}
                                     </span>
                                 </div>
                             </div>
@@ -701,7 +718,7 @@ export default function AppointmentBookingModal({
                             <div className="space-y-3.5">
                                 <div>
                                     <label className="text-[12px] font-bold text-slate-700 block mb-1">
-                                        Adınız ve Soyadınız <span className="text-rose-500">*</span>
+                                        Full Name <span className="text-rose-500">*</span>
                                     </label>
                                     <div className="relative">
                                         <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -710,7 +727,7 @@ export default function AppointmentBookingModal({
                                             required
                                             value={fullName}
                                             onChange={e => setFullName(e.target.value)}
-                                            placeholder="Örn: Ayşe Yılmaz"
+                                            placeholder="e.g. Alex Morgan"
                                             className="w-full h-12 pl-10 pr-4 rounded-xl border border-slate-200 focus:border-[#5500FF] focus:ring-2 focus:ring-[#5500FF]/15 text-sm font-semibold outline-hidden transition-all"
                                         />
                                     </div>
@@ -718,7 +735,7 @@ export default function AppointmentBookingModal({
 
                                 <div>
                                     <label className="text-[12px] font-bold text-slate-700 block mb-1">
-                                        Telefon Numaranız (WhatsApp) <span className="text-rose-500">*</span>
+                                        Phone Number (WhatsApp) <span className="text-rose-500">*</span>
                                     </label>
                                     <div className="relative">
                                         <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -727,18 +744,18 @@ export default function AppointmentBookingModal({
                                             required
                                             value={phone}
                                             onChange={e => setPhone(e.target.value)}
-                                            placeholder="05XX XXX XX XX"
+                                            placeholder="+1 (555) 000-0000"
                                             className="w-full h-12 pl-10 pr-4 rounded-xl border border-slate-200 focus:border-[#5500FF] focus:ring-2 focus:ring-[#5500FF]/15 text-sm font-semibold outline-hidden transition-all"
                                         />
                                     </div>
                                     <p className="text-[11px] text-slate-400 mt-1">
-                                        Randevu teyidiniz ve seans bilgilendirmesi bu numaraya WhatsApp üzerinden iletilecektir.
+                                        Confirmation and session link will be sent to this number/WhatsApp.
                                     </p>
                                 </div>
 
                                 <div>
                                     <label className="text-[12px] font-bold text-slate-700 block mb-1">
-                                        E-posta Adresiniz <span className="text-rose-500">*</span>
+                                        Email Address <span className="text-rose-500">*</span>
                                     </label>
                                     <div className="relative">
                                         <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -747,7 +764,7 @@ export default function AppointmentBookingModal({
                                             required
                                             value={email}
                                             onChange={e => setEmail(e.target.value)}
-                                            placeholder="ornek@email.com"
+                                            placeholder="you@example.com"
                                             className="w-full h-12 pl-10 pr-4 rounded-xl border border-slate-200 focus:border-[#5500FF] focus:ring-2 focus:ring-[#5500FF]/15 text-sm font-semibold outline-hidden transition-all"
                                         />
                                     </div>
@@ -755,22 +772,22 @@ export default function AppointmentBookingModal({
 
                                 <div>
                                     <label className="text-[12px] font-bold text-slate-700 block mb-1">
-                                        Başvuru Nedeni veya Notunuz (Opsiyonel)
+                                        Notes or Discussion Topics (Optional)
                                     </label>
                                     <textarea
                                         rows={2}
                                         value={clientNote}
                                         onChange={e => setClientNote(e.target.value)}
-                                        placeholder="Görüşmek istediğiniz konu veya özel bir durum varsa belirtebilirsiniz..."
+                                        placeholder="Any specific goals or context you'd like to share ahead of the session..."
                                         className="w-full p-3 rounded-xl border border-slate-200 focus:border-[#5500FF] focus:ring-2 focus:ring-[#5500FF]/15 text-sm font-medium outline-hidden transition-all resize-none"
                                     />
                                 </div>
                             </div>
 
-                            {/* KVKK / Privacy reassurance */}
+                            {/* Privacy reassurance */}
                             <div className="flex items-center gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                                <span>Bilgileriniz KVKK ve psikolog-danışan gizliliği ilkeleri çerçevesinde korunur.</span>
+                                <span>Your contact information is strictly confidential and protected.</span>
                             </div>
 
                             {/* Buttons */}
@@ -780,7 +797,7 @@ export default function AppointmentBookingModal({
                                     onClick={() => setStep(2)}
                                     className="h-13 px-5 rounded-2xl border border-slate-200 text-slate-700 text-[14px] font-bold hover:bg-slate-50 transition-all"
                                 >
-                                    Geri
+                                    Back
                                 </button>
                                 <button
                                     type="submit"
@@ -790,11 +807,11 @@ export default function AppointmentBookingModal({
                                     {loading ? (
                                         <>
                                             <Loader2 className="w-5 h-5 animate-spin" />
-                                            <span>Talep Gönderiliyor...</span>
+                                            <span>Submitting Request...</span>
                                         </>
                                     ) : (
                                         <>
-                                            <span>Randevu Talebini Oluştur ✨</span>
+                                            <span>Confirm Booking Request ✨</span>
                                         </>
                                     )}
                                 </button>
@@ -802,7 +819,7 @@ export default function AppointmentBookingModal({
                         </form>
                     )}
 
-                    {/* ═══ STEP 4: Başarı & WhatsApp Teyit Ekranı ═══ */}
+                    {/* ═══ STEP 4: Success & Direct WhatsApp Screen ═══ */}
                     {step === 4 && (
                         <div className="py-4 text-center space-y-5 animate-in zoom-in-95 duration-200">
                             <div className="w-16 h-16 rounded-3xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
@@ -811,29 +828,29 @@ export default function AppointmentBookingModal({
 
                             <div>
                                 <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                                    Randevu Talebiniz Alındı!
+                                    Appointment Request Received!
                                 </h3>
                                 <p className="text-[13px] text-slate-500 max-w-sm mx-auto mt-1">
-                                    Talebiniz {creatorName} tarafına başarıyla iletildi.
+                                    Your booking request has been successfully submitted to {creatorName}.
                                 </p>
                             </div>
 
                             {/* Summary Card */}
                             <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left space-y-2 text-xs">
                                 <div className="flex justify-between items-center pb-2 border-b border-slate-200">
-                                    <span className="text-slate-500 font-semibold">Takip Kodu:</span>
+                                    <span className="text-slate-500 font-semibold">Reference ID:</span>
                                     <span className="font-black text-[#5500FF] text-sm">#{orderNumber}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500 font-semibold">Danışan:</span>
+                                    <span className="text-slate-500 font-semibold">Client Name:</span>
                                     <span className="font-bold text-slate-900">{fullName}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500 font-semibold">Seans Alanı:</span>
+                                    <span className="text-slate-500 font-semibold">Selected Focus:</span>
                                     <span className="font-bold text-slate-900">{selectedOption}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500 font-semibold">Tarih & Saat:</span>
+                                    <span className="text-slate-500 font-semibold">Date & Time:</span>
                                     <span className="font-bold text-emerald-600">
                                         {selectedDateLabel} · {selectedTimeSlot}
                                     </span>
@@ -849,7 +866,7 @@ export default function AppointmentBookingModal({
                                     className="w-full h-14 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] text-white text-[15px] font-extrabold shadow-lg shadow-[#25D366]/25 flex items-center justify-center gap-2.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     <MessageCircle className="w-5 h-5 fill-white" />
-                                    <span>Gizem Hanım ile WhatsApp'ta Başlat</span>
+                                    <span>Connect with {creatorName} on WhatsApp</span>
                                 </a>
 
                                 <button
@@ -857,7 +874,7 @@ export default function AppointmentBookingModal({
                                     onClick={onClose}
                                     className="w-full h-12 rounded-xl text-slate-500 hover:text-slate-800 text-xs font-bold transition-colors"
                                 >
-                                    Pencereyi Kapat
+                                    Close Window
                                 </button>
                             </div>
                         </div>
