@@ -534,7 +534,7 @@ export function CreatorHubLanding() {
                 <Calendar />
               </span>
               <span className="category-label">
-                {isEn ? "TURN YOUR TIME INTO VALUE" : "ZAMANINI DEĞERE DÖNÜŞTÜR"}
+                {isEn ? "1:1 COACHING & SESSIONS" : "BİREBİR SEANSLAR"}
               </span>
               <button
                 type="button"
@@ -626,7 +626,7 @@ export function CreatorHubLanding() {
                 <Download />
               </span>
               <span className="category-label">
-                {isEn ? "CREATE ONCE. SELL FOREVER." : "BİR KERE ÜRET. TEKRAR TEKRAR SAT."}
+                {isEn ? "DIGITAL PRODUCTS" : "DİJİTAL ÜRÜNLER"}
               </span>
               <button
                 type="button"
@@ -712,7 +712,7 @@ export function CreatorHubLanding() {
                 <BookOpen />
               </span>
               <span className="category-label">
-                {isEn ? "YOUR KNOWLEDGE, A ROADMAP." : "BİLGİN, BİRİNİN YOL HARİTASI."}
+                {isEn ? "E-BOOKS & GUIDES" : "E-KİTAPLAR & REHBERLER"}
               </span>
               <button
                 type="button"
@@ -781,7 +781,7 @@ export function CreatorHubLanding() {
                 </div>
                 <div>
                   <small>{isEn ? "COMPATIBLE" : "UYUMLULUK"}</small>
-                  <b>iOS / Android / PC</b>
+                  <b>{isEn ? "All Devices" : "Tüm Cihazlar"}</b>
                 </div>
               </div>
             </div>
@@ -802,7 +802,7 @@ export function CreatorHubLanding() {
                 <Users />
               </span>
               <span className="category-label">
-                {isEn ? "STRONGER TOGETHER." : "BİRLİKTE DAHA FAZLASI."}
+                {isEn ? "COMMUNITIES & ACCESS" : "TOPLULUKLAR & ERİŞİM"}
               </span>
               <button
                 type="button"
